@@ -99,7 +99,7 @@ internal class UnionOperationTest {
             val result = unionOperation.execute(listOne, listtwo)
 
             //THEN
-            assertTrue((result.value as JSONArray).length() == 0)
+            assertTrue((result.value as JSONArray).length() == 1)
         }
     }
 }

@@ -31,15 +31,15 @@ internal class DefaultImageDownloader : BeagleImageDownloader {
 
     private val imageDownloader: ImageDownloader = ImageDownloader()
 
-    override fun download(url: String, imageView: ImageView, rootView: RootView) {
+    override fun download(url: String,                          imageView: ImageView,                                        rootView: RootView) {
         imageView.post {
             rootView.getLifecycleOwner().lifecycleScope.launch(CoroutineDispatchers.IO) {
                 try {
                     val formattedUrl = url.formatUrl().takeIf { it.isNotEmpty() } ?: url
-                    val bitmap = imageDownloader.getRemoteImage(
+                                                                                                                     val bitmap = imageDownloader.getRemoteImage(
                         formattedUrl,
                         imageView.width,
-                        imageView.height,
+                             imageView.height,
                         rootView.getContext(),
                     )
                     setImage(imageView, bitmap)
