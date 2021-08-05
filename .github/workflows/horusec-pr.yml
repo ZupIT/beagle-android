@@ -44,5 +44,5 @@ jobs:
         env:
           HORUSEC_CLI_REPOSITORY_AUTHORIZATION: ${{ env.BEAGLE_CORE_SECURITY_HORUSEC_CLI_REPOSITORY_AUTHORIZATION }}
         run: |
-          curl -fsSL https://horusec.io/bin/install.sh | bash
-          horusec start -p ./ --ignore="**/sample/**,**/.gradle/**,**/Gemfile.lock" -a "$HORUSEC_CLI_REPOSITORY_AUTHORIZATION" -n "${GITHUB_REPOSITORY}_${GITHUB_REF##*/}" -e true -u "https://api-horusec.zup.com.br" -G true
+          curl -fsSL https://raw.githubusercontent.com/ZupIT/horusec/master/deployments/scripts/install.sh | bash -s latest
+          horusec start -p="./" -e="true"
