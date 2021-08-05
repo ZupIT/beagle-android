@@ -24,6 +24,8 @@ jobs:
                 parse-json: true
             - name: Install Fastlane
               run: bundle install
+            - name: Set Java home
+              run: ENV["JAVA_HOME"] = ENV["JAVA_HOME_11_X64"]
             - name: Deploy new version
               env:
                 REPO_TOKEN: ${{ env.BEAGLE_CORE_GITHUB_GITHUB_TOKEN }}

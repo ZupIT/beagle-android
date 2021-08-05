@@ -21,6 +21,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import androidx.core.view.get
+import androidx.viewbinding.ViewBindings
 import br.com.zup.beagle.R
 import br.com.zup.beagle.android.extensions.once
 import br.com.zup.beagle.android.testutil.RandomData
@@ -61,6 +62,9 @@ class LazyComponentTest : BaseComponentTest() {
     @BeforeEach
     override fun setUp() {
         super.setUp()
+
+        mockkStatic(ViewBindings::class)
+        every { ViewBindings.findChildViewById<Button>(any(), any()) } returns errorRetryButton
 
         every { ViewFactory.makeBeagleView(any()) } returns beagleView
 

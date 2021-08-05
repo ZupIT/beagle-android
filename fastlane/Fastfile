@@ -12,7 +12,7 @@ platform :android do
     gradle(task: "jacocoDebugTestReport")
     gradle(task: "jacocoRootReport")
     gradle(task: "sample:assembleDebug")
-    publish_sonarcloud_gradle
+    gradle(task: "sonarqube")
   end
 
   desc "Deploy current code to stage"
@@ -135,13 +135,4 @@ lane :lastExpectedVersion do |params|
 
   version = lastVersion
   "#{version}"
-end
-
-desc "Publishing Sonarcloud reports via gradle"
-private_lane :publish_sonarcloud_gradle do |params|
-   # Setup java 11
-   ENV["JAVA_HOME"] = ENV["JAVA_HOME_11_X64"]
-   gradle(task: "sonarqube")
-   # Rollback to java 8
-   ENV["JAVA_HOME"] = ENV["JAVA_HOME_8_X64"]
 end
