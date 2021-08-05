@@ -65,9 +65,11 @@ fun ServerDrivenComponent.handleEvent(
  * @property eventValue is the value that the eventName name has created,
  * this could be a primitive or a object that will be serialized to JSON
  */
-@Deprecated("It was deprecated in version 1.1.0 and will be removed in a future version." +
-    " Use handleEvent without eventName and eventValue or with ContextData for create a implicit context.",
-    ReplaceWith("handleEvent(rootView, origin, actions)"))
+@Deprecated(
+    "It was deprecated in version 1.1.0 and will be removed in a future version." +
+            " Use handleEvent without eventName and eventValue or with ContextData for create a implicit context.",
+    ReplaceWith("handleEvent(rootView, origin, actions)")
+)
 fun ServerDrivenComponent.handleEvent(
     rootView: RootView,
     origin: View,
@@ -113,9 +115,11 @@ fun ServerDrivenComponent.handleEvent(
  * @property eventValue is the value that the eventName name has created,
  * this could be a primitive or a object that will be serialized to JSON
  */
-@Deprecated("It was deprecated in version 1.1.0 and will be removed in a future version." +
-    " Use handleEvent without eventName and eventValue or with ContextData for create a implicit context.",
-    ReplaceWith("handleEvent(rootView, origin, action)"))
+@Deprecated(
+    "It was deprecated in version 1.1.0 and will be removed in a future version." +
+            " Use handleEvent without eventName and eventValue or with ContextData for create a implicit context.",
+    ReplaceWith("handleEvent(rootView, origin, action)")
+)
 fun ServerDrivenComponent.handleEvent(
     rootView: RootView,
     origin: View,
@@ -158,24 +162,50 @@ internal fun <T> internalObserveBindChanges(
  * @property activity <p>is the reference for your activity.
  * Make sure to use this method if you are inside a Activity because of the lifecycle</p>
  */
+@Deprecated(
+    "It was deprecated in version 1.10.0 and will be removed in a future version." +
+            " Use the load view with screenJson.",
+    ReplaceWith(
+        "viewGroup.loadView(activity, screenJson, screenId)"
+    )
+)
 fun ServerDrivenComponent.toView(
     activity: AppCompatActivity,
     idView: Int = R.id.beagle_default_id,
     screenIdentifier: String? = null,
 ): View =
-    this.toView(ActivityRootView(activity, idView, this.getServerDrivenIdentifier(screenIdentifier)))
+    this.toView(
+        ActivityRootView(
+            activity,
+            idView,
+            this.getServerDrivenIdentifier(screenIdentifier)
+        )
+    )
 
 /**
  * Transform your Component to a view.
  * @property fragment <p>is the reference for your fragment.
  * Make sure to use this method if you are inside a Fragment because of the lifecycle</p>
  */
+@Deprecated(
+    "It was deprecated in version 1.10.0 and will be removed in a future version." +
+            " Use the load view with screenJson.",
+    ReplaceWith(
+        "viewGroup.loadView(fragment, screenJson, screenId)"
+    )
+)
 fun ServerDrivenComponent.toView(
     fragment: Fragment,
     idView: Int = R.id.beagle_default_id,
     screenIdentifier: String? = null,
 ): View =
-    this.toView(FragmentRootView(fragment, idView, this.getServerDrivenIdentifier(screenIdentifier)))
+    this.toView(
+        FragmentRootView(
+            fragment,
+            idView,
+            this.getServerDrivenIdentifier(screenIdentifier)
+        )
+    )
 
 internal fun ServerDrivenComponent.toView(
     rootView: RootView,
