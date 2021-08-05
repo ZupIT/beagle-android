@@ -29,8 +29,6 @@ android {
         minSdkVersion Dependencies.Versions.minSdk
         targetSdkVersion Dependencies.Versions.targetSdk
 
-        versionCode Dependencies.Releases.versionCode
-        versionName "${Dependencies.Releases.beagleVersionName}"
 
         testInstrumentationRunner Dependencies.GeneralNames.testInstrumentationRunner
 
