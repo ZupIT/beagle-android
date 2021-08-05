@@ -65,11 +65,9 @@ fun ServerDrivenComponent.handleEvent(
  * @property eventValue is the value that the eventName name has created,
  * this could be a primitive or a object that will be serialized to JSON
  */
-@Deprecated(
-    "It was deprecated in version 1.1.0 and will be removed in a future version." +
-            " Use handleEvent without eventName and eventValue or with ContextData for create a implicit context.",
-    ReplaceWith("handleEvent(rootView, origin, actions)")
-)
+@Deprecated("It was deprecated in version 1.1.0 and will be removed in a future version." +
+    " Use handleEvent without eventName and eventValue or with ContextData for create a implicit context.",
+    ReplaceWith("handleEvent(rootView, origin, actions)"))
 fun ServerDrivenComponent.handleEvent(
     rootView: RootView,
     origin: View,
@@ -115,11 +113,9 @@ fun ServerDrivenComponent.handleEvent(
  * @property eventValue is the value that the eventName name has created,
  * this could be a primitive or a object that will be serialized to JSON
  */
-@Deprecated(
-    "It was deprecated in version 1.1.0 and will be removed in a future version." +
-            " Use handleEvent without eventName and eventValue or with ContextData for create a implicit context.",
-    ReplaceWith("handleEvent(rootView, origin, action)")
-)
+@Deprecated("It was deprecated in version 1.1.0 and will be removed in a future version." +
+    " Use handleEvent without eventName and eventValue or with ContextData for create a implicit context.",
+    ReplaceWith("handleEvent(rootView, origin, action)"))
 fun ServerDrivenComponent.handleEvent(
     rootView: RootView,
     origin: View,
