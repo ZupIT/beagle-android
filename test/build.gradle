@@ -31,8 +31,6 @@ android {
         minSdkVersion Dependencies.Versions.minSdk
         targetSdkVersion Dependencies.Versions.targetSdk
 
-        versionCode Dependencies.Releases.versionCode
-        versionName "${Dependencies.Releases.beagleVersionName}"
 
         testInstrumentationRunner Dependencies.GeneralNames.testInstrumentationRunner
         consumerProguardFiles Dependencies.GeneralNames.consumerProguard
@@ -45,11 +43,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8
+        jvmTarget = JavaVersion.VERSION_11
     }
 
     sourceSets {
