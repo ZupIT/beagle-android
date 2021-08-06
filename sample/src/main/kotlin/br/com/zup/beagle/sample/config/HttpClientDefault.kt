@@ -74,6 +74,7 @@ class HttpClientDefault : HttpClient, CoroutineScope {
             val uri = URI(request.url)
             urlConnection = uri.toURL().openConnection() as HttpURLConnection
         } catch (e: Exception) {
+            e.printStackTrace()
             throw BeagleApiException(ResponseData(-1, data = byteArrayOf()), request)
         }
         request.httpAdditionalData.headers?.forEach {
@@ -90,6 +91,7 @@ class HttpClientDefault : HttpClient, CoroutineScope {
         try {
             return createResponseData(urlConnection)
         } catch (e: Exception) {
+            e.printStackTrace()
             throw tryFormatException(urlConnection, request)
         } finally {
             urlConnection.disconnect()
@@ -124,6 +126,7 @@ class HttpClientDefault : HttpClient, CoroutineScope {
             urlConnection.outputStream.write(request.httpAdditionalData.body?.toByteArray())
             urlConnection.outputStream.flush()
         } catch (e: Exception) {
+            e.printStackTrace()
             throw BeagleApiException(ResponseData(-1, data = byteArrayOf()), request)
         }
     }
@@ -140,6 +143,7 @@ class HttpClientDefault : HttpClient, CoroutineScope {
             data = try {
                 urlConnection.inputStream.readBytes()
             } catch (e: EOFException) {
+                e.printStackTrace()
                 byteArrayOf()
             }
         )
