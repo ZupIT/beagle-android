@@ -21,8 +21,22 @@ import androidx.fragment.app.Fragment
 import br.com.zup.beagle.android.components.layout.Screen
 import br.com.zup.beagle.android.components.layout.ScreenComponent
 
+@Deprecated(
+    "It was deprecated in version 1.10.0 and will be removed in a future version." +
+            " Use the load view with screenJson.",
+    ReplaceWith(
+        "viewGroup.loadView(activity, screenJson, screenId)"
+    )
+)
 fun Screen.toView(activity: AppCompatActivity) = this.toComponent().toView(activity)
 
+@Deprecated(
+    "It was deprecated in version 1.10.0 and will be removed in a future version." +
+            " Use the load view with screenJson.",
+    ReplaceWith(
+        "viewGroup.loadView(activity, screenJson, screenId)"
+    )
+)
 fun Screen.toView(fragment: Fragment) = this.toComponent().toView(fragment)
 
 internal fun Screen.toComponent() = ScreenComponent(
