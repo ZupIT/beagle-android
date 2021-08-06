@@ -1,0 +1,9 @@
+{
+  "horusecCliFilesOrPathsToIgnore": [
+    "**/sample/**",
+    "**/.gradle/**",
+    "**/Gemfile.lock",
+    "**/UrlBuilderDefault.kt",
+    "**/BeagleKotlinJsonAdapterFactory.kt"
+  ]
+}
