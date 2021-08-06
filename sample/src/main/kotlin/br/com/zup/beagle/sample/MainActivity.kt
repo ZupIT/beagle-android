@@ -16,32 +16,28 @@
 
 package br.com.zup.beagle.sample
 
+import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import br.com.zup.beagle.android.networking.RequestData
+import br.com.zup.beagle.android.utils.loadView
 import br.com.zup.beagle.android.utils.newServerDrivenIntent
 import br.com.zup.beagle.android.view.ServerDrivenActivity
-import br.com.zup.beagle.sample.activities.NavigationBarActivity
 import br.com.zup.beagle.sample.constants.SAMPLE_ENDPOINT
-import br.com.zup.beagle.sample.fragment.ComposeComponentFragment
-import br.com.zup.beagle.sample.fragment.ContextOperationsFragment
-import br.com.zup.beagle.sample.fragment.DisabledFormSubmitFragment
-import br.com.zup.beagle.sample.fragment.FormFragment
-import br.com.zup.beagle.sample.fragment.GridViewFragment
-import br.com.zup.beagle.sample.fragment.ImageViewFragment
-import br.com.zup.beagle.sample.fragment.LazyComponentFragment
-import br.com.zup.beagle.sample.fragment.NavigationFragment
-import br.com.zup.beagle.sample.fragment.PageViewFragment
-import br.com.zup.beagle.sample.fragment.PullToRefreshFragment
-import br.com.zup.beagle.sample.fragment.ScrollViewFragment
-import br.com.zup.beagle.sample.fragment.TabViewFragment
-import br.com.zup.beagle.sample.fragment.TextInputFragment
-import br.com.zup.beagle.sample.fragment.WebViewFragment
-import br.com.zup.beagle.sample.fragment.list.ListViewFragment
+import br.com.zup.beagle.sample.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity(R.layout.activity_main) {
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityMainBinding
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
+        renderScreen()
+    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_navigation_drawer, menu)
@@ -56,30 +52,18 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     @Suppress("ComplexMethod")
     private fun menuSelected(itemSelected: Int) {
         when (itemSelected) {
-            R.id.contextOperations -> goToFragment(ContextOperationsFragment.newInstance())
-            R.id.textInput -> goToFragment(TextInputFragment.newInstance())
-            R.id.scroll -> goToFragment(ScrollViewFragment.newInstance())
-            R.id.lazycomponent -> goToFragment(LazyComponentFragment.newInstance())
-            R.id.image -> goToFragment(ImageViewFragment.newInstance())
-            R.id.pageView -> goToFragment(PageViewFragment.newInstance())
-            // Navigation Bar requires an activity without toolbar
-            R.id.navigationBar -> startActivity(NavigationBarActivity.newIntent(this))
-            R.id.navigationFragment -> goToFragment(NavigationFragment.newInstance())
-            R.id.form -> goToFragment(FormFragment.newInstance())
-            R.id.tabBar -> goToFragment(TabViewFragment.newInstance())
-            R.id.disabledFormSubmit -> goToFragment(DisabledFormSubmitFragment.newInstance())
-            R.id.listView -> goToFragment(ListViewFragment.newInstance())
-            R.id.gridView -> goToFragment(GridViewFragment.newInstance())
-            R.id.pullToRefresh -> goToFragment(PullToRefreshFragment.newInstance())
-            R.id.webView -> goToFragment(WebViewFragment.newInstance())
-            R.id.composeComponent -> goToFragment(ComposeComponentFragment.newInstance())
-            R.id.sampleBff -> startActivity(newServerDrivenIntent<ServerDrivenActivity>(RequestData(SAMPLE_ENDPOINT)))
+            R.id.remote_server -> startActivity(
+                newServerDrivenIntent<ServerDrivenActivity>(
+                    RequestData(SAMPLE_ENDPOINT)
+                )
+            )
         }
     }
 
-    private fun goToFragment(fragment: Fragment) {
-        val fragmentTransaction = supportFragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.fragment_content, fragment)
-        fragmentTransaction.commit()
+    private fun renderScreen() {
+        binding.fragmentContent.loadView(
+            this,
+            RequestData("https://usebeagle.io/start/welcome")
+        )
     }
 }

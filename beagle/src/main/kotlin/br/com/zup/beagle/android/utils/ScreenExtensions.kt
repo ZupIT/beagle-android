@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment
 import br.com.zup.beagle.android.components.layout.Screen
 import br.com.zup.beagle.android.components.layout.ScreenComponent
 
+
 fun Screen.toView(activity: AppCompatActivity) = this.toComponent().toView(activity)
 
 fun Screen.toView(fragment: Fragment) = this.toComponent().toView(fragment)
