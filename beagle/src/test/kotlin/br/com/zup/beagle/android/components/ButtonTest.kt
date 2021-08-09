@@ -19,8 +19,6 @@ package br.com.zup.beagle.android.components
 import android.content.Context
 import android.view.View
 import androidx.appcompat.widget.AppCompatButton
-import br.com.zup.beagle.analytics.Analytics
-import br.com.zup.beagle.analytics.ClickEvent
 import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.action.Navigate
 import br.com.zup.beagle.android.context.Bind
@@ -52,7 +50,6 @@ internal class ButtonTest : BaseComponentTest() {
 
     private val buttonStyle = RandomData.int()
     private val defaultText = Bind.Value("Hello")
-    private val analytics: Analytics = mockk(relaxed = true)
     private val context: Context = mockk()
     private val button: AppCompatButton = mockk(relaxed = true, relaxUnitFun = true)
     private val listener = slot<View.OnClickListener>()
@@ -65,8 +62,6 @@ internal class ButtonTest : BaseComponentTest() {
 
         mockkConstructor(PreFetchHelper::class)
         mockkConstructor(StyleManager::class)
-
-        every { beagleSdk.analytics } returns analytics
 
         every { button.setOnClickListener(capture(listener)) } just Runs
         every { button.context } returns context
@@ -177,50 +172,6 @@ internal class ButtonTest : BaseComponentTest() {
 
             // Then
             verify(exactly = 1) { button.isEnabled = false }
-        }
-    }
-
-    @DisplayName("When passing clickAnalyticsEvent and click on button")
-    @Nested
-    inner class ClickAnalyticsEventTest {
-
-        @Test
-        @DisplayName("Then should call analytics with ClickEvent")
-        fun testClickAnalyticsEventClickEvent() {
-            // GIVEN
-            val category = "category"
-            val action = "action"
-            val value = "value"
-            val clickAnalyticsEvent = ClickEvent(
-                category,
-                action,
-                value
-            )
-            buttonComponent = buttonComponent.copy(clickAnalyticsEvent = clickAnalyticsEvent)
-            val onClickListenerSlot = CapturingSlot<View.OnClickListener>()
-
-            // When
-            val buttonView = buttonComponent.buildView(rootView)
-            verify { buttonView.setOnClickListener(capture(onClickListenerSlot)) }
-            onClickListenerSlot.captured.onClick(view)
-
-            // Then
-            verify { analytics.trackEventOnClick(eq(clickAnalyticsEvent)) }
-        }
-
-        @Test
-        @DisplayName("Then shouldn't call analytics with null")
-        fun testClickAnalyticsEventNull() {
-            // GIVEN
-            val onClickListenerSlot = CapturingSlot<View.OnClickListener>()
-
-            // When
-            val buttonView = buttonComponent.buildView(rootView)
-            verify { buttonView.setOnClickListener(capture(onClickListenerSlot)) }
-            onClickListenerSlot.captured.onClick(view)
-
-            // Then
-            verify(exactly = 0) { analytics.trackEventOnClick(any()) }
         }
     }
 

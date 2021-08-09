@@ -47,7 +47,6 @@ internal class BeagleMessageLogsTest {
         mockkObject(BeagleEnvironment)
 
         every { BeagleEnvironment.beagleSdk.logger } returns null
-        every { BeagleEnvironment.beagleSdk.config.isLoggingEnabled } returns true
 
         mockkObject(BeagleLoggerProxy)
 

@@ -34,15 +34,11 @@ import br.com.zup.beagle.android.testutil.RandomData
 import br.com.zup.beagle.android.utils.beagleSerializerFactory
 import br.com.zup.beagle.android.utils.dp
 import br.com.zup.beagle.android.utils.loadView
-import br.com.zup.beagle.android.utils.renderScreen
 import br.com.zup.beagle.android.utils.toAndroidColor
-import br.com.zup.beagle.android.view.ScreenRequest
 import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.view.custom.BeagleView
 import br.com.zup.beagle.android.view.custom.OnLoadCompleted
 import br.com.zup.beagle.android.view.custom.OnServerStateChanged
-import br.com.zup.beagle.android.view.custom.OnStateChanged
-import br.com.zup.beagle.android.view.mapper.toRequestData
 import br.com.zup.beagle.android.view.viewmodel.GenerateIdViewModel
 import br.com.zup.beagle.android.view.viewmodel.ScreenContextViewModel
 import br.com.zup.beagle.android.widget.ActivityRootView
@@ -72,7 +68,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 private val URL = RandomData.httpUrl()
-private val screenRequest = ScreenRequest(URL)
+private val requestData = RequestData(URL)
 
 @DisplayName("Given a View Extension")
 class ViewExtensionsKtTest : BaseTest() {
@@ -94,9 +90,6 @@ class ViewExtensionsKtTest : BaseTest() {
 
     @RelaxedMockK
     private lateinit var beagleView: BeagleView
-
-    @MockK
-    private lateinit var onStateChanged: OnStateChanged
 
     @MockK
     private lateinit var onServerStateChanged: OnServerStateChanged
@@ -128,7 +121,7 @@ class ViewExtensionsKtTest : BaseTest() {
         every { ViewFactory.makeView(any()) } returns beagleView
         every { viewGroup.addView(capture(viewSlot)) } just Runs
         every { viewGroup.context } returns activity
-        every { beagleView.loadView(any<RequestData>()) } just Runs
+        every { beagleView.loadView(any()) } just Runs
         every { activity.getSystemService(Activity.INPUT_METHOD_SERVICE) } returns inputMethodManager
         every { beagleSdk.designSystem } returns designSystem
         every { TextViewCompat.setTextAppearance(any(), any()) } just Runs
@@ -280,14 +273,12 @@ class ViewExtensionsKtTest : BaseTest() {
         @Test
         fun testLoadViewShouldCreateBeagleViewAndCallLoadViewWithFragment() {
             // Given When
-            viewGroup.loadView(fragment, screenRequest, onStateChanged)
+            viewGroup.loadView(fragment, requestData, onServerStateChanged)
 
             // Then
-            val requestData = screenRequest.toRequestData()
             verifySequence {
                 generateIdViewModel.createIfNotExisting(0)
                 ViewFactory.makeBeagleView(any<FragmentRootView>())
-                beagleView.stateChangedListener = any()
                 beagleView.serverStateChangedListener = any()
                 beagleView.loadView(requestData)
                 beagleView.loadCompletedListener = any()
@@ -299,10 +290,9 @@ class ViewExtensionsKtTest : BaseTest() {
         @Test
         fun testLoadViewShouldCreateBeagleViewAndCallLoadViewWithActivity() {
             // When
-            viewGroup.loadView(activity, screenRequest, onStateChanged)
+            viewGroup.loadView(activity, requestData, onServerStateChanged)
 
             // Then
-            val requestData = screenRequest.toRequestData()
             verify {
                 ViewFactory.makeBeagleView(any<ActivityRootView>())
                 beagleView.loadView(requestData)
@@ -317,7 +307,7 @@ class ViewExtensionsKtTest : BaseTest() {
             every { beagleView.loadCompletedListener = capture(slot) } just Runs
 
             // When
-            viewGroup.loadView(fragment, screenRequest, onStateChanged)
+            viewGroup.loadView(fragment, requestData, onServerStateChanged)
             slot.captured.invoke()
 
             // Then
@@ -336,7 +326,7 @@ class ViewExtensionsKtTest : BaseTest() {
             every { beagleView.loadCompletedListener = capture(slot) } just Runs
 
             // When
-            viewGroup.loadView(fragment, screenRequest)
+            viewGroup.loadView(fragment, requestData)
             slot.captured.invoke()
 
             // Then
@@ -348,14 +338,14 @@ class ViewExtensionsKtTest : BaseTest() {
         @Test
         fun testLoadViewShouldSetStateChangedListenerToBeagleView() {
             // Given
-            val slot = slot<OnStateChanged>()
-            every { beagleView.stateChangedListener = capture(slot) } just Runs
+            val slot = slot<OnServerStateChanged>()
+            every { beagleView.serverStateChangedListener = capture(slot) } just Runs
 
             // When
-            viewGroup.loadView(fragment, screenRequest, onStateChanged)
+            viewGroup.loadView(fragment, requestData, onServerStateChanged)
 
             // Then
-            assertEquals(slot.captured, onStateChanged)
+            assertEquals(slot.captured, onServerStateChanged)
         }
 
         @DisplayName("Then should create the rootView with right parameters")
@@ -365,10 +355,10 @@ class ViewExtensionsKtTest : BaseTest() {
             val slot = commonGiven()
 
             //when
-            viewGroup.loadView(activity, screenRequest, onStateChanged)
+            viewGroup.loadView(activity, requestData, onServerStateChanged)
 
             //then
-            assertEquals(screenRequest.url, slot.captured.getScreenId())
+            assertEquals(requestData.url, slot.captured.getScreenId())
         }
 
         @DisplayName("Then should create the rootView with right parameters")
@@ -378,10 +368,10 @@ class ViewExtensionsKtTest : BaseTest() {
             val slot = commonGiven()
 
             //when
-            viewGroup.loadView(activity, screenRequest)
+            viewGroup.loadView(activity, requestData)
 
             //then
-            assertEquals(screenRequest.url, slot.captured.getScreenId())
+            assertEquals(requestData.url, slot.captured.getScreenId())
         }
 
         @DisplayName("Then should create the rootView with right parameters")
@@ -391,10 +381,10 @@ class ViewExtensionsKtTest : BaseTest() {
             val slot = commonGiven()
 
             //when
-            viewGroup.loadView(activity, screenRequest, onServerStateChanged)
+            viewGroup.loadView(activity, requestData, onServerStateChanged)
 
             //then
-            assertEquals(screenRequest.url, slot.captured.getScreenId())
+            assertEquals(requestData.url, slot.captured.getScreenId())
         }
 
         @DisplayName("Then should create the rootView with right parameters")
@@ -404,10 +394,10 @@ class ViewExtensionsKtTest : BaseTest() {
             val slot = commonGiven()
 
             //when
-            viewGroup.loadView(fragment, screenRequest, onStateChanged)
+            viewGroup.loadView(fragment, requestData, onServerStateChanged)
 
             //then
-            assertEquals(screenRequest.url, slot.captured.getScreenId())
+            assertEquals(requestData.url, slot.captured.getScreenId())
         }
 
         @DisplayName("Then should create the rootView with right parameters")
@@ -417,10 +407,10 @@ class ViewExtensionsKtTest : BaseTest() {
             val slot = commonGiven()
 
             //when
-            viewGroup.loadView(fragment, screenRequest)
+            viewGroup.loadView(fragment, requestData)
 
             //then
-            assertEquals(screenRequest.url, slot.captured.getScreenId())
+            assertEquals(requestData.url, slot.captured.getScreenId())
         }
 
         @DisplayName("Then should create the rootView with right parameters")
@@ -430,10 +420,10 @@ class ViewExtensionsKtTest : BaseTest() {
             val slot = commonGiven()
 
             //when
-            viewGroup.loadView(fragment, screenRequest, onServerStateChanged)
+            viewGroup.loadView(fragment, requestData, onServerStateChanged)
 
             //then
-            assertEquals(screenRequest.url, slot.captured.getScreenId())
+            assertEquals(requestData.url, slot.captured.getScreenId())
         }
 
         private fun commonGiven(): CapturingSlot<RootView> {
@@ -465,7 +455,7 @@ class ViewExtensionsKtTest : BaseTest() {
             every { serializerFactory.deserializeComponent(any()) } returns component
 
             // When
-            viewGroup.renderScreen(activity, json, "screenId")
+            viewGroup.loadView(activity, json, "screenId")
 
             // Then
             verifySequence {
@@ -487,7 +477,7 @@ class ViewExtensionsKtTest : BaseTest() {
             every { serializerFactory.deserializeComponent(any()) } returns component
 
             // When
-            viewGroup.renderScreen(fragment, json, "screenId")
+            viewGroup.loadView(fragment, json, "screenId")
 
             // Then
             verifySequence {

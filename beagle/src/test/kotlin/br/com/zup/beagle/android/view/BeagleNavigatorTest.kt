@@ -80,7 +80,6 @@ class BeagleNavigatorTest : BaseTest() {
 
         every { beagleSdk.config.baseUrl } returns RandomData.httpUrl()
         every { beagleSdk.logger } returns null
-        every { beagleSdk.config.isLoggingEnabled } returns true
         every { beagleSdk.controllerReference } returns mockk(relaxed = true)
 
         mockkObject(BeagleFragment.Companion)
@@ -90,7 +89,7 @@ class BeagleNavigatorTest : BaseTest() {
 
         every { anyConstructed<Intent>().putExtras(any<Bundle>()) } returns intent
         every { anyConstructed<Intent>().addFlags(any()) } returns intent
-        every { BeagleActivity.bundleOf(any<ScreenRequest>()) } returns mockk()
+        every { BeagleActivity.bundleOf(any<RequestData>()) } returns mockk()
         every { BeagleActivity.bundleOf(any<Screen>()) } returns mockk()
 
         val supportFragmentManager = mockk<FragmentManager>()

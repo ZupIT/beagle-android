@@ -74,7 +74,6 @@ class CacheManagerTest {
     fun setUp() {
         mockkObject(BeagleEnvironment)
 
-        every { BeagleEnvironment.beagleSdk.config.cache.memoryMaximumCapacity } returns 15
         every { BeagleEnvironment.beagleSdk.config.cache.size } returns 15
 
         MockKAnnotations.init(this)
@@ -89,7 +88,6 @@ class CacheManagerTest {
         every { memoryCache.hash } returns BEAGLE_HASH_VALUE
         every { beagleEnvironment.beagleSdk.config.cache.enabled } returns true
         every { beagleEnvironment.beagleSdk.config.cache.maxAge } returns INVALIDATION_TIME
-        every { beagleEnvironment.beagleSdk.config.cache.memoryMaximumCapacity } returns MAXIMUM_CAPACITY
         every { beagleEnvironment.beagleSdk.config.cache.size } returns MAXIMUM_CAPACITY
         every { memoryCacheStore.restore(any()) } returns null
         every { storeHandler.restore(StoreType.DATABASE, any(), any(), any()) } returns mapOf()
@@ -122,7 +120,6 @@ class CacheManagerTest {
         fun testLruCacheNotCallWhenCacheIsDisabled() {
             // Given
             every { beagleEnvironment.beagleSdk.config.cache.enabled } returns false
-            every { beagleEnvironment.beagleSdk.config.cache.memoryMaximumCapacity } returns 0
             every { beagleEnvironment.beagleSdk.config.cache.size } returns 0
 
             // When
@@ -298,8 +295,7 @@ class CacheManagerTest {
             val actualRequestData = cacheManager.requestDataWithCache(REQUEST_DATA, beagleCache)
 
             // Then
-            assertEquals(BEAGLE_HASH_VALUE, actualRequestData.headers[BEAGLE_HASH])
-            assertEquals(BEAGLE_HASH_VALUE, actualRequestData.httpAdditionalData.headers!![BEAGLE_HASH])
+            assertEquals(BEAGLE_HASH_VALUE, actualRequestData.httpAdditionalData.headers[BEAGLE_HASH])
         }
     }
 
@@ -317,8 +313,7 @@ class CacheManagerTest {
             val actualScreenRequest = cacheManager.requestDataWithCache(REQUEST_DATA, beagleCache)
 
             // Then
-            assertNull(actualScreenRequest.headers[BEAGLE_HASH])
-            assertNull(actualScreenRequest.httpAdditionalData.headers!![BEAGLE_HASH])
+            assertNull(actualScreenRequest.httpAdditionalData.headers[BEAGLE_HASH])
         }
     }
 

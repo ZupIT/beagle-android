@@ -30,7 +30,6 @@ import br.com.zup.beagle.android.data.formatUrl
 import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.setup.BeagleSdk
 import br.com.zup.beagle.android.view.ApplicationTest
-import br.com.zup.beagle.android.view.ScreenRequest
 import br.com.zup.beagle.android.view.ServerDrivenActivity
 import br.com.zup.beagle.android.view.viewmodel.AnalyticsViewModel
 import br.com.zup.beagle.android.view.viewmodel.BeagleViewModel
@@ -111,7 +110,7 @@ internal class BeagleViewTest : BaseTest() {
         mutableLiveData.postValue(ViewState.DoRender(url, component))
 
         // when
-        beagleView.loadView(ScreenRequest(url))
+        beagleView.loadView(RequestData(url))
 
         // Then
         Assert.assertEquals(url, screenIdentifierSlot.captured)
@@ -123,7 +122,7 @@ internal class BeagleViewTest : BaseTest() {
         mutableLiveData.postValue(ViewState.DoRender(null, component))
 
         // when
-        beagleView.loadView(ScreenRequest(url))
+        beagleView.loadView(RequestData(url))
 
         // Then
         Assert.assertEquals(false, screenIdentifierSlot.isCaptured)

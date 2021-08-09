@@ -44,7 +44,6 @@ data class Button(
     val enabled: Bind<Boolean>? = null,
 ) : WidgetView() {
 
-
     @Transient
     private val preFetchHelper: PreFetchHelper = PreFetchHelper()
 

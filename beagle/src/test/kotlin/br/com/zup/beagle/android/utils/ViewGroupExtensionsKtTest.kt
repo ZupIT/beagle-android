@@ -36,10 +36,9 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import java.net.URI
 
 private val REQUEST_DATA_FAKE = RequestData(
-    uri = URI(""),
+    url = "",
 )
 
 @DisplayName("Given a View Group")
@@ -75,7 +74,6 @@ internal class ViewGroupExtensionsKtTest : BaseTest() {
             // Then
             verifySequence {
                 ViewFactory.makeBeagleView(any<ActivityRootView>())
-                beagleView.stateChangedListener = null
                 beagleView.serverStateChangedListener = null
                 beagleView.loadView(REQUEST_DATA_FAKE)
                 beagleView.loadCompletedListener = any()
@@ -99,7 +97,6 @@ internal class ViewGroupExtensionsKtTest : BaseTest() {
             // Then
             verifySequence {
                 ViewFactory.makeBeagleView(any<ActivityRootView>())
-                beagleView.stateChangedListener = null
                 beagleView.serverStateChangedListener = listenerMock
                 beagleView.loadView(REQUEST_DATA_FAKE)
                 beagleView.loadCompletedListener = any()
@@ -123,7 +120,6 @@ internal class ViewGroupExtensionsKtTest : BaseTest() {
             // Then
             verifySequence {
                 ViewFactory.makeBeagleView(any<FragmentRootView>())
-                beagleView.stateChangedListener = null
                 beagleView.serverStateChangedListener = null
                 beagleView.loadView(REQUEST_DATA_FAKE)
                 beagleView.loadCompletedListener = any()
@@ -148,7 +144,6 @@ internal class ViewGroupExtensionsKtTest : BaseTest() {
             // Then
             verifySequence {
                 ViewFactory.makeBeagleView(any<FragmentRootView>())
-                beagleView.stateChangedListener = null
                 beagleView.serverStateChangedListener = listenerMock
                 beagleView.loadView(REQUEST_DATA_FAKE)
                 beagleView.loadCompletedListener = any()

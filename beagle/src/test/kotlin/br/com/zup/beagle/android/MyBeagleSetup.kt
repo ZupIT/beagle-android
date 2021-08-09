@@ -16,11 +16,8 @@
 
 package br.com.zup.beagle.android
 
-import br.com.zup.beagle.analytics.Analytics
 import br.com.zup.beagle.android.analytics.AnalyticsProvider
 import br.com.zup.beagle.android.action.Action
-import br.com.zup.beagle.android.action.FormLocalActionHandler
-import br.com.zup.beagle.android.components.form.core.ValidatorHandler
 import br.com.zup.beagle.android.data.serializer.adapter.generic.TypeAdapterResolver
 import br.com.zup.beagle.android.imagedownloader.BeagleImageDownloader
 import br.com.zup.beagle.android.logger.BeagleLogger
@@ -46,18 +43,9 @@ class MyBeagleSetup(override val analyticsProvider: AnalyticsProvider? = null) :
         override val environment: Environment = Environment.DEBUG
         override val baseUrl: String = ""
         override val cache: Cache = Cache(enabled = false, maxAge = 0)
-
-        override val isLoggingEnabled: Boolean = true
-
     }
 
-    override val formLocalActionHandler: FormLocalActionHandler? = null
-
     override val deepLinkHandler: DeepLinkHandler? = null
-
-    override val validatorHandler: ValidatorHandler? = null
-
-    override val httpClient: HttpClient? = null
 
     override val httpClientFactory: HttpClientFactory? = null
 
@@ -71,12 +59,7 @@ class MyBeagleSetup(override val analyticsProvider: AnalyticsProvider? = null) :
 
     override val typeAdapterResolver: TypeAdapterResolver? = null
 
-    override val serverDrivenActivity: Class<BeagleActivity> =
-        ServerDrivenActivity::class.java as Class<BeagleActivity>
-
     override val urlBuilder: UrlBuilder? = null
-
-    override val analytics: Analytics? = null
 
     override val logger: BeagleLogger? = null
 

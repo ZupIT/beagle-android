@@ -35,13 +35,10 @@ internal class ScreenExtensionsKtTest : BaseTest() {
     @DisplayName("When call Screen to ScreenComponent")
     @Nested
     inner class ScreenToScreenComponent {
-
-        private val identifier = "identifier"
         private val safeArea = SafeArea()
         private val navigationBar = NavigationBar("navigationBar")
         private val child by lazy { Text("Test component") }
         private val style = Style()
-        private val screenAnalyticsEvent = ScreenEvent("ScreenName")
         private val context = ContextData("id", false)
         private val id = "id"
 
@@ -55,7 +52,6 @@ internal class ScreenExtensionsKtTest : BaseTest() {
                 navigationBar,
                 child,
                 style,
-                screenAnalyticsEvent,
                 context,
                 id
             )
@@ -65,40 +61,16 @@ internal class ScreenExtensionsKtTest : BaseTest() {
 
             //then
             commonAssert(screenComponent)
-            assertEquals(id, screenComponent.id)
-            assertEquals(null, screenComponent.identifier)
         }
 
-        @DisplayName("Then should map correctly")
-        @Test
-        fun testScreenWithIdentifierToScreenComponentMapCorrectly() {
-            //given
-            val screen = Screen(
-                identifier,
-                safeArea,
-                navigationBar,
-                child,
-                style,
-                screenAnalyticsEvent,
-                context
-            )
-
-            //when
-            val screenComponent = screen.toComponent()
-
-            //then
-            commonAssert(screenComponent)
-            assertEquals(identifier, screenComponent.identifier)
-            assertEquals(null, screenComponent.id)
-        }
 
         private fun commonAssert(screenComponent: ScreenComponent) {
             assertEquals(safeArea, screenComponent.safeArea)
             assertEquals(navigationBar, screenComponent.navigationBar)
             assertEquals(child, screenComponent.child)
             assertEquals(style, screenComponent.style)
-            assertEquals(screenAnalyticsEvent, screenComponent.screenAnalyticsEvent)
             assertEquals(context, screenComponent.context)
+            assertEquals(id, screenComponent.id)
         }
     }
 }
