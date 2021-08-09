@@ -36,12 +36,12 @@
 # Beagle Serialization / Deserialization
 -keep class br.com.zup.beagle.core.BeagleJson
 
--keep @br.com.zup.beagle.annotation.RegisterWidget class *  {
+-keep @br.com.zup.beagle.android.annotation.RegisterWidget class *  {
   <init>(...);
   <fields>;
 }
 
--keep @br.com.zup.beagle.annotation.RegisterAction class *  {
+-keep @br.com.zup.beagle.android.annotation.RegisterAction class *  {
   <init>(...);
   <fields>;
 }

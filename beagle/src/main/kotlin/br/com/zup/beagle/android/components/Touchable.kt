@@ -17,7 +17,6 @@
 package br.com.zup.beagle.android.components
 
 import android.view.View
-import br.com.zup.beagle.analytics.ClickEvent
 import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.data.PreFetchHelper
 import br.com.zup.beagle.android.engine.renderer.ViewRendererFactory
@@ -34,17 +33,12 @@ import br.com.zup.beagle.core.ServerDrivenComponent
  *
  * @param onPress define an Action to be executed when the child component is clicked.
  * @param child define the widget that will trigger the Action.
- * @param clickAnalyticsEvent define the event will triggered when click
  *
  */
 @BeagleJson(name = "touchable")
 data class Touchable(
     val onPress: List<Action>,
     override val child: ServerDrivenComponent,
-
-    @Deprecated("It was deprecated in version 1.10.0 and will be removed in a future version." +
-        " Use the new analytics.")
-    val clickAnalyticsEvent: ClickEvent? = null,
 ) : ViewConvertable, GhostComponent {
 
     @Transient
@@ -58,9 +52,6 @@ data class Touchable(
         return viewRendererFactory.make(child).build(rootView).apply {
             setOnClickListener {
                 handleEvent(rootView, this, onPress, analyticsValue = "onPress")
-                clickAnalyticsEvent?.let {
-                    BeagleEnvironment.beagleSdk.analytics?.trackEventOnClick(it)
-                }
             }
         }
     }

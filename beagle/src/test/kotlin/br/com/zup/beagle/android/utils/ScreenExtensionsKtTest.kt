@@ -16,7 +16,6 @@
 
 package br.com.zup.beagle.android.utils
 
-import br.com.zup.beagle.analytics.ScreenEvent
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.components.Text
 import br.com.zup.beagle.android.components.layout.NavigationBar
@@ -26,8 +25,6 @@ import br.com.zup.beagle.android.components.layout.ScreenComponent
 import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.core.Style
 import org.junit.Assert.assertEquals
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test

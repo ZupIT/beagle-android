@@ -25,7 +25,6 @@ import android.util.TypedValue
 import android.view.View
 import br.com.zup.beagle.R
 import br.com.zup.beagle.android.components.Button
-import br.com.zup.beagle.android.components.TabView
 import br.com.zup.beagle.android.components.Text
 import br.com.zup.beagle.android.components.utils.applyViewBackgroundAndCorner
 import br.com.zup.beagle.android.setup.BeagleEnvironment
@@ -43,7 +42,6 @@ class StyleManager(
         } else when (component) {
             is Text -> applyStyleId(view, component)
             is Button -> applyStyleId(view, component)
-            is TabView -> applyStyleId(view, component)
             else -> {
                 val colorInt = fetchDrawableColor(view.background)
                 view.applyViewBackgroundAndCorner(colorInt, component)

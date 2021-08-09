@@ -81,7 +81,7 @@ const val VALID_HTTP_CLIENT_FACTORY_BEAGLE_SDK =
         import br.com.zup.beagle.android.store.StoreHandler
         import br.com.zup.beagle.android.view.BeagleActivity
         import br.com.zup.beagle.android.widget.WidgetView
-        import br.com.zup.beagle.newanalytics.AnalyticsProvider
+        import br.com.zup.beagle.android.newanalytics.AnalyticsProvider
         import java.lang.Class
         import kotlin.String
         import kotlin.Suppress
@@ -157,7 +157,7 @@ const val VALID_HTTP_CLIENT_FACTORY_BEAGLE_SDK_FROM_REGISTRAR =
         import br.com.zup.beagle.android.store.StoreHandler
         import br.com.zup.beagle.android.view.BeagleActivity
         import br.com.zup.beagle.android.widget.WidgetView
-        import br.com.zup.beagle.newanalytics.AnalyticsProvider
+        import br.com.zup.beagle.android.newanalytics.AnalyticsProvider
         import java.lang.Class
         import kotlin.String
         import kotlin.Suppress

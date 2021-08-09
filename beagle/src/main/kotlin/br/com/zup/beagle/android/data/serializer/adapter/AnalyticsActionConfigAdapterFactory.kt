@@ -16,8 +16,8 @@
 
 package br.com.zup.beagle.android.data.serializer.adapter
 
-import br.com.zup.beagle.newanalytics.ActionAnalyticsConfig
-import br.com.zup.beagle.newanalytics.ActionAnalyticsProperties
+import br.com.zup.beagle.android.analytics.ActionAnalyticsConfig
+import br.com.zup.beagle.android.analytics.ActionAnalyticsProperties
 import br.com.zup.beagle.android.data.serializer.BeagleMoshi.moshi
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.JsonReader

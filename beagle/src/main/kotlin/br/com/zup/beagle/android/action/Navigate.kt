@@ -27,7 +27,7 @@ import br.com.zup.beagle.android.utils.evaluateExpression
 import br.com.zup.beagle.android.view.custom.BeagleNavigator
 import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.core.BeagleJson
-import br.com.zup.beagle.newanalytics.ActionAnalyticsConfig
+import br.com.zup.beagle.android.analytics.ActionAnalyticsConfig
 
 /**
  * Class handles transition actions between screens in the application. Its structure is the following:.

@@ -17,11 +17,11 @@
 package br.com.zup.beagle.android.compiler.mocks
 
 
-const val ANALYTICS_PROVIDER_IMPORT = "import br.com.zup.beagle.newanalytics.AnalyticsProvider"
+const val ANALYTICS_PROVIDER_IMPORT = "import br.com.zup.beagle.android.newanalytics.AnalyticsProvider"
 
 const val VALID_ANALYTICS_PROVIDER =
     """
-        import br.com.zup.beagle.newanalytics.AnalyticsProvider
+        import br.com.zup.beagle.android.newanalytics.AnalyticsProvider
 
         @BeagleComponent
         class AnalyticsProviderTest: AnalyticsProvider { }
@@ -65,7 +65,7 @@ const val VALID_ANALYTICS_PROVIDER_BEAGLE_SDK =
         import br.com.zup.beagle.android.store.StoreHandler
         import br.com.zup.beagle.android.view.BeagleActivity
         import br.com.zup.beagle.android.widget.WidgetView
-        import br.com.zup.beagle.newanalytics.AnalyticsProvider
+        import br.com.zup.beagle.android.newanalytics.AnalyticsProvider
         import java.lang.Class
         import kotlin.String
         import kotlin.Suppress
@@ -141,7 +141,7 @@ const val VALID_ANALYTICS_PROVIDER_BEAGLE_SDK_FROM_REGISTRAR =
         import br.com.zup.beagle.android.store.StoreHandler
         import br.com.zup.beagle.android.view.BeagleActivity
         import br.com.zup.beagle.android.widget.WidgetView
-        import br.com.zup.beagle.newanalytics.AnalyticsProvider
+        import br.com.zup.beagle.android.newanalytics.AnalyticsProvider
         import java.lang.Class
         import kotlin.String
         import kotlin.Suppress

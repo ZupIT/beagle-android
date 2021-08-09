@@ -20,8 +20,8 @@ import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.action.Navigate
 import br.com.zup.beagle.android.data.serializer.BeagleMoshi
-import br.com.zup.beagle.newanalytics.ActionAnalyticsConfig
-import br.com.zup.beagle.newanalytics.ActionAnalyticsProperties
+import br.com.zup.beagle.android.analytics.ActionAnalyticsConfig
+import br.com.zup.beagle.android.analytics.ActionAnalyticsProperties
 import com.squareup.moshi.Moshi
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach

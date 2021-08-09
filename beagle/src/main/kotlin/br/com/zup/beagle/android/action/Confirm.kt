@@ -25,7 +25,7 @@ import br.com.zup.beagle.android.utils.handleEvent
 import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.core.BeagleJson
-import br.com.zup.beagle.newanalytics.ActionAnalyticsConfig
+import br.com.zup.beagle.android.analytics.ActionAnalyticsConfig
 
 /**
  * This action will show dialogues natively, such as an error alert indicating alternative flows, business system

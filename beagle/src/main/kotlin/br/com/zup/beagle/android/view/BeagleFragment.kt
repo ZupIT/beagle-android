@@ -68,7 +68,6 @@ internal class BeagleFragment : Fragment() {
 
         private val beagleSerializer: BeagleSerializer = BeagleSerializer()
         private const val JSON_SCREEN_KEY = "JSON_SCREEN_KEY"
-        private const val IS_LOCAL_SCREEN_KEY = "IS_LOCAL_SCREEN_KEY"
         private const val SCREEN_IDENTIFIER_KEY = "SCREEN_IDENTIFIER_KEY"
 
     }

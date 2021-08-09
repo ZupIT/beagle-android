@@ -17,7 +17,6 @@
 package br.com.zup.beagle.android.components
 
 import android.view.View
-import br.com.zup.beagle.analytics.Analytics
 import br.com.zup.beagle.analytics.ClickEvent
 import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.action.Navigate

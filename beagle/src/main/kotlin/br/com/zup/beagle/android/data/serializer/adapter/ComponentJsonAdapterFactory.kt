@@ -17,11 +17,7 @@
 package br.com.zup.beagle.android.data.serializer.adapter
 
 import br.com.zup.beagle.android.components.Touchable
-import br.com.zup.beagle.android.components.form.FormInput
-import br.com.zup.beagle.android.components.form.FormSubmit
-import br.com.zup.beagle.android.components.form.InputWidget
 import br.com.zup.beagle.android.components.page.PageIndicator
-import br.com.zup.beagle.android.components.page.PageIndicatorComponent
 import br.com.zup.beagle.android.components.page.PageView
 import br.com.zup.beagle.android.data.serializer.PolymorphicJsonAdapterFactory
 import br.com.zup.beagle.android.data.serializer.generateNameSpaceToDefaultWidget
@@ -43,7 +39,6 @@ internal object ComponentJsonAdapterFactory {
             ServerDrivenComponent::class.java, BEAGLE_WIDGET_TYPE
         )
 
-        factory = registerBaseSubTypes(factory)
         factory = registerUIClass(factory)
         factory = registerWidgets(factory, true, InternalWidgetFactory.registeredWidgets())
         factory = registerWidgets(factory, false, BeagleEnvironment.beagleSdk.registeredWidgets())
@@ -52,21 +47,12 @@ internal object ComponentJsonAdapterFactory {
         return factory
     }
 
-    private fun registerBaseSubTypes(
-        factory: PolymorphicJsonAdapterFactory<ServerDrivenComponent>,
-    ): PolymorphicJsonAdapterFactory<ServerDrivenComponent> {
-        return factory.withBaseSubType(PageIndicatorComponent::class.java)
-            .withBaseSubType(InputWidget::class.java)
-            .withBaseSubType(Widget::class.java)
-    }
 
     private fun registerUIClass(
         factory: PolymorphicJsonAdapterFactory<ServerDrivenComponent>,
     ): PolymorphicJsonAdapterFactory<ServerDrivenComponent> {
         return factory
             .withSubtype(Touchable::class.java, createNameSpaceToDefaultWidget<Touchable>("touchable"))
-            .withSubtype(FormInput::class.java, createNameSpaceToDefaultWidget<FormInput>("formInput"))
-            .withSubtype(FormSubmit::class.java, createNameSpaceToDefaultWidget<FormSubmit>("formSubmit"))
             .withSubtype(PageView::class.java, createNameSpaceToDefaultWidget<PageView>("pageView"))
             .withSubtype(PageIndicator::class.java, createNameSpaceToDefaultWidget<PageIndicator>("pageIndicator"))
     }

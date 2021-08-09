@@ -17,7 +17,7 @@
 package br.com.zup.beagle.android.compiler.generatefunction
 
 import br.com.zup.beagle.android.compiler.ANDROID_ACTION
-import br.com.zup.beagle.annotation.RegisterAction
+import br.com.zup.beagle.android.annotation.RegisterAction
 import br.com.zup.beagle.compiler.shared.BeagleGeneratorFunction
 import br.com.zup.beagle.compiler.shared.RegisteredComponentFullName
 import br.com.zup.beagle.compiler.shared.RegisteredComponentId

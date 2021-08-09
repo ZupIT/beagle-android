@@ -26,7 +26,7 @@ const val BEAGLE_PROPERTIES_IMPORTS =
         import br.com.zup.beagle.android.store.StoreHandler
         import br.com.zup.beagle.android.networking.urlbuilder.UrlBuilder
         import br.com.zup.beagle.analytics.Analytics
-        import br.com.zup.beagle.newanalytics.AnalyticsProvider
+        import br.com.zup.beagle.android.newanalytics.AnalyticsProvider
         import br.com.zup.beagle.android.logger.BeagleLogger
         import br.com.zup.beagle.android.imagedownloader.BeagleImageDownloader
     """

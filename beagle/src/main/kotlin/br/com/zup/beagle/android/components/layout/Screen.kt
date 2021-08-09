@@ -16,8 +16,6 @@
 
 package br.com.zup.beagle.android.components.layout
 
-import br.com.zup.beagle.analytics.ScreenAnalytics
-import br.com.zup.beagle.analytics.ScreenEvent
 import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.context.ContextComponent
 import br.com.zup.beagle.android.context.ContextData
@@ -100,11 +98,7 @@ data class NavigationBar(
  * @see NavigationBar
  * @see ServerDrivenComponent
  * @see Style
- * @see ScreenEvent
  *
- * @param identifier
- *                      identifies your screen globally inside your
- *                      application so that it could have actions set on itself.
  * @param safeArea
  *                      enable Safe areas to help you place your views within the visible
  *                      portion of the overall interface.
@@ -114,46 +108,15 @@ data class NavigationBar(
  *                  define the child elements on this screen.
  *                  It could be any visual component that extends the ServerDrivenComponent.1
  * @param style enable a few visual options to be changed.
- * @param screenAnalyticsEvent send event when screen appear/disappear
  * @param context define the contextData that be set to screen.
  *
  */
-@Suppress("DataClassPrivateConstructor")
 @BeagleJson(name = "screen")
-data class Screen private constructor(
-    val identifier: String? = null,
+data class Screen constructor(
     val safeArea: SafeArea? = null,
     val navigationBar: NavigationBar? = null,
     override val child: ServerDrivenComponent,
     val style: Style? = null,
-    @Deprecated("It was deprecated in version 1.10.0 and will be removed in a future version." +
-        " Use the new analytics.")
-    override val screenAnalyticsEvent: ScreenEvent? = null,
     override val context: ContextData? = null,
     override val id: String? = null,
-) : ScreenAnalytics, ContextComponent, SingleChildComponent, IdentifierComponent {
-
-    @Deprecated(
-        "It was deprecated in version 1.5.0 and will be removed in a future version. Use field id instead.",
-        replaceWith = ReplaceWith("Screen(id = )")
-    )
-    constructor(
-        identifier: String?,
-        safeArea: SafeArea? = null,
-        navigationBar: NavigationBar? = null,
-        child: ServerDrivenComponent,
-        style: Style? = null,
-        screenAnalyticsEvent: ScreenEvent? = null,
-        context: ContextData? = null,
-    ) : this(identifier, safeArea, navigationBar, child, style, screenAnalyticsEvent, context, null)
-
-    constructor(
-        safeArea: SafeArea? = null,
-        navigationBar: NavigationBar? = null,
-        child: ServerDrivenComponent,
-        style: Style? = null,
-        screenAnalyticsEvent: ScreenEvent? = null,
-        context: ContextData? = null,
-        id: String? = null,
-    ) : this(null, safeArea, navigationBar, child, style, screenAnalyticsEvent, context, id)
-}
+) : ContextComponent, SingleChildComponent, IdentifierComponent

@@ -37,7 +37,6 @@ import br.com.zup.beagle.core.ServerDrivenComponent
 @Suppress("LongParameterList")
 internal class ListAdapter(
     val orientation: Int,
-    val template: ServerDrivenComponent?,
     val iteratorName: String,
     val key: String? = null,
     val listViewModels: ListViewModels,
@@ -61,9 +60,6 @@ internal class ListAdapter(
 
     // Struct to manage created ViewHolders
     private val createdViewHolders = mutableListOf<ListViewHolder>()
-
-    // Each access generate a new instance of the template to avoid reference conflict
-    private val templateJson = template?.let { serializer.serializeComponent(it) }
 
     // Each access generate a new instance of the template to avoid reference conflict
     private val templateJsonList = templateList?.let {
@@ -164,7 +160,7 @@ internal class ListAdapter(
     }
 
     private fun getTemplateByViewType(viewType: Int): String {
-        return templateJsonList?.getOrNull(viewType)?.viewJson ?: (templateJson ?: NOT_FOUND_TEMPLATE)
+        return templateJsonList?.getOrNull(viewType)?.viewJson ?: NOT_FOUND_TEMPLATE
     }
 
     private fun getDefaultTemplateIndex(): Int {
@@ -286,7 +282,6 @@ internal class ListAdapter(
     fun clone(): ListAdapter {
         return ListAdapter(
             this.orientation,
-            this.template,
             this.iteratorName,
             this.key,
             this.listViewModels,

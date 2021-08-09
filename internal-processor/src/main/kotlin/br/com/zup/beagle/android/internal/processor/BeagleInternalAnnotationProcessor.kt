@@ -16,8 +16,8 @@
 
 package br.com.zup.beagle.android.internal.processor
 
-import br.com.zup.beagle.annotation.RegisterOperation
-import br.com.zup.beagle.annotation.RegisterWidget
+import br.com.zup.beagle.android.annotation.RegisterOperation
+import br.com.zup.beagle.android.annotation.RegisterWidget
 import br.com.zup.beagle.compiler.shared.ANDROID_OPERATION
 import br.com.zup.beagle.compiler.shared.GenerateFunctionOperation
 import br.com.zup.beagle.compiler.shared.GenerateFunctionWidget

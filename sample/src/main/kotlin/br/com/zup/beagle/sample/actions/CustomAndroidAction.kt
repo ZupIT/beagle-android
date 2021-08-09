@@ -19,7 +19,7 @@ package br.com.zup.beagle.sample.actions
 import android.view.View
 import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.widget.RootView
-import br.com.zup.beagle.annotation.RegisterAction
+import br.com.zup.beagle.android.annotation.RegisterAction
 
 @RegisterAction
 data class CustomAndroidAction(

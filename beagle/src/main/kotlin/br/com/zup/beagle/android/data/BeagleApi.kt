@@ -29,7 +29,6 @@ import java.net.URI
 
 internal class BeagleApi(
     private val httpClient: HttpClient? = BeagleEnvironment.beagleSdk.httpClientFactory?.create()
-        ?: BeagleEnvironment.beagleSdk.httpClient
 ) {
     companion object {
         const val BEAGLE_PLATFORM_HEADER_KEY = "beagle-platform"
@@ -69,9 +68,7 @@ internal class BeagleApi(
     }
 
     private fun mapperDeprecatedFields(request: RequestData): RequestData {
-        val headers = request.headers + FIXED_HEADERS
         val url = request.url.formatUrl()
-        val uri = if (url.isNotEmpty()) URI(url) else request.uri
         var additionalData = request.httpAdditionalData
 
         additionalData = additionalData.copy(
@@ -80,8 +77,6 @@ internal class BeagleApi(
 
         return request.copy(
             url = url,
-            uri = uri,
-            headers = headers,
             httpAdditionalData = additionalData,
         )
     }

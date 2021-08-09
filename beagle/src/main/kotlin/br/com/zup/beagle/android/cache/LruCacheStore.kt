@@ -21,8 +21,7 @@ import br.com.zup.beagle.android.setup.BeagleEnvironment
 
 internal class LruCacheStore(
     private val cache: LruCache<String, BeagleCache> = LruCache(
-        BeagleEnvironment.beagleSdk.config.cache.memoryMaximumCapacity.takeIf { it > 0 }
-            ?: BeagleEnvironment.beagleSdk.config.cache.size
+        BeagleEnvironment.beagleSdk.config.cache.size
     )
 ) {
 

@@ -32,7 +32,7 @@ import br.com.zup.beagle.android.view.ServerDrivenState
 import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.android.widget.WidgetView
-import br.com.zup.beagle.annotation.RegisterWidget
+import br.com.zup.beagle.android.annotation.RegisterWidget
 
 /**
  * A WebView widget will define a WebView natively using the server driven information received through Beagle.
@@ -85,7 +85,11 @@ data class WebView(
         }
 
         private fun notify(loading: Boolean) {
-            notify(state = ServerDrivenState.Loading(loading))
+            if (loading) {
+                notify(state = ServerDrivenState.Started)
+            } else {
+                notify(state = ServerDrivenState.Finished)
+            }
         }
 
         private fun notify(state: ServerDrivenState) {

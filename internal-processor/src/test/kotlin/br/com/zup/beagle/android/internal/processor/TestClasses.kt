@@ -19,7 +19,7 @@ package br.com.zup.beagle.android.internal.processor
 const val INVALID_WIDGET =
     """
         package br.com.test.beagle
-        import br.com.zup.beagle.annotation.RegisterWidget
+        import br.com.zup.beagle.android.annotation.RegisterWidget
 
         @RegisterWidget
         class InvalidWidget { }
@@ -28,7 +28,7 @@ const val INVALID_WIDGET =
 const val INVALID_WIDGET_WITH_INHERITANCE =
     """
         package br.com.test.beagle
-        import br.com.zup.beagle.annotation.RegisterWidget
+        import br.com.zup.beagle.android.annotation.RegisterWidget
         import br.com.zup.beagle.android.operation.Operation
 
         @RegisterWidget
@@ -39,7 +39,7 @@ const val VALID_WIDGET_WITH_INHERITANCE_WIDGET_VIEW =
     """
         package br.com.test.beagle
         
-        import br.com.zup.beagle.annotation.RegisterWidget
+        import br.com.zup.beagle.android.annotation.RegisterWidget
         import br.com.zup.beagle.android.components.form.InputWidget
         import br.com.zup.beagle.android.widget.WidgetView
         import br.com.zup.beagle.android.components.page.PageIndicatorComponent
@@ -117,7 +117,7 @@ const val VALID_OPERATION =
     """
         package br.com.test.beagle
         
-        import br.com.zup.beagle.annotation.RegisterOperation
+        import br.com.zup.beagle.android.annotation.RegisterOperation
         import br.com.zup.beagle.android.operation.Operation
         
         @RegisterOperation("OperationTestName")
@@ -183,7 +183,7 @@ const val INTERNAL_LIST_OPERATION_GENERATED_EXPECTED: String =
 const val INVALID_OPERATION =
     """
         package br.com.test.beagle
-        import br.com.zup.beagle.annotation.RegisterOperation
+        import br.com.zup.beagle.android.annotation.RegisterOperation
 
         @RegisterOperation("test")
         class InvalidOperation { }
@@ -192,7 +192,7 @@ const val INVALID_OPERATION =
 const val INVALID_OPERATION_TWO =
     """
         package br.com.test.beagle
-        import br.com.zup.beagle.annotation.RegisterOperation
+        import br.com.zup.beagle.android.annotation.RegisterOperation
 
         @RegisterOperation("test")
         class InvalidOperationTwo { }
@@ -201,7 +201,7 @@ const val INVALID_OPERATION_TWO =
 const val INVALID_OPERATION_WITH_INHERITANCE =
     """
         package br.com.test.beagle
-        import br.com.zup.beagle.annotation.RegisterOperation
+        import br.com.zup.beagle.android.annotation.RegisterOperation
 
         @RegisterOperation("testTwo")
         class InvalidOperation : WidgetView { }

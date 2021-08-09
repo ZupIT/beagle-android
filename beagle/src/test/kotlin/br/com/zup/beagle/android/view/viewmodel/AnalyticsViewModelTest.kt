@@ -17,11 +17,10 @@
 package br.com.zup.beagle.android.view.viewmodel
 
 import android.view.View
-import androidx.lifecycle.viewModelScope
 import br.com.zup.beagle.android.action.AnalyticsAction
 import br.com.zup.beagle.android.testutil.CoroutinesTestExtension
 import br.com.zup.beagle.android.widget.RootView
-import br.com.zup.beagle.newanalytics.AnalyticsService
+import br.com.zup.beagle.android.analytics.AnalyticsService
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just

@@ -32,7 +32,7 @@ import br.com.zup.beagle.android.operation.Operation
 import br.com.zup.beagle.android.store.StoreHandler
 import br.com.zup.beagle.android.view.BeagleActivity
 import br.com.zup.beagle.android.widget.WidgetView
-import br.com.zup.beagle.newanalytics.AnalyticsProvider
+import br.com.zup.beagle.android.analytics.AnalyticsProvider
 
 interface BeagleSdk {
 

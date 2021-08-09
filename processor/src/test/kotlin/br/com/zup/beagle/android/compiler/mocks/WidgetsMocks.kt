@@ -18,7 +18,7 @@ package br.com.zup.beagle.android.compiler.mocks
 
 const val INVALID_WIDGET =
     """
-        import br.com.zup.beagle.annotation.RegisterWidget
+        import br.com.zup.beagle.android.annotation.RegisterWidget
 
         @RegisterWidget
         class InvalidWidget { }
@@ -26,7 +26,7 @@ const val INVALID_WIDGET =
 
 const val INVALID_WIDGET_WITH_INHERITANCE =
     """
-        import br.com.zup.beagle.annotation.RegisterWidget
+        import br.com.zup.beagle.android.annotation.RegisterWidget
         import br.com.zup.beagle.android.operation.Operation
 
         @RegisterWidget
@@ -35,7 +35,7 @@ const val INVALID_WIDGET_WITH_INHERITANCE =
 
 const val VALID_WIDGET_WITH_INHERITANCE_WIDGET_VIEW =
     """ 
-        import br.com.zup.beagle.annotation.RegisterWidget
+        import br.com.zup.beagle.android.annotation.RegisterWidget
         import br.com.zup.beagle.android.components.form.InputWidget
         import br.com.zup.beagle.android.widget.WidgetView
         import br.com.zup.beagle.android.components.page.PageIndicatorComponent

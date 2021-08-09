@@ -33,8 +33,4 @@ data class Template(
      * The template itself: view to render
      */
     val view: ServerDrivenComponent,
-) {
-    constructor(case: String, view: ServerDrivenComponent) : this(expressionOrValueOf(case), view)
-
-    constructor(case: Boolean, view: ServerDrivenComponent) : this(valueOf(case), view)
-}
+)

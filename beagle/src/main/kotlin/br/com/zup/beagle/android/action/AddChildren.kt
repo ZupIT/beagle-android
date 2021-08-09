@@ -29,7 +29,7 @@ import br.com.zup.beagle.android.utils.toView
 import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.core.BeagleJson
 import br.com.zup.beagle.core.ServerDrivenComponent
-import br.com.zup.beagle.newanalytics.ActionAnalyticsConfig
+import br.com.zup.beagle.android.analytics.ActionAnalyticsConfig
 import com.squareup.moshi.Types
 import java.lang.reflect.Type
 

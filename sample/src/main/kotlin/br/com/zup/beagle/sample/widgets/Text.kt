@@ -22,7 +22,7 @@ import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.utils.observeBindChanges
 import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.android.widget.WidgetView
-import br.com.zup.beagle.annotation.RegisterWidget
+import br.com.zup.beagle.android.annotation.RegisterWidget
 
 @RegisterWidget("text")
 data class Text(

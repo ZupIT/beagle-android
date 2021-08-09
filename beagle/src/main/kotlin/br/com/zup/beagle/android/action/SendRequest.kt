@@ -30,7 +30,7 @@ import br.com.zup.beagle.android.view.viewmodel.ActionRequestViewModel
 import br.com.zup.beagle.android.view.viewmodel.FetchViewState
 import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.core.BeagleJson
-import br.com.zup.beagle.newanalytics.ActionAnalyticsConfig
+import br.com.zup.beagle.android.analytics.ActionAnalyticsConfig
 
 /**
  * Enum with HTTP methods.

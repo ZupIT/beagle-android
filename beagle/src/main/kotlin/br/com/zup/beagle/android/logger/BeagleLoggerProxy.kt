@@ -22,25 +22,20 @@ internal object BeagleLoggerProxy : BeagleLogger {
 
     internal var logger: BeagleLogger? = BeagleEnvironment.beagleSdk.logger
 
-    override fun warning(message: String) = runIfEnable {
+    override fun warning(message: String) {
         logger?.warning(message)
     }
 
-    override fun error(message: String) = runIfEnable {
+    override fun error(message: String) {
         logger?.error(message)
     }
 
-    override fun error(message: String, throwable: Throwable) = runIfEnable {
+    override fun error(message: String, throwable: Throwable) {
         logger?.error(message, throwable)
     }
 
-    override fun info(message: String) = runIfEnable {
+    override fun info(message: String) {
         logger?.info(message)
     }
 
-    private fun runIfEnable(runBlock: () -> Unit) {
-        if (BeagleEnvironment.beagleSdk.config.isLoggingEnabled) {
-            runBlock()
-        }
-    }
 }

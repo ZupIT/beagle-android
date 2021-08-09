@@ -19,7 +19,7 @@ package br.com.zup.beagle.sample.operations
 import android.text.TextUtils
 import br.com.zup.beagle.android.operation.Operation
 import br.com.zup.beagle.android.operation.OperationType
-import br.com.zup.beagle.annotation.RegisterOperation
+import br.com.zup.beagle.android.annotation.RegisterOperation
 
 @RegisterOperation("isValidCpf")
 class IsValidCPFOperation : Operation {

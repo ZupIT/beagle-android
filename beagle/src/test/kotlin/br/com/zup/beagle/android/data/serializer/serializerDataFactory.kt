@@ -21,7 +21,6 @@ import br.com.zup.beagle.android.action.AddChildren
 import br.com.zup.beagle.android.action.Alert
 import br.com.zup.beagle.android.action.Condition
 import br.com.zup.beagle.android.action.Confirm
-import br.com.zup.beagle.android.action.FormLocalAction
 import br.com.zup.beagle.android.action.FormMethodType
 import br.com.zup.beagle.android.action.FormRemoteAction
 import br.com.zup.beagle.android.action.HttpAdditionalData
@@ -38,7 +37,6 @@ import br.com.zup.beagle.android.components.LazyComponent
 import br.com.zup.beagle.android.components.ListView
 import br.com.zup.beagle.android.components.TabBar
 import br.com.zup.beagle.android.components.TabBarItem
-import br.com.zup.beagle.android.components.TabItem
 import br.com.zup.beagle.android.components.TabView
 import br.com.zup.beagle.android.components.Text
 import br.com.zup.beagle.android.components.TextInput

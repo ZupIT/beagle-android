@@ -153,44 +153,7 @@ internal fun <T> internalObserveBindChanges(
     bind.observe(rootView, view, observes)
 }
 
-/**
- * Transform your Component to a view.
- * @property activity <p>is the reference for your activity.
- * Make sure to use this method if you are inside a Activity because of the lifecycle</p>
- */
-@Deprecated(
-    "It was deprecated in version 1.10.0 and will be removed in a future version." +
-            " Use the load view with screenJson.",
-    ReplaceWith(
-        "viewGroup.loadView(activity, screenJson, screenId)"
-    )
-)
-fun ServerDrivenComponent.toView(
-    activity: AppCompatActivity,
-    idView: Int = R.id.beagle_default_id,
-    screenIdentifier: String? = null,
-): View =
-    this.toView(
-        ActivityRootView(
-            activity,
-            idView,
-            this.getServerDrivenIdentifier(screenIdentifier)
-        )
-    )
-
-/**
- * Transform your Component to a view.
- * @property fragment <p>is the reference for your fragment.
- * Make sure to use this method if you are inside a Fragment because of the lifecycle</p>
- */
-@Deprecated(
-    "It was deprecated in version 1.10.0 and will be removed in a future version." +
-            " Use the load view with screenJson.",
-    ReplaceWith(
-        "viewGroup.loadView(fragment, screenJson, screenId)"
-    )
-)
-fun ServerDrivenComponent.toView(
+internal fun ServerDrivenComponent.toView(
     fragment: Fragment,
     idView: Int = R.id.beagle_default_id,
     screenIdentifier: String? = null,

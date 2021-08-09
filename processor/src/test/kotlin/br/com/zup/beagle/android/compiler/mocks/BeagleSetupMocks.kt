@@ -25,8 +25,8 @@ const val COMPLETE_BEAGLE_CUSTOM_CLASS =
         import br.com.zup.beagle.android.annotation.RegisterController
         import br.com.zup.beagle.android.view.BeagleActivity
         import br.com.zup.beagle.analytics.Analytics
-        import br.com.zup.beagle.newanalytics.AnalyticsProvider
-        import br.com.zup.beagle.annotation.RegisterAction
+        import br.com.zup.beagle.android.newanalytics.AnalyticsProvider
+        import br.com.zup.beagle.android.annotation.RegisterAction
         import br.com.zup.beagle.android.action.Action
         import br.com.zup.beagle.android.annotation.RegisterBeagleAdapter
         import br.com.zup.beagle.android.data.serializer.adapter.generic.BeagleTypeAdapter
@@ -39,11 +39,11 @@ const val COMPLETE_BEAGLE_CUSTOM_CLASS =
         import br.com.zup.beagle.android.networking.HttpClientFactory
         import br.com.zup.beagle.android.imagedownloader.BeagleImageDownloader
         import br.com.zup.beagle.android.logger.BeagleLogger
-        import br.com.zup.beagle.annotation.RegisterOperation
+        import br.com.zup.beagle.android.annotation.RegisterOperation
         import br.com.zup.beagle.android.operation.Operation
         import br.com.zup.beagle.android.store.StoreHandler
         import br.com.zup.beagle.android.networking.urlbuilder.UrlBuilder
-        import br.com.zup.beagle.annotation.RegisterWidget
+        import br.com.zup.beagle.android.annotation.RegisterWidget
         import br.com.zup.beagle.android.widget.WidgetView
         
         @BeagleComponent
@@ -141,7 +141,7 @@ const val BEAGLE_SETUP_COMPLETE =
         import br.com.zup.beagle.android.store.StoreHandler
         import br.com.zup.beagle.android.view.BeagleActivity
         import br.com.zup.beagle.android.widget.WidgetView
-        import br.com.zup.beagle.newanalytics.AnalyticsProvider
+        import br.com.zup.beagle.android.newanalytics.AnalyticsProvider
         import java.lang.Class
         import kotlin.String
         import kotlin.Suppress
