@@ -19,28 +19,28 @@ package br.com.zup.beagle.android.action
 import android.content.DialogInterface
 import android.view.View
 import androidx.appcompat.app.AlertDialog
-import br.com.zup.beagle.android.extensions.once
 import br.com.zup.beagle.android.testutil.RandomData
 import br.com.zup.beagle.android.utils.handleEvent
 import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.widget.RootView
-import io.mockk.MockKAnnotations
 import io.mockk.Runs
+import io.mockk.clearMocks
 import io.mockk.every
-import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.slot
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ConfirmTest {
 
-    @RelaxedMockK
-    private lateinit var rootView: RootView
+    private val rootView: RootView = mockk(relaxed = true)
 
     private val builder = mockk<AlertDialog.Builder>()
     private val dialogBox = mockk<AlertDialog>()
@@ -52,17 +52,31 @@ class ConfirmTest {
     private val listenerCancelSlot = slot<DialogInterface.OnClickListener>()
     private val view: View = mockk()
 
-    @BeforeEach
+    @BeforeAll
     fun setUp() {
-        MockKAnnotations.init(this)
         mockkObject(ViewFactory)
 
         every { ViewFactory.makeAlertDialogBuilder(any()) } returns builder
         every { builder.setTitle(capture(titleSlot)) } returns builder
         every { builder.setMessage(capture(messageSlot)) } returns builder
-        every { builder.setPositiveButton(capture(labelOkSlot), capture(listenerOkSlot)) } returns builder
-        every { builder.setNegativeButton(capture(labelCancelSlot), capture(listenerCancelSlot)) } returns builder
+        every {
+            builder.setPositiveButton(
+                capture(labelOkSlot),
+                capture(listenerOkSlot)
+            )
+        } returns builder
+        every {
+            builder.setNegativeButton(
+                capture(labelCancelSlot),
+                capture(listenerCancelSlot)
+            )
+        } returns builder
         every { builder.show() } returns mockk()
+    }
+
+    @BeforeEach
+    fun clear() {
+        clearMocks(dialogBox)
     }
 
     @Test
@@ -126,7 +140,7 @@ class ConfirmTest {
         listenerOkSlot.captured.onClick(dialogBox, 0)
 
         // Then
-        verify(exactly = once()) { dialogBox.dismiss() }
+        verify(exactly = 1) { dialogBox.dismiss() }
     }
 
     @Test
@@ -146,7 +160,14 @@ class ConfirmTest {
         listenerOkSlot.captured.onClick(dialogBox, 0)
 
         // Then
-        verify(exactly = once()) { action.handleEvent(rootView, view, onPressOk, analyticsValue = "onPressOk") }
+        verify(exactly = 1) {
+            action.handleEvent(
+                rootView,
+                view,
+                onPressOk,
+                analyticsValue = "onPressOk"
+            )
+        }
     }
 
     @Test
@@ -166,6 +187,13 @@ class ConfirmTest {
         listenerCancelSlot.captured.onClick(dialogBox, 0)
 
         // Then
-        verify(exactly = once()) { action.handleEvent(rootView, view, onPressCancel, analyticsValue = "onPressCancel") }
+        verify(exactly = 1) {
+            action.handleEvent(
+                rootView,
+                view,
+                onPressCancel,
+                analyticsValue = "onPressCancel"
+            )
+        }
     }
 }

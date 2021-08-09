@@ -16,14 +16,15 @@
 
 package br.com.zup.beagle.android.data.cache
 
-import br.com.zup.beagle.core.ServerDrivenComponent
+import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.testutil.RandomData
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 import io.mockk.mockk
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Test
 
-class BeagleCacheHelperTest {
+class BeagleCacheHelperTest : BaseTest() {
 
     private val subject = BeagleCacheHelper
 

@@ -16,9 +16,8 @@
 
 package br.com.zup.beagle.android.utils
 
-import org.junit.jupiter.api.Test
-
 import org.junit.Assert.assertEquals
+import org.junit.jupiter.api.Test
 
 class BeagleExtensionsKtTest {
 

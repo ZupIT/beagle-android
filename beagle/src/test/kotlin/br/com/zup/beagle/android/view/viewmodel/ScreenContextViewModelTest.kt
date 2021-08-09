@@ -17,6 +17,7 @@
 package br.com.zup.beagle.android.view.viewmodel
 
 import android.view.View
+import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.action.SetContextInternal
 import br.com.zup.beagle.android.context.Bind
@@ -31,7 +32,7 @@ import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class ScreenContextViewModelTest {
+class ScreenContextViewModelTest: BaseTest() {
 
     private val contextDataManager = mockk<ContextDataManager>(relaxed = true)
     private val contextDataEvaluation = mockk<ContextDataEvaluation>(relaxed = true)
@@ -41,7 +42,7 @@ class ScreenContextViewModelTest {
     private lateinit var screenContextViewModel: ScreenContextViewModel
 
     @BeforeEach
-    fun setUp() {
+    fun clear() {
         screenContextViewModel = ScreenContextViewModel(contextDataManager, contextDataEvaluation, implicitContextManager)
     }
 

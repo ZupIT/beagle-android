@@ -20,9 +20,7 @@ import br.com.zup.beagle.android.compiler.BEAGLE_CONFIG
 import br.com.zup.beagle.android.compiler.BEAGLE_IMAGE_DOWNLOADER
 import br.com.zup.beagle.android.compiler.BEAGLE_LOGGER
 import br.com.zup.beagle.android.compiler.DEEP_LINK_HANDLER
-import br.com.zup.beagle.android.compiler.FORM_LOCAL_ACTION_HANDLER
 import br.com.zup.beagle.android.compiler.HTTP_CLIENT_FACTORY_HANDLER
-import br.com.zup.beagle.android.compiler.HTTP_CLIENT_HANDLER
 import br.com.zup.beagle.android.compiler.PropertySpecifications
 import br.com.zup.beagle.android.compiler.STORE_HANDLER
 import br.com.zup.beagle.android.compiler.URL_BUILDER_HANDLER
@@ -50,20 +48,9 @@ internal object TypeElementImplementationManager {
                     BEAGLE_CONFIG.className,
                 )
             }
-            typeElement.implements(FORM_LOCAL_ACTION_HANDLER, processingEnv) -> {
-                val element = propertySpecifications?.formLocalActionHandler
-                propertySpecifications?.formLocalActionHandler = manage.manageTypeElement(
-                    element,
-                    FORM_LOCAL_ACTION_HANDLER.className,
-                )
-            }
             typeElement.implements(DEEP_LINK_HANDLER, processingEnv) -> {
                 val element = propertySpecifications?.deepLinkHandler
                 propertySpecifications?.deepLinkHandler = manage.manageTypeElement(element, DEEP_LINK_HANDLER.className)
-            }
-            typeElement.implements(HTTP_CLIENT_HANDLER, processingEnv) -> {
-                val element = propertySpecifications?.httpClient
-                propertySpecifications?.httpClient = manage.manageTypeElement(element, HTTP_CLIENT_HANDLER.className)
             }
             typeElement.implements(HTTP_CLIENT_FACTORY_HANDLER, processingEnv) -> {
                 val element = propertySpecifications?.httpClientFactory

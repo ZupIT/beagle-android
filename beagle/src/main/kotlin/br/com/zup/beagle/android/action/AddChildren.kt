@@ -21,7 +21,6 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.context.valueOf
-import br.com.zup.beagle.android.data.serializer.BeagleMoshi
 import br.com.zup.beagle.android.logger.BeagleMessageLogs
 import br.com.zup.beagle.android.utils.evaluateExpression
 import br.com.zup.beagle.android.utils.toAndroidId
@@ -30,6 +29,9 @@ import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.core.BeagleJson
 import br.com.zup.beagle.core.ServerDrivenComponent
 import br.com.zup.beagle.newanalytics.ActionAnalyticsConfig
+import br.com.zup.beagle.android.widget.core.BeagleJson
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
+import br.com.zup.beagle.android.analytics.ActionAnalyticsConfig
 import com.squareup.moshi.Types
 import java.lang.reflect.Type
 
@@ -90,7 +92,8 @@ data class AddChildren(
 
     override fun execute(rootView: RootView, origin: View) {
         try {
-            val view = (rootView.getContext() as AppCompatActivity).findViewById<ViewGroup>(componentId.toAndroidId())
+            val view =
+                (rootView.getContext() as AppCompatActivity).findViewById<ViewGroup>(componentId.toAndroidId())
             val list = getList(rootView, origin)
             val viewList = convertServerDrivenListOnViewList(list, rootView)
             addValueToView(view, viewList)
@@ -99,22 +102,15 @@ data class AddChildren(
         }
     }
 
-    // Temporary solution to evaluate expression of server driven component
     private fun getList(rootView: RootView, origin: View): List<ServerDrivenComponent> {
         val result = evaluateExpression(rootView, origin, value)
-
-        if (value is Bind.Value<*>) {
-            return result ?: emptyList()
-        }
-
-        val moshi = BeagleMoshi.moshi
-
-        val type: Type = Types.newParameterizedType(List::class.java, ServerDrivenComponent::class.java)
-
-        return moshi.adapter<List<ServerDrivenComponent>>(type).fromJsonValue(result) ?: emptyList()
+        return result ?: emptyList()
     }
 
-    private fun convertServerDrivenListOnViewList(list: List<ServerDrivenComponent>, rootView: RootView): List<View> {
+    private fun convertServerDrivenListOnViewList(
+        list: List<ServerDrivenComponent>,
+        rootView: RootView
+    ): List<View> {
         val result: ArrayList<View> = ArrayList()
         list.forEach {
             result.add(it.toView(rootView))

@@ -21,14 +21,31 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.DisplayMetrics
 import android.util.LruCache
-import io.mockk.*
+import br.com.zup.beagle.android.BaseTest
+import io.mockk.clearMocks
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.mockkStatic
+import io.mockk.runs
+import io.mockk.slot
+import io.mockk.unmockkAll
+import io.mockk.verify
 import kotlinx.coroutines.runBlocking
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 import java.io.InputStream
 import java.net.URL
 
 @DisplayName("Given ImageDownloader")
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ImageDownloaderTest {
 
     private val imageDownloader = ImageDownloader()
@@ -43,7 +60,7 @@ class ImageDownloaderTest {
     private val context: Context = mockk(relaxed = true)
     private val optionsSlot = slot<BitmapFactory.Options>()
 
-    @BeforeEach
+    @BeforeAll
     fun setUp() {
         mockkStatic(BitmapFactory::class)
         mockkObject(LruImageCache)
@@ -52,20 +69,27 @@ class ImageDownloaderTest {
         mockkObject(URLFactory)
         every { bitmapImproved.width } returns contentWidth
         every { bitmapImproved.height } returns contentHeight
-        every { LruImageCache.get(any()) } returns null
-        every { LruImageCache.put(any(), any()) } just runs
         every { URLFactory.createURL(any()) } returns javaUrl
         every { javaUrl.openStream() } returns inputStream
         every { BitmapFactory.decodeStream(inputStream, null, capture(optionsSlot)) } returns bitmap
-        every { Bitmap.createScaledBitmap(
-            any(),
-            contentWidth,
-            contentHeight,
-            any()
-        ) } returns bitmapImproved
+        every {
+            Bitmap.createScaledBitmap(
+                any(),
+                contentWidth,
+                contentHeight,
+                any()
+            )
+        } returns bitmapImproved
     }
 
-    @AfterEach
+    @BeforeEach
+    fun clear() {
+        clearMocks(LruImageCache)
+        every { LruImageCache.get(any()) } returns null
+        every { LruImageCache.put(any(), any()) } just runs
+    }
+
+    @AfterAll
     fun tearDown() {
         unmockkAll()
     }

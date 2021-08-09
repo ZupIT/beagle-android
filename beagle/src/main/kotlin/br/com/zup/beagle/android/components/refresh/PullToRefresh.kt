@@ -20,6 +20,7 @@ import android.graphics.Color
 import android.view.View
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import br.com.zup.beagle.android.action.Action
+import br.com.zup.beagle.android.annotation.RegisterWidget
 import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.context.ContextComponent
 import br.com.zup.beagle.android.context.ContextData
@@ -29,9 +30,8 @@ import br.com.zup.beagle.android.utils.observeBindChanges
 import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.android.widget.WidgetView
-import br.com.zup.beagle.annotation.RegisterWidget
-import br.com.zup.beagle.core.ServerDrivenComponent
-import br.com.zup.beagle.core.SingleChildComponent
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
+import br.com.zup.beagle.android.widget.core.SingleChildComponent
 
 @RegisterWidget("pullToRefresh")
 data class PullToRefresh constructor(
@@ -67,9 +67,10 @@ data class PullToRefresh constructor(
         }
     }
 
-    private fun buildChildView(rootView: RootView) = ViewFactory.makeBeagleFlexView(rootView).apply {
-        addView(child, false)
-    }
+    private fun buildChildView(rootView: RootView) =
+        ViewFactory.makeBeagleFlexView(rootView).apply {
+            addView(child, false)
+        }
 
     private fun observeRefreshState(rootView: RootView, view: SwipeRefreshLayout) {
         isRefreshing?.let { bind ->

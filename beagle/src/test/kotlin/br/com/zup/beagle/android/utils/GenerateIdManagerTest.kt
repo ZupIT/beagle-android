@@ -24,20 +24,21 @@ import br.com.zup.beagle.android.view.custom.InternalBeagleFlexView
 import br.com.zup.beagle.android.view.viewmodel.GenerateIdViewModel
 import br.com.zup.beagle.android.view.viewmodel.ListViewIdViewModel
 import br.com.zup.beagle.android.view.viewmodel.OnInitViewModel
-import br.com.zup.beagle.core.ServerDrivenComponent
-import br.com.zup.beagle.ext.setId
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
+import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.verify
 import org.junit.Assert.assertEquals
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 @DisplayName("Given a GenerateIdManager")
-class GenerateIdManagerTest: BaseTest() {
+class GenerateIdManagerTest : BaseTest() {
 
     private val generateIdViewModel = mockk<GenerateIdViewModel>(relaxed = true)
     private val listViewIdViewModel = mockk<ListViewIdViewModel>(relaxed = true)
@@ -47,16 +48,13 @@ class GenerateIdManagerTest: BaseTest() {
     private lateinit var generateIdManager: GenerateIdManager
 
     @BeforeEach
-    override fun setUp() {
-        super.setUp()
-
+    fun clear() {
+        clearMocks(generateIdViewModel,rootView)
         mockkStatic(View::class)
         every { View.generateViewId() } returns generatedId
-        every { rootView.generateViewModelInstance<GenerateIdViewModel>() } returns generateIdViewModel
-        every { rootView.generateViewModelInstance<ListViewIdViewModel>() } returns listViewIdViewModel
-        every { rootView.generateViewModelInstance<OnInitViewModel>() } returns onInitViewModel
 
-        generateIdManager = GenerateIdManager(rootView, generateIdViewModel, listViewIdViewModel, onInitViewModel)
+        generateIdManager =
+            GenerateIdManager(rootView, generateIdViewModel, listViewIdViewModel, onInitViewModel)
     }
 
     @DisplayName("When createSingleManagerByRootViewId is called")
@@ -120,7 +118,9 @@ class GenerateIdManagerTest: BaseTest() {
         @Test
         fun notGenerateViewIdWithId() {
             // Given
-            val component = Container(listOf()).setId("stub")
+            val component = Container(listOf()).apply {
+                id = "stub"
+            }
             every { view.isAutoGenerateIdEnabled() } returns true
 
             // When
@@ -185,7 +185,9 @@ class GenerateIdManagerTest: BaseTest() {
         fun keepPreviousIds() {
             // Given
             val previousId = "id"
-            val componentWithId = Text("stub").setId(previousId)
+            val componentWithId = Text("stub").apply {
+                id = previousId
+            }
             val children = listOf<ServerDrivenComponent>(componentWithId)
             val component = Container(children)
             every { view.isAutoGenerateIdEnabled() } returns false

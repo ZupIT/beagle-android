@@ -32,10 +32,10 @@ import br.com.zup.beagle.android.utils.getContextData
 import br.com.zup.beagle.android.utils.isInitiableComponent
 import br.com.zup.beagle.android.utils.safeGet
 import br.com.zup.beagle.android.utils.toAndroidId
-import br.com.zup.beagle.core.IdentifierComponent
-import br.com.zup.beagle.core.MultiChildComponent
-import br.com.zup.beagle.core.ServerDrivenComponent
-import br.com.zup.beagle.core.SingleChildComponent
+import br.com.zup.beagle.android.widget.core.IdentifierComponent
+import br.com.zup.beagle.android.widget.core.MultiChildComponent
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
+import br.com.zup.beagle.android.widget.core.SingleChildComponent
 import org.json.JSONObject
 import java.util.LinkedList
 

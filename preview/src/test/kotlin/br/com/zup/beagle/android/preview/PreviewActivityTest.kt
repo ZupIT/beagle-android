@@ -25,7 +25,11 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import br.com.zup.beagle.android.utils.toAndroidId
 import br.com.zup.beagle.test.rules.BeagleComponentsRule
+import io.mockk.Runs
+import io.mockk.every
+import io.mockk.just
 import io.mockk.mockkConstructor
+import io.mockk.unmockkAll
 import io.mockk.verifyOrder
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -47,11 +51,19 @@ class PreviewActivityTest {
     @Before
     fun setUp() {
         mockkConstructor(BeaglePreview::class)
+        every {
+            anyConstructed<BeaglePreview>().closeWebSocket()
+        } just Runs
+
+        every {
+            anyConstructed<BeaglePreview>().doNotReconnect()
+        } just Runs
         activityScenario = ActivityScenario.launch(PreviewActivity::class.java)
     }
 
     @After
     fun tearDown() {
+        unmockkAll()
         activityScenario.close()
     }
 
@@ -63,7 +75,10 @@ class PreviewActivityTest {
         }
 
         // THEN
-        assertEquals(ShadowToast.getTextOfLatestToast().toString(), "onError: Closed webSocket trying to reconnect")
+        assertEquals(
+            ShadowToast.getTextOfLatestToast().toString(),
+            "onError: Closed webSocket trying to reconnect"
+        )
     }
 
     @Test
@@ -74,7 +89,10 @@ class PreviewActivityTest {
         }
 
         // THEN
-        assertEquals(ShadowToast.getTextOfLatestToast().toString(), "onClose: Connection closed by remote host")
+        assertEquals(
+            ShadowToast.getTextOfLatestToast().toString(),
+            "onClose: Connection closed by remote host"
+        )
     }
 
     @Test
@@ -93,7 +111,6 @@ class PreviewActivityTest {
     fun `GIVEN a preview Activity WHEN on message called THEN should show screen`() {
         // WHEN
         val application = ApplicationProvider.getApplicationContext() as Application
-        var activity: PreviewActivity? = null
         var textComponent: TextView? = null
         var incrementButton: Button? = null
         MyBeagleSetup().init(application)
@@ -135,10 +152,10 @@ class PreviewActivityTest {
                           }
                        }
                     }
-                """.trimIndent())
+                """.trimIndent()
+            )
 
             activityScenario.moveToState(Lifecycle.State.RESUMED)
-            activity = it
             textComponent = it.findViewById("textComponent".toAndroidId())
             incrementButton = it.findViewById("incrementButton".toAndroidId())
         }

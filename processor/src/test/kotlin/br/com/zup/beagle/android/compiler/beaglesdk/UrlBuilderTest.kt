@@ -115,7 +115,6 @@ internal class UrlBuilderTest : BeagleSdkBaseTest() {
         }
     }
 
-
     @DisplayName("When register url builder")
     @Nested
     inner class InvalidUrlBuilder {

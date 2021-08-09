@@ -16,10 +16,9 @@
 
 package br.com.zup.beagle.android.view
 
+import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.lifecycle.Lifecycle
-import androidx.test.core.app.ActivityScenario
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import br.com.zup.beagle.R
 import br.com.zup.beagle.android.BaseSoLoaderTest
 import br.com.zup.beagle.android.view.viewmodel.AnalyticsViewModel
 import io.mockk.Runs
@@ -49,25 +48,19 @@ class BeagleFragmentTest : BaseSoLoaderTest() {
             }
             }"""
     private val url = "/url"
-    private var activity: ServerDrivenActivity? = null
 
     @Before
     fun mockBeforeTest() {
         prepareViewModelMock(analyticsViewModel)
         every { analyticsViewModel.createScreenReport(capture(screenIdentifierSlot)) } just Runs
-        val activityScenario: ActivityScenario<ServerDrivenActivity> = ActivityScenario.launch(ServerDrivenActivity::class.java)
-        activityScenario.onActivity {
-            activityScenario.moveToState(Lifecycle.State.RESUMED)
-            activity = it
-        }
     }
 
     @Test
     fun `Given  a BeagleFragment with screen identifier When BeagleFragment is resumed Then should report screen`() {
         //When
-        activity?.supportFragmentManager?.beginTransaction()?.replace(
-            R.id.server_driven_container, BeagleFragment.newInstance(json,  url)
-        )?.commit()
+        val scenario =
+            launchFragmentInContainer<BeagleFragment>(BeagleFragment.newBundle(json, url))
+        scenario.moveToState(Lifecycle.State.RESUMED)
 
         //Then
         assertEquals(url, screenIdentifierSlot.captured)
@@ -76,10 +69,9 @@ class BeagleFragmentTest : BaseSoLoaderTest() {
     @Test
     fun `Given  a BeagleFragment without screen identifier When BeagleFragment is resumed Then should not report screen`() {
         //When
-        activity?.supportFragmentManager?.beginTransaction()?.replace(
-            R.id.server_driven_container,
-            BeagleFragment.newInstance(json, null)
-        )?.commit()
+        val scenario =
+            launchFragmentInContainer<BeagleFragment>(BeagleFragment.newBundle(json, null))
+        scenario.moveToState(Lifecycle.State.RESUMED)
 
         //then
         assertEquals(false, screenIdentifierSlot.isCaptured)

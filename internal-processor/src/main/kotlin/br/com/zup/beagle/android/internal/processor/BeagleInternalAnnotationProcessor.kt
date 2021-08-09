@@ -16,8 +16,8 @@
 
 package br.com.zup.beagle.android.internal.processor
 
-import br.com.zup.beagle.annotation.RegisterOperation
-import br.com.zup.beagle.annotation.RegisterWidget
+import br.com.zup.beagle.android.annotation.RegisterOperation
+import br.com.zup.beagle.android.annotation.RegisterWidget
 import br.com.zup.beagle.compiler.shared.ANDROID_OPERATION
 import br.com.zup.beagle.compiler.shared.GenerateFunctionOperation
 import br.com.zup.beagle.compiler.shared.GenerateFunctionWidget
@@ -38,7 +38,7 @@ import javax.lang.model.element.TypeElement
 const val BEAGLE_PACKAGE_INTERNAL = "br.com.zup.beagle.android.setup"
 
 @AutoService(Processor::class)
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
+@SupportedSourceVersion(SourceVersion.RELEASE_11)
 @IncrementalAnnotationProcessor(IncrementalAnnotationProcessorType.ISOLATING)
 class BeagleInternalAnnotationProcessor : AbstractProcessor() {
 

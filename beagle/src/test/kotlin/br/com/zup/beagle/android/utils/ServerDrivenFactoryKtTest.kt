@@ -27,15 +27,10 @@ import br.com.zup.beagle.android.networking.HttpMethod
 import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.setup.BeagleSdk
 import br.com.zup.beagle.android.testutil.RandomData
-import br.com.zup.beagle.android.view.ScreenMethod
-import br.com.zup.beagle.android.view.ScreenRequest
 import br.com.zup.beagle.android.view.ServerDrivenActivity
-import br.com.zup.beagle.android.view.mapper.toRequestData
-import io.mockk.mockk
-import junit.framework.Assert.assertEquals
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Nested
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 
@@ -76,23 +71,26 @@ internal class ServerDrivenFactoryKtTest {
     @DisplayName("When newServerDrivenIntent is called Then should pass RequestData through bundle")
     fun testCreateIntentWithScreenRequestBundle() {
         // Given
-        val screenRequest = ScreenRequest(
+        val requestData = RequestData(
             url = RandomData.string(),
-            method = ScreenMethod.POST,
-            headers = mapOf("key" to "value"),
-            body = RandomData.string()
+            httpAdditionalData = HttpAdditionalData(
+                method = HttpMethod.POST,
+                headers = mapOf("key" to "value"),
+                body = RandomData.string()
+            )
+
         )
         val context = ApplicationProvider.getApplicationContext<Context>()
         BeagleSdk.setInTestMode()
         MyBeagleSetup().init(context as Application)
 
         // When
-        val result = context.newServerDrivenIntent<ServerDrivenActivity>(screenRequest)
+        val result = context.newServerDrivenIntent<ServerDrivenActivity>(requestData)
 
         // Then
         val expected = Intent()
         val bundle = Bundle()
-        bundle.putParcelable(KEY, screenRequest.toRequestData())
+        bundle.putParcelable(KEY, requestData)
         expected.putExtras(bundle)
 
         assertEquals(expected.extras!!.size(), result.extras!!.size())

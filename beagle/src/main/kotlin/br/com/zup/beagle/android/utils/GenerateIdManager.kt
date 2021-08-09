@@ -23,12 +23,11 @@ import br.com.zup.beagle.android.view.viewmodel.ListViewIdViewModel
 import br.com.zup.beagle.android.view.viewmodel.OnInitViewModel
 import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.android.widget.WidgetView
-import br.com.zup.beagle.core.IdentifierComponent
-import br.com.zup.beagle.core.MultiChildComponent
-import br.com.zup.beagle.core.ServerDrivenComponent
-import br.com.zup.beagle.core.SingleChildComponent
-import br.com.zup.beagle.ext.setId
-import br.com.zup.beagle.widget.Widget
+import br.com.zup.beagle.android.widget.core.IdentifierComponent
+import br.com.zup.beagle.android.widget.core.MultiChildComponent
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
+import br.com.zup.beagle.android.widget.core.SingleChildComponent
+import br.com.zup.beagle.android.widget.Widget
 
 internal const val COMPONENT_NO_ID = "-1"
 
@@ -67,7 +66,7 @@ internal class GenerateIdManager(
         } catch (exception: Exception) {
             View.generateViewId()
         }
-        (component as? Widget)?.setId(id.toString())
+        (component as? Widget)?.id = id.toString()
     }
 
     private fun markEachNestedComponentAsNoIdIfNeeded(serverDrivenComponent: ServerDrivenComponent) {
@@ -85,7 +84,7 @@ internal class GenerateIdManager(
 
     private fun setNoIdToComponentWithoutId(component: WidgetView) {
         if (component.id.isNullOrEmpty()) {
-            component.setId(COMPONENT_NO_ID)
+            component.id = COMPONENT_NO_ID
         }
     }
 }

@@ -19,6 +19,7 @@ package br.com.zup.beagle.sample.config
 import br.com.zup.beagle.android.annotation.BeagleComponent
 import br.com.zup.beagle.android.exception.BeagleApiException
 import br.com.zup.beagle.android.networking.HttpClient
+import br.com.zup.beagle.android.networking.HttpClientFactory
 import br.com.zup.beagle.android.networking.HttpMethod
 import br.com.zup.beagle.android.networking.RequestCall
 import br.com.zup.beagle.android.networking.RequestData
@@ -34,7 +35,14 @@ import java.net.URI
 typealias OnSuccess = (responseData: ResponseData) -> Unit
 typealias OnError = (responseData: ResponseData) -> Unit
 
+
 @BeagleComponent
+class HttpClientFactoryDefault : HttpClientFactory {
+    override fun create(): HttpClient {
+        return HttpClientDefault()
+    }
+}
+
 class HttpClientDefault : HttpClient, CoroutineScope {
     private val job = Job()
     override val coroutineContext = job + CoroutineDispatchers.IO
@@ -77,11 +85,11 @@ class HttpClientDefault : HttpClient, CoroutineScope {
             e.printStackTrace()
             throw BeagleApiException(ResponseData(-1, data = byteArrayOf()), request)
         }
-        request.httpAdditionalData.headers?.forEach {
+        request.httpAdditionalData.headers.forEach {
             urlConnection.setRequestProperty(it.key, it.value)
         }
 
-        request.httpAdditionalData.method?.let { method ->
+        request.httpAdditionalData.method.let { method ->
             addRequestMethod(urlConnection, method)
         }
 

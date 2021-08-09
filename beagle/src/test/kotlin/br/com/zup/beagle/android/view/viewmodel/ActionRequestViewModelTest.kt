@@ -17,10 +17,10 @@
 package br.com.zup.beagle.android.view.viewmodel
 
 import androidx.lifecycle.Observer
+import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.action.SendRequestInternal
 import br.com.zup.beagle.android.data.ActionRequester
 import br.com.zup.beagle.android.exception.BeagleApiException
-import br.com.zup.beagle.android.extensions.once
 import br.com.zup.beagle.android.networking.ResponseData
 import br.com.zup.beagle.android.testutil.CoroutinesTestExtension
 import br.com.zup.beagle.android.testutil.InstantExecutorExtension
@@ -37,13 +37,14 @@ import io.mockk.unmockkAll
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExperimentalCoroutinesApi
 @ExtendWith(InstantExecutorExtension::class, CoroutinesTestExtension::class)
-class ActionRequestViewModelTest {
+class ActionRequestViewModelTest: BaseTest() {
 
     private val actionRequester: ActionRequester = mockk()
 
@@ -53,8 +54,10 @@ class ActionRequestViewModelTest {
 
     private lateinit var viewModel: ActionRequestViewModel
 
-    @BeforeEach
-    fun setUp() {
+    @BeforeAll
+    override fun setUp() {
+        super.setUp()
+
         MockKAnnotations.init(this)
 
         mockkStatic("br.com.zup.beagle.android.view.mapper.SendRequestActionMapperKt")
@@ -62,11 +65,6 @@ class ActionRequestViewModelTest {
         viewModel = ActionRequestViewModel(actionRequester = actionRequester)
 
         every { observer.onChanged(any()) } just Runs
-    }
-
-    @AfterEach
-    fun tearDown() {
-        unmockkAll()
     }
 
     @Test
@@ -82,7 +80,7 @@ class ActionRequestViewModelTest {
         viewModel.fetch(action).observeForever(observer)
 
         // Then
-        verify(exactly = once()) {
+        verify(exactly = 1) {
             observer.onChanged(FetchViewState.Success(responseMapped))
         }
     }
@@ -102,7 +100,7 @@ class ActionRequestViewModelTest {
         viewModel.fetch(action).observeForever(observer)
 
         // Then
-        verify(exactly = once()) {
+        verify(exactly = 1) {
             observer.onChanged(FetchViewState.Error(responseMapped))
         }
     }

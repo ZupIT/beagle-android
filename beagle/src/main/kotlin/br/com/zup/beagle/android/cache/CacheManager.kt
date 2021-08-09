@@ -85,7 +85,8 @@ internal class CacheManager(
         val beagleJsonKey = url.toBeagleJsonKey()
         val beagleTimeKey = url.toBeagleTimeKey()
 
-        val cachedData = storeHandler!!.restore(StoreType.DATABASE, beagleHashKey, beagleJsonKey, beagleTimeKey)
+        val cachedData =
+            storeHandler!!.restore(StoreType.DATABASE, beagleHashKey, beagleJsonKey, beagleTimeKey)
 
         val beagleHash = cachedData[beagleHashKey]
         val beagleJson = cachedData[beagleJsonKey]
@@ -110,12 +111,12 @@ internal class CacheManager(
         beagleCache: BeagleCache?,
     ): RequestData {
         return if (beagleCache != null) {
-            var headers = requestData.httpAdditionalData.headers ?: hashMapOf()
+            var headers = requestData.httpAdditionalData.headers
             headers = headers.toMutableMap().apply {
                 put(BEAGLE_HASH, beagleCache.hash)
             }
             val httpAdditionalData = requestData.httpAdditionalData.copy(headers = headers)
-            requestData.copy(headers = headers, httpAdditionalData = httpAdditionalData)
+            requestData.copy(httpAdditionalData = httpAdditionalData)
         } else {
             requestData
         }
@@ -158,8 +159,7 @@ internal class CacheManager(
     }
 
     private fun clearOldCacheDataOnDisk() {
-        val cacheMaxRegisters = beagleEnvironment.beagleSdk.config.cache.memoryMaximumCapacity.takeIf { it > 0 }
-            ?: beagleEnvironment.beagleSdk.config.cache.size
+        val cacheMaxRegisters = beagleEnvironment.beagleSdk.config.cache.size
 
         val cachedKeys = storeHandler!!.getAll(StoreType.DATABASE)
         val cachedTimeKeys = cachedKeys.filter { mapEntry ->
@@ -167,7 +167,8 @@ internal class CacheManager(
         }
 
         if (cachedTimeKeys.size > cacheMaxRegisters) {
-            val orderedCachedTimeKeysList = cachedTimeKeys.toList().sortedByDescending { (_, value) -> value }
+            val orderedCachedTimeKeysList =
+                cachedTimeKeys.toList().sortedByDescending { (_, value) -> value }
             for (index in cacheMaxRegisters until orderedCachedTimeKeysList.size) {
                 val url = orderedCachedTimeKeysList[index].first.split(CACHE_KEY_DELIMITER)[0]
                 deleteDiskCacheForUrl(url)
@@ -192,17 +193,20 @@ internal class CacheManager(
     ) {
         val cacheKey = url.toBeagleHashKey()
         val maxTime = getMaxAgeFromCacheControl(cacheControl)
-        memoryCacheStore?.save(cacheKey, BeagleCache(
-            maxTime = maxTime,
-            cachedTime = nanoTimeInSeconds(),
-            hash = beagleHash,
-            json = responseBody
-        ))
+        memoryCacheStore?.save(
+            cacheKey, BeagleCache(
+                maxTime = maxTime,
+                cachedTime = nanoTimeInSeconds(),
+                hash = beagleHash,
+                json = responseBody
+            )
+        )
     }
 
     private fun getMaxAgeFromCacheControl(cacheControl: String?): Long {
         val maxAgeName = "max-age"
-        val maxAge = cacheControl?.split(",")?.find { it.contains(maxAgeName) } ?: cacheControl ?: ""
+        val maxAge =
+            cacheControl?.split(",")?.find { it.contains(maxAgeName) } ?: cacheControl ?: ""
         return try {
             maxAge.replace("$maxAgeName=", "").trim().toLong()
         } catch (ex: NumberFormatException) {
@@ -210,7 +214,8 @@ internal class CacheManager(
         }
     }
 
-    private fun isCacheEnabled(): Boolean = beagleEnvironment.beagleSdk.config.cache.enabled && storeHandler != null
+    private fun isCacheEnabled(): Boolean =
+        beagleEnvironment.beagleSdk.config.cache.enabled && storeHandler != null
 
     private fun String.toBeagleHashKey(): String = "$this$CACHE_KEY_DELIMITER$CACHE_HASH_KEY"
     private fun String.toBeagleJsonKey(): String = "$this$CACHE_KEY_DELIMITER$CACHE_JSON_KEY"

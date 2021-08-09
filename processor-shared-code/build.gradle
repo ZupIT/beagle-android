@@ -18,9 +18,6 @@ import br.com.zup.beagle.Dependencies
 
 apply plugin: 'kotlin'
 
-sourceCompatibility = JavaVersion.VERSION_11
-targetCompatibility = JavaVersion.VERSION_11
-
 dependencies {
     implementation Dependencies.ProcessorLibraries.kotlinPoet
     implementation project(Dependencies.Modules.androidAnnotation)

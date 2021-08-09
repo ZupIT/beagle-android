@@ -18,7 +18,7 @@ package br.com.zup.beagle.android.logger
 
 import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.networking.ResponseData
-import br.com.zup.beagle.core.ServerDrivenComponent
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 
 internal object BeagleMessageLogs {
 

@@ -22,15 +22,15 @@ import android.view.Gravity
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.TextViewCompat
-import br.com.zup.beagle.android.components.utils.styleManagerFactory
-import br.com.zup.beagle.android.extensions.once
 import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.setup.DesignSystem
 import br.com.zup.beagle.android.testutil.RandomData
 import br.com.zup.beagle.android.utils.StyleManager
+import br.com.zup.beagle.android.utils.styleManagerFactory
 import br.com.zup.beagle.android.view.ViewFactory
-import br.com.zup.beagle.widget.core.TextAlignment
+import br.com.zup.beagle.android.widget.core.TextAlignment
 import io.mockk.Runs
+import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
@@ -39,6 +39,7 @@ import io.mockk.mockkStatic
 import io.mockk.slot
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -57,7 +58,7 @@ class BeagleTextViewExtensionsKtTest : BaseComponentTest() {
 
     private lateinit var text: Text
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
 
@@ -76,6 +77,11 @@ class BeagleTextViewExtensionsKtTest : BaseComponentTest() {
         every { textView.text = capture(textValueSlot) } just Runs
         every { textView.gravity = capture(textAlignment) } just Runs
         every { designSystem.image(any()) } returns IMAGE_RES
+    }
+
+    @BeforeEach
+    fun clear() {
+        clearMocks(textView, answers = false)
     }
 
     @Test
@@ -174,7 +180,7 @@ class BeagleTextViewExtensionsKtTest : BaseComponentTest() {
         text.buildView(rootView)
 
         // Then
-        verify(exactly = once()) { textView.setTextColor(colorInt) }
+        verify(exactly = 1) { textView.setTextColor(colorInt) }
     }
 
     @Test

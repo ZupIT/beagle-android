@@ -20,10 +20,10 @@ import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.networking.ResponseData
 import org.json.JSONArray
 import org.json.JSONObject
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 
-class SendRequestActionMapperTest : BaseTest(){
+class SendRequestActionMapperTest : BaseTest() {
 
     @Test
     fun `GIVEN response data is an valid json WHEN toResponse is called THEN it should return an object of type JSONObject`() {

@@ -21,9 +21,6 @@ import br.com.zup.beagle.android.action.AddChildren
 import br.com.zup.beagle.android.action.Alert
 import br.com.zup.beagle.android.action.Condition
 import br.com.zup.beagle.android.action.Confirm
-import br.com.zup.beagle.android.action.FormLocalAction
-import br.com.zup.beagle.android.action.FormRemoteAction
-import br.com.zup.beagle.android.action.FormValidation
 import br.com.zup.beagle.android.action.Navigate
 import br.com.zup.beagle.android.action.SendRequest
 import br.com.zup.beagle.android.action.SetContext
@@ -41,9 +38,6 @@ internal object ActionJsonAdapterFactory {
         return factory
             .withDefaultValue(UndefinedAction())
             .withSubtype(UndefinedAction::class.java, createNamespaceFor<UndefinedAction>("undefinedAction"))
-            .withSubtype(FormRemoteAction::class.java, createNamespaceFor<FormRemoteAction>("formRemoteAction"))
-            .withSubtype(FormLocalAction::class.java, createNamespaceFor<FormLocalAction>("formLocalAction"))
-            .withSubtype(FormValidation::class.java, createNamespaceFor<FormValidation>("formValidation"))
             .withSubtype(Alert::class.java, createNamespaceFor<Alert>("alert"))
             .withSubtype(Confirm::class.java, createNamespaceFor<Confirm>("confirm"))
             .withSubtype(Navigate.OpenExternalURL::class.java,

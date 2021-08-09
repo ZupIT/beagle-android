@@ -18,7 +18,7 @@ package br.com.zup.beagle.android.data.serializer.adapter
 
 import br.com.zup.beagle.android.annotation.ContextDataValue
 import br.com.zup.beagle.android.utils.readValue
-import br.com.zup.beagle.core.BeagleJson
+import br.com.zup.beagle.android.widget.core.BeagleJson
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.JsonReader
 import com.squareup.moshi.JsonWriter

@@ -21,7 +21,6 @@ import android.widget.ImageView
 import br.com.zup.beagle.android.components.utils.RoundedImageView
 import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.context.expressionOrValueOf
-import br.com.zup.beagle.android.context.valueOf
 import br.com.zup.beagle.android.engine.mapper.ViewMapper
 import br.com.zup.beagle.android.imagedownloader.DefaultImageDownloader
 import br.com.zup.beagle.android.logger.BeagleMessageLogs
@@ -30,10 +29,10 @@ import br.com.zup.beagle.android.utils.observeBindChanges
 import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.android.widget.WidgetView
-import br.com.zup.beagle.annotation.RegisterWidget
-import br.com.zup.beagle.core.BeagleJson
-import br.com.zup.beagle.core.CornerRadius
-import br.com.zup.beagle.widget.core.ImageContentMode
+import br.com.zup.beagle.android.annotation.RegisterWidget
+import br.com.zup.beagle.android.widget.core.BeagleJson
+import br.com.zup.beagle.android.widget.core.CornerRadius
+import br.com.zup.beagle.android.widget.core.ImageContentMode
 
 /**
  * Define an image view using the server driven information received through Beagle.
@@ -46,8 +45,6 @@ data class Image constructor(
     val path: Bind<ImagePath>,
     val mode: ImageContentMode? = null,
 ) : WidgetView() {
-
-    constructor(path: ImagePath, mode: ImageContentMode? = null) : this(valueOf(path), mode)
 
     @Transient
     private val viewMapper: ViewMapper = ViewMapper()

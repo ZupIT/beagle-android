@@ -18,10 +18,8 @@ package br.com.zup.beagle.android.utils
 
 import android.content.Context
 import android.content.Intent
-import br.com.zup.beagle.android.components.layout.Screen
 import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.view.BeagleActivity
-import br.com.zup.beagle.android.view.ScreenRequest
 
 /**
  * Create a intent to start BeagleActivity's sub-classes.
@@ -29,30 +27,6 @@ import br.com.zup.beagle.android.view.ScreenRequest
  */
 inline fun <reified T : BeagleActivity> Context.newServerDrivenIntent(screenJson: String): Intent {
     return Intent(this, T::class.java).putExtras(BeagleActivity.bundleOf(screenJson))
-}
-
-/**
- * Create a intent to start BeagleActivity's sub-classes.
- * @property screen to be shown
- */
-inline fun <reified T : BeagleActivity> Context.newServerDrivenIntent(screen: Screen): Intent {
-    return Intent(this, T::class.java).putExtras(BeagleActivity.bundleOf(screen))
-}
-
-/**
- * Create a intent to start BeagleActivity's sub-classes.
- * @property screenRequest to configure how the first screen request will be done
- */
-@Deprecated(
-    message = "It was deprecated in version 1.7.0 and will be removed in a future version." +
-        " To create a intent of your sub-class of BeagleActivity use Context.newServerDrivenIntent instead.",
-    replaceWith = ReplaceWith(
-        "context.newServerDrivenIntent<YourBeagleActivity>(requestData = )",
-        imports = ["br.com.zup.beagle.android.utils.newServerDrivenIntent"]
-    )
-)
-inline fun <reified T : BeagleActivity> Context.newServerDrivenIntent(screenRequest: ScreenRequest): Intent {
-    return Intent(this, T::class.java).putExtras(BeagleActivity.bundleOf(screenRequest))
 }
 
 inline fun <reified T : BeagleActivity> Context.newServerDrivenIntent(requestData: RequestData): Intent {

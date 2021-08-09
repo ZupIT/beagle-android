@@ -19,7 +19,7 @@ package br.com.zup.beagle.sample.operations
 import android.text.TextUtils
 import br.com.zup.beagle.android.operation.Operation
 import br.com.zup.beagle.android.operation.OperationType
-import br.com.zup.beagle.annotation.RegisterOperation
+import br.com.zup.beagle.android.annotation.RegisterOperation
 
 @RegisterOperation("isValidCpf")
 class IsValidCPFOperation : Operation {
@@ -46,11 +46,11 @@ class IsValidCPFOperation : Operation {
             if (numbers == digits) return false
         }
 
-        val dv1 = ((0..8).sumBy { (it + 1) * numbers[it] }).rem(11).let {
+        val dv1 = ((0..8).sumOf { (it + 1) * numbers[it] }).rem(11).let {
             if (it >= 10) 0 else it
         }
 
-        val dv2 = ((0..8).sumBy { it * numbers[it] }.let { (it + (dv1 * 9)).rem(11) }).let {
+        val dv2 = ((0..8).sumOf { it * numbers[it] }.let { (it + (dv1 * 9)).rem(11) }).let {
             if (it >= 10) 0 else it
         }
 

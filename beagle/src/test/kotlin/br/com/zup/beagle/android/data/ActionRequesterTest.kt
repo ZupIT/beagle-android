@@ -16,10 +16,10 @@
 
 package br.com.zup.beagle.android.data
 
+import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.data.serializer.BeagleSerializer
 import br.com.zup.beagle.android.data.serializer.makeActionFormLocalActionJson
-import br.com.zup.beagle.android.extensions.once
 import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.networking.ResponseData
 import br.com.zup.beagle.android.setup.BeagleEnvironment
@@ -27,41 +27,33 @@ import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
-import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.mockkStatic
-import io.mockk.unmockkAll
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 
 private val JSON_SUCCESS = makeActionFormLocalActionJson()
 
 @ExperimentalCoroutinesApi
-class ActionRequesterTest {
+class ActionRequesterTest : BaseTest() {
 
     private val beagleApi: BeagleApi = mockk()
     private val serializer: BeagleSerializer = mockk()
 
-    @InjectMockKs
-    private lateinit var actionRequester: ActionRequester
+    private val actionRequester = ActionRequester(beagleApi, serializer)
 
-    @BeforeEach
-    fun setUp() {
+    @BeforeAll
+    override fun setUp() {
+        super.setUp()
         MockKAnnotations.init(this)
 
         mockkObject(BeagleEnvironment)
         mockkStatic("br.com.zup.beagle.android.data.StringExtensionsKt")
-    }
-
-    @AfterEach
-    fun tearDown() {
-        unmockkAll()
     }
 
     @Test
@@ -82,7 +74,7 @@ class ActionRequesterTest {
         val actionResult = actionRequester.fetchAction("")
 
         // Then
-        verify(exactly = once()) { serializer.deserializeAction(JSON_SUCCESS) }
+        verify(exactly = 1) { serializer.deserializeAction(JSON_SUCCESS) }
         assertEquals(action, actionResult)
     }
 
@@ -97,7 +89,7 @@ class ActionRequesterTest {
         actionRequester.fetchData(requestData)
 
         // Then
-        coVerify(exactly = once()) { beagleApi.fetchData(requestData) }
+        coVerify(exactly = 1) { beagleApi.fetchData(requestData) }
     }
 
 }

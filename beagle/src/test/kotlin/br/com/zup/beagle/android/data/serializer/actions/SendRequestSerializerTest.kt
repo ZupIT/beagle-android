@@ -16,12 +16,10 @@
 
 package br.com.zup.beagle.android.data.serializer.actions
 
-import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.action.RequestActionMethod
 import br.com.zup.beagle.android.action.SendRequest
 import br.com.zup.beagle.android.context.expressionOf
 import br.com.zup.beagle.android.context.valueOf
-import br.com.zup.beagle.android.data.serializer.BaseSerializerTest
 import br.com.zup.beagle.android.data.serializer.makeActionAlertJson
 import br.com.zup.beagle.android.data.serializer.makeActionAlertObject
 import org.json.JSONObject

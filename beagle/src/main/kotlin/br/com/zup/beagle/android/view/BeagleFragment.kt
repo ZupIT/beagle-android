@@ -23,26 +23,36 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import br.com.zup.beagle.android.components.utils.applyBackgroundFromWindowBackgroundTheme
 import br.com.zup.beagle.android.data.serializer.BeagleSerializer
+import br.com.zup.beagle.android.utils.applyBackgroundFromWindowBackgroundTheme
 import br.com.zup.beagle.android.utils.toView
 import br.com.zup.beagle.android.view.viewmodel.AnalyticsViewModel
 import br.com.zup.beagle.android.view.viewmodel.BeagleScreenViewModel
 import br.com.zup.beagle.android.widget.UndefinedWidget
-import br.com.zup.beagle.core.ServerDrivenComponent
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 
 internal class BeagleFragment : Fragment() {
 
     private val screen: ServerDrivenComponent by lazy {
-        val json = arguments?.getString(JSON_SCREEN_KEY) ?: beagleSerializer.serializeComponent(UndefinedWidget())
+        val json = arguments?.getString(JSON_SCREEN_KEY) ?: beagleSerializer.serializeComponent(
+            UndefinedWidget()
+        )
         beagleSerializer.deserializeComponent(json)
     }
     private val screenIdentifier by lazy {
         arguments?.getString(SCREEN_IDENTIFIER_KEY)
     }
 
-    private val screenViewModel by lazy { ViewModelProvider(requireActivity()).get(BeagleScreenViewModel::class.java) }
-    private val analyticsViewModel by lazy { ViewModelProvider(requireActivity()).get(AnalyticsViewModel::class.java) }
+    private val screenViewModel by lazy {
+        ViewModelProvider(requireActivity()).get(
+            BeagleScreenViewModel::class.java
+        )
+    }
+    private val analyticsViewModel by lazy {
+        ViewModelProvider(requireActivity()).get(
+            AnalyticsViewModel::class.java
+        )
+    }
 
     companion object {
 
@@ -60,15 +70,21 @@ internal class BeagleFragment : Fragment() {
             json: String,
             screenIdentifier: String? = null,
         ) = BeagleFragment().apply {
+            arguments = newBundle(json, screenIdentifier)
+        }
+
+        fun newBundle(
+            json: String,
+            screenIdentifier: String? = null,
+        ): Bundle {
             val bundle = Bundle()
             bundle.putString(JSON_SCREEN_KEY, json)
             bundle.putString(SCREEN_IDENTIFIER_KEY, screenIdentifier)
-            arguments = bundle
+            return bundle
         }
 
         private val beagleSerializer: BeagleSerializer = BeagleSerializer()
         private const val JSON_SCREEN_KEY = "JSON_SCREEN_KEY"
-        private const val IS_LOCAL_SCREEN_KEY = "IS_LOCAL_SCREEN_KEY"
         private const val SCREEN_IDENTIFIER_KEY = "SCREEN_IDENTIFIER_KEY"
 
     }
