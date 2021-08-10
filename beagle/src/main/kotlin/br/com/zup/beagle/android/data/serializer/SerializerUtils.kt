@@ -18,7 +18,6 @@ package br.com.zup.beagle.android.data.serializer
 
 import br.com.zup.beagle.android.annotation.RegisterAction
 import br.com.zup.beagle.android.annotation.RegisterWidget
-import java.util.Locale
 
 private const val BEAGLE_NAMESPACE = "beagle"
 

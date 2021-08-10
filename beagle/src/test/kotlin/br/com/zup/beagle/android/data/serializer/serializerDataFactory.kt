@@ -138,29 +138,6 @@ fun makeCustomWidgetJson() = """
     }
 """
 
-fun makeFormJson() = """
-    {
-        "_beagleComponent_": "beagle:form",
-        "child": ${makeButtonJson()},
-        "onSubmit": [{
-            "_beagleAction_": "beagle:formremoteaction",
-            "path": "$TEST_URL",
-            "method": "POST"
-        }],
-        "group": "A group",
-        "additionalData":{"test" : "test"},
-        "shouldStoreFields": true
-    }
-    """
-
-fun makeFormSubmitJson() = """
-    {
-        "_beagleComponent_": "beagle:formsubmit",
-        "child": ${makeButtonJson()},
-        "enabled": true
-    }
-"""
-
 fun makeJsonGridView() = """
     {
       "_beagleComponent_": "beagle:gridview",
@@ -472,15 +449,6 @@ fun makeObjectTabBarItem() = TabBarItem(
         mobileId = "beagle"
     )
 )
-
-fun makeTabViewJson() = """
-    {
-        "_beagleComponent_": "beagle:tabview",
-        "children":[${makeTabItemJson()},${makeTabItemJson()},${makeTabItemJson()}],
-        "styleId": "style",
-        "context": ${makeContextWithPrimitiveValueJson()}
-    }
-"""
 
 fun makeTabItemJson() = """
     {

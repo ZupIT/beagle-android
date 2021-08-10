@@ -20,7 +20,6 @@ import android.view.View
 import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.data.PreFetchHelper
 import br.com.zup.beagle.android.engine.renderer.ViewRendererFactory
-import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.utils.handleEvent
 import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.android.widget.ViewConvertable

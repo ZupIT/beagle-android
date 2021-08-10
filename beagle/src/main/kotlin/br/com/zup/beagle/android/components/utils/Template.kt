@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
@@ -17,8 +18,6 @@
 package br.com.zup.beagle.android.components.utils
 
 import br.com.zup.beagle.android.context.Bind
-import br.com.zup.beagle.android.context.expressionOrValueOf
-import br.com.zup.beagle.android.context.valueOf
 import br.com.zup.beagle.core.BeagleJson
 import br.com.zup.beagle.core.ServerDrivenComponent
 

@@ -21,11 +21,7 @@ import br.com.zup.beagle.android.compiler.beaglesetupmanage.PropertyImplementati
 import br.com.zup.beagle.android.compiler.beaglesetupmanage.TypeElementImplementationManager
 import br.com.zup.beagle.compiler.shared.implements
 import br.com.zup.beagle.compiler.shared.multipleDefinitionErrorMessage
-import com.squareup.kotlinpoet.ClassName
-import com.squareup.kotlinpoet.KModifier
-import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
-import com.squareup.kotlinpoet.asClassName
 import javax.annotation.processing.ProcessingEnvironment
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.element.TypeElement
