@@ -95,7 +95,6 @@ class PageViewSerializerTest : BaseServerDrivenComponentSerializerTest() {
     {
         "_beagleComponent_": "beagle:pageview",
         "children": [${makeButtonJson()}],
-        "pageIndicator": ${makePageIndicatorJson()},
         "context": ${makeContextWithPrimitiveValueJson()}
     }
 """

@@ -280,7 +280,6 @@ fun makeListViewJson() = """
        "context": ${makeContextWithPrimitiveValueJson()},
        "onInit": [${makeActionAlertJson()}],
        "dataSource":"@{characters}",
-       "template": ${makeTextJson()},
        "onScrollEnd": [${makeActionAlertJson()}],
        "scrollEndThreshold": 80,
        "isScrollIndicatorVisible": false,
@@ -317,7 +316,7 @@ fun makeObjectListView() = ListView(
 fun makeScreenComponentJson() = """
     {
         "_beagleComponent_": "beagle:screencomponent",
-        "identifier": "id",
+        "id": "id",
         "safeArea": {
             "top": true,
             "leading": true,
@@ -538,12 +537,7 @@ fun makeTouchableJson() = """
     {
         "_beagleComponent_": "beagle:touchable",
         "onPress": [${makeActionAlertJson()}],
-        "child": ${makeTextJson()},
-        "clickAnalyticsEvent": {
-            "category": "category",
-            "label": "label",
-            "value": "value"
-        }
+        "child": ${makeTextJson()}
     }
 """
 

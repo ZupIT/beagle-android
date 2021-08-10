@@ -44,7 +44,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
-@DisplayName("Given a PageViewTwo")
+@DisplayName("Given a PageView")
 class PageViewTest : BaseComponentTest() {
 
     private val beaglePageView: BeaglePageView = mockk(relaxed = true)
