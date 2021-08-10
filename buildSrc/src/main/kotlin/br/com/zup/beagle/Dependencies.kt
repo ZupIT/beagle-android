@@ -79,7 +79,7 @@ class Dependencies : Plugin<Project> {
 
         const val jsonObject = "20200518"
 
-        const val mockk = "1.10.2"
+        const val mockk = "1.12.0"
 
         const val testRunner = "1.3.1-alpha02"
         const val testExt = "1.1.3-alpha02"

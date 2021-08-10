@@ -327,9 +327,6 @@ fun makeScreenComponentJson() = """
             "showBackButton": true
         },
         "child": ${makeContainerJson()},
-        "screenAnalyticsEvent": {
-            "screenName": "Test"
-        },
         "context": ${makeContextWithPrimitiveValueJson()},
         "id": "id"
     }
