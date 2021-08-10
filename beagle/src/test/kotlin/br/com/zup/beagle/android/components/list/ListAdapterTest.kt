@@ -442,35 +442,6 @@ class ListAdapterTest : BaseTest() {
     }
 
     @Test
-    fun `Given a ListAdapter with a null template list When call onCreateViewHolder Then should create the template`() {
-        val expectedTemplate = Container(children = listOf(Button(text = valueOf("test"))))
-        val expectedViewType = -1
-        val subject = ListAdapter(
-            orientation = RecyclerView.VERTICAL,
-            iteratorName = iteratorName,
-            key = key,
-            listViewModels = listViewModels,
-            templateList = templateList,
-            originView = recyclerViewMock
-        )
-
-        every {
-            listViewModels.contextViewModel.evaluateExpressionForGivenContext(
-                recyclerViewMock,
-                any(),
-                any()
-            )
-        } returns false
-
-        subject.setList(list)
-        val viewType = subject.getItemViewType(0)
-        val holder = subject.onCreateViewHolder(viewGroupMock, viewType)
-
-        assertEquals(expectedViewType, viewType)
-        assertEquals(expectedTemplate, holder.getTemplate())
-    }
-
-    @Test
     fun `Given a ListAdapter When call onCreateViewHolder Then should create the non existent default template`() {
         val expectedTemplate = Container()
         val expectedViewType = -1

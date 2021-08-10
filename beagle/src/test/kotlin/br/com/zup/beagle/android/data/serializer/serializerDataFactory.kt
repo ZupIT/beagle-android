@@ -316,7 +316,6 @@ fun makeObjectListView() = ListView(
 fun makeScreenComponentJson() = """
     {
         "_beagleComponent_": "beagle:screencomponent",
-        "id": "id",
         "safeArea": {
             "top": true,
             "leading": true,
@@ -331,7 +330,8 @@ fun makeScreenComponentJson() = """
         "screenAnalyticsEvent": {
             "screenName": "Test"
         },
-        "context": ${makeContextWithPrimitiveValueJson()}
+        "context": ${makeContextWithPrimitiveValueJson()},
+        "id": "id"
     }
 """
 
