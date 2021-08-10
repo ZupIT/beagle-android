@@ -100,7 +100,10 @@ data class TextInput(
 
     private fun createEditText(rootView: RootView): EditText {
         return if (styleId.isNullOrEmpty()) ViewFactory.makeInputText(rootView.getContext())
-        else ViewFactory.makeInputText(rootView.getContext(), styleManagerFactory.getInputTextStyle(styleId))
+        else ViewFactory.makeInputText(
+            rootView.getContext(),
+            styleManagerFactory.getInputTextStyle(styleId)
+        )
     }
 
     private fun EditText.setUpOnTextChange(rootView: RootView) {
@@ -159,18 +162,44 @@ data class TextInput(
     private fun EditText.setData(textInput: TextInput, rootView: RootView) {
         isFocusable = true
         isFocusableInTouchMode = true
-        textInput.placeholder?.let { bind -> observeBindChanges(rootView, this, bind) { it?.let { hint = it } } }
-        textInput.value?.let { bind ->
-            observeBindChanges(rootView, this, bind) { it?.let { setValue(it, rootView) } }
+        textInput.placeholder?.let { bind ->
+            observeBindChanges(
+                rootView,
+                this,
+                bind
+            ) { it?.let { hint = it } }
         }
-        textInput.readOnly?.let { bind -> observeBindChanges(rootView, this, bind) { setEnabledConfig(it) } }
+        textInput.value?.let { bind ->
+            observeBindChanges(
+                rootView,
+                this,
+                bind
+            ) { it?.let { setValue(it, rootView) } }
+        }
+        textInput.readOnly?.let { bind ->
+            observeBindChanges(
+                rootView,
+                this,
+                bind
+            ) { setEnabledConfig(it?.not()) }
+        }
         textInput.enabled?.let { bind ->
-            observeBindChanges(rootView, this, bind) { bindField ->
-                bindField?.let { this.isEnabled = it }
+            observeBindChanges(
+                rootView,
+                this,
+                bind
+            ) {
+                setEnabledConfig(it)
             }
         }
 
-        textInput.type?.let { bind -> observeBindChanges(rootView, this, bind) { it?.let { setInputType(it) } } }
+        textInput.type?.let { bind ->
+            observeBindChanges(
+                rootView,
+                this,
+                bind
+            ) { it?.let { setInputType(it) } }
+        }
 
         observeBindError(textInput, rootView, this)
     }
@@ -199,7 +228,7 @@ data class TextInput(
     }
 
     private fun EditText.setEnabledConfig(isEnabled: Boolean?) {
-        isEnabled?.let { this.isEnabled = !it }
+        isEnabled?.let { this.isEnabled = it }
     }
 
     private fun EditText.setValue(text: String, rootView: RootView) {
@@ -214,7 +243,8 @@ data class TextInput(
         when (textInputType) {
             DATE -> setRawInputType(InputType.TYPE_CLASS_DATETIME)
             EMAIL -> setRawInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS)
-            PASSWORD -> inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+            PASSWORD -> inputType =
+                InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
             NUMBER -> setRawInputType(InputType.TYPE_CLASS_NUMBER)
             else -> setRawInputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES)
         }

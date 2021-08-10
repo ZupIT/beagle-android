@@ -55,7 +55,7 @@ class Dependencies : Plugin<Project> {
         const val kotlinPoet = "1.8.0"
         const val okio = "2.10.0"
 
-        const val appcompat = "1.2.0"
+        const val appcompat = "1.3.1"
         const val viewModel = "2.3.1"
         const val recyclerView = "1.2.0"
         const val swipeRefreshLayout = "1.1.0"
@@ -138,9 +138,11 @@ class Dependencies : Plugin<Project> {
         const val appcompat = "androidx.appcompat:appcompat:${Versions.appcompat}"
         const val coreKtx = "androidx.core:core-ktx:${Versions.appcompat}"
         const val recyclerView = "androidx.recyclerview:recyclerview:${Versions.recyclerView}"
-        const val swipeRefreshLayout = "androidx.swiperefreshlayout:swiperefreshlayout:${Versions.swipeRefreshLayout}"
+        const val swipeRefreshLayout =
+            "androidx.swiperefreshlayout:swiperefreshlayout:${Versions.swipeRefreshLayout}"
         const val viewModel = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.viewModel}"
-        const val viewModelExtensions = "androidx.lifecycle:lifecycle-runtime-ktx:${Versions.viewModel}"
+        const val viewModelExtensions =
+            "androidx.lifecycle:lifecycle-runtime-ktx:${Versions.viewModel}"
     }
 
     object MoshiLibraries {
@@ -156,7 +158,8 @@ class Dependencies : Plugin<Project> {
         const val junitVintageEngine = "org.junit.vintage:junit-vintage-engine:${Versions.junit5}"
         const val junitParams = "org.junit.jupiter:junit-jupiter-params:${Versions.junit5}"
         const val mockk = "io.mockk:mockk:${Versions.mockk}"
-        const val kotlinCoroutinesTest = "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.kotlinCoroutinesTest}"
+        const val kotlinCoroutinesTest =
+            "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.kotlinCoroutinesTest}"
         const val archCoreTesting = "androidx.arch.core:core-testing:${Versions.archCoreTesting}"
         const val testRunner = "androidx.test:runner:${Versions.testRunner}"
         const val testExt = "androidx.test.ext:junit:${Versions.testExt}"
@@ -164,7 +167,8 @@ class Dependencies : Plugin<Project> {
         const val testRules = "androidx.test:rules:${Versions.testRules}"
         const val robolectric = "org.robolectric:robolectric:${Versions.robolectric}"
         const val fragmentTest = "androidx.fragment:fragment-testing:${Versions.fragmentTest}"
-        const val kotlinCompileTesting = "com.github.tschuchortdev:kotlin-compile-testing:${Versions.kotlinCompileTesting}"
+        const val kotlinCompileTesting =
+            "com.github.tschuchortdev:kotlin-compile-testing:${Versions.kotlinCompileTesting}"
     }
 
 }

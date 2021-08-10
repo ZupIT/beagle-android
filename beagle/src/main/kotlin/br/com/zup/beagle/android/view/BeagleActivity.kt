@@ -24,6 +24,7 @@ import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -82,7 +83,10 @@ abstract class BeagleActivity : AppCompatActivity() {
             FIRST_SCREEN_REQUEST_KEY
         )
     }
+
     private val screen by lazy { intent.extras?.getString(FIRST_SCREEN_KEY) }
+
+    private val fragmentManager: FragmentManager = supportFragmentManager
 
     companion object {
         fun bundleOf(requestData: RequestData): Bundle {
@@ -164,7 +168,7 @@ abstract class BeagleActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        if (supportFragmentManager.fragments.size == 0) {
+        if (fragmentManager.fragments.size == 0) {
             screen?.let { screen ->
                 fetch(
                     RequestData(url = ""),
@@ -178,17 +182,17 @@ abstract class BeagleActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         if (screenViewModel.isFetchComponent()) {
-            if (supportFragmentManager.backStackEntryCount == 0) {
+            if (fragmentManager.backStackEntryCount == 0) {
                 finish()
             }
-        } else if (supportFragmentManager.backStackEntryCount == 1) {
+        } else if (fragmentManager.backStackEntryCount == 1) {
             finish()
         } else {
             super.onBackPressed()
         }
     }
 
-    fun hasServerDrivenScreen(): Boolean = supportFragmentManager.backStackEntryCount > 0
+    fun hasServerDrivenScreen(): Boolean = fragmentManager.backStackEntryCount > 0
 
     internal fun navigateTo(requestData: RequestData, screen: Screen?) {
         fetch(requestData, screen)
@@ -231,7 +235,7 @@ abstract class BeagleActivity : AppCompatActivity() {
 
     private fun showScreen(screenName: String?, component: ServerDrivenComponent) {
         val transition = getFragmentTransitionAnimation()
-        supportFragmentManager
+        fragmentManager
             .beginTransaction()
             .setCustomAnimations(
                 transition.enter,

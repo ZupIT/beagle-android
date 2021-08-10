@@ -245,9 +245,8 @@ internal class TextInputTest : BaseComponentTest() {
                 ViewFactory.makeInputText(any())
                 editText.setText(VALUE_KEY)
                 editText.hint = PLACE_HOLDER.value
-                editText.isEnabled = READ_ONLY.value
+                editText.isEnabled = READ_ONLY.value.not()
                 editText.isEnabled = ENABLED.value
-                editText.visibility = View.INVISIBLE
                 editText.isFocusable = true
                 editText.isFocusableInTouchMode = true
             }
@@ -265,9 +264,8 @@ internal class TextInputTest : BaseComponentTest() {
                 ViewFactory.makeInputText(any(), any())
                 editText.setText(VALUE_KEY)
                 editText.hint = PLACE_HOLDER.value
-                editText.isEnabled = READ_ONLY.value
+                editText.isEnabled = READ_ONLY.value.not()
                 editText.isEnabled = ENABLED.value
-                editText.visibility = View.INVISIBLE
                 editText.isFocusable = true
                 editText.isFocusableInTouchMode = true
             }
