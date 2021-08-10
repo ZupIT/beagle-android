@@ -30,9 +30,9 @@ import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.android.widget.WidgetView
 import br.com.zup.beagle.android.annotation.RegisterWidget
-import br.com.zup.beagle.core.BeagleJson
-import br.com.zup.beagle.core.CornerRadius
-import br.com.zup.beagle.widget.core.ImageContentMode
+import br.com.zup.beagle.android.widget.core.BeagleJson
+import br.com.zup.beagle.android.widget.core.CornerRadius
+import br.com.zup.beagle.android.widget.core.ImageContentMode
 
 /**
  * Define an image view using the server driven information received through Beagle.

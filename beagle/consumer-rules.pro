@@ -34,7 +34,7 @@
 -keep class com.facebook.fbjni.**{*;}
 
 # Beagle Serialization / Deserialization
--keep class br.com.zup.beagle.core.BeagleJson
+-keep class br.com.zup.beagle.android.widget.core.BeagleJson
 
 -keep @br.com.zup.beagle.android.annotation.RegisterWidget class *  {
   <init>(...);
@@ -46,7 +46,7 @@
   <fields>;
 }
 
--keep @br.com.zup.beagle.core.BeagleJson class *  {
+-keep @br.com.zup.beagle.android.widget.core.BeagleJson class *  {
   <init>(...);
   <fields>;
   **[] values();

@@ -16,7 +16,7 @@
 
 package br.com.zup.beagle.android.analytics
 
-import br.com.zup.beagle.core.BeagleJson
+import br.com.zup.beagle.android.widget.core.BeagleJson
 
 /**
  * This class is used to pass some properties for analytics

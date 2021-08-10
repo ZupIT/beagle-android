@@ -18,8 +18,8 @@ package br.com.zup.beagle.android.view.custom
 
 import android.view.View
 import br.com.zup.beagle.android.BaseTest
-import br.com.zup.beagle.core.ServerDrivenComponent
-import br.com.zup.beagle.core.Style
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
+import br.com.zup.beagle.android.widget.core.Style
 import com.facebook.yoga.YogaNode
 import com.facebook.yoga.YogaNodeFactory
 import io.mockk.*

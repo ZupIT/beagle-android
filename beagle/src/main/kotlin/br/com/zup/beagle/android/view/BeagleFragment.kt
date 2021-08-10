@@ -29,7 +29,7 @@ import br.com.zup.beagle.android.utils.toView
 import br.com.zup.beagle.android.view.viewmodel.AnalyticsViewModel
 import br.com.zup.beagle.android.view.viewmodel.BeagleScreenViewModel
 import br.com.zup.beagle.android.widget.UndefinedWidget
-import br.com.zup.beagle.core.ServerDrivenComponent
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 
 internal class BeagleFragment : Fragment() {
 

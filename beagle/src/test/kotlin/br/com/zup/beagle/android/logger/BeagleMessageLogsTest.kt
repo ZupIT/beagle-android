@@ -20,7 +20,7 @@ import br.com.zup.beagle.android.mockdata.makeRequestData
 import br.com.zup.beagle.android.mockdata.makeResponseData
 import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.testutil.RandomData
-import br.com.zup.beagle.core.ServerDrivenComponent
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just

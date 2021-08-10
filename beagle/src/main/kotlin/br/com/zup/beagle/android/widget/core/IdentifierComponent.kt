@@ -14,39 +14,14 @@
  * limitations under the License.
  */
 
-package br.com.zup.beagle.widget.core
-
-import br.com.zup.beagle.core.BeagleJson
+package br.com.zup.beagle.android.widget.core
 
 /**
- * Enum define text support.
+ * Component that hold the identifier
+ * @property id use to identifier the current view
  */
+
 @BeagleJson
-enum class TextInputType {
-
-    /**
-     * Date text support.
-     * This attribute on iOS will have the same effect as NUMBER.
-     */
-    DATE,
-
-    /**
-     * Email text support.
-     */
-    EMAIL,
-
-    /**
-     * Password text support.
-     */
-    PASSWORD,
-
-    /**
-     * Numeric text support.
-     */
-    NUMBER,
-
-    /**
-     * Normal text support.
-     */
-    TEXT
+interface IdentifierComponent : ServerDrivenComponent {
+    val id: String?
 }

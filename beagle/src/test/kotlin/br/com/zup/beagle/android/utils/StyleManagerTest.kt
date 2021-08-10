@@ -33,7 +33,7 @@ import br.com.zup.beagle.android.components.utils.applyViewBackgroundAndCorner
 import br.com.zup.beagle.android.context.valueOf
 import br.com.zup.beagle.android.extensions.once
 import br.com.zup.beagle.android.setup.DesignSystem
-import br.com.zup.beagle.core.StyleComponent
+import br.com.zup.beagle.android.widget.core.StyleComponent
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.RelaxedMockK

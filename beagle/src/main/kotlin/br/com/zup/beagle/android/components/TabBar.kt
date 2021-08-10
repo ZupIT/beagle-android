@@ -35,8 +35,8 @@ import br.com.zup.beagle.android.view.custom.BeagleFlexView
 import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.android.widget.WidgetView
 import br.com.zup.beagle.android.annotation.RegisterWidget
-import br.com.zup.beagle.core.Style
-import br.com.zup.beagle.widget.core.Flex
+import br.com.zup.beagle.android.widget.core.Style
+import br.com.zup.beagle.android.widget.core.Flex
 import com.google.android.material.tabs.TabLayout
 
 private val TAB_BAR_HEIGHT = 48.dp()

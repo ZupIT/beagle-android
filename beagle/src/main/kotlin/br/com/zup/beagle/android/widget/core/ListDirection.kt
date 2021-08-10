@@ -14,14 +14,26 @@
  * limitations under the License.
  */
 
-package br.com.zup.beagle.core
+package br.com.zup.beagle.android.widget.core
 
 /**
- * Component that has children
- * @property children list of views that the component has in its hierarchy
+ * The direction attribute will define the list direction.
+ *
+ * @property VERTICAL
+ * @property HORIZONTAL
+ *
  */
-
 @BeagleJson
-interface MultiChildComponent {
-    val children: List<ServerDrivenComponent>?
+enum class ListDirection {
+    /**
+     * Items list are displayed in vertical direction like LINES.
+     *
+     */
+    VERTICAL,
+
+    /**
+     * Items list are displayed in Horizontal direction like COLUMNS.
+     *
+     */
+    HORIZONTAL
 }

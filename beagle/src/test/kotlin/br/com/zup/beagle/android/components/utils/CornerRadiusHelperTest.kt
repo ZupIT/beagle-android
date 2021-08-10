@@ -18,7 +18,7 @@ package br.com.zup.beagle.android.components.utils
 
 import android.util.DisplayMetrics
 import br.com.zup.beagle.android.setup.BeagleEnvironment
-import br.com.zup.beagle.core.CornerRadius
+import br.com.zup.beagle.android.widget.core.CornerRadius
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject

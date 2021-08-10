@@ -16,7 +16,7 @@
 
 package br.com.zup.beagle.android.networking
 
-import br.com.zup.beagle.core.BeagleJson
+import br.com.zup.beagle.android.widget.core.BeagleJson
 
 /**
  * ResponseData is used to return data made by the request.

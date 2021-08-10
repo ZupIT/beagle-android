@@ -14,14 +14,27 @@
  * limitations under the License.
  */
 
-package br.com.zup.beagle.core
+package br.com.zup.beagle.android.widget
+
+import br.com.zup.beagle.android.widget.core.Accessibility
+import br.com.zup.beagle.android.widget.core.AccessibilityComponent
+import br.com.zup.beagle.android.widget.core.BeagleJson
+import br.com.zup.beagle.android.widget.core.IdentifierComponent
+import br.com.zup.beagle.android.widget.core.Style
+import br.com.zup.beagle.android.widget.core.StyleComponent
 
 /**
- * Component that hold the identifier
- * @property id use to identifier the current view
+ * Base of all widgets
+ *
  */
 
 @BeagleJson
-interface IdentifierComponent : ServerDrivenComponent {
-    val id: String?
+abstract class Widget : StyleComponent, AccessibilityComponent,
+    IdentifierComponent {
+
+    override var id: String? = null
+
+    override var style: Style? = null
+
+    override var accessibility: Accessibility? = null
 }

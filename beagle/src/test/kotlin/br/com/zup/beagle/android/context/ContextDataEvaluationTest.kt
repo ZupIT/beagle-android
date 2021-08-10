@@ -22,7 +22,7 @@ import br.com.zup.beagle.android.extensions.once
 import br.com.zup.beagle.android.logger.BeagleMessageLogs
 import br.com.zup.beagle.android.mockdata.ComponentModel
 import br.com.zup.beagle.android.testutil.RandomData
-import br.com.zup.beagle.widget.core.TextAlignment
+import br.com.zup.beagle.android.widget.core.TextAlignment
 import com.squareup.moshi.Moshi
 import io.mockk.Runs
 import io.mockk.every

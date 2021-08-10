@@ -28,13 +28,13 @@ import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.android.widget.WidgetView
 import br.com.zup.beagle.android.annotation.RegisterWidget
 import br.com.zup.beagle.android.components.ImagePath
-import br.com.zup.beagle.core.Accessibility
-import br.com.zup.beagle.core.BeagleJson
-import br.com.zup.beagle.core.IdentifierComponent
-import br.com.zup.beagle.core.ServerDrivenComponent
-import br.com.zup.beagle.core.SingleChildComponent
-import br.com.zup.beagle.core.Style
-import br.com.zup.beagle.widget.core.Flex
+import br.com.zup.beagle.android.widget.core.Accessibility
+import br.com.zup.beagle.android.widget.core.BeagleJson
+import br.com.zup.beagle.android.widget.core.IdentifierComponent
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
+import br.com.zup.beagle.android.widget.core.SingleChildComponent
+import br.com.zup.beagle.android.widget.core.Style
+import br.com.zup.beagle.android.widget.core.Flex
 
 
 /**

@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-package br.com.zup.beagle.widget.core
-
-import br.com.zup.beagle.core.BeagleJson
+package br.com.zup.beagle.android.widget.core
 
 /**
  *  defines how the image fits the view it's in

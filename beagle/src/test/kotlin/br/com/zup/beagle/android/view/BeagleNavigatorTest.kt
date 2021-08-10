@@ -27,6 +27,7 @@ import androidx.fragment.app.FragmentTransaction
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.action.Route
 import br.com.zup.beagle.android.components.Text
+import br.com.zup.beagle.android.components.layout.Screen
 import br.com.zup.beagle.android.data.formatUrl
 import br.com.zup.beagle.android.extensions.once
 import br.com.zup.beagle.android.logger.BeagleLoggerProxy

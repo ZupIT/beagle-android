@@ -14,35 +14,37 @@
  * limitations under the License.
  */
 
-package br.com.zup.beagle.widget.core
-
-import br.com.zup.beagle.core.BeagleJson
+package br.com.zup.beagle.android.widget.core
 
 /**
- * Defines the text content alignment inside the text view
- *
- * @property LEFT
- * @property CENTER
- * @property RIGHT
- *
+ * Enum define text support.
  */
 @BeagleJson
-enum class TextAlignment {
-    /**
-     * Text content is LEFT aligned inside the text view.
-     *
-     */
-    LEFT,
+enum class TextInputType {
 
     /**
-     * Text content is CENTER aligned inside the text view.
-     *
+     * Date text support.
+     * This attribute on iOS will have the same effect as NUMBER.
      */
-    CENTER,
+    DATE,
 
     /**
-     * Text content is RIGHT aligned inside the text view.
-     *
+     * Email text support.
      */
-    RIGHT
+    EMAIL,
+
+    /**
+     * Password text support.
+     */
+    PASSWORD,
+
+    /**
+     * Numeric text support.
+     */
+    NUMBER,
+
+    /**
+     * Normal text support.
+     */
+    TEXT
 }

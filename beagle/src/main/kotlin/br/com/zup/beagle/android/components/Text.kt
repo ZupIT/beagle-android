@@ -30,7 +30,7 @@ import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.android.widget.WidgetView
 import br.com.zup.beagle.android.annotation.RegisterWidget
-import br.com.zup.beagle.widget.core.TextAlignment
+import br.com.zup.beagle.android.widget.core.TextAlignment
 
 /**
  * A text widget will define a text view natively using the server driven information received through Beagle.

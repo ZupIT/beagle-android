@@ -18,8 +18,8 @@
 package br.com.zup.beagle.android.components.utils
 
 import br.com.zup.beagle.android.context.Bind
-import br.com.zup.beagle.core.BeagleJson
-import br.com.zup.beagle.core.ServerDrivenComponent
+import br.com.zup.beagle.android.widget.core.BeagleJson
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 
 @BeagleJson
 data class Template(

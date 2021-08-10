@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.components.layout.NavigationBar
+import br.com.zup.beagle.android.components.layout.Screen
 import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.context.expressionOf
 import br.com.zup.beagle.android.mockdata.createViewForContext
@@ -29,9 +30,9 @@ import br.com.zup.beagle.android.view.custom.BeagleFlexView
 import br.com.zup.beagle.android.view.viewmodel.GenerateIdViewModel
 import br.com.zup.beagle.android.view.viewmodel.ScreenContextViewModel
 import br.com.zup.beagle.android.widget.RootView
-import br.com.zup.beagle.core.ServerDrivenComponent
-import br.com.zup.beagle.core.Style
-import br.com.zup.beagle.widget.Widget
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
+import br.com.zup.beagle.android.widget.core.Style
+import br.com.zup.beagle.android.widget.Widget
 import io.mockk.CapturingSlot
 import io.mockk.every
 import io.mockk.mockk
@@ -154,33 +155,6 @@ class WidgetExtensionsKtTest : BaseTest() {
             every { widgetComponent.toView(capture(slot), any()) } returns mockk()
             every { widgetComponent.id } returns "componentId"
             return slot
-        }
-    }
-
-    @DisplayName("When toComponent")
-    @Nested
-    inner class ToComponent {
-
-        @DisplayName("Then should create screen widget")
-        @Test
-        fun testToComponentShouldCreateScreenWidget() {
-            // Given
-            val navigationBar = mockk<NavigationBar>()
-            val child = mockk<ServerDrivenComponent>()
-            val style = mockk<Style>()
-            val screen = Screen(
-                navigationBar = navigationBar,
-                child = child,
-                style = style
-            )
-
-            // When
-            val actual = screen.toComponent()
-
-            // Then
-            assertEquals(navigationBar, actual.navigationBar)
-            assertEquals(child, actual.child)
-            assertEquals(style, actual.style)
         }
     }
 }

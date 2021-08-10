@@ -17,7 +17,7 @@
 package br.com.zup.beagle.android.networking
 
 import android.os.Parcelable
-import br.com.zup.beagle.core.BeagleJson
+import br.com.zup.beagle.android.widget.core.BeagleJson
 import kotlinx.parcelize.Parcelize
 
 /**

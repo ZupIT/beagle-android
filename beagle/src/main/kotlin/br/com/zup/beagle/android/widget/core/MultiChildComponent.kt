@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-package br.com.zup.beagle.core;
+package br.com.zup.beagle.android.widget.core
 
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+/**
+ * Component that has children
+ * @property children list of views that the component has in its hierarchy
+ */
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
-
-@Retention(RUNTIME)
-@Documented
-public @interface BeagleJson {
-    String name() default "";;
+@BeagleJson
+interface MultiChildComponent {
+    val children: List<ServerDrivenComponent>?
 }

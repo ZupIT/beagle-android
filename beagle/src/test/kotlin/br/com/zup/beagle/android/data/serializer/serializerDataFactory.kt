@@ -51,14 +51,14 @@ import br.com.zup.beagle.android.mockdata.CustomAndroidAction
 import br.com.zup.beagle.android.mockdata.CustomWidget
 import br.com.zup.beagle.android.mockdata.Person
 import br.com.zup.beagle.android.networking.HttpMethod
-import br.com.zup.beagle.core.Style
-import br.com.zup.beagle.widget.core.Flex
-import br.com.zup.beagle.widget.core.FlexDirection
-import br.com.zup.beagle.widget.core.ImageContentMode
-import br.com.zup.beagle.widget.core.ListDirection
-import br.com.zup.beagle.widget.core.ScrollAxis
-import br.com.zup.beagle.widget.core.TextAlignment
-import br.com.zup.beagle.widget.core.TextInputType
+import br.com.zup.beagle.android.widget.core.Style
+import br.com.zup.beagle.android.widget.core.Flex
+import br.com.zup.beagle.android.widget.core.FlexDirection
+import br.com.zup.beagle.android.widget.core.ImageContentMode
+import br.com.zup.beagle.android.widget.core.ListDirection
+import br.com.zup.beagle.android.widget.core.ScrollAxis
+import br.com.zup.beagle.android.widget.core.TextAlignment
+import br.com.zup.beagle.android.widget.core.TextInputType
 
 const val TEST_URL = "http://test.com"
 const val TEST_EXPRESSION = "@{test}"

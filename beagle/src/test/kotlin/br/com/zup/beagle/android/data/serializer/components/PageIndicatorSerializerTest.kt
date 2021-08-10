@@ -17,10 +17,8 @@
 package br.com.zup.beagle.android.data.serializer.components
 
 import br.com.zup.beagle.android.components.page.PageIndicator
-import br.com.zup.beagle.android.data.serializer.BaseSerializerTest
 import br.com.zup.beagle.android.data.serializer.makeObjectPageIndicator
 import br.com.zup.beagle.android.data.serializer.makePageIndicatorJson
-import br.com.zup.beagle.core.ServerDrivenComponent
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested

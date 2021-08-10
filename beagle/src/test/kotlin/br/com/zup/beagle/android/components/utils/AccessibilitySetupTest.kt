@@ -21,7 +21,7 @@ import android.widget.TextView
 import androidx.core.view.AccessibilityDelegateCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
-import br.com.zup.beagle.core.AccessibilityComponent
+import br.com.zup.beagle.android.widget.core.AccessibilityComponent
 import io.mockk.MockKAnnotations
 import io.mockk.Runs
 import io.mockk.every

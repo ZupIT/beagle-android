@@ -27,7 +27,7 @@ import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.utils.evaluateExpression
 import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.android.annotation.RegisterAction
-import br.com.zup.beagle.core.BeagleJson
+import br.com.zup.beagle.android.widget.core.BeagleJson
 import kotlin.reflect.KClass
 import kotlin.reflect.KParameter
 import kotlin.reflect.KProperty1

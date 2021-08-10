@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-package br.com.zup.beagle.core
+package br.com.zup.beagle.android.widget.core
 
 /**
- * Component that has a single child
- * @property child only view that the component has in its hierarchy
+ * Component that hold the accessibility
+ * @property accessibility attribute will enable a textual information to explain
+ * the view content in case a screen reader is use
  */
 
 @BeagleJson
-interface SingleChildComponent {
-    val child: ServerDrivenComponent
+interface AccessibilityComponent: ServerDrivenComponent {
+    val accessibility: Accessibility?
 }

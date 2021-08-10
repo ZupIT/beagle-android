@@ -27,7 +27,7 @@ import br.com.zup.beagle.android.components.Text
 import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.android.widget.WidgetView
 import br.com.zup.beagle.android.annotation.RegisterAction
-import br.com.zup.beagle.core.BeagleJson
+import br.com.zup.beagle.android.widget.core.BeagleJson
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.Assert

@@ -14,12 +14,9 @@
  * limitations under the License.
  */
 
-package br.com.zup.beagle.core
+package br.com.zup.beagle.android.widget.core
 
 import br.com.zup.beagle.android.context.Bind
-import br.com.zup.beagle.widget.core.EdgeValue
-import br.com.zup.beagle.widget.core.Flex
-import br.com.zup.beagle.widget.core.Size
 
 /**
  * The style class will enable a few visual options to be changed.

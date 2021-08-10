@@ -14,43 +14,20 @@
  * limitations under the License.
  */
 
-package br.com.zup.beagle.widget.core
-
-import br.com.zup.beagle.core.BeagleJson
+package br.com.zup.beagle.android.widget.core
 
 /**
- * Represents measurement values that contain both the numeric magnitude and the unit of measurement.
- * @property value the numeric measurement value.
- * @property type the unit of measurement.
+ * Enum define the scroll roll direction on screen.
  */
 @BeagleJson
-data class UnitValue(
-    val value: Double,
-    val type: UnitType
-)
-
-/**
- * This defines of a unit type;
- *
- * @property REAL
- * @property PERCENT
- * @property AUTO
- */
-
-@BeagleJson
-enum class UnitType {
+enum class ScrollAxis {
     /**
-     * Apply the value based in platform, like android this represent dp.
+     * Defines the scroll as vertical.
      */
-    REAL,
+    VERTICAL,
 
     /**
-     * Apply the value based in percentage.
+     * Defines the scroll as horizontal.
      */
-    PERCENT,
-
-    /**
-     * TODO.
-     */
-    AUTO
+    HORIZONTAL
 }

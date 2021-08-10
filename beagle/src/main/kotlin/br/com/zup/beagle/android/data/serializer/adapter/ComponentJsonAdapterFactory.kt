@@ -26,7 +26,7 @@ import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.setup.InternalWidgetFactory
 import br.com.zup.beagle.android.widget.UndefinedWidget
 import br.com.zup.beagle.android.widget.WidgetView
-import br.com.zup.beagle.core.ServerDrivenComponent
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 
 private const val BEAGLE_WIDGET_TYPE = "_beagleComponent_"
 private const val CUSTOM_NAMESPACE = "custom"

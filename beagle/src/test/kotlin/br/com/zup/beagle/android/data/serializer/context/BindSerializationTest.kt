@@ -24,7 +24,7 @@ import br.com.zup.beagle.android.data.serializer.BeagleMoshi
 import br.com.zup.beagle.android.mockdata.ComponentBinding
 import br.com.zup.beagle.android.mockdata.InternalObject
 import br.com.zup.beagle.android.widget.WidgetView
-import br.com.zup.beagle.core.ServerDrivenComponent
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 import io.mockk.every
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach

@@ -16,7 +16,7 @@
 
 package br.com.zup.beagle.android.data.cache
 
-import br.com.zup.beagle.core.ServerDrivenComponent
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 import br.com.zup.beagle.android.testutil.RandomData
 import io.mockk.mockk
 import org.junit.jupiter.api.Test

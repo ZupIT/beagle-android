@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package br.com.zup.beagle.core
+package br.com.zup.beagle.android.widget.core
 
 /**
  * The accessibility will enable a textual information to explain the view content in case a screen reader is used.

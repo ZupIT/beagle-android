@@ -22,9 +22,9 @@ import br.com.zup.beagle.android.data.serializer.createNamespace
 import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.utils.toAndroidId
 import br.com.zup.beagle.android.annotation.RegisterWidget
-import br.com.zup.beagle.core.BeagleJson
-import br.com.zup.beagle.core.IdentifierComponent
-import br.com.zup.beagle.core.ServerDrivenComponent
+import br.com.zup.beagle.android.widget.core.BeagleJson
+import br.com.zup.beagle.android.widget.core.IdentifierComponent
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 
 class ComponentStylization<T : ServerDrivenComponent>(
     private val accessibilitySetup: AccessibilitySetup = AccessibilitySetup(),

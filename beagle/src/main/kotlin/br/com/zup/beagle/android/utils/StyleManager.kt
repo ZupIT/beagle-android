@@ -29,7 +29,7 @@ import br.com.zup.beagle.android.components.Text
 import br.com.zup.beagle.android.components.utils.applyViewBackgroundAndCorner
 import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.setup.DesignSystem
-import br.com.zup.beagle.core.StyleComponent
+import br.com.zup.beagle.android.widget.core.StyleComponent
 
 class StyleManager(
     private val designSystem: DesignSystem? = BeagleEnvironment.beagleSdk.designSystem,

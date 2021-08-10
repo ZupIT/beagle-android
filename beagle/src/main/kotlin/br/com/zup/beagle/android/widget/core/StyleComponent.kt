@@ -14,10 +14,14 @@
  * limitations under the License.
  */
 
-package br.com.zup.beagle.core
+package br.com.zup.beagle.android.widget.core
 
 /**
- * Base of components
+ * Component that hold the style
+ * @property style attribute will enable a few visual options to be changed.
  */
 
-interface ServerDrivenComponent
+@BeagleJson
+interface StyleComponent : ServerDrivenComponent {
+    val style: Style?
+}

@@ -25,8 +25,8 @@ import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.widget.FragmentRootView
 import br.com.zup.beagle.android.widget.RootView
-import br.com.zup.beagle.core.IdentifierComponent
-import br.com.zup.beagle.core.ServerDrivenComponent
+import br.com.zup.beagle.android.widget.core.IdentifierComponent
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 
 /**
  * Execute a list of actions and create an implicit context with eventName and eventValue.

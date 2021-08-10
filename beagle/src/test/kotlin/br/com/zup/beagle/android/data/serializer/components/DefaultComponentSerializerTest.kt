@@ -18,7 +18,7 @@ package br.com.zup.beagle.android.data.serializer.components
 
 import br.com.zup.beagle.android.components.layout.NavigationBar
 import br.com.zup.beagle.android.components.layout.SafeArea
-import br.com.zup.beagle.android.components.layout.ScreenComponent
+import br.com.zup.beagle.android.components.layout.Screen
 import br.com.zup.beagle.android.data.serializer.BeagleMoshi
 import br.com.zup.beagle.android.data.serializer.DefaultSerializerTest
 import br.com.zup.beagle.android.data.serializer.makeButtonJson
@@ -63,7 +63,7 @@ import br.com.zup.beagle.android.data.serializer.makeWebViewJson
 import br.com.zup.beagle.android.data.serializer.makeWebViewWithExpressionJson
 import br.com.zup.beagle.android.mockdata.CustomWidget
 import br.com.zup.beagle.android.widget.WidgetView
-import br.com.zup.beagle.core.ServerDrivenComponent
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 import io.mockk.every
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.DisplayName
@@ -113,7 +113,7 @@ class DefaultComponentSerializerTest :
         ),
     )
 
-    private fun makeObjectScreenComponent() = ScreenComponent(
+    private fun makeObjectScreenComponent() = Screen(
         safeArea = SafeArea(
             top = true,
             leading = true,

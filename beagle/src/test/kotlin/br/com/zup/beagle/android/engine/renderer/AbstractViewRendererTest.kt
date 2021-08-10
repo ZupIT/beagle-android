@@ -25,7 +25,7 @@ import br.com.zup.beagle.android.testutil.RandomData
 import br.com.zup.beagle.android.view.viewmodel.GenerateIdViewModel
 import br.com.zup.beagle.android.view.viewmodel.ScreenContextViewModel
 import br.com.zup.beagle.android.widget.RootView
-import br.com.zup.beagle.widget.Widget
+import br.com.zup.beagle.android.widget.Widget
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just

@@ -26,9 +26,8 @@ import br.com.zup.beagle.android.utils.ToolbarManager
 import br.com.zup.beagle.android.view.BeagleActivity
 import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.view.custom.BeagleFlexView
-import br.com.zup.beagle.core.ServerDrivenComponent
-import br.com.zup.beagle.core.Style
-import io.mockk.CapturingSlot
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
+import br.com.zup.beagle.android.widget.core.Style
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
@@ -55,7 +54,7 @@ class ScreenComponentTest : BaseComponentTest() {
     @MockK
     private lateinit var component: ServerDrivenComponent
 
-    private lateinit var screenComponent: ScreenComponent
+    private lateinit var screenComponent: Screen
 
     @BeforeEach
     override fun setUp() {
@@ -67,7 +66,7 @@ class ScreenComponentTest : BaseComponentTest() {
         every { Color.parseColor(any()) } returns DEFAULT_COLOR
         every { rootView.getContext() } returns context
 
-        screenComponent = ScreenComponent(navigationBar = null, child = component)
+        screenComponent = Screen(navigationBar = null, child = component)
     }
 
     @Test
@@ -133,7 +132,7 @@ class ScreenComponentTest : BaseComponentTest() {
         //GIVEN
         val navigationBar = NavigationBar("Stub")
         mockkConstructor(ToolbarManager::class)
-        screenComponent = ScreenComponent(child = screenComponent, navigationBar = navigationBar)
+        screenComponent = Screen(child = screenComponent, navigationBar = navigationBar)
         every {
             anyConstructed<ToolbarManager>().configureToolbar(
                 any(),

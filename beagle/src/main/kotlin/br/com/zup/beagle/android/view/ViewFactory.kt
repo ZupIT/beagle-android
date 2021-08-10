@@ -38,8 +38,8 @@ import br.com.zup.beagle.android.view.custom.BeaglePageView
 import br.com.zup.beagle.android.view.custom.BeagleTabLayout
 import br.com.zup.beagle.android.view.custom.BeagleView
 import br.com.zup.beagle.android.widget.RootView
-import br.com.zup.beagle.core.CornerRadius
-import br.com.zup.beagle.core.Style
+import br.com.zup.beagle.android.widget.core.CornerRadius
+import br.com.zup.beagle.android.widget.core.Style
 
 internal object ViewFactory {
 

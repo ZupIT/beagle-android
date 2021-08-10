@@ -35,8 +35,8 @@ import br.com.zup.beagle.android.view.viewmodel.ListViewIdViewModel
 import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.android.widget.WidgetView
 import br.com.zup.beagle.android.annotation.RegisterWidget
-import br.com.zup.beagle.core.ServerDrivenComponent
-import br.com.zup.beagle.widget.core.ListDirection
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
+import br.com.zup.beagle.android.widget.core.ListDirection
 
 /**
  * @param direction define the list direction.

@@ -14,27 +14,10 @@
  * limitations under the License.
  */
 
-package br.com.zup.beagle.widget
-
-import br.com.zup.beagle.core.Accessibility
-import br.com.zup.beagle.core.AccessibilityComponent
-import br.com.zup.beagle.core.BeagleJson
-import br.com.zup.beagle.core.IdentifierComponent
-import br.com.zup.beagle.core.Style
-import br.com.zup.beagle.core.StyleComponent
+package br.com.zup.beagle.android.widget.core
 
 /**
- * Base of all widgets
- *
+ * Base of components
  */
 
-@BeagleJson
-abstract class Widget : StyleComponent, AccessibilityComponent,
-    IdentifierComponent {
-
-    override var id: String? = null
-
-    override var style: Style? = null
-
-    override var accessibility: Accessibility? = null
-}
+interface ServerDrivenComponent

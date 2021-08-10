@@ -19,7 +19,7 @@ package br.com.zup.beagle.android.view.viewmodel
 import androidx.lifecycle.Observer
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.action.Action
-import br.com.zup.beagle.android.components.layout.ScreenComponent
+import br.com.zup.beagle.android.components.layout.Screen
 import br.com.zup.beagle.android.data.ActionRequester
 import br.com.zup.beagle.android.data.ComponentRequester
 import br.com.zup.beagle.android.exception.BeagleException
@@ -28,8 +28,8 @@ import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.testutil.CoroutinesTestExtension
 import br.com.zup.beagle.android.testutil.InstantExecutorExtension
 import br.com.zup.beagle.android.testutil.RandomData
-import br.com.zup.beagle.core.IdentifierComponent
-import br.com.zup.beagle.core.ServerDrivenComponent
+import br.com.zup.beagle.android.widget.core.IdentifierComponent
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.coVerifyOrder
@@ -212,7 +212,7 @@ class BeagleViewModelTest : BaseTest() {
         fun testGivenAScreenComponentWhenFetchComponentCalledShouldPostViewStateDoRenderUsingIdentifierAsScreenId() {
             //Given
             val screenRequest = RequestData(url = "")
-            val component: ScreenComponent = mockk()
+            val component: Screen = mockk()
             val id = "id"
 
             every { component.id } returns id

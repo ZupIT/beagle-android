@@ -29,7 +29,7 @@ import br.com.zup.beagle.android.utils.handleEvent
 import br.com.zup.beagle.android.utils.observeBindChanges
 import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.view.custom.BeagleTabLayout
-import br.com.zup.beagle.core.Style
+import br.com.zup.beagle.android.widget.core.Style
 import com.google.android.material.tabs.TabLayout
 import io.mockk.Runs
 import io.mockk.every

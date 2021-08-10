@@ -30,7 +30,7 @@ import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.components.ImagePath
 import br.com.zup.beagle.android.components.layout.NavigationBar
 import br.com.zup.beagle.android.components.layout.NavigationBarItem
-import br.com.zup.beagle.android.components.layout.ScreenComponent
+import br.com.zup.beagle.android.components.layout.Screen
 import br.com.zup.beagle.android.extensions.once
 import br.com.zup.beagle.android.setup.DesignSystem
 import br.com.zup.beagle.android.testutil.RandomData
@@ -60,7 +60,7 @@ import org.junit.jupiter.api.Test
 internal class ToolbarManagerTest : BaseTest() {
 
     private var toolbarTextManagerMock = mockk<ToolbarTextManager>()
-    private var screenComponent = mockk<ScreenComponent>()
+    private var screenComponent = mockk<Screen>()
     private var action = mockk<Action>()
     private var designSystemMock = mockk<DesignSystem>()
     private var navigationIcon = mockk<Drawable>()

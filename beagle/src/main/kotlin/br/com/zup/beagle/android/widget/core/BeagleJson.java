@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-package br.com.zup.beagle.core
+package br.com.zup.beagle.android.widget.core;
 
-/**
- * Component that hold the style
- * @property style attribute will enable a few visual options to be changed.
- */
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-@BeagleJson
-interface StyleComponent : ServerDrivenComponent {
-    val style: Style?
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+
+@Retention(RUNTIME)
+@Documented
+public @interface BeagleJson {
+    String name() default "";;
 }

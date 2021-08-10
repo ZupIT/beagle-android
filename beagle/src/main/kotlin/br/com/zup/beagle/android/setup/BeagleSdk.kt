@@ -33,7 +33,7 @@ import br.com.zup.beagle.android.store.StoreHandler
 import br.com.zup.beagle.android.utils.BeagleScope
 import br.com.zup.beagle.android.utils.CoroutineDispatchers
 import br.com.zup.beagle.android.widget.WidgetView
-import br.com.zup.beagle.core.ServerDrivenComponent
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 import com.facebook.soloader.SoLoader
 import kotlinx.coroutines.launch
 

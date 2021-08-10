@@ -25,8 +25,8 @@ import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.android.widget.WidgetView
 import br.com.zup.beagle.android.annotation.RegisterWidget
-import br.com.zup.beagle.core.BeagleJson
-import br.com.zup.beagle.widget.core.ListDirection
+import br.com.zup.beagle.android.widget.core.BeagleJson
+import br.com.zup.beagle.android.widget.core.ListDirection
 
 /**
  * @param context define the contextData that be set to component.

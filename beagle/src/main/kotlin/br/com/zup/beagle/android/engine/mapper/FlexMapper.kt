@@ -20,11 +20,11 @@ import android.view.View
 import br.com.zup.beagle.android.utils.dp
 import br.com.zup.beagle.android.utils.internalObserveBindChanges
 import br.com.zup.beagle.android.widget.RootView
-import br.com.zup.beagle.core.Style
-import br.com.zup.beagle.widget.core.EdgeValue
-import br.com.zup.beagle.widget.core.Size
-import br.com.zup.beagle.widget.core.UnitType
-import br.com.zup.beagle.widget.core.UnitValue
+import br.com.zup.beagle.android.widget.core.Style
+import br.com.zup.beagle.android.widget.core.EdgeValue
+import br.com.zup.beagle.android.widget.core.Size
+import br.com.zup.beagle.android.widget.core.UnitType
+import br.com.zup.beagle.android.widget.core.UnitValue
 import com.facebook.yoga.YogaAlign
 import com.facebook.yoga.YogaDisplay
 import com.facebook.yoga.YogaEdge

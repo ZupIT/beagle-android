@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-package br.com.zup.beagle.core
+package br.com.zup.beagle.android.widget.core
 
 /**
- * Component that hold the accessibility
- * @property accessibility attribute will enable a textual information to explain
- * the view content in case a screen reader is use
+ * Component that hold the ghost view
+ * @property child show the current view
  */
 
 @BeagleJson
-interface AccessibilityComponent: ServerDrivenComponent {
-    val accessibility: Accessibility?
+interface GhostComponent : SingleChildComponent {
+    override val child: ServerDrivenComponent
 }

@@ -14,14 +14,33 @@
  * limitations under the License.
  */
 
-package br.com.zup.beagle.core
+package br.com.zup.beagle.android.widget.core
 
 /**
- * Component that hold the ghost view
- * @property child show the current view
+ * Defines the text content alignment inside the text view
+ *
+ * @property LEFT
+ * @property CENTER
+ * @property RIGHT
+ *
  */
-
 @BeagleJson
-interface GhostComponent : SingleChildComponent {
-    override val child: ServerDrivenComponent
+enum class TextAlignment {
+    /**
+     * Text content is LEFT aligned inside the text view.
+     *
+     */
+    LEFT,
+
+    /**
+     * Text content is CENTER aligned inside the text view.
+     *
+     */
+    CENTER,
+
+    /**
+     * Text content is RIGHT aligned inside the text view.
+     *
+     */
+    RIGHT
 }

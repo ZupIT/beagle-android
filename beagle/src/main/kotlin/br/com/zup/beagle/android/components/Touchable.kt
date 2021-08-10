@@ -23,9 +23,9 @@ import br.com.zup.beagle.android.engine.renderer.ViewRendererFactory
 import br.com.zup.beagle.android.utils.handleEvent
 import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.android.widget.ViewConvertable
-import br.com.zup.beagle.core.BeagleJson
-import br.com.zup.beagle.core.GhostComponent
-import br.com.zup.beagle.core.ServerDrivenComponent
+import br.com.zup.beagle.android.widget.core.BeagleJson
+import br.com.zup.beagle.android.widget.core.GhostComponent
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 
 /**
  *  The Touchable component defines a click listener.
