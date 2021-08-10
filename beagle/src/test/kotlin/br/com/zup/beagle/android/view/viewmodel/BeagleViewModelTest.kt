@@ -214,16 +214,14 @@ class BeagleViewModelTest : BaseTest() {
             val screenRequest = RequestData(url = "")
             val component: ScreenComponent = mockk()
             val id = "id"
-            val identifier = "identifier"
 
             every { component.id } returns id
-            every { component.identifier } returns identifier
 
             //WHEN
             beagleUIViewModel.fetchComponent(screenRequest, component).observeForever(observer)
 
             //THEN
-            verify(exactly = once()) { observer.onChanged(ViewState.DoRender(identifier, component)) }
+            verify(exactly = once()) { observer.onChanged(ViewState.DoRender(id, component)) }
 
         }
     }

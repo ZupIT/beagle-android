@@ -22,6 +22,7 @@ import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.action.SendRequest
 import br.com.zup.beagle.android.components.layout.Container
 import br.com.zup.beagle.android.components.list.ListAdapter
+import br.com.zup.beagle.android.components.utils.Template
 import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.context.expressionOf
 import br.com.zup.beagle.android.testutil.InstantExecutorExtension
@@ -54,30 +55,48 @@ class ListViewTest : BaseComponentTest() {
     private val recyclerView: RecyclerView = mockk(relaxed = true)
     private val beagleRecyclerView: BeagleRecyclerView = mockk(relaxed = true)
     private val layoutManagerSlot = slot<LinearLayoutManager>()
-    private val deprecatedAdapterSlot = slot<ListView.ListViewRecyclerAdapter>()
     private val adapterSlot = slot<ListAdapter>()
 
-    private val children by lazy { listOf(Container(listOf())) }
     private val context = ContextData(
         id = "context",
         value = listOf(Cell(10, "Item 1"), Cell(20, "Item 2"), Cell(30, "Item 3"))
     )
     private val onInit = listOf(SendRequest("http://www.init.com"))
     private val dataSource = expressionOf<List<Any>>("@{context}")
-    private val template by lazy { Container(children = listOf(Text(expressionOf("@{item.name}")))) }
+
+    private val templates by lazy {
+        listOf(
+            Template(
+                view = Container(
+                    children = listOf(
+                        Text(
+                            expressionOf("@{item.name}")
+                        )
+                    )
+                )
+            )
+        )
+    }
     private val onScrollEnd = listOf(mockk<Action>(relaxed = true))
     private val iteratorName = "list"
     private val key = "id"
 
-    private lateinit var deprecatedListView: ListView
     private lateinit var listView: ListView
 
     @BeforeEach
     override fun setUp() {
         super.setUp()
 
-        deprecatedListView = ListView(children, ListDirection.VERTICAL)
-        listView = ListView(ListDirection.VERTICAL, context, onInit, dataSource, template, onScrollEnd, iteratorName = iteratorName, key = key)
+        listView = ListView(
+            direction = ListDirection.VERTICAL,
+            context = context,
+            onInit = onInit,
+            dataSource = dataSource,
+            onScrollEnd = onScrollEnd,
+            templates = templates,
+            iteratorName = iteratorName,
+            key = key
+        )
 
         every { beagleFlexView.addView(any<ServerDrivenComponent>()) } just Runs
         every { ViewFactory.makeRecyclerView(rootView.getContext()) } returns recyclerView
@@ -86,60 +105,6 @@ class ListViewTest : BaseComponentTest() {
         every { ViewFactory.makeBeagleRecyclerViewScrollIndicatorHorizontal(rootView.getContext()) } returns beagleRecyclerView
         every { recyclerView.layoutManager = capture(layoutManagerSlot) } just Runs
         every { recyclerView.adapter = any() } just Runs
-    }
-
-    @DisplayName("When build a deprecated list")
-    @Nested
-    inner class DeprecatedListViewBuild {
-
-        @Test
-        @DisplayName("Then should return a RecyclerView instance")
-        fun testDeprecatedListReturnRecyclerView() {
-            // Given When
-            val view = deprecatedListView.buildView(rootView)
-
-            // Then
-            assertTrue(view is RecyclerView)
-        }
-
-        @Test
-        @DisplayName("Then should return a vertical RecyclerView instance")
-        fun testDeprecatedListReturnVerticalRecyclerView() {
-            // Given
-            deprecatedListView = deprecatedListView.copy(direction = ListDirection.VERTICAL)
-
-            // When
-            deprecatedListView.buildView(rootView)
-
-            // Then
-            assertEquals(RecyclerView.VERTICAL, layoutManagerSlot.captured.orientation)
-        }
-
-        @Test
-        @DisplayName("Then should return a horizontal RecyclerView instance")
-        fun testDeprecatedListReturnHorizontalRecyclerView() {
-            // Given
-            deprecatedListView = deprecatedListView.copy(direction = ListDirection.HORIZONTAL)
-
-            // When
-            deprecatedListView.buildView(rootView)
-
-            // Then
-            assertEquals(RecyclerView.HORIZONTAL, layoutManagerSlot.captured.orientation)
-        }
-
-        @Test
-        @DisplayName("Then should create an adapter with children")
-        fun testDeprecatedListCreateAnAdapter() {
-            // Given
-            every { recyclerView.adapter = capture(deprecatedAdapterSlot) } just Runs
-
-            // When
-            deprecatedListView.buildView(rootView)
-
-            // Then
-            assertEquals(children, deprecatedAdapterSlot.captured.children)
-        }
     }
 
     @DisplayName("When buildView")
@@ -156,7 +121,7 @@ class ListViewTest : BaseComponentTest() {
             listView.buildView(rootView)
 
             // Then
-            assertEquals(template, adapterSlot.captured.template)
+            assertEquals(templates, adapterSlot.captured.templateList)
             assertEquals(iteratorName, adapterSlot.captured.iteratorName)
             assertEquals(key, adapterSlot.captured.key)
         }
@@ -191,7 +156,16 @@ class ListViewTest : BaseComponentTest() {
         @DisplayName("Then should create a recyclerView")
         fun testListViewIndicatorCreateRecyclerView() {
             // Given
-            listView = ListView(ListDirection.VERTICAL, context, onInit, dataSource, template, onScrollEnd, iteratorName = iteratorName, key = key)
+            listView = ListView(
+                direction = ListDirection.VERTICAL,
+                context = context,
+                onInit = onInit,
+                dataSource = dataSource,
+                templates = templates,
+                onScrollEnd = onScrollEnd,
+                iteratorName = iteratorName,
+                key = key
+            )
 
             // When
             listView.buildView(rootView)
@@ -204,7 +178,17 @@ class ListViewTest : BaseComponentTest() {
         @DisplayName("Then should create a vertical indicator recyclerView")
         fun testListViewVerticalIndicatorCreateRecyclerView() {
             // Given
-            listView = ListView(ListDirection.VERTICAL, context, onInit, dataSource, template, onScrollEnd, iteratorName = iteratorName, key = key, isScrollIndicatorVisible = true)
+            listView = ListView(
+                direction = ListDirection.VERTICAL,
+                context = context,
+                onInit = onInit,
+                dataSource = dataSource,
+                templates = templates,
+                onScrollEnd = onScrollEnd,
+                iteratorName = iteratorName,
+                key = key,
+                isScrollIndicatorVisible = true
+            )
 
             // When
             listView.buildView(rootView)
@@ -217,13 +201,27 @@ class ListViewTest : BaseComponentTest() {
         @DisplayName("Then should create a horizontal indicator recyclerView")
         fun testListViewHorizontalIndicatorCreateRecyclerView() {
             // Given
-            listView = ListView(ListDirection.HORIZONTAL, context, onInit, dataSource, template, onScrollEnd, iteratorName = iteratorName, key = key, isScrollIndicatorVisible = true)
+            listView = ListView(
+                direction = ListDirection.VERTICAL,
+                context = context,
+                onInit = onInit,
+                dataSource = dataSource,
+                templates = templates,
+                onScrollEnd = onScrollEnd,
+                iteratorName = iteratorName,
+                key = key,
+                isScrollIndicatorVisible = true
+            )
 
             // When
             listView.buildView(rootView)
 
             // Then
-            verify(exactly = 1) { ViewFactory.makeBeagleRecyclerViewScrollIndicatorHorizontal(rootView.getContext()) }
+            verify(exactly = 1) {
+                ViewFactory.makeBeagleRecyclerViewScrollIndicatorHorizontal(
+                    rootView.getContext()
+                )
+            }
         }
     }
 

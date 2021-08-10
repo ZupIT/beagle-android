@@ -21,6 +21,7 @@ import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.action.Navigate
 import br.com.zup.beagle.android.action.Route
 import br.com.zup.beagle.android.components.Button
+import br.com.zup.beagle.android.context.valueOf
 import br.com.zup.beagle.android.exception.BeagleException
 import br.com.zup.beagle.android.logger.BeagleMessageLogs
 import br.com.zup.beagle.android.testutil.RandomData
@@ -86,7 +87,7 @@ class BeagleSerializerTest : BaseTest() {
         fun testSerializeObject() {
             // Given
             val json = "{}"
-            val button = Button(RandomData.string())
+            val button = Button(valueOf(RandomData.string()))
             every { jsonAdapter.toJson(button) } returns json
 
             // When
@@ -100,7 +101,7 @@ class BeagleSerializerTest : BaseTest() {
         @Test
         fun testSerializeObjectException() {
             // Given
-            val button = Button(RandomData.string())
+            val button = Button(valueOf(RandomData.string()))
             every { jsonAdapter.toJson(button) } returns null
 
             // Then
@@ -112,7 +113,7 @@ class BeagleSerializerTest : BaseTest() {
         fun testSerializeObjectWhenToJsonThrowsException() {
             // Given
             val exception = IOException()
-            val button = Button(RandomData.string())
+            val button = Button(valueOf(RandomData.string()))
             every { jsonAdapter.toJson(any()) } throws exception
 
             // Then
@@ -129,7 +130,7 @@ class BeagleSerializerTest : BaseTest() {
         fun testDeserializeJson() {
             // Given
             val json = "{}"
-            val button = Button(RandomData.string())
+            val button = Button(valueOf(RandomData.string()))
             every { jsonAdapter.fromJson(json) } returns button
 
             // When

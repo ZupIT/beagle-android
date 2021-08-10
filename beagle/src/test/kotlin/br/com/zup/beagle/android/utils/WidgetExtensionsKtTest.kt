@@ -16,7 +16,7 @@
 
 package br.com.zup.beagle.android.utils
 
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.components.layout.NavigationBar
@@ -55,7 +55,7 @@ class WidgetExtensionsKtTest : BaseTest() {
     private val view = createViewForContext()
     private val generateIdViewModel: GenerateIdViewModel = mockk(relaxed = true)
     private val contextViewModel: ScreenContextViewModel = mockk(relaxed = true)
-    private val activity: AppCompatActivity = mockk(relaxed = true)
+    private val fragment: Fragment = mockk(relaxed = true)
 
     @BeforeEach
     override fun setUp() {
@@ -129,7 +129,7 @@ class WidgetExtensionsKtTest : BaseTest() {
             val screenId = "screenId"
 
             //when
-            widgetComponent.toView(activity = activity, screenIdentifier = screenId)
+            widgetComponent.toView(fragment = fragment, screenIdentifier = screenId)
 
             //then
             assertEquals(screenId, slot.captured.getScreenId())
@@ -143,7 +143,7 @@ class WidgetExtensionsKtTest : BaseTest() {
             val componentId = "componentId"
 
             //when
-            widgetComponent.toView(activity = activity, screenIdentifier = null)
+            widgetComponent.toView(fragment = fragment, screenIdentifier = null)
 
             //then
             assertEquals(componentId, slot.captured.getScreenId())

@@ -114,8 +114,8 @@ class BeagleActivityTest : BaseSoLoaderTest() {
     fun `Given a screen with identifier When navigate to Then should call BeagleFragment newInstance with right parameters`() = runBlockingTest {
         // Given
         val screenRequest = RequestData(url = "")
-        val screenIdentifier = "myScreen"
-        val screen = Screen(identifier = screenIdentifier, child = component)
+        val id = "myScreen"
+        val screen = Screen(id = id, child = component)
 
 
         prepareViewModelMock(analyticsViewModel)
@@ -126,7 +126,7 @@ class BeagleActivityTest : BaseSoLoaderTest() {
         activity?.navigateTo(screenRequest, screen)
 
         // THEN
-        assertEquals(screenIdentifier, screenIdentifierSlot.captured)
+        assertEquals(id, screenIdentifierSlot.captured)
     }
 
 }

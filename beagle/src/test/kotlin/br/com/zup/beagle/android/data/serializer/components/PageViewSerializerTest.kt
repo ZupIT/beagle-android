@@ -16,18 +16,15 @@
 
 package br.com.zup.beagle.android.data.serializer.components
 
-import br.com.zup.beagle.android.components.page.PageIndicator
 import br.com.zup.beagle.android.components.page.PageView
-import br.com.zup.beagle.android.data.serializer.BaseSerializerTest
+import br.com.zup.beagle.android.context.valueOf
 import br.com.zup.beagle.android.data.serializer.makeActionAlertJson
 import br.com.zup.beagle.android.data.serializer.makeActionAlertObject
 import br.com.zup.beagle.android.data.serializer.makeButtonJson
 import br.com.zup.beagle.android.data.serializer.makeContextWithPrimitiveValueJson
 import br.com.zup.beagle.android.data.serializer.makeObjectButton
 import br.com.zup.beagle.android.data.serializer.makeObjectContextWithPrimitiveValue
-import br.com.zup.beagle.android.data.serializer.makeObjectPageIndicator
 import br.com.zup.beagle.android.data.serializer.makePageIndicatorJson
-import br.com.zup.beagle.core.ServerDrivenComponent
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -60,18 +57,6 @@ class PageViewSerializerTest : BaseServerDrivenComponentSerializerTest() {
             Assertions.assertNotNull(deserializedComponent)
             Assertions.assertEquals(expectedComponent.children, deserializedComponent.children)
             Assertions.assertEquals(expectedComponent.context, deserializedComponent.context)
-            Assertions.assertEquals(
-                (expectedComponent.pageIndicator as PageIndicator).selectedColor,
-                (deserializedComponent.pageIndicator as PageIndicator).selectedColor
-            )
-            Assertions.assertEquals(
-                (expectedComponent.pageIndicator as PageIndicator).unselectedColor,
-                (deserializedComponent.pageIndicator as PageIndicator).unselectedColor
-            )
-            Assertions.assertEquals(
-                (expectedComponent.pageIndicator as PageIndicator).numberOfPages,
-                (deserializedComponent.pageIndicator as PageIndicator).numberOfPages
-            )
         }
     }
 
@@ -123,12 +108,11 @@ class PageViewSerializerTest : BaseServerDrivenComponentSerializerTest() {
         ),
         context = makeObjectContextWithPrimitiveValue(),
         onPageChange = listOf(makeActionAlertObject()),
-        currentPage = 1
+        currentPage = valueOf(1)
     )
 
     private fun makeObjectPageViewWithPageIndicator() = PageView(
         children = listOf(makeObjectButton()),
         context = makeObjectContextWithPrimitiveValue(),
-        pageIndicator = makeObjectPageIndicator()
     )
 }

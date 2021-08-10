@@ -130,11 +130,17 @@ class BeagleApiTest {
             mockListenersAndExecuteHttpClient()
 
             // When
-            beagleApi.fetchData(REQUEST_DATA.copy(headers = headers))
+            beagleApi.fetchData(
+                REQUEST_DATA.copy(
+                    httpAdditionalData = REQUEST_DATA.httpAdditionalData.copy(
+                        headers = headers
+                    )
+                )
+            )
 
             // Then
             checkFixedHeaders(requestDataSlot[0])
-            assertEquals(headers["a"], requestDataSlot[0].headers["a"])
+            assertEquals(headers["a"], requestDataSlot[0].httpAdditionalData.headers["a"])
         }
 
         @DisplayName("Then should replace header with same keys as fixed ones")
@@ -145,7 +151,13 @@ class BeagleApiTest {
             mockListenersAndExecuteHttpClient()
 
             // When
-            beagleApi.fetchData(REQUEST_DATA.copy(headers = headers))
+            beagleApi.fetchData(
+                REQUEST_DATA.copy(
+                    httpAdditionalData = REQUEST_DATA.httpAdditionalData.copy(
+                        headers = headers
+                    )
+                )
+            )
 
             // Then
             checkFixedHeaders(requestDataSlot[0])
@@ -173,12 +185,8 @@ class BeagleApiTest {
             val convertedRequestData = requestDataSlot[0]
             checkFixedHeaders(convertedRequestData)
             assertEquals(FINAL_URL, convertedRequestData.url)
-            assertEquals(URI(FINAL_URL), convertedRequestData.uri)
-            assertEquals(headers["key"], convertedRequestData.headers["key"])
             assertEquals(headers["key"], convertedRequestData.httpAdditionalData.headers["key"])
-            assertEquals(HttpMethod.POST, convertedRequestData.method)
             assertEquals(HttpMethod.POST, convertedRequestData.httpAdditionalData.method)
-            assertEquals(body, convertedRequestData.body)
             assertEquals(body, convertedRequestData.httpAdditionalData.body)
         }
     }
@@ -225,9 +233,13 @@ class BeagleApiTest {
     }
 
     private fun checkFixedHeaders(requestData: RequestData) {
-        assertEquals(BeagleApi.APP_JSON, requestData.headers[BeagleApi.CONTENT_TYPE])
-        assertEquals(BeagleApi.BEAGLE_PLATFORM_HEADER_VALUE, requestData.headers[BeagleApi.BEAGLE_PLATFORM_HEADER_KEY])
-        assertEquals(BeagleApi.APP_JSON, requestData.httpAdditionalData.headers[BeagleApi.CONTENT_TYPE])
-        assertEquals(BeagleApi.BEAGLE_PLATFORM_HEADER_VALUE, requestData.httpAdditionalData.headers[BeagleApi.BEAGLE_PLATFORM_HEADER_KEY])
+        assertEquals(
+            BeagleApi.APP_JSON,
+            requestData.httpAdditionalData.headers[BeagleApi.CONTENT_TYPE]
+        )
+        assertEquals(
+            BeagleApi.BEAGLE_PLATFORM_HEADER_VALUE,
+            requestData.httpAdditionalData.headers[BeagleApi.BEAGLE_PLATFORM_HEADER_KEY]
+        )
     }
 }

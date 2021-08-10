@@ -56,11 +56,25 @@ class GridViewTest : BaseComponentTest() {
     )
     private val onInit = listOf(SendRequest("http://www.init.com"))
     private val dataSource = expressionOf<List<Any>>("@{context}")
-    private val templates by lazy { listOf(Template(view = Container(children = listOf(Text(expressionOf("@{item.name}")))))) }
+
+    private val templates by lazy {
+        listOf(
+            Template(
+                view = Container(
+                    children = listOf(
+                        Text(
+                            expressionOf("@{item.name}")
+                        )
+                    )
+                )
+            )
+        )
+    }
+
     private val onScrollEnd = listOf(mockk<Action>(relaxed = true))
     private val iteratorName = "list"
     private val key = "id"
-    private val numColumns = 3
+    private val spanCount = 3
 
     private lateinit var gridView: GridView
 
@@ -68,7 +82,16 @@ class GridViewTest : BaseComponentTest() {
     override fun setUp() {
         super.setUp()
 
-        gridView = GridView(context, onInit, dataSource, templates, onScrollEnd, iteratorName = iteratorName, key = key, numColumns = numColumns)
+        gridView = GridView(
+            context,
+            onInit,
+            dataSource,
+            templates,
+            onScrollEnd,
+            iteratorName = iteratorName,
+            key = key,
+            spanCount = spanCount,
+        )
 
         every { ViewFactory.makeBeagleRecyclerView(rootView.getContext()) } returns beagleRecyclerView
         every { beagleRecyclerView.layoutManager = capture(layoutManagerSlot) } just Runs
@@ -87,7 +110,10 @@ class GridViewTest : BaseComponentTest() {
 
             // Then
             Assertions.assertTrue(layoutManagerSlot.captured is GridLayoutManager)
-            Assertions.assertEquals((layoutManagerSlot.captured as GridLayoutManager).spanCount, numColumns)
+            Assertions.assertEquals(
+                (layoutManagerSlot.captured as GridLayoutManager).spanCount,
+                spanCount
+            )
         }
     }
 

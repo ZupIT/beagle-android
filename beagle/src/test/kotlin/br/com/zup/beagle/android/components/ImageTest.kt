@@ -18,6 +18,7 @@ package br.com.zup.beagle.android.components
 
 import android.widget.ImageView
 import br.com.zup.beagle.android.components.utils.RoundedImageView
+import br.com.zup.beagle.android.context.valueOf
 import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.testutil.RandomData
 import br.com.zup.beagle.android.utils.dp
@@ -26,6 +27,8 @@ import br.com.zup.beagle.core.CornerRadius
 import br.com.zup.beagle.core.Style
 import br.com.zup.beagle.widget.core.ImageContentMode
 import br.com.zup.beagle.widget.core.Size
+import br.com.zup.beagle.widget.core.UnitType
+import br.com.zup.beagle.widget.core.UnitValue
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
@@ -49,8 +52,13 @@ internal class ImageTest : BaseComponentTest() {
 
     private val imageView: RoundedImageView = mockk(relaxed = true, relaxUnitFun = true)
     private val scaleTypeSlot = slot<ImageView.ScaleType>()
-    private val style = Style(size = Size(width = 100.unitReal(), height = 100.unitReal()),
-        cornerRadius = CornerRadius(radius = 10.0))
+    private val styleLocal = Style(
+        size = Size(
+            width = UnitValue(100.0, UnitType.REAL),
+            height = UnitValue(100.0, UnitType.REAL)
+        ),
+        cornerRadius = CornerRadius(radius = 10.0)
+    )
 
     private lateinit var imageLocal: Image
     private lateinit var imageRemote: Image
@@ -67,8 +75,18 @@ internal class ImageTest : BaseComponentTest() {
         every { beagleSdk.designSystem!!.image(any()) } returns IMAGE_RES
         every { 10.0.dp() } returns 20.0
 
-        imageLocal = Image(ImagePath.Local("imageName"))
-        imageRemote = Image(ImagePath.Remote(DEFAULT_URL, ImagePath.Local("imageName"))).applyStyle(style)
+        imageLocal = Image(valueOf(ImagePath.Local("imageName")))
+        imageRemote =
+            Image(
+                valueOf(
+                    ImagePath.Remote(
+                        DEFAULT_URL,
+                        ImagePath.Local("imageName"),
+                    )
+                )
+            ).apply {
+                style = styleLocal
+            }
     }
 
     @DisplayName("When an imageView is built")
@@ -89,7 +107,7 @@ internal class ImageTest : BaseComponentTest() {
         @DisplayName("Then it should return a imageView if imagePath is remote")
         fun testsIfViewIsBuiltAsImageViewWhenImagePathIsRemote() {
             // Given
-            imageRemote = Image(ImagePath.Remote(""))
+            imageRemote = Image(valueOf(ImagePath.Remote("")))
 
             // When
             val view = imageRemote.buildView(rootView)
@@ -102,7 +120,7 @@ internal class ImageTest : BaseComponentTest() {
         @DisplayName("Then it should clear drawable if placeholder is null")
         fun testsIfClearDrawableWhenPlaceholderIsNull() {
             // Given
-            imageRemote = Image(ImagePath.Remote(url = ""))
+            imageRemote = Image(valueOf(ImagePath.Remote(url = "")))
 
             // When
             val view = imageRemote.buildView(rootView)
@@ -115,7 +133,15 @@ internal class ImageTest : BaseComponentTest() {
         @DisplayName("Then it should not clear drawable with placeholder")
         fun testsIfDrawableNullWasNotCalledWithPlaceholder() {
             // Given
-            imageRemote = Image(ImagePath.Remote(url = "", placeholder = ImagePath.Local("imageName")))
+            imageRemote =
+                Image(
+                    valueOf(
+                        ImagePath.Remote(
+                            url = "",
+                            placeholder = ImagePath.Local("imageName"),
+                        )
+                    )
+                )
 
             // When
             val view = imageRemote.buildView(rootView)
@@ -148,7 +174,13 @@ internal class ImageTest : BaseComponentTest() {
         @DisplayName("Then adjustViewBounds should be TRUE if there is size")
         fun testsIfTheAdjustViewBoundsIsSetTrue() {
             // Given
-            val image = imageLocal.applyStyle(Style(size = Size(width = 100.unitReal())))
+            val image = imageLocal.apply {
+                style = Style(
+                    size = Size(
+                        width = UnitValue(100.0, UnitType.REAL),
+                    ),
+                )
+            }
             val adjustViewBoundsSlot = slot<Boolean>()
             every { imageView.adjustViewBounds = capture(adjustViewBoundsSlot) } just Runs
 
@@ -163,14 +195,14 @@ internal class ImageTest : BaseComponentTest() {
         @DisplayName("Then adjustViewBounds should not be set when both width and height are not null")
         fun testsIfTheAdjustViewBoundsIsNotSet() {
             // Given
-            val image = imageLocal.applyStyle(
-                Style(
+            val image = imageLocal.apply {
+                style = Style(
                     size = Size(
-                        width = 100.unitReal(),
-                        height = 100.unitReal(),
+                        width = UnitValue(100.0, UnitType.REAL),
+                        height = UnitValue(100.0, UnitType.REAL),
                     )
                 )
-            )
+            }
 
             // When
             image.buildView(rootView)
@@ -183,7 +215,13 @@ internal class ImageTest : BaseComponentTest() {
         @DisplayName("Then adjustViewBounds should be set before scaleType")
         fun testsIfTheAdjustViewBoundsIsSetBeforeScaleType() {
             // Given
-            val image = imageLocal.applyStyle(Style(size = Size(width = 100.unitReal())))
+            val image = imageLocal.apply {
+                style = Style(
+                    size = Size(
+                        width = UnitValue(100.0, UnitType.REAL)
+                    )
+                )
+            }
             every { imageView.scaleType = any() } just Runs
 
             // When
@@ -231,7 +269,7 @@ internal class ImageTest : BaseComponentTest() {
         @DisplayName("Then the placeHolder for a remote image should set a Local Image path")
         fun testsIfTheSetImageResourceForALocalImageIsCalled() {
             //Given
-            imageRemote = Image(ImagePath.Remote("", ImagePath.Local("imageName")))
+            imageRemote = Image(valueOf(ImagePath.Remote("", ImagePath.Local("imageName"))))
 
             // When
             imageRemote.buildView(rootView)
