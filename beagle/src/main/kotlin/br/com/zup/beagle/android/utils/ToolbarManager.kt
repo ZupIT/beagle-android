@@ -33,7 +33,7 @@ import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
 import br.com.zup.beagle.R
 import br.com.zup.beagle.android.components.layout.NavigationBar
 import br.com.zup.beagle.android.components.layout.NavigationBarItem
-import br.com.zup.beagle.android.components.layout.ScreenComponent
+import br.com.zup.beagle.android.components.layout.Screen
 import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.setup.DesignSystem
 import br.com.zup.beagle.android.view.BeagleActivity
@@ -81,14 +81,14 @@ internal class ToolbarManager(private val toolbarTextManager: ToolbarTextManager
         rootView: RootView,
         navigationBar: NavigationBar,
         container: BeagleFlexView,
-        screenComponent: ScreenComponent,
+        screen: Screen,
     ) {
         (rootView.getContext() as BeagleActivity).getToolbar().apply {
             visibility = View.VISIBLE
             menu.clear()
             setAttributeToolbar(rootView.getContext(), this, navigationBar)
             navigationBar.navigationBarItems?.let { items ->
-                configToolbarItems(rootView, this, items, container, screenComponent)
+                configToolbarItems(rootView, this, items, container, screen)
             }
         }
     }
@@ -188,7 +188,7 @@ internal class ToolbarManager(private val toolbarTextManager: ToolbarTextManager
         toolbar: Toolbar,
         items: List<NavigationBarItem>,
         container: BeagleFlexView,
-        screenComponent: ScreenComponent,
+        screen: Screen,
     ) {
         val designSystem = BeagleEnvironment.beagleSdk.designSystem
         for (i in items.indices) {
@@ -204,7 +204,7 @@ internal class ToolbarManager(private val toolbarTextManager: ToolbarTextManager
                 if (items[i].image == null) {
                     setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
                 } else {
-                    configMenuItem(designSystem, items, i, rootView, container, screenComponent)
+                    configMenuItem(designSystem, items, i, rootView, container, screen)
                 }
             }
         }
@@ -228,13 +228,13 @@ internal class ToolbarManager(private val toolbarTextManager: ToolbarTextManager
         i: Int,
         rootView: RootView,
         container: BeagleFlexView,
-        screenComponent: ScreenComponent,
+        screen: Screen,
     ) {
         design?.let { designSystem ->
             items[i].image?.let { image ->
                 setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
 
-                screenComponent.observeBindChanges(rootView, container, image.mobileId) { mobileId ->
+                screen.observeBindChanges(rootView, container, image.mobileId) { mobileId ->
                     mobileId?.let {
                         icon = designSystem.image(it)?.let { iconRes ->
                             ResourcesCompat.getDrawable(

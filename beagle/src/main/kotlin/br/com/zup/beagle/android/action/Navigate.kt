@@ -27,7 +27,7 @@ import br.com.zup.beagle.android.view.custom.BeagleNavigator
 import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.core.BeagleJson
 import br.com.zup.beagle.android.analytics.ActionAnalyticsConfig
-import br.com.zup.beagle.android.components.layout.ScreenComponent
+import br.com.zup.beagle.android.components.layout.Screen
 
 /**
  * Class handles transition actions between screens in the application. Its structure is the following:.
@@ -249,14 +249,14 @@ sealed class Route {
     data class Remote constructor(
         val url: Bind<String>,
         val shouldPrefetch: Boolean? = null,
-        val fallback: ScreenComponent? = null,
+        val fallback: Screen? = null,
         val httpAdditionalData: HttpAdditionalData? = null,
     ) : Route() {
 
         constructor(
             url: String,
             shouldPrefetch: Boolean? = null,
-            fallback: ScreenComponent? = null,
+            fallback: Screen? = null,
             httpAdditionalData: HttpAdditionalData? = null,
         ) : this(
             expressionOrValueOf(url),
@@ -272,7 +272,7 @@ sealed class Route {
      */
     @BeagleJson
     data class Local(
-        val screen: ScreenComponent,
+        val screen: Screen,
     ) : Route()
 }
 

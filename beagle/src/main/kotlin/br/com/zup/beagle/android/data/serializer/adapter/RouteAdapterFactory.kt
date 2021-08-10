@@ -18,7 +18,7 @@ package br.com.zup.beagle.android.data.serializer.adapter
 
 import br.com.zup.beagle.android.action.HttpAdditionalData
 import br.com.zup.beagle.android.action.Route
-import br.com.zup.beagle.android.components.layout.ScreenComponent
+import br.com.zup.beagle.android.components.layout.Screen
 import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.data.serializer.BeagleMoshi.moshi
 import com.squareup.moshi.JsonAdapter
@@ -76,20 +76,20 @@ internal class RouteAdapter(private val adapter: JsonAdapter<Bind<String>>) : Js
                 writer.name(SHOULD_PREFETCH)
                 moshi.adapter(Boolean::class.java).toJson(writer, value.shouldPrefetch ?: false)
                 writer.name(FALLBACK)
-                moshi.adapter(ScreenComponent::class.java).toJson(writer, value.fallback)
+                moshi.adapter(Screen::class.java).toJson(writer, value.fallback)
                 writer.name(HTTP_ADDITIONAL_DATA)
                 moshi.adapter(HttpAdditionalData::class.java).toJson(writer, value.httpAdditionalData)
             }
             is Route.Local -> {
                 writer.name(SCREEN)
-                moshi.adapter(ScreenComponent::class.java).toJson(writer, value.screen)
+                moshi.adapter(Screen::class.java).toJson(writer, value.screen)
             }
         }
         writer.endObject()
     }
 
     private fun convertScreen(value: Any?) =
-        moshi.adapter(ScreenComponent::class.java).fromJsonValue(value)
+        moshi.adapter(Screen::class.java).fromJsonValue(value)
 
     companion object {
         private const val URL: String = "url"
