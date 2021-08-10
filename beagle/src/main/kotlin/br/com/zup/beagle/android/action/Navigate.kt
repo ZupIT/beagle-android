@@ -18,7 +18,6 @@ package br.com.zup.beagle.android.action
 
 import android.view.View
 import br.com.zup.beagle.android.annotation.ContextDataValue
-import br.com.zup.beagle.android.components.layout.Screen
 import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.context.expressionOrValueOf
 import br.com.zup.beagle.android.context.normalizeContextValue
@@ -28,6 +27,7 @@ import br.com.zup.beagle.android.view.custom.BeagleNavigator
 import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.core.BeagleJson
 import br.com.zup.beagle.android.analytics.ActionAnalyticsConfig
+import br.com.zup.beagle.android.components.layout.ScreenComponent
 
 /**
  * Class handles transition actions between screens in the application. Its structure is the following:.
@@ -249,14 +249,14 @@ sealed class Route {
     data class Remote constructor(
         val url: Bind<String>,
         val shouldPrefetch: Boolean? = null,
-        val fallback: Screen? = null,
+        val fallback: ScreenComponent? = null,
         val httpAdditionalData: HttpAdditionalData? = null,
     ) : Route() {
 
         constructor(
             url: String,
             shouldPrefetch: Boolean? = null,
-            fallback: Screen? = null,
+            fallback: ScreenComponent? = null,
             httpAdditionalData: HttpAdditionalData? = null,
         ) : this(
             expressionOrValueOf(url),
@@ -272,7 +272,7 @@ sealed class Route {
      */
     @BeagleJson
     data class Local(
-        val screen: Screen,
+        val screen: ScreenComponent,
     ) : Route()
 }
 

@@ -20,7 +20,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.components.layout.NavigationBar
-import br.com.zup.beagle.android.components.layout.Screen
 import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.context.expressionOf
 import br.com.zup.beagle.android.mockdata.createViewForContext

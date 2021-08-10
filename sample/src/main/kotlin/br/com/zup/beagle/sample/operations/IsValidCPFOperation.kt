@@ -46,11 +46,11 @@ class IsValidCPFOperation : Operation {
             if (numbers == digits) return false
         }
 
-        val dv1 = ((0..8).sumBy { (it + 1) * numbers[it] }).rem(11).let {
+        val dv1 = ((0..8).sumOf { (it + 1) * numbers[it] }).rem(11).let {
             if (it >= 10) 0 else it
         }
 
-        val dv2 = ((0..8).sumBy { it * numbers[it] }.let { (it + (dv1 * 9)).rem(11) }).let {
+        val dv2 = ((0..8).sumOf { it * numbers[it] }.let { (it + (dv1 * 9)).rem(11) }).let {
             if (it >= 10) 0 else it
         }
 

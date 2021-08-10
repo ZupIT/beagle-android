@@ -20,6 +20,7 @@ import android.annotation.SuppressLint
 import br.com.zup.beagle.android.operation.Operation
 import br.com.zup.beagle.android.operation.OperationType
 import br.com.zup.beagle.android.annotation.RegisterOperation
+import java.util.Locale
 
 @RegisterOperation("capitalize")
 internal class CapitalizeOperation : Operation {
@@ -27,7 +28,8 @@ internal class CapitalizeOperation : Operation {
     @SuppressLint("DefaultLocale")
     override fun execute(vararg params: OperationType?): OperationType {
         val operationType = params[0]?.value
-        return OperationType.TypeString(operationType.toString().capitalize())
+        return OperationType.TypeString(operationType.toString()
+            .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() })
     }
 
 }

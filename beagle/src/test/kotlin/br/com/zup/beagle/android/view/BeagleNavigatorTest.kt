@@ -27,7 +27,6 @@ import androidx.fragment.app.FragmentTransaction
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.action.Route
 import br.com.zup.beagle.android.components.Text
-import br.com.zup.beagle.android.components.layout.Screen
 import br.com.zup.beagle.android.data.formatUrl
 import br.com.zup.beagle.android.extensions.once
 import br.com.zup.beagle.android.logger.BeagleLoggerProxy
@@ -37,7 +36,6 @@ import br.com.zup.beagle.android.networking.urlbuilder.UrlBuilder
 import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.testutil.RandomData
 import br.com.zup.beagle.android.view.custom.BeagleNavigator
-import io.mockk.MockKAnnotations
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.impl.annotations.MockK

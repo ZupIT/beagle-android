@@ -20,8 +20,6 @@ import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.action.Navigate
 import br.com.zup.beagle.android.action.Route
 import br.com.zup.beagle.android.components.Text
-import br.com.zup.beagle.android.components.layout.Screen
-import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.context.expressionOf
 import br.com.zup.beagle.android.logger.BeagleMessageLogs
 import br.com.zup.beagle.android.testutil.RandomData

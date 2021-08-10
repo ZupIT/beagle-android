@@ -20,7 +20,6 @@ import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.components.Text
 import br.com.zup.beagle.android.components.layout.NavigationBar
 import br.com.zup.beagle.android.components.layout.SafeArea
-import br.com.zup.beagle.android.components.layout.Screen
 import br.com.zup.beagle.android.components.layout.ScreenComponent
 import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.core.Style

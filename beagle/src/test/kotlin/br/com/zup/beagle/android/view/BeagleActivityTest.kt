@@ -24,7 +24,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import br.com.zup.beagle.R
 import br.com.zup.beagle.android.BaseSoLoaderTest
 import br.com.zup.beagle.android.components.Text
-import br.com.zup.beagle.android.components.layout.Screen
 import br.com.zup.beagle.android.data.ComponentRequester
 import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.testutil.CoroutinesTestExtension

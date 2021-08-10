@@ -16,4 +16,4 @@
 
 package br.com.zup.beagle.android.utils
 
-fun <K> Map<String, K>.toLowerKeys() = this.mapKeys { it.key.toLowerCase() }
+fun <K> Map<String, K>.toLowerKeys() = this.mapKeys { it.key.lowercase() }

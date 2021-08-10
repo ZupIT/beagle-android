@@ -16,9 +16,17 @@
 
 package br.com.zup.beagle.android.components.layout
 
+import android.view.View
 import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.context.ContextComponent
 import br.com.zup.beagle.android.context.ContextData
+import br.com.zup.beagle.android.utils.ToolbarManager
+import br.com.zup.beagle.android.view.BeagleActivity
+import br.com.zup.beagle.android.view.ViewFactory
+import br.com.zup.beagle.android.view.custom.BeagleFlexView
+import br.com.zup.beagle.android.widget.RootView
+import br.com.zup.beagle.android.widget.WidgetView
+import br.com.zup.beagle.android.annotation.RegisterWidget
 import br.com.zup.beagle.android.components.ImagePath
 import br.com.zup.beagle.core.Accessibility
 import br.com.zup.beagle.core.BeagleJson
@@ -26,6 +34,8 @@ import br.com.zup.beagle.core.IdentifierComponent
 import br.com.zup.beagle.core.ServerDrivenComponent
 import br.com.zup.beagle.core.SingleChildComponent
 import br.com.zup.beagle.core.Style
+import br.com.zup.beagle.widget.core.Flex
+
 
 /**
  * The SafeArea will enable Safe areas to help you place your views within the visible portion of the overall interface.
@@ -107,16 +117,61 @@ data class NavigationBar(
  * @param child
  *                  define the child elements on this screen.
  *                  It could be any visual component that extends the ServerDrivenComponent.1
- * @param style enable a few visual options to be changed.
  * @param context define the contextData that be set to screen.
  *
  */
-@BeagleJson(name = "screen")
-data class Screen constructor(
+@RegisterWidget("screenComponent")
+data class Screen(
     val safeArea: SafeArea? = null,
     val navigationBar: NavigationBar? = null,
     override val child: ServerDrivenComponent,
-    val style: Style? = null,
     override val context: ContextData? = null,
-    override val id: String? = null,
-) : ContextComponent, SingleChildComponent, IdentifierComponent
+) : WidgetView(), ContextComponent, SingleChildComponent {
+
+    @Transient
+    private val toolbarManager: ToolbarManager = ToolbarManager()
+
+    override fun buildView(rootView: RootView): View {
+        val container = ViewFactory.makeBeagleFlexView(rootView, Style(flex = Flex(grow = 1.0)))
+
+        addNavigationBarIfNecessary(rootView, navigationBar, container)
+
+        container.addView(child)
+
+        return container
+    }
+
+    private fun addNavigationBarIfNecessary(
+        rootView: RootView,
+        navigationBar: NavigationBar?,
+        container: BeagleFlexView,
+    ) {
+
+        (rootView.getContext() as? BeagleActivity)?.let {
+            if (navigationBar != null) {
+                configNavigationBar(rootView, navigationBar, container)
+            } else {
+                hideNavigationBar(it)
+            }
+        }
+    }
+
+    private fun hideNavigationBar(context: BeagleActivity) {
+        context.supportActionBar?.apply {
+            hide()
+        }
+
+        context.getToolbar().visibility = View.GONE
+    }
+
+    private fun configNavigationBar(
+        rootView: RootView,
+        navigationBar: NavigationBar,
+        container: BeagleFlexView,
+    ) {
+        (rootView.getContext() as? BeagleActivity)?.let {
+            toolbarManager.configureNavigationBarForScreen(it, navigationBar)
+            toolbarManager.configureToolbar(rootView, navigationBar, container, this)
+        }
+    }
+}

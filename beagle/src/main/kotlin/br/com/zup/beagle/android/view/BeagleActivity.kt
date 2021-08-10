@@ -27,11 +27,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import br.com.zup.beagle.R
-import br.com.zup.beagle.android.components.layout.Screen
+import br.com.zup.beagle.android.components.layout.ScreenComponent
 import br.com.zup.beagle.android.data.serializer.BeagleSerializer
 import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.utils.BeagleRetry
-import br.com.zup.beagle.android.utils.toComponent
 import br.com.zup.beagle.android.view.viewmodel.BeagleScreenViewModel
 import br.com.zup.beagle.android.view.viewmodel.ViewState
 import br.com.zup.beagle.core.ServerDrivenComponent
@@ -78,7 +77,11 @@ private const val FIRST_SCREEN_KEY = "FIRST_SCREEN_KEY"
 abstract class BeagleActivity : AppCompatActivity() {
 
     private val screenViewModel by lazy { ViewModelProvider(this).get(BeagleScreenViewModel::class.java) }
-    private val screenRequest by lazy { intent.extras?.getParcelable<RequestData>(FIRST_SCREEN_REQUEST_KEY) }
+    private val screenRequest by lazy {
+        intent.extras?.getParcelable<RequestData>(
+            FIRST_SCREEN_REQUEST_KEY
+        )
+    }
     private val screen by lazy { intent.extras?.getString(FIRST_SCREEN_KEY) }
 
     companion object {
@@ -88,16 +91,16 @@ abstract class BeagleActivity : AppCompatActivity() {
             }
         }
 
-        fun bundleOf(requestData: RequestData, fallbackScreen: Screen): Bundle {
+        internal fun bundleOf(requestData: RequestData, fallbackScreen: ScreenComponent): Bundle {
             return Bundle(2).apply {
                 putParcelable(FIRST_SCREEN_REQUEST_KEY, requestData)
                 putAll(bundleOf(fallbackScreen))
             }
         }
 
-        fun bundleOf(screen: Screen): Bundle {
+        internal fun bundleOf(screen: ScreenComponent): Bundle {
             return Bundle(1).apply {
-                putString(FIRST_SCREEN_KEY, beagleSerializer.serializeComponent(screen.toComponent()))
+                putString(FIRST_SCREEN_KEY, beagleSerializer.serializeComponent(screen))
             }
         }
 
@@ -175,8 +178,8 @@ abstract class BeagleActivity : AppCompatActivity() {
 
     fun hasServerDrivenScreen(): Boolean = supportFragmentManager.backStackEntryCount > 0
 
-    internal fun navigateTo(requestData: RequestData, screen: Screen?) {
-        fetch(requestData, screen?.toComponent())
+    internal fun navigateTo(requestData: RequestData, screen: ScreenComponent?) {
+        fetch(requestData, screen)
     }
 
     private fun fetch(requestData: RequestData, screenComponent: ServerDrivenComponent? = null) {
@@ -188,7 +191,12 @@ abstract class BeagleActivity : AppCompatActivity() {
         state.observe(this, {
             when (it) {
                 is ViewState.Error -> {
-                    onServerDrivenContainerStateChanged(ServerDrivenState.Error(it.throwable, it.retry))
+                    onServerDrivenContainerStateChanged(
+                        ServerDrivenState.Error(
+                            it.throwable,
+                            it.retry
+                        )
+                    )
                     onServerDrivenContainerStateChanged(ServerDrivenState.Finished)
                 }
 
@@ -219,7 +227,10 @@ abstract class BeagleActivity : AppCompatActivity() {
                 transition.popEnter,
                 transition.popExit
             )
-            .replace(getServerDrivenContainerId(), BeagleFragment.newInstance(component, screenName))
+            .replace(
+                getServerDrivenContainerId(),
+                BeagleFragment.newInstance(component, screenName)
+            )
             .addToBackStack(screenName)
             .commit()
     }

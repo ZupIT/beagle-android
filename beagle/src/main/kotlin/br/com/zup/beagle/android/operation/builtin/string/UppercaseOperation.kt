@@ -26,7 +26,7 @@ internal class UppercaseOperation : Operation {
 
     override fun execute(vararg params: OperationType?): OperationType {
         val operationType = params[0]?.value
-        return OperationType.TypeString(operationType.toString().toUpperCase(Locale.getDefault()))
+        return OperationType.TypeString(operationType.toString().uppercase())
     }
 
 }
