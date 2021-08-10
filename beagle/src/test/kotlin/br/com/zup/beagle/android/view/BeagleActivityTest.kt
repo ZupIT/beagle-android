@@ -63,6 +63,7 @@ class BeagleActivityTest : BaseSoLoaderTest() {
     private var activity: ServerDrivenActivity? = null
     private val analyticsViewModel = mockk<AnalyticsViewModel>()
     private val screenIdentifierSlot = slot<String>()
+    lateinit var activityScenario: ActivityScenario<ServerDrivenActivity>
 
     @Before
     fun mockBeforeTest() {
@@ -70,10 +71,10 @@ class BeagleActivityTest : BaseSoLoaderTest() {
         beagleViewModel =
             BeagleScreenViewModel(ioDispatcher = TestCoroutineDispatcher(), componentRequester)
         prepareViewModelMock(beagleViewModel)
-        val activityScenario: ActivityScenario<ServerDrivenActivity> =
+        activityScenario =
             ActivityScenario.launch(ServerDrivenActivity::class.java)
         activityScenario.onActivity {
-            activityScenario.moveToState(Lifecycle.State.RESUMED)
+            activityScenario.moveToState(Lifecycle.State.STARTED)
             activity = it
         }
     }
@@ -89,6 +90,7 @@ class BeagleActivityTest : BaseSoLoaderTest() {
 
             //When
             activity?.navigateTo(screenRequest, null)
+            activityScenario.moveToState(Lifecycle.State.RESUMED)
 
             //Then
             assertEquals(url, screenIdentifierSlot.captured)
@@ -109,6 +111,8 @@ class BeagleActivityTest : BaseSoLoaderTest() {
 
             //When
             activity?.navigateTo(screenRequest, screen)
+            activityScenario.moveToState(Lifecycle.State.RESUMED)
+
 
             // THEN
             assertEquals(screenId, screenIdentifierSlot.captured)
