@@ -47,7 +47,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
-val VALUE_KEY = valueOf("value")
+const val VALUE_KEY = "value"
 val PLACE_HOLDER = valueOf("Text Hint")
 val READ_ONLY = valueOf(true)
 val ENABLED = valueOf(true)
@@ -99,7 +99,7 @@ internal class TextInputTest : BaseComponentTest() {
         styleId: String? = STYLE_ID,
         showError: Bind<Boolean> = valueOf(false),
     ) = TextInput(
-        value = VALUE_KEY,
+        value = valueOf(VALUE_KEY),
         placeholder = PLACE_HOLDER,
         readOnly = READ_ONLY,
         enabled = ENABLED,
@@ -243,7 +243,7 @@ internal class TextInputTest : BaseComponentTest() {
             assertTrue(view is EditText)
             verify(exactly = once()) {
                 ViewFactory.makeInputText(any())
-                editText.setText(VALUE_KEY.value)
+                editText.setText(VALUE_KEY)
                 editText.hint = PLACE_HOLDER.value
                 editText.isEnabled = READ_ONLY.value
                 editText.isEnabled = ENABLED.value
@@ -263,7 +263,7 @@ internal class TextInputTest : BaseComponentTest() {
             assertTrue(view is EditText)
             verify(exactly = once()) {
                 ViewFactory.makeInputText(any(), any())
-                editText.setText(VALUE_KEY.value)
+                editText.setText(VALUE_KEY)
                 editText.hint = PLACE_HOLDER.value
                 editText.isEnabled = READ_ONLY.value
                 editText.isEnabled = ENABLED.value
