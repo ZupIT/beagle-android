@@ -87,6 +87,7 @@ class Dependencies : Plugin<Project> {
         const val testRules = "1.3.1-alpha02"
         const val testCore = "1.3.1-alpha02"
         const val robolectric = "4.6.1"
+        const val fragmentTest = "1.3.6"
 
         const val incap = "0.3"
 
@@ -162,6 +163,7 @@ class Dependencies : Plugin<Project> {
         const val testCore = "androidx.test:core:${Versions.testCore}"
         const val testRules = "androidx.test:rules:${Versions.testRules}"
         const val robolectric = "org.robolectric:robolectric:${Versions.robolectric}"
+        const val fragmentTest = "androidx.fragment:fragment-testing:${Versions.fragmentTest}"
         const val kotlinCompileTesting = "com.github.tschuchortdev:kotlin-compile-testing:${Versions.kotlinCompileTesting}"
     }
 
