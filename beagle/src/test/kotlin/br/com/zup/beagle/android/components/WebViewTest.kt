@@ -78,7 +78,7 @@ class WebViewTest : BaseComponentTest() {
         webViewClient.onPageStarted(null, null, null)
 
         // Then
-        assertTrue((stateSlot.captured as ServerDrivenState.Loading).loading)
+        assertEquals(ServerDrivenState.Started, stateSlot.captured)
     }
 
     @Test
@@ -91,7 +91,7 @@ class WebViewTest : BaseComponentTest() {
         webViewClient.onPageFinished(webView, null)
 
         // Then
-        assertFalse((stateSlot.captured as ServerDrivenState.Loading).loading)
+        assertEquals(ServerDrivenState.Finished, stateSlot.captured)
         verify(exactly = once()) { webView.requestLayout() }
     }
 

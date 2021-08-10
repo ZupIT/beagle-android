@@ -48,7 +48,7 @@ class StringExtensionsKtTest {
         val requestData = "".toRequestData(urlBuilder, environment)
 
         // Then
-        val expectedResult = RequestData(URI(""))
+        val expectedResult = RequestData(url = "")
         assertEquals(expectedResult, requestData)
     }
 

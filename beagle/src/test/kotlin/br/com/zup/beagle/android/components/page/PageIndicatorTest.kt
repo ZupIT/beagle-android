@@ -102,7 +102,7 @@ class PageIndicatorTest : BaseComponentTest() {
     }
 
 
-    @DisplayName("When current page change")
+/*    @DisplayName("When current page change")
     @Nested
     inner class OnItemUpdatedTest {
 
@@ -176,7 +176,8 @@ class PageIndicatorTest : BaseComponentTest() {
 
             // Then
             verify(exactly = once()) { beaglePageIndicatorView.setCurrentIndex(count) }
-        }
 
-    }
+        }
+    }*/
+
 }

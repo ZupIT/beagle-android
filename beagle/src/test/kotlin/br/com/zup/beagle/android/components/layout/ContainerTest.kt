@@ -22,7 +22,6 @@ import br.com.zup.beagle.android.utils.StyleManager
 import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.core.ServerDrivenComponent
 import br.com.zup.beagle.core.Style
-import br.com.zup.beagle.ext.applyStyle
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkConstructor
@@ -38,7 +37,7 @@ private const val STYLE_ID_INTEGER = 123
 @DisplayName("Given a Container")
 class ContainerTest : BaseComponentTest() {
 
-    private val style: Style = mockk(relaxed = true)
+    private val styleLocal: Style = mockk(relaxed = true)
 
     private val containerChildren = listOf<ServerDrivenComponent>(mockk<Container>())
 
@@ -49,7 +48,7 @@ class ContainerTest : BaseComponentTest() {
         super.setUp()
 
         every { ViewFactory.makeBeagleFlexView(any(), any(), any()) } returns beagleFlexView
-        every { style.copy(flex = any()) } returns style
+        every { styleLocal.copy(flex = any()) } returns styleLocal
         mockkConstructor(StyleManager::class)
 
         every { anyConstructed<StyleManager>().getContainerStyle(STYLE_ID) } returns STYLE_ID_INTEGER
@@ -57,7 +56,9 @@ class ContainerTest : BaseComponentTest() {
         container = Container(
             children = containerChildren,
             styleId = STYLE_ID,
-        ).applyStyle(style)
+        ).apply {
+            style = styleLocal
+        }
     }
 
     @DisplayName("When build view")
@@ -74,7 +75,7 @@ class ContainerTest : BaseComponentTest() {
             verify {
                 ViewFactory.makeBeagleFlexView(
                     rootView = rootView,
-                    style = style,
+                    style = styleLocal,
                     styleId = STYLE_ID_INTEGER,
                 )
             }

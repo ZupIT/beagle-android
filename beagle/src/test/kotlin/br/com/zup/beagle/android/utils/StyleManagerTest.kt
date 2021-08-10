@@ -30,6 +30,7 @@ import br.com.zup.beagle.android.components.Button
 import br.com.zup.beagle.android.components.Text
 import br.com.zup.beagle.android.components.layout.Container
 import br.com.zup.beagle.android.components.utils.applyViewBackgroundAndCorner
+import br.com.zup.beagle.android.context.valueOf
 import br.com.zup.beagle.android.extensions.once
 import br.com.zup.beagle.android.setup.DesignSystem
 import br.com.zup.beagle.core.StyleComponent
@@ -94,7 +95,12 @@ class StyleManagerTest : BaseTest() {
         styleManager.applyStyleComponent(serverDrivenComponent, view)
 
         //Then
-        verify(exactly = once()) { view.applyViewBackgroundAndCorner(expected, serverDrivenComponent) }
+        verify(exactly = once()) {
+            view.applyViewBackgroundAndCorner(
+                expected,
+                serverDrivenComponent
+            )
+        }
     }
 
     @Test
@@ -109,7 +115,12 @@ class StyleManagerTest : BaseTest() {
         styleManager.applyStyleComponent(serverDrivenComponent, view)
 
         //Then
-        verify(exactly = once()) { view.applyViewBackgroundAndCorner(Color.WHITE, serverDrivenComponent) }
+        verify(exactly = once()) {
+            view.applyViewBackgroundAndCorner(
+                Color.WHITE,
+                serverDrivenComponent
+            )
+        }
     }
 
     @Test
@@ -128,7 +139,7 @@ class StyleManagerTest : BaseTest() {
     @Test
     fun test_getBackgroundColor_when_button_has_a_color_drawable_background() {
         //Given
-        serverDrivenComponent = Button("")
+        serverDrivenComponent = Button(valueOf(""))
         every { context.obtainStyledAttributes(any<Int>(), any()) } returns typedArray
         every { view.background } returns colorDrawable
         every { colorDrawable.color } returns Color.WHITE
@@ -137,13 +148,18 @@ class StyleManagerTest : BaseTest() {
         styleManager.applyStyleComponent(serverDrivenComponent, view)
 
         //Then
-        verify(exactly = once()) { view.applyViewBackgroundAndCorner(Color.WHITE, serverDrivenComponent) }
+        verify(exactly = once()) {
+            view.applyViewBackgroundAndCorner(
+                Color.WHITE,
+                serverDrivenComponent
+            )
+        }
     }
 
     @Test
     fun test_getBackgroundColor_when_Button_not_is_color_drawable() {
         //Given
-        serverDrivenComponent = Button("")
+        serverDrivenComponent = Button(valueOf(""))
         every { context.obtainStyledAttributes(any<Int>(), any()) } returns typedArray
 
         //When
@@ -164,7 +180,12 @@ class StyleManagerTest : BaseTest() {
         styleManager.applyStyleComponent(serverDrivenComponent, view)
 
         //Then
-        verify(exactly = once()) { view.applyViewBackgroundAndCorner(Color.BLACK, serverDrivenComponent) }
+        verify(exactly = once()) {
+            view.applyViewBackgroundAndCorner(
+                Color.BLACK,
+                serverDrivenComponent
+            )
+        }
     }
 
     @Test

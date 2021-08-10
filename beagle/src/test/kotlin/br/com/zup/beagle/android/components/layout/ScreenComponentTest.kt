@@ -20,8 +20,6 @@ import android.graphics.Color
 import android.view.View
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.widget.Toolbar
-import br.com.zup.beagle.analytics.Analytics
-import br.com.zup.beagle.analytics.ScreenEvent
 import br.com.zup.beagle.android.components.BaseComponentTest
 import br.com.zup.beagle.android.extensions.once
 import br.com.zup.beagle.android.utils.ToolbarManager
@@ -51,17 +49,11 @@ private const val DEFAULT_COLOR = 0xFFFFFF
 
 class ScreenComponentTest : BaseComponentTest() {
 
-    private val screenName = "screenName"
-    private var screenAnalyticsEvent = ScreenEvent(screenName = screenName)
-
     @RelaxedMockK
     private lateinit var context: BeagleActivity
 
     @MockK
     private lateinit var component: ServerDrivenComponent
-
-    @RelaxedMockK
-    private lateinit var analytics: Analytics
 
     private lateinit var screenComponent: ScreenComponent
 
@@ -71,13 +63,11 @@ class ScreenComponentTest : BaseComponentTest() {
 
         mockkStatic(Color::class)
 
-        every { beagleSdk.analytics } returns analytics
 
         every { Color.parseColor(any()) } returns DEFAULT_COLOR
         every { rootView.getContext() } returns context
 
-        screenComponent = ScreenComponent(navigationBar = null, child = component,
-            screenAnalyticsEvent = null)
+        screenComponent = ScreenComponent(navigationBar = null, child = component)
     }
 
     @Test
@@ -129,19 +119,6 @@ class ScreenComponentTest : BaseComponentTest() {
     }
 
     @Test
-    fun should_assign_window_attach_callbacks_when_screen_event_presented() {
-        // GIVEN
-        screenComponent = ScreenComponent(child = component, screenAnalyticsEvent = screenAnalyticsEvent)
-
-        // When
-        val view = screenComponent.buildView(rootView)
-
-        // Then
-        assertTrue(view is BeagleFlexView)
-        verify { view.addOnAttachStateChangeListener(any()) }
-    }
-
-    @Test
     fun should_keep_window_attach_callbacks_null_when_screen_event_not_presented() {
         // When
         val view = screenComponent.buildView(rootView)
@@ -152,33 +129,19 @@ class ScreenComponentTest : BaseComponentTest() {
     }
 
     @Test
-    fun should_call_analytics_when_window_attach_states_changes() {
-        // GIVEN
-        screenComponent = ScreenComponent(child = component, screenAnalyticsEvent = screenAnalyticsEvent)
-        val onAttachStateChangeListenerSlot = CapturingSlot<View.OnAttachStateChangeListener>()
-
-        // When
-        val screenView = screenComponent.buildView(rootView)
-        verify { screenView.addOnAttachStateChangeListener(capture(onAttachStateChangeListenerSlot)) }
-        onAttachStateChangeListenerSlot.captured.onViewAttachedToWindow(view)
-        onAttachStateChangeListenerSlot.captured.onViewDetachedFromWindow(view)
-
-        // Then
-        val capturedEvent = CapturingSlot<ScreenEvent>()
-        verify { analytics.trackEventOnScreenAppeared(capture(capturedEvent)) }
-        assertEquals(screenName, capturedEvent.captured.screenName)
-
-        verify { analytics.trackEventOnScreenDisappeared(capture(capturedEvent)) }
-        assertEquals(screenName, capturedEvent.captured.screenName)
-    }
-
-    @Test
     fun buildView_should_call_configureToolbar_before_configureNavigationBarForScreen() {
         //GIVEN
         val navigationBar = NavigationBar("Stub")
         mockkConstructor(ToolbarManager::class)
         screenComponent = ScreenComponent(child = screenComponent, navigationBar = navigationBar)
-        every { anyConstructed<ToolbarManager>().configureToolbar(any(), any(), any(), any()) } just Runs
+        every {
+            anyConstructed<ToolbarManager>().configureToolbar(
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } just Runs
 
         //WHEN
         screenComponent.buildView(rootView)
@@ -186,8 +149,10 @@ class ScreenComponentTest : BaseComponentTest() {
         //THEN
         verifyOrder {
             anyConstructed<ToolbarManager>().configureNavigationBarForScreen(context, navigationBar)
-            anyConstructed<ToolbarManager>().configureToolbar(rootView, navigationBar,
-                beagleFlexView, screenComponent)
+            anyConstructed<ToolbarManager>().configureToolbar(
+                rootView, navigationBar,
+                beagleFlexView, screenComponent
+            )
         }
     }
 }
