@@ -81,7 +81,6 @@ dependencies {
     implementation Dependencies.AndroidxLibraries.swipeRefreshLayout
     implementation Dependencies.AndroidxLibraries.viewModel
     implementation Dependencies.AndroidxLibraries.viewModelExtensions
-//    implementation Dependencies.AndroidxLibraries.activityKtx
 
     implementation Dependencies.GeneralLibraries.kotlinCoroutines
 
