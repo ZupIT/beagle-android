@@ -16,6 +16,7 @@
 
 package br.com.zup.beagle.android.view
 
+import android.os.Build
 import android.os.Bundle
 import android.view.Window
 import android.view.WindowManager
@@ -125,17 +126,28 @@ abstract class BeagleActivity : AppCompatActivity() {
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
 
-        if (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.KITKAT) {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
             AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
         }
 
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+
+
+        adjustInputMode()
+
 
         observeScreenLoadFinish()
+    }
+
+    @SuppressWarnings("deprecation")
+    private fun adjustInputMode() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            window.setDecorFitsSystemWindows(false)
+        } else {
+            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+        }
     }
 
     private fun observeScreenLoadFinish() {
