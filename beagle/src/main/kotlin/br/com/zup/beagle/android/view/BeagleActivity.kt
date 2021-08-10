@@ -198,8 +198,8 @@ abstract class BeagleActivity : AppCompatActivity() {
         fetch(requestData, screen)
     }
 
-    private fun fetch(requestData: RequestData, Screen: ServerDrivenComponent? = null) {
-        val liveData = screenViewModel.fetchComponent(requestData, Screen)
+    private fun fetch(requestData: RequestData, screen: ServerDrivenComponent? = null) {
+        val liveData = screenViewModel.fetchComponent(requestData, screen)
         handleLiveData(liveData)
     }
 
