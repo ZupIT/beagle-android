@@ -138,7 +138,6 @@ class PageViewTest : BaseComponentTest() {
                 context,
                 onPageChange
             )
-            every { pageView.handleEvent(rootView, beaglePageView, onPageChange, "onChange", any()) } just Runs
 
             // WHEN
             pageView.buildView(rootView)

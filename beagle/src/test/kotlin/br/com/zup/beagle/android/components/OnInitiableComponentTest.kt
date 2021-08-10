@@ -172,14 +172,13 @@ class OnInitiableComponentTest: BaseTest() {
             every { action.execute(rootView, origin) } just Runs
             val initiableWidget = Container(children = listOf(), onInit = listOf(action))
 
-
             // When
             initiableWidget.handleOnInit(rootView, origin)
             listenerSlot.captured.onViewAttachedToWindow(origin)
             listenerSlot.captured.onViewAttachedToWindow(origin)
 
             // Then
-            verify(exactly = 1) { action.handleEvent(rootView, origin, action, "onInit") }
+            verify(exactly = 1) { action.handleEvent(rootView, origin, action, analyticsValue = "onInit") }
         }
 
         @DisplayName("Then should setOnInitFinished true to FINISHED AsyncAction")

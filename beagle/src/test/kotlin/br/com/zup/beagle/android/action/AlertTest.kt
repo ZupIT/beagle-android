@@ -59,7 +59,12 @@ class AlertTest {
         every { ViewFactory.makeAlertDialogBuilder(any()) } returns builder
         every { builder.setTitle(capture(titleSlot)) } returns builder
         every { builder.setMessage(capture(messageSlot)) } returns builder
-        every { builder.setPositiveButton(capture(buttonTextSlot), capture(listenerSlot)) } returns builder
+        every {
+            builder.setPositiveButton(
+                capture(buttonTextSlot),
+                capture(listenerSlot)
+            )
+        } returns builder
         every { builder.show() } returns mockk()
         every { dialogBox.dismiss() } just Runs
     }
@@ -136,7 +141,14 @@ class AlertTest {
         listenerSlot.captured.onClick(dialogBox, 0)
 
         // Then
-        verify(exactly = once()) { action.handleEvent(rootView, view, onPressOk, "onPressOk") }
+        verify(exactly = once()) {
+            action.handleEvent(
+                rootView,
+                view,
+                onPressOk,
+                analyticsValue = "onPressOk"
+            )
+        }
     }
 
 }
