@@ -25,12 +25,6 @@ const val VALID_DEFAULT_CONTROLLER =
         class AppDefaultBeagleActivity : BeagleActivity 
     """
 
-const val VALID_DEFAULT_CONTROLLER_BEAGLE_COMPONENT =
-    """
-        @BeagleComponent
-        class AppDefaultBeagleActivityBeagleComponent : BeagleActivity 
-    """
-
 const val VALID_SECOND_DEFAULT_CONTROLLER =
     """
         @RegisterController()
@@ -120,27 +114,6 @@ const val INTERNAL_DEFAULT_CONTROLLER_GENERATED_EXPECTED: String =
                 br.com.test.beagle.AppDefaultBeagleActivity::class.java as Class<BeagleActivity>
         }
 
-    """
-
-const val INTERNAL_DEFAULT_CONTROLLER_BEAGLE_COMPONENT_GENERATED_EXPECTED: String =
-    """
-        @file:Suppress("UNCHECKED_CAST")
-
-        package br.com.test.beagle
-        
-        import br.com.zup.beagle.android.navigation.BeagleControllerReference
-        import br.com.zup.beagle.android.view.BeagleActivity
-        import java.lang.Class
-        import kotlin.String
-        import kotlin.Suppress
-        
-        public final class RegisteredControllers : BeagleControllerReference {
-            public override fun classFor(id: String?): Class<BeagleActivity> = when(id) {
-                "otherController" -> br.com.test.beagle.AppBeagleActivity::class.java as Class<BeagleActivity>
-                else -> br.com.test.beagle.AppDefaultBeagleActivityBeagleComponent::class.java as Class<BeagleActivity>
-            }
-        
-        }
     """
 
 const val INTERNAL_LIST_CONTROLLER_GENERATED_EXPECTED: String =

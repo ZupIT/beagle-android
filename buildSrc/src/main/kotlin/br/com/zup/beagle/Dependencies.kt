@@ -72,6 +72,7 @@ class Dependencies : Plugin<Project> {
         const val jni = "0.2.2"
 
         const val webSocket = "1.5.2"
+        const val slf4jSimple = "1.7.32"
 
         const val kotlinCoroutinesTest = "1.3.9"
         const val materialDesign = "1.2.1"
@@ -128,6 +129,8 @@ class Dependencies : Plugin<Project> {
         const val jsonObject = "org.json:json:${Versions.jsonObject}"
 
         const val multidex = "androidx.multidex:multidex:${Versions.multidex}"
+
+        const val slf4jSimple = "org.slf4j:slf4j-simple:${Versions.slf4jSimple}"
     }
 
     object GoogleLibraries {
