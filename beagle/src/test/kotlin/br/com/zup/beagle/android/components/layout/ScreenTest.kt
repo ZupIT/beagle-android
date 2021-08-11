@@ -46,7 +46,7 @@ import org.junit.jupiter.api.Test
 
 private const val DEFAULT_COLOR = 0xFFFFFF
 
-class ScreenComponentTest : BaseComponentTest() {
+class ScreenTest : BaseComponentTest() {
 
     @RelaxedMockK
     private lateinit var context: BeagleActivity
@@ -149,8 +149,10 @@ class ScreenComponentTest : BaseComponentTest() {
         verifyOrder {
             anyConstructed<ToolbarManager>().configureNavigationBarForScreen(context, navigationBar)
             anyConstructed<ToolbarManager>().configureToolbar(
-                rootView, navigationBar,
-                beagleFlexView, screenComponent
+                rootView,
+                navigationBar,
+                beagleFlexView,
+                screenComponent
             )
         }
     }

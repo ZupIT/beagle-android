@@ -40,6 +40,8 @@ import br.com.zup.beagle.android.view.custom.BeagleView
 import br.com.zup.beagle.android.view.custom.OnLoadCompleted
 import br.com.zup.beagle.android.view.custom.OnServerStateChanged
 import br.com.zup.beagle.android.view.viewmodel.GenerateIdViewModel
+import br.com.zup.beagle.android.view.viewmodel.ListViewIdViewModel
+import br.com.zup.beagle.android.view.viewmodel.OnInitViewModel
 import br.com.zup.beagle.android.view.viewmodel.ScreenContextViewModel
 import br.com.zup.beagle.android.widget.ActivityRootView
 import br.com.zup.beagle.android.widget.FragmentRootView
@@ -82,6 +84,12 @@ class ViewExtensionsKtTest : BaseTest() {
     @MockK(relaxUnitFun = true, relaxed = true)
     private lateinit var generateIdViewModel: GenerateIdViewModel
 
+    @MockK(relaxUnitFun = true, relaxed = true)
+    private lateinit var listViewIdViewModel: ListViewIdViewModel
+
+    @MockK(relaxUnitFun = true, relaxed = true)
+    private lateinit var onInitViewModel: OnInitViewModel
+
     @RelaxedMockK
     private lateinit var fragment: Fragment
 
@@ -115,8 +123,12 @@ class ViewExtensionsKtTest : BaseTest() {
 
         mockkObject(ViewFactory)
 
-        prepareViewModelMock(contextViewModel)
-        prepareViewModelMock(generateIdViewModel)
+        prepareViewModelMock(
+            contextViewModel,
+            generateIdViewModel,
+            listViewIdViewModel,
+            onInitViewModel
+        )
         every { ViewFactory.makeBeagleView(any()) } returns beagleView
         every { ViewFactory.makeView(any()) } returns beagleView
         every { viewGroup.addView(capture(viewSlot)) } just Runs
@@ -253,7 +265,12 @@ class ViewExtensionsKtTest : BaseTest() {
             every { styleWidget.style } returns style
             every { resultWidth.dp() } returns resultWidth
             every { defaultColor.toAndroidColor() } returns resultColor
-            every { anyConstructed<GradientDrawable>().setStroke(resultWidth, resultColor) } just Runs
+            every {
+                anyConstructed<GradientDrawable>().setStroke(
+                    resultWidth,
+                    resultColor
+                )
+            } just Runs
 
             // When
             viewGroup.applyStroke(styleWidget)

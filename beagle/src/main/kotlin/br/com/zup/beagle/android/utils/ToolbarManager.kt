@@ -59,12 +59,17 @@ internal class ToolbarManager(private val toolbarTextManager: ToolbarTextManager
                     navigationContentDescription = backButtonAccessibilityLabel
                 }
                 navigationBar.backButtonAccessibility?.isHeader?.let { isHeader ->
-                    ViewCompat.setAccessibilityDelegate(this, object : AccessibilityDelegateCompat() {
-                        override fun onInitializeAccessibilityNodeInfo(host: View, info: AccessibilityNodeInfoCompat) {
-                            super.onInitializeAccessibilityNodeInfo(host, info)
-                            info.isHeading = isHeader
-                        }
-                    })
+                    ViewCompat.setAccessibilityDelegate(
+                        this,
+                        object : AccessibilityDelegateCompat() {
+                            override fun onInitializeAccessibilityNodeInfo(
+                                host: View,
+                                info: AccessibilityNodeInfoCompat
+                            ) {
+                                super.onInitializeAccessibilityNodeInfo(host, info)
+                                info.isHeading = isHeader
+                            }
+                        })
                 }
 
                 setNavigationOnClickListener {
@@ -179,7 +184,7 @@ internal class ToolbarManager(private val toolbarTextManager: ToolbarTextManager
     }
 
     private fun removePreviousToolbarTitle(toolbar: Toolbar) {
-        val centeredTitle = toolbar.findViewById<TextView>(R.id.beagle_toolbar_text)
+        val centeredTitle = toolbar.findViewById<View>(R.id.beagle_toolbar_text)
         toolbar.removeView(centeredTitle)
     }
 
@@ -192,21 +197,22 @@ internal class ToolbarManager(private val toolbarTextManager: ToolbarTextManager
     ) {
         val designSystem = BeagleEnvironment.beagleSdk.designSystem
         for (i in items.indices) {
-            toolbar.menu.add(Menu.NONE, items[i].id?.toAndroidId() ?: i, Menu.NONE, items[i].text).apply {
-                setOnMenuItemClickListener {
-                    val action = items[i].action
-                    action.handleEvent(rootView, toolbar, action)
-                    return@setOnMenuItemClickListener true
-                }
+            toolbar.menu.add(Menu.NONE, items[i].id?.toAndroidId() ?: i, Menu.NONE, items[i].text)
+                .apply {
+                    setOnMenuItemClickListener {
+                        val action = items[i].action
+                        action.handleEvent(rootView, toolbar, action)
+                        return@setOnMenuItemClickListener true
+                    }
 
-                setContentDescription(items, i)
+                    setContentDescription(items, i)
 
-                if (items[i].image == null) {
-                    setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
-                } else {
-                    configMenuItem(designSystem, items, i, rootView, container, screen)
+                    if (items[i].image == null) {
+                        setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+                    } else {
+                        configMenuItem(designSystem, items, i, rootView, container, screen)
+                    }
                 }
-            }
         }
     }
 
@@ -258,7 +264,8 @@ internal class ToolbarManager(private val toolbarTextManager: ToolbarTextManager
 
     private fun setupNavigationIcon(context: Context, toolbar: Toolbar) {
         if (toolbar.navigationIcon == null) {
-            toolbar.navigationIcon = getDrawableFromAttribute(context, androidx.appcompat.R.attr.homeAsUpIndicator)
+            toolbar.navigationIcon =
+                getDrawableFromAttribute(context, androidx.appcompat.R.attr.homeAsUpIndicator)
         }
     }
 }

@@ -60,8 +60,7 @@ class AbstractViewRendererTest : BaseTest() {
     override fun setUp() {
         super.setUp()
 
-        prepareViewModelMock(generateIdViewModel)
-        every { anyConstructed<ViewModelProvider>().get(contextViewModel::class.java) } returns contextViewModel
+        prepareViewModelMock(generateIdViewModel, contextViewModel)
 
         viewRenderer = spyk(AbstractViewRenderer(
             component,

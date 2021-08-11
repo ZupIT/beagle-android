@@ -106,7 +106,7 @@ class PullToRefreshTest : BaseComponentTest() {
 
             // Then
             verify(exactly = 1) {
-                pullToRefreshComponent.observeBindChanges(rootView, swipeRefreshLayout, isRefreshing, captureLambda())
+                pullToRefreshComponent.observeBindChanges(rootView, swipeRefreshLayout, isRefreshing, any())
             }
         }
 
@@ -118,7 +118,7 @@ class PullToRefreshTest : BaseComponentTest() {
 
             // Then
             verify(exactly = 1) {
-                pullToRefreshComponent.observeBindChanges(rootView, swipeRefreshLayout, color, captureLambda())
+                pullToRefreshComponent.observeBindChanges(rootView, swipeRefreshLayout, color, any())
             }
         }
 
