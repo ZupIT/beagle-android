@@ -201,7 +201,7 @@ class ListViewTest : BaseComponentTest() {
         fun testListViewHorizontalIndicatorCreateRecyclerView() {
             // Given
             listView = ListView(
-                direction = ListDirection.VERTICAL,
+                direction = ListDirection.HORIZONTAL,
                 context = context,
                 onInit = onInit,
                 dataSource = dataSource,

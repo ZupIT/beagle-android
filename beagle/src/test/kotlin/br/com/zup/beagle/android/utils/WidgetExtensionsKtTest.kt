@@ -28,6 +28,8 @@ import br.com.zup.beagle.android.testutil.RandomData
 import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.view.custom.BeagleFlexView
 import br.com.zup.beagle.android.view.viewmodel.GenerateIdViewModel
+import br.com.zup.beagle.android.view.viewmodel.ListViewIdViewModel
+import br.com.zup.beagle.android.view.viewmodel.OnInitViewModel
 import br.com.zup.beagle.android.view.viewmodel.ScreenContextViewModel
 import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
@@ -55,6 +57,8 @@ class WidgetExtensionsKtTest : BaseTest() {
     private val view = createViewForContext()
     private val generateIdViewModel: GenerateIdViewModel = mockk(relaxed = true)
     private val contextViewModel: ScreenContextViewModel = mockk(relaxed = true)
+    private val listViewIdViewModel: ListViewIdViewModel = mockk(relaxed = true)
+    private val onInitViewModel: OnInitViewModel = mockk(relaxed = true)
     private val fragment: Fragment = mockk(relaxed = true)
 
     @BeforeEach
@@ -62,8 +66,12 @@ class WidgetExtensionsKtTest : BaseTest() {
         super.setUp()
         mockkObject(ViewFactory)
 
-        prepareViewModelMock(generateIdViewModel)
-        every { anyConstructed<ViewModelProvider>().get(contextViewModel::class.java) } returns contextViewModel
+        prepareViewModelMock(
+            generateIdViewModel,
+            contextViewModel,
+            listViewIdViewModel,
+            onInitViewModel
+        )
     }
 
     @DisplayName("When observeBindChanges")
@@ -76,10 +84,12 @@ class WidgetExtensionsKtTest : BaseTest() {
             // Given
             val value = RandomData.string()
             val bind = expressionOf<String>("Hello @{context}")
-            contextViewModel.addContext(view, ContextData(
-                id = "context",
-                value = value
-            ))
+            contextViewModel.addContext(
+                view, ContextData(
+                    id = "context",
+                    value = value
+                )
+            )
 
             // When Then
             component.observeBindChanges(rootView, view, bind) { evaluated ->

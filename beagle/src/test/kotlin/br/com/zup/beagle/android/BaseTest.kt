@@ -54,8 +54,10 @@ abstract class BaseTest {
         unmockkAll()
     }
 
-    protected fun prepareViewModelMock(viewModel: ViewModel) {
+    protected fun prepareViewModelMock(vararg viewModels: ViewModel) {
         mockkConstructor(ViewModelProvider::class)
-        every { anyConstructed<ViewModelProvider>().get(viewModel::class.java) } returns viewModel
+        viewModels.forEach { viewModel ->
+            every { anyConstructed<ViewModelProvider>().get(viewModel::class.java) } returns viewModel
+        }
     }
 }

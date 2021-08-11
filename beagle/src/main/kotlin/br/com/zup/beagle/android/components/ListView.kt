@@ -90,7 +90,7 @@ data class ListView constructor(
     }
 
     private fun getLayoutManager(context: Context): RecyclerView.LayoutManager {
-        return if (spanCount <= 0) {
+        return if (spanCount <= 1) {
             val orientation = listDirectionToRecyclerViewOrientation()
             LinearLayoutManager(context, orientation, false)
         } else {
