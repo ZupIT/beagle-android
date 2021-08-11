@@ -51,6 +51,7 @@ const val VALID_BEAGLE_CONFIG_IN_BEAGLE_SDK =
         
         import br.com.zup.beagle.android.`data`.serializer.adapter.generic.TypeAdapterResolver
         import br.com.zup.beagle.android.action.Action
+        import br.com.zup.beagle.android.analytics.AnalyticsProvider
         import br.com.zup.beagle.android.imagedownloader.BeagleImageDownloader
         import br.com.zup.beagle.android.logger.BeagleLogger
         import br.com.zup.beagle.android.navigation.BeagleControllerReference
@@ -63,7 +64,6 @@ const val VALID_BEAGLE_CONFIG_IN_BEAGLE_SDK =
         import br.com.zup.beagle.android.setup.DesignSystem
         import br.com.zup.beagle.android.store.StoreHandler
         import br.com.zup.beagle.android.widget.WidgetView
-        import br.com.zup.beagle.android.analytics.AnalyticsProvider
         import java.lang.Class
         import kotlin.String
         import kotlin.Suppress

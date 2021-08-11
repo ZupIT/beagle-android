@@ -197,18 +197,18 @@ internal class BeagleConfigTest : BeagleSdkBaseTest() {
         private const val FILE_NAME = "File1.kt"
         private val REGEX_REMOVE_SPACE = "\\s".toRegex()
         private const val MESSAGE_DUPLICATE_BEAGLE_CONFIG =
-            "error: BeagleConfig defined multiple times: " +
-                    "1 - br.com.test.beagle.BeagleConfigImpl " +
-                    "2 - br.com.test.beagle.BeagleConfigTwo. " +
-                    "You must remove one implementation from the application."
+            "error: BeagleConfig defined multiple times: "
+                .plus("1 - br.com.test.beagle.BeagleConfigImpl ")
+                .plus("2 - br.com.test.beagle.BeagleConfigTwo. ")
+                .plus("You must remove one implementation from the application.")
         private const val MESSAGE_MISSING_BEAGLE_CONFIG =
             "Did you miss to annotate your BeagleConfig class with @BeagleComponent?"
 
         private const val MESSAGE_DUPLICATE_BEAGLE_CONFIG_REGISTRAR =
-            "error: BeagleConfig defined multiple times: " +
-                    "1 - br.com.test.beagle.BeagleConfigImpl " +
-                    "2 - br.com.test.beagle.BeagleConfigThree. " +
-                    "You must remove one implementation from the application."
+            "error: BeagleConfig defined multiple times: "
+                .plus("1 - br.com.test.beagle.BeagleConfigImpl ")
+                .plus("2 - br.com.test.beagle.BeagleConfigThree. ")
+                .plus("You must remove one implementation from the application.")
     }
 
 }

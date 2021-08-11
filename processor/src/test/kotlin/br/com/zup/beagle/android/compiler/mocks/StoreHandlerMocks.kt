@@ -129,6 +129,8 @@ const val VALID_STORE_HANDLER_BEAGLE_SDK_FROM_REGISTRAR =
         
         public final class BeagleSetup : BeagleSdk {
         
+          public override val deepLinkHandler : DeepLinkHandler? = null 
+          
           public override val httpClientFactory: HttpClientFactory? = null
         
           public override val designSystem: DesignSystem? = null

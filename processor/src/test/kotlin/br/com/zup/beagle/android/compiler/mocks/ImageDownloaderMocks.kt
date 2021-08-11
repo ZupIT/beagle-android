@@ -59,7 +59,6 @@ const val VALID_IMAGE_DOWNLOADER_BEAGLE_SDK =
         import br.com.zup.beagle.android.setup.BeagleSdk
         import br.com.zup.beagle.android.setup.DesignSystem
         import br.com.zup.beagle.android.store.StoreHandler
-        import br.com.zup.beagle.android.view.BeagleActivity
         import br.com.zup.beagle.android.widget.WidgetView
         import java.lang.Class
         import kotlin.String
@@ -120,7 +119,6 @@ const val VALID_IMAGE_DOWNLOADER_BEAGLE_SDK_FROM_REGISTRAR =
         import br.com.zup.beagle.android.setup.BeagleSdk
         import br.com.zup.beagle.android.setup.DesignSystem
         import br.com.zup.beagle.android.store.StoreHandler
-        import br.com.zup.beagle.android.view.BeagleActivity
         import br.com.zup.beagle.android.widget.WidgetView
         import java.lang.Class
         import kotlin.String

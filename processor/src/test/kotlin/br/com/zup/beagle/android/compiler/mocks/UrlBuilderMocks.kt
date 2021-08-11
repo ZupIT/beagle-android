@@ -48,11 +48,11 @@ const val VALID_URL_BUILDER_BEAGLE_SDK =
 
         import br.com.zup.beagle.android.`data`.serializer.adapter.generic.TypeAdapterResolver
         import br.com.zup.beagle.android.action.Action
+        import br.com.zup.beagle.android.analytics.AnalyticsProvider
         import br.com.zup.beagle.android.imagedownloader.BeagleImageDownloader
         import br.com.zup.beagle.android.logger.BeagleLogger
         import br.com.zup.beagle.android.navigation.BeagleControllerReference
         import br.com.zup.beagle.android.navigation.DeepLinkHandler
-        import br.com.zup.beagle.android.networking.HttpClient
         import br.com.zup.beagle.android.networking.HttpClientFactory
         import br.com.zup.beagle.android.networking.urlbuilder.UrlBuilder
         import br.com.zup.beagle.android.operation.Operation
@@ -60,9 +60,7 @@ const val VALID_URL_BUILDER_BEAGLE_SDK =
         import br.com.zup.beagle.android.setup.BeagleSdk
         import br.com.zup.beagle.android.setup.DesignSystem
         import br.com.zup.beagle.android.store.StoreHandler
-        import br.com.zup.beagle.android.view.BeagleActivity
         import br.com.zup.beagle.android.widget.WidgetView
-        import br.com.zup.beagle.android.analytics.AnalyticsProvider
         import java.lang.Class
         import kotlin.String
         import kotlin.Suppress
@@ -115,7 +113,6 @@ const val VALID_URL_BUILDER_BEAGLE_SDK_FROM_REGISTRAR =
         import br.com.zup.beagle.android.logger.BeagleLogger
         import br.com.zup.beagle.android.navigation.BeagleControllerReference
         import br.com.zup.beagle.android.navigation.DeepLinkHandler
-        import br.com.zup.beagle.android.networking.HttpClient
         import br.com.zup.beagle.android.networking.HttpClientFactory
         import br.com.zup.beagle.android.networking.urlbuilder.UrlBuilder
         import br.com.zup.beagle.android.operation.Operation
