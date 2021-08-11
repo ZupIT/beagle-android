@@ -27,6 +27,7 @@ import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.context.expressionOf
 import br.com.zup.beagle.android.testutil.InstantExecutorExtension
 import br.com.zup.beagle.android.view.ViewFactory
+import br.com.zup.beagle.android.view.viewmodel.AsyncActionViewModel
 import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 import br.com.zup.beagle.android.widget.core.ListDirection
 import io.mockk.Runs
@@ -50,6 +51,8 @@ class ListViewTest : BaseComponentTest() {
         val id: Int,
         val name: String,
     )
+
+    private val asyncActionViewModel = mockk<AsyncActionViewModel>(relaxUnitFun = true, relaxed = true)
 
     private val recyclerView: RecyclerView = mockk(relaxed = true)
     private val beagleRecyclerView: BeagleRecyclerView = mockk(relaxed = true)
@@ -86,6 +89,15 @@ class ListViewTest : BaseComponentTest() {
     override fun setUp() {
         super.setUp()
 
+        prepareViewModelMock(asyncActionViewModel)
+        every { beagleFlexView.addView(any<ServerDrivenComponent>()) } just Runs
+        every { ViewFactory.makeRecyclerView(rootView.getContext()) } returns recyclerView
+        every { ViewFactory.makeBeagleRecyclerView(rootView.getContext()) } returns beagleRecyclerView
+        every { ViewFactory.makeBeagleRecyclerViewScrollIndicatorVertical(rootView.getContext()) } returns beagleRecyclerView
+        every { ViewFactory.makeBeagleRecyclerViewScrollIndicatorHorizontal(rootView.getContext()) } returns beagleRecyclerView
+        every { recyclerView.layoutManager = capture(layoutManagerSlot) } just Runs
+        every { recyclerView.adapter = any() } just Runs
+
         listView = ListView(
             direction = ListDirection.VERTICAL,
             context = context,
@@ -96,14 +108,6 @@ class ListViewTest : BaseComponentTest() {
             iteratorName = iteratorName,
             key = key
         )
-
-        every { beagleFlexView.addView(any<ServerDrivenComponent>()) } just Runs
-        every { ViewFactory.makeRecyclerView(rootView.getContext()) } returns recyclerView
-        every { ViewFactory.makeBeagleRecyclerView(rootView.getContext()) } returns beagleRecyclerView
-        every { ViewFactory.makeBeagleRecyclerViewScrollIndicatorVertical(rootView.getContext()) } returns beagleRecyclerView
-        every { ViewFactory.makeBeagleRecyclerViewScrollIndicatorHorizontal(rootView.getContext()) } returns beagleRecyclerView
-        every { recyclerView.layoutManager = capture(layoutManagerSlot) } just Runs
-        every { recyclerView.adapter = any() } just Runs
     }
 
     @DisplayName("When buildView")
