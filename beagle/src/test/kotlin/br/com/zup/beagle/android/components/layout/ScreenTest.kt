@@ -54,7 +54,7 @@ class ScreenTest : BaseComponentTest() {
     @MockK
     private lateinit var component: ServerDrivenComponent
 
-    private lateinit var screenComponent: Screen
+    private lateinit var screen: Screen
 
     @BeforeEach
     override fun setUp() {
@@ -66,7 +66,7 @@ class ScreenTest : BaseComponentTest() {
         every { Color.parseColor(any()) } returns DEFAULT_COLOR
         every { rootView.getContext() } returns context
 
-        screenComponent = Screen(navigationBar = null, child = component)
+        screen = Screen(navigationBar = null, child = component)
     }
 
     @Test
@@ -77,7 +77,7 @@ class ScreenTest : BaseComponentTest() {
         every { context.supportActionBar } returns null
 
         // When
-        screenComponent.buildView(rootView)
+        screen.buildView(rootView)
 
         // Then
         assertEquals(1.0, style.captured.flex?.grow)
@@ -91,7 +91,7 @@ class ScreenTest : BaseComponentTest() {
         every { context.supportActionBar } returns null
 
         // When
-        screenComponent.buildView(rootView)
+        screen.buildView(rootView)
 
         // Then
         verify(atLeast = once()) { beagleFlexView.addView(component) }
@@ -110,7 +110,7 @@ class ScreenTest : BaseComponentTest() {
         every { toolbar.visibility } returns expected
 
         // WHEN
-        screenComponent.buildView(rootView)
+        screen.buildView(rootView)
 
         // THEN
         assertEquals(expected, toolbar.visibility)
@@ -120,7 +120,7 @@ class ScreenTest : BaseComponentTest() {
     @Test
     fun should_keep_window_attach_callbacks_null_when_screen_event_not_presented() {
         // When
-        val view = screenComponent.buildView(rootView)
+        val view = screen.buildView(rootView)
 
         // Then
         assertTrue(view is BeagleFlexView)
@@ -131,8 +131,9 @@ class ScreenTest : BaseComponentTest() {
     fun buildView_should_call_configureToolbar_before_configureNavigationBarForScreen() {
         //GIVEN
         val navigationBar = NavigationBar("Stub")
+
         mockkConstructor(ToolbarManager::class)
-        screenComponent = Screen(child = screenComponent, navigationBar = navigationBar)
+
         every {
             anyConstructed<ToolbarManager>().configureToolbar(
                 any(),
@@ -142,8 +143,17 @@ class ScreenTest : BaseComponentTest() {
             )
         } just Runs
 
+        every {
+            anyConstructed<ToolbarManager>().configureNavigationBarForScreen(
+                any(),
+                any(),
+            )
+        } just Runs
+
+        screen = Screen(child = screen, navigationBar = navigationBar)
+
         //WHEN
-        screenComponent.buildView(rootView)
+        screen.buildView(rootView)
 
         //THEN
         verifyOrder {
@@ -151,8 +161,8 @@ class ScreenTest : BaseComponentTest() {
             anyConstructed<ToolbarManager>().configureToolbar(
                 rootView,
                 navigationBar,
-                beagleFlexView,
-                screenComponent
+                any(),
+                screen
             )
         }
     }

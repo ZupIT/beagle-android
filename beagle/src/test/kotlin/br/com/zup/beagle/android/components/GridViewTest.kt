@@ -26,6 +26,7 @@ import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.context.expressionOf
 import br.com.zup.beagle.android.testutil.InstantExecutorExtension
 import br.com.zup.beagle.android.view.ViewFactory
+import br.com.zup.beagle.android.view.viewmodel.OnInitViewModel
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
@@ -49,6 +50,8 @@ class GridViewTest : BaseComponentTest() {
 
     private val beagleRecyclerView: BeagleRecyclerView = mockk(relaxed = true)
     private val layoutManagerSlot = slot<RecyclerView.LayoutManager>()
+
+    private val onInitViewModel: OnInitViewModel = mockk(relaxed = true, relaxUnitFun = true)
 
     private val context = ContextData(
         id = "context",
@@ -81,6 +84,8 @@ class GridViewTest : BaseComponentTest() {
     @BeforeEach
     override fun setUp() {
         super.setUp()
+
+        prepareViewModelMock(onInitViewModel)
 
         gridView = GridView(
             context,
