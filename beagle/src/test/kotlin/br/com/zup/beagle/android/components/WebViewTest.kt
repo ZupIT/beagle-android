@@ -31,10 +31,8 @@ import io.mockk.mockkClass
 import io.mockk.slot
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotNull
-import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 
 private const val MOCKED_URL = "http://mocked.com"
@@ -47,7 +45,7 @@ class WebViewTest : BaseComponentTest() {
 
     private lateinit var webViewComponent: WebView
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
 

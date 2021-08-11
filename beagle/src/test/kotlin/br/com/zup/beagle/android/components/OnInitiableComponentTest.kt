@@ -30,7 +30,6 @@ import br.com.zup.beagle.android.testutil.InstantExecutorExtension
 import br.com.zup.beagle.android.utils.handleEvent
 import br.com.zup.beagle.android.utils.setIsInitiableComponent
 import br.com.zup.beagle.android.view.viewmodel.OnInitViewModel
-import br.com.zup.beagle.android.widget.RootView
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
@@ -38,10 +37,9 @@ import io.mockk.mockk
 import io.mockk.mockkConstructor
 import io.mockk.slot
 import io.mockk.spyk
-import io.mockk.unmockkConstructor
 import io.mockk.verify
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -49,14 +47,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 
 @DisplayName("Given an OnInitiableComponent")
 @ExtendWith(InstantExecutorExtension::class)
-class OnInitiableComponentTest: BaseTest() {
+class OnInitiableComponentTest : BaseTest() {
 
     private val onInitViewModel = spyk(OnInitViewModel())
     private val origin = mockk<View>(relaxed = true)
     private val listenerSlot = slot<View.OnAttachStateChangeListener>()
     private val id = 10
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
         mockkConstructor(ViewModelProvider::class)
@@ -92,7 +90,8 @@ class OnInitiableComponentTest: BaseTest() {
         @Test
         fun handleOnInitCallWithAtLeastOneOnInitAction() {
             // Given
-            val initiableWidget = Container(children = listOf(), onInit = listOf(Navigate.PopView()))
+            val initiableWidget =
+                Container(children = listOf(), onInit = listOf(Navigate.PopView()))
 
             // When
             initiableWidget.handleOnInit(rootView, origin)
@@ -105,7 +104,8 @@ class OnInitiableComponentTest: BaseTest() {
         @Test
         fun checkIfViewIsTaggedAsInitiableComponent() {
             // Given
-            val initiableWidget = Container(children = listOf(), onInit = listOf(Navigate.PopView()))
+            val initiableWidget =
+                Container(children = listOf(), onInit = listOf(Navigate.PopView()))
 
             // When
             initiableWidget.handleOnInit(rootView, origin)
@@ -178,7 +178,14 @@ class OnInitiableComponentTest: BaseTest() {
             listenerSlot.captured.onViewAttachedToWindow(origin)
 
             // Then
-            verify(exactly = 1) { action.handleEvent(rootView, origin, action, analyticsValue = "onInit") }
+            verify(exactly = 1) {
+                action.handleEvent(
+                    rootView,
+                    origin,
+                    action,
+                    analyticsValue = "onInit"
+                )
+            }
         }
 
         @DisplayName("Then should setOnInitFinished true to FINISHED AsyncAction")
@@ -236,7 +243,14 @@ class OnInitiableComponentTest: BaseTest() {
             listenerSlot.captured.onViewAttachedToWindow(origin)
 
             // Then
-            verify(exactly = 2) { action.handleEvent(rootView, origin, action, analyticsValue = "onInit") }
+            verify(exactly = 2) {
+                action.handleEvent(
+                    rootView,
+                    origin,
+                    action,
+                    analyticsValue = "onInit"
+                )
+            }
         }
     }
 }

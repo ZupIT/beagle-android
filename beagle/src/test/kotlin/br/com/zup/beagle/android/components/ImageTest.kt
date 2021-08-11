@@ -24,12 +24,13 @@ import br.com.zup.beagle.android.testutil.RandomData
 import br.com.zup.beagle.android.utils.dp
 import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.widget.core.CornerRadius
-import br.com.zup.beagle.android.widget.core.Style
 import br.com.zup.beagle.android.widget.core.ImageContentMode
 import br.com.zup.beagle.android.widget.core.Size
+import br.com.zup.beagle.android.widget.core.Style
 import br.com.zup.beagle.android.widget.core.UnitType
 import br.com.zup.beagle.android.widget.core.UnitValue
 import io.mockk.Runs
+import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
@@ -39,6 +40,7 @@ import io.mockk.verify
 import io.mockk.verifyOrder
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -64,7 +66,7 @@ internal class ImageTest : BaseComponentTest() {
     private lateinit var imageRemote: Image
     private val scaleType = ImageView.ScaleType.FIT_CENTER
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
 
@@ -74,7 +76,12 @@ internal class ImageTest : BaseComponentTest() {
         every { beagleSdk.designSystem } returns mockk(relaxed = true)
         every { beagleSdk.designSystem!!.image(any()) } returns IMAGE_RES
         every { 10.0.dp() } returns 20.0
+    }
 
+    @BeforeEach
+    fun clear() {
+        clearMocks(imageView, answers = false)
+        mockBeagleEnvironment()
         imageLocal = Image(valueOf(ImagePath.Local("imageName")))
         imageRemote =
             Image(

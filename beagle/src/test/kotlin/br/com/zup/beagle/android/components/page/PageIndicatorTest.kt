@@ -35,7 +35,7 @@ import io.mockk.mockkStatic
 import io.mockk.slot
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -46,14 +46,15 @@ private const val UNSELECTED_COLOR = "#FF0000"
 @DisplayName("Given Page Indicator")
 class PageIndicatorTest : BaseComponentTest() {
 
-    private val beaglePageIndicatorView: BeaglePageIndicatorView = mockk(relaxed = true, relaxUnitFun = true)
+    private val beaglePageIndicatorView: BeaglePageIndicatorView =
+        mockk(relaxed = true, relaxUnitFun = true)
     private val numberOfPages: Int = RandomData.int()
     private val currentPage: Bind<Int> = mockk(relaxed = true, relaxUnitFun = true)
     private val currentPageSlot = slot<Observer<Int?>>()
 
     private lateinit var pageIndicator: PageIndicator
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
 

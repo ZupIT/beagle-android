@@ -51,9 +51,8 @@ import br.com.zup.beagle.android.widget.core.Style
 import br.com.zup.beagle.android.widget.core.StyleComponent
 import io.mockk.CapturingSlot
 import io.mockk.Runs
+import io.mockk.clearMocks
 import io.mockk.every
-import io.mockk.impl.annotations.MockK
-import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkConstructor
@@ -63,7 +62,8 @@ import io.mockk.slot
 import io.mockk.verify
 import io.mockk.verifyOrder
 import io.mockk.verifySequence
-import org.junit.Assert.assertEquals
+import junit.framework.Assert.assertEquals
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -75,45 +75,33 @@ private val requestData = RequestData(URL)
 @DisplayName("Given a View Extension")
 class ViewExtensionsKtTest : BaseTest() {
 
-    @RelaxedMockK
-    private lateinit var viewGroup: ViewGroup
+    private val viewGroup: ViewGroup = mockk(relaxed = true)
 
-    @MockK(relaxUnitFun = true, relaxed = true)
-    private lateinit var contextViewModel: ScreenContextViewModel
+    private val contextViewModel: ScreenContextViewModel = mockk(relaxed = true)
 
-    @MockK(relaxUnitFun = true, relaxed = true)
-    private lateinit var generateIdViewModel: GenerateIdViewModel
+    private val generateIdViewModel: GenerateIdViewModel = mockk(relaxed = true)
 
-    @MockK(relaxUnitFun = true, relaxed = true)
-    private lateinit var listViewIdViewModel: ListViewIdViewModel
+    private val listViewIdViewModel: ListViewIdViewModel = mockk(relaxed = true)
 
-    @MockK(relaxUnitFun = true, relaxed = true)
-    private lateinit var onInitViewModel: OnInitViewModel
+    private val onInitViewModel: OnInitViewModel = mockk(relaxed = true)
 
-    @RelaxedMockK
-    private lateinit var fragment: Fragment
+    private val fragment: Fragment = mockk(relaxed = true)
 
-    @RelaxedMockK
-    private lateinit var activity: AppCompatActivity
+    private val activity: AppCompatActivity = mockk(relaxed = true)
 
-    @RelaxedMockK
-    private lateinit var beagleView: BeagleView
+    private val beagleView: BeagleView = mockk(relaxed = true)
 
-    @MockK
-    private lateinit var onServerStateChanged: OnServerStateChanged
+    private val onServerStateChanged: OnServerStateChanged = mockk()
 
-    @RelaxedMockK
-    private lateinit var inputMethodManager: InputMethodManager
+    private val inputMethodManager: InputMethodManager = mockk(relaxed = true)
 
-    @MockK
-    private lateinit var designSystem: DesignSystem
+    private val designSystem: DesignSystem = mockk()
 
-    @MockK
-    private lateinit var imageView: ImageView
+    private val imageView: ImageView = mockk()
 
     private val viewSlot = slot<View>()
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
 
@@ -129,6 +117,7 @@ class ViewExtensionsKtTest : BaseTest() {
             listViewIdViewModel,
             onInitViewModel
         )
+
         every { ViewFactory.makeBeagleView(any()) } returns beagleView
         every { ViewFactory.makeView(any()) } returns beagleView
         every { viewGroup.addView(capture(viewSlot)) } just Runs
@@ -140,6 +129,19 @@ class ViewExtensionsKtTest : BaseTest() {
         every { imageView.scaleType = any() } just Runs
         every { imageView.setImageResource(any()) } just Runs
 
+    }
+
+    @BeforeEach
+    fun clear() {
+        mockkStatic("br.com.zup.beagle.android.utils.ViewGroupExtensionsKt")
+        clearMocks(
+            ViewFactory,
+            inputMethodManager,
+            beagleView,
+            viewGroup,
+            generateIdViewModel,
+            answers = false
+        )
     }
 
     @DisplayName("When hideKeyboard")

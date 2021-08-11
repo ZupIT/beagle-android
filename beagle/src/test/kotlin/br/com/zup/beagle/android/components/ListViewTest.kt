@@ -27,16 +27,17 @@ import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.context.expressionOf
 import br.com.zup.beagle.android.testutil.InstantExecutorExtension
 import br.com.zup.beagle.android.view.ViewFactory
-import br.com.zup.beagle.android.view.viewmodel.AsyncActionViewModel
-import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 import br.com.zup.beagle.android.widget.core.ListDirection
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 import io.mockk.Runs
+import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -51,8 +52,6 @@ class ListViewTest : BaseComponentTest() {
         val id: Int,
         val name: String,
     )
-
-    private val asyncActionViewModel = mockk<AsyncActionViewModel>(relaxUnitFun = true, relaxed = true)
 
     private val recyclerView: RecyclerView = mockk(relaxed = true)
     private val beagleRecyclerView: BeagleRecyclerView = mockk(relaxed = true)
@@ -85,18 +84,9 @@ class ListViewTest : BaseComponentTest() {
 
     private lateinit var listView: ListView
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
-
-        prepareViewModelMock(asyncActionViewModel)
-        every { beagleFlexView.addView(any<ServerDrivenComponent>()) } just Runs
-        every { ViewFactory.makeRecyclerView(rootView.getContext()) } returns recyclerView
-        every { ViewFactory.makeBeagleRecyclerView(rootView.getContext()) } returns beagleRecyclerView
-        every { ViewFactory.makeBeagleRecyclerViewScrollIndicatorVertical(rootView.getContext()) } returns beagleRecyclerView
-        every { ViewFactory.makeBeagleRecyclerViewScrollIndicatorHorizontal(rootView.getContext()) } returns beagleRecyclerView
-        every { recyclerView.layoutManager = capture(layoutManagerSlot) } just Runs
-        every { recyclerView.adapter = any() } just Runs
 
         listView = ListView(
             direction = ListDirection.VERTICAL,
@@ -108,6 +98,27 @@ class ListViewTest : BaseComponentTest() {
             iteratorName = iteratorName,
             key = key
         )
+
+        every { beagleFlexView.addView(any<ServerDrivenComponent>()) } just Runs
+        every { recyclerView.layoutManager = capture(layoutManagerSlot) } just Runs
+        every { recyclerView.adapter = any() } just Runs
+    }
+
+    @BeforeEach
+    fun clear() {
+        clearMocks(
+            ViewFactory,
+            beagleFlexView,
+            rootView,
+            recyclerView,
+            beagleRecyclerView,
+            answers = false
+        )
+
+        every { ViewFactory.makeRecyclerView(rootView.getContext()) } returns recyclerView
+        every { ViewFactory.makeBeagleRecyclerView(rootView.getContext()) } returns beagleRecyclerView
+        every { ViewFactory.makeBeagleRecyclerViewScrollIndicatorVertical(rootView.getContext()) } returns beagleRecyclerView
+        every { ViewFactory.makeBeagleRecyclerViewScrollIndicatorHorizontal(rootView.getContext()) } returns beagleRecyclerView
     }
 
     @DisplayName("When buildView")
@@ -227,5 +238,6 @@ class ListViewTest : BaseComponentTest() {
             }
         }
     }
+
 
 }

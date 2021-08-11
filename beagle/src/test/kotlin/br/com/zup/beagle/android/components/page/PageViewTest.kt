@@ -31,6 +31,7 @@ import br.com.zup.beagle.android.view.custom.BeaglePageView
 import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 import br.com.zup.beagle.android.widget.core.Style
 import io.mockk.Runs
+import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
@@ -39,6 +40,7 @@ import io.mockk.slot
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -59,14 +61,20 @@ class PageViewTest : BaseComponentTest() {
 
     private val styleSlot = mutableListOf<Style>()
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
-        mockkStatic("br.com.zup.beagle.android.utils.WidgetExtensionsKt")
         every { ViewFactory.makeViewPager(any()) } returns beaglePageView
         every { ViewFactory.makeBeagleFlexView(any(), capture(styleSlot)) } returns beagleFlexView
         every { beagleFlexView.addView(any(), capture(styleSlot)) } just Runs
         every { beaglePageView.addOnPageChangeListener(capture(pageListenerSlot)) } just Runs
+    }
+
+    @BeforeEach
+    fun clear(){
+        mockkStatic("br.com.zup.beagle.android.utils.WidgetExtensionsKt")
+        clearMocks(ViewFactory, answers = false)
+        styleSlot.clear()
     }
 
     @DisplayName("When buildView is called")

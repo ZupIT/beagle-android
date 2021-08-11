@@ -32,6 +32,7 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -48,7 +49,7 @@ internal class SimpleFormTest : BaseComponentTest() {
 
     private lateinit var simpleForm: SimpleForm
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
 

@@ -31,6 +31,7 @@ import br.com.zup.beagle.android.utils.StyleManager
 import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.widget.core.TextAlignment
 import io.mockk.Runs
+import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
@@ -39,6 +40,7 @@ import io.mockk.mockkStatic
 import io.mockk.slot
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -57,7 +59,7 @@ class BeagleTextViewExtensionsKtTest : BaseComponentTest() {
 
     private lateinit var text: Text
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
 
@@ -76,6 +78,11 @@ class BeagleTextViewExtensionsKtTest : BaseComponentTest() {
         every { textView.text = capture(textValueSlot) } just Runs
         every { textView.gravity = capture(textAlignment) } just Runs
         every { designSystem.image(any()) } returns IMAGE_RES
+    }
+
+    @BeforeEach
+    fun clear() {
+        clearMocks(textView, answers = false)
     }
 
     @Test

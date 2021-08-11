@@ -38,7 +38,7 @@ import io.mockk.verifyOrder
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 
 data class DataTest(val email: String, val password: String)
@@ -52,7 +52,7 @@ class SendRequestTest : BaseAsyncActionTest() {
     private val view: View = mockk()
     private val contextDataSlot = slot<ContextData>()
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
 
@@ -69,8 +69,10 @@ class SendRequestTest : BaseAsyncActionTest() {
         val onSuccessAction: Action = mockk()
         val onErrorAction: Action = mockk()
         val onFinishAction: Action = mockk()
-        val requestAction = createSendRequest(onSuccess = listOf(onSuccessAction),
-            onError = listOf(onErrorAction), onFinish = listOf(onFinishAction))
+        val requestAction = createSendRequest(
+            onSuccess = listOf(onSuccessAction),
+            onError = listOf(onErrorAction), onFinish = listOf(onFinishAction)
+        )
 
         // When
         requestAction.execute(rootView, view)
@@ -103,8 +105,10 @@ class SendRequestTest : BaseAsyncActionTest() {
         val onSuccessAction: Action = mockk()
         val onErrorAction: Action = mockk()
         val onFinishAction: Action = mockk()
-        val requestAction = createSendRequest(onSuccess = listOf(onSuccessAction),
-            onError = listOf(onErrorAction), onFinish = listOf(onFinishAction))
+        val requestAction = createSendRequest(
+            onSuccess = listOf(onSuccessAction),
+            onError = listOf(onErrorAction), onFinish = listOf(onFinishAction)
+        )
 
         // When
         requestAction.execute(rootView, view)
@@ -136,8 +140,10 @@ class SendRequestTest : BaseAsyncActionTest() {
         // Given
         val onErrorAction: Action = mockk()
         val onFinishAction: Action = mockk()
-        val requestAction = createSendRequest(onSuccess = null,
-            onError = listOf(onErrorAction), onFinish = listOf(onFinishAction))
+        val requestAction = createSendRequest(
+            onSuccess = null,
+            onError = listOf(onErrorAction), onFinish = listOf(onFinishAction)
+        )
 
         // When
         requestAction.execute(rootView, view)
@@ -158,8 +164,10 @@ class SendRequestTest : BaseAsyncActionTest() {
     @Test
     fun `should not send any action when handle action`() {
         // Given
-        val requestAction = createSendRequest(onSuccess = null,
-            onError = null, onFinish = null)
+        val requestAction = createSendRequest(
+            onSuccess = null,
+            onError = null, onFinish = null
+        )
 
         // When
         requestAction.execute(rootView, view)
@@ -191,8 +199,10 @@ class SendRequestTest : BaseAsyncActionTest() {
     fun `should send only action finish when handle action with success`() {
         // Given
         val onFinishAction: Action = mockk()
-        val requestAction = createSendRequest(onSuccess = null,
-            onError = null, onFinish = listOf(onFinishAction))
+        val requestAction = createSendRequest(
+            onSuccess = null,
+            onError = null, onFinish = listOf(onFinishAction)
+        )
 
         // When
         requestAction.execute(rootView, view)
@@ -214,8 +224,10 @@ class SendRequestTest : BaseAsyncActionTest() {
     fun `should send only action finish when handle action with error`() {
         // Given
         val onFinishAction: Action = mockk()
-        val requestAction = createSendRequest(onSuccess = null,
-            onError = null, onFinish = listOf(onFinishAction))
+        val requestAction = createSendRequest(
+            onSuccess = null,
+            onError = null, onFinish = listOf(onFinishAction)
+        )
 
         // When
         requestAction.execute(rootView, view)
@@ -247,8 +259,23 @@ class SendRequestTest : BaseAsyncActionTest() {
             data = data
         ).apply {
             every { evaluateExpression(rootView, view, any<Any>()) } returns ""
-            every { handleEvent(rootView, view, any<List<Action>>(), capture(contextDataSlot), analyticsValue = any()) } just Runs
-            every { handleEvent(rootView, view, any<List<Action>>(), analyticsValue = any()) } just Runs
+            every {
+                handleEvent(
+                    rootView,
+                    view,
+                    any<List<Action>>(),
+                    capture(contextDataSlot),
+                    analyticsValue = any()
+                )
+            } just Runs
+            every {
+                handleEvent(
+                    rootView,
+                    view,
+                    any<List<Action>>(),
+                    analyticsValue = any()
+                )
+            } just Runs
         }
     }
 

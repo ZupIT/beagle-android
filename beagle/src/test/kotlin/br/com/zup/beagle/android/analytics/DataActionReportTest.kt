@@ -20,47 +20,58 @@ import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.action.AnalyticsAction
 import br.com.zup.beagle.android.action.Navigate
 import br.com.zup.beagle.android.action.Route
+import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
+private const val ROUTE_URL_CONSTANT = "route.url"
+private const val ROUTE_SHOULD_PREFETCH_CONSTANT = "route.shouldPrefetch"
+
 @DisplayName("Given DataActionReport")
 internal class DataActionReportTest : BaseTest() {
 
-    @BeforeEach
-    fun setup() {
-        mockkObject(ActionReportFactory)
-        every { ActionReportFactory.generateAnalyticsRecord(any()) } returns mockk()
-    }
-
-    private val ROUTE_URL_CONSTANT = "route.url"
-    private val ROUTE_SHOULD_PREFETCH_CONSTANT = "route.shouldPrefetch"
     private val url = "/url"
     private val route = Route.Remote(url = url)
     private val action: AnalyticsAction = Navigate.PushView(route = route)
+    private val analyticsRecord: AnalyticsRecord = mockk()
+    private lateinit var dataActionReport: DataActionReport
 
-    private val dataActionReport = DataActionReport(
-        originX = 300f,
-        originY = 400f,
-        attributes = hashMapOf(
-            "route.url.length" to 4,
-            ROUTE_SHOULD_PREFETCH_CONSTANT to false,
-            "route" to route,
-            ROUTE_URL_CONSTANT to url
-        ),
-        id = null,
-        type = null,
-        analyticsValue = "onPress",
-        action = action,
-        screenId = "",
-        actionType = "beagle:pushView"
-    )
+    @BeforeAll
+    override fun setUp() {
+        super.setUp()
+        mockkObject(ActionReportFactory)
+    }
+
+    @BeforeEach
+    fun clear() {
+        clearMocks(ActionReportFactory)
+        every { ActionReportFactory.generateAnalyticsRecord(any()) } returns analyticsRecord
+
+        dataActionReport = DataActionReport(
+            originX = 300f,
+            originY = 400f,
+            attributes = hashMapOf(
+                "route.url.length" to 4,
+                ROUTE_SHOULD_PREFETCH_CONSTANT to false,
+                "route" to route,
+                ROUTE_URL_CONSTANT to url
+            ),
+            id = null,
+            type = null,
+            analyticsValue = "onPress",
+            action = action,
+            screenId = "",
+            actionType = "beagle:pushView"
+        )
+    }
 
     @DisplayName("When report")
     @Nested
@@ -76,7 +87,10 @@ internal class DataActionReportTest : BaseTest() {
             )
             action.apply {
                 analytics = ActionAnalyticsConfig.Enabled(
-                    ActionAnalyticsProperties(listOf("route", "route.url"), hashMapOf("additionalEntries" to "additional"))
+                    ActionAnalyticsProperties(
+                        listOf("route", "route.url"),
+                        hashMapOf("additionalEntries" to "additional")
+                    )
                 )
             }
             //When
@@ -103,7 +117,12 @@ internal class DataActionReportTest : BaseTest() {
                 analytics = ActionAnalyticsConfig.Enabled()
             }
             val analyticsConfig: AnalyticsConfig = mockk()
-            every { analyticsConfig.actions } returns hashMapOf("beagle:pushView" to listOf("route", "route.url"))
+            every { analyticsConfig.actions } returns hashMapOf(
+                "beagle:pushView" to listOf(
+                    "route",
+                    "route.url"
+                )
+            )
 
             //When
             dataActionReport.report(analyticsConfig)
@@ -141,7 +160,14 @@ internal class DataActionReportTest : BaseTest() {
                 "route.url" to url
             )
             action.apply {
-                analytics = ActionAnalyticsConfig.Enabled(ActionAnalyticsProperties(listOf("route", "route.url")))
+                analytics = ActionAnalyticsConfig.Enabled(
+                    ActionAnalyticsProperties(
+                        listOf(
+                            "route",
+                            "route.url"
+                        )
+                    )
+                )
             }
             val analyticsConfig: AnalyticsConfig = mockk()
             every { analyticsConfig.actions } returns hashMapOf("beagle:pushView" to listOf("route.shouldPrefetch"))
@@ -171,7 +197,12 @@ internal class DataActionReportTest : BaseTest() {
                 )
             }
             val analyticsConfig: AnalyticsConfig = mockk()
-            every { analyticsConfig.actions } returns hashMapOf("beagle:pushView" to listOf("route", "route.url"))
+            every { analyticsConfig.actions } returns hashMapOf(
+                "beagle:pushView" to listOf(
+                    "route",
+                    "route.url"
+                )
+            )
 
             //When
             dataActionReport.report(analyticsConfig)

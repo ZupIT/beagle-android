@@ -19,24 +19,24 @@ package br.com.zup.beagle.android.components.utils
 import android.view.View
 import br.com.zup.beagle.R
 import br.com.zup.beagle.android.BaseTest
+import br.com.zup.beagle.android.annotation.RegisterWidget
 import br.com.zup.beagle.android.components.Text
 import br.com.zup.beagle.android.utils.StyleManager
 import br.com.zup.beagle.android.utils.toAndroidId
 import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.android.widget.WidgetView
-import br.com.zup.beagle.android.annotation.RegisterWidget
 import br.com.zup.beagle.android.widget.core.BeagleJson
 import io.mockk.Runs
+import io.mockk.clearMocks
 import io.mockk.every
-import io.mockk.impl.annotations.InjectMockKs
-import io.mockk.impl.annotations.MockK
-import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.just
+import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.slot
 import io.mockk.verifyOrder
 import org.junit.Assert
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -45,26 +45,26 @@ import org.junit.jupiter.api.Test
 @DisplayName("Given a ComponentStylization")
 class ComponentStylizationTest : BaseTest() {
 
-    @RelaxedMockK
-    private lateinit var accessibilitySetup: AccessibilitySetup
+    private val accessibilitySetup: AccessibilitySetup = mockk(relaxed = true)
 
-    @MockK
-    private lateinit var view: View
+    private val view: View = mockk()
 
-    @RelaxedMockK
-    private lateinit var widget: Text
+    private val widget: Text = mockk(relaxed = true)
 
-    @RelaxedMockK
-    private lateinit var styleManager: StyleManager
+    private val styleManager: StyleManager = mockk(relaxed = true)
 
-    @InjectMockKs
-    private lateinit var componentStylization: ComponentStylization<WidgetView>
+    private val componentStylization = ComponentStylization<WidgetView>(accessibilitySetup)
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
         styleManagerFactory = styleManager
         mockkStatic("br.com.zup.beagle.android.components.utils.ViewExtensionsKt")
+    }
+
+    @BeforeEach
+    fun clear() {
+        clearMocks(beagleSdk)
     }
 
     @DisplayName("When apply")

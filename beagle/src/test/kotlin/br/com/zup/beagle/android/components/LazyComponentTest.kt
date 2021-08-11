@@ -40,7 +40,7 @@ import io.mockk.slot
 import io.mockk.verify
 import io.mockk.verifyOrder
 import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -59,7 +59,7 @@ class LazyComponentTest : BaseComponentTest() {
 
     private lateinit var lazyComponent: LazyComponent
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
 

@@ -27,13 +27,13 @@ import br.com.zup.beagle.android.utils.toAndroidId
 import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.view.custom.BeagleFlexView
 import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
-import io.mockk.Runs
+import io.mockk.clearMocks
 import io.mockk.every
-import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.mockkStatic
 import io.mockk.verify
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -50,7 +50,7 @@ class AddChildrenTest : BaseTest() {
     private val view = mockk<BeagleFlexView>(relaxed = true)
     private val id = "id"
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
 
@@ -63,7 +63,12 @@ class AddChildrenTest : BaseTest() {
         every { rootView.getContext() } returns context
         every { context.findViewById<ViewGroup>(id.toAndroidId()) } returns viewGroup
         every { ViewFactory.makeBeagleFlexView(rootView) } returns view
-        every { viewGroup.addView(any()) } just Runs
+//        every { viewGroup.addView(any()) } just Runs
+    }
+
+    @BeforeEach
+    fun clear() {
+        clearMocks(viewGroup)
     }
 
 
@@ -154,7 +159,13 @@ class AddChildrenTest : BaseTest() {
 
             val list = arrayListOf(linkedMapOf(Pair("_beagleComponent_", " beagle:container")))
 
-            every { action.evaluateExpression(rootView, origin, action.value) } returns list as List<ServerDrivenComponent>
+            every {
+                action.evaluateExpression(
+                    rootView,
+                    origin,
+                    action.value
+                )
+            } returns list as List<ServerDrivenComponent>
 
             // When
             action.execute(rootView, origin)

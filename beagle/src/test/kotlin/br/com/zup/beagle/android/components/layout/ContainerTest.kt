@@ -22,10 +22,12 @@ import br.com.zup.beagle.android.utils.StyleManager
 import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 import br.com.zup.beagle.android.widget.core.Style
+import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkConstructor
 import io.mockk.verify
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -43,11 +45,10 @@ class ContainerTest : BaseComponentTest() {
 
     private lateinit var container: Container
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
 
-        every { ViewFactory.makeBeagleFlexView(any(), any(), any()) } returns beagleFlexView
         every { styleLocal.copy(flex = any()) } returns styleLocal
         mockkConstructor(StyleManager::class)
 
@@ -59,6 +60,11 @@ class ContainerTest : BaseComponentTest() {
         ).apply {
             style = styleLocal
         }
+    }
+
+    @BeforeEach
+    fun clear() {
+        clearMocks(beagleFlexView)
     }
 
     @DisplayName("When build view")

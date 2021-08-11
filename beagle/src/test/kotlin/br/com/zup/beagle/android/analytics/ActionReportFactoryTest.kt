@@ -23,11 +23,12 @@ import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.action.AnalyticsAction
 import br.com.zup.beagle.android.action.Navigate
 import br.com.zup.beagle.android.action.Route
+import br.com.zup.beagle.android.annotation.RegisterAction
 import br.com.zup.beagle.android.components.Text
 import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.android.widget.WidgetView
-import br.com.zup.beagle.android.annotation.RegisterAction
 import br.com.zup.beagle.android.widget.core.BeagleJson
+import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.Assert
@@ -37,15 +38,17 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
+private const val ROUTE_URL_CONSTANT = "route.url"
+private const val ROUTE_SHOULD_PREFETCH_CONSTANT = "route.shouldPrefetch"
+
 @DisplayName("Given a Action Report Factory")
 internal class ActionReportFactoryTest : BaseTest() {
 
     private val origin: View = mockk(relaxed = true)
-    private val ROUTE_URL_CONSTANT = "route.url"
-    private val ROUTE_SHOULD_PREFETCH_CONSTANT = "route.shouldPrefetch"
 
     @BeforeEach
-    fun setup() {
+    fun clear() {
+        clearMocks(origin)
         every { origin.x } returns 300f
         every { origin.y } returns 400f
         every { origin.getTag(R.id.beagle_component_type) } returns "beagle:text"
@@ -141,7 +144,8 @@ internal class ActionReportFactoryTest : BaseTest() {
         fun testOriginComponentAsWidgetViewWithAnId() {
             //Given
             every { origin.getTag(R.id.beagle_component_id) } returns "text-id"
-            val componentReport = hashMapOf<String, Any>("type" to "beagle:button", "id" to "text-id")
+            val componentReport =
+                hashMapOf<String, Any>("type" to "beagle:button", "id" to "text-id")
             val componentReportAux = generateComponentReport()
             componentReport.putAll(componentReportAux)
             val dataActionReport = generateDataActionReport()
@@ -433,14 +437,16 @@ internal class ActionReportFactoryTest : BaseTest() {
 }
 
 @BeagleJson(name = "actionName")
-internal class BeagleJsonActionWithName(override var analytics: ActionAnalyticsConfig? = null) : AnalyticsAction {
+internal class BeagleJsonActionWithName(override var analytics: ActionAnalyticsConfig? = null) :
+    AnalyticsAction {
     override fun execute(rootView: RootView, origin: View) {
         //this is a class to test
     }
 }
 
 @BeagleJson
-internal class BeagleJsonActionWithoutName(override var analytics: ActionAnalyticsConfig? = null) : AnalyticsAction {
+internal class BeagleJsonActionWithoutName(override var analytics: ActionAnalyticsConfig? = null) :
+    AnalyticsAction {
     override fun execute(rootView: RootView, origin: View) {
         //this is a class to test
     }

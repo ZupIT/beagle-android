@@ -16,6 +16,7 @@
 
 package br.com.zup.beagle.android
 
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import br.com.zup.beagle.android.setup.BeagleEnvironment
@@ -27,20 +28,48 @@ import io.mockk.mockk
 import io.mockk.mockkConstructor
 import io.mockk.mockkObject
 import io.mockk.unmockkAll
+import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.TestInstance
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 abstract class BaseTest {
 
     protected val rootView = mockk<ActivityRootView>(relaxed = true, relaxUnitFun = true)
     protected val beagleSdk = mockk<BeagleSdk>(relaxed = true)
+    private val activity: AppCompatActivity = mockk()
 
-    @BeforeEach
+    @BeforeAll
     open fun setUp() {
-        MockKAnnotations.init(this)
+//        MockKAnnotations.init(this)
 
+        mockBeagleEnvironment()
+
+    }
+
+    @AfterAll
+    open fun tearDown() {
+        unmockkAll()
+    }
+
+    protected fun prepareViewModelMock(viewModel: ViewModel) {
+        mockkConstructor(ViewModelProvider::class)
+        every { anyConstructed<ViewModelProvider>().get(viewModel::class.java) } returns viewModel
+    }
+
+    protected fun prepareViewModelMock(vararg viewModels: ViewModel) {
+        mockkConstructor(ViewModelProvider::class)
+
+        viewModels.forEach { viewModel ->
+            every { anyConstructed<ViewModelProvider>().get(viewModel::class.java) } returns viewModel
+        }
+    }
+
+    protected fun mockBeagleEnvironment(){
         mockkObject(BeagleEnvironment)
-        every { rootView.activity } returns mockk()
+        every { rootView.activity } returns activity
         every { BeagleEnvironment.beagleSdk } returns beagleSdk
         every { beagleSdk.typeAdapterResolver } returns null
         every { beagleSdk.config.cache.size } returns 15
@@ -49,15 +78,4 @@ abstract class BaseTest {
         every { beagleSdk.registeredOperations() } returns mapOf()
     }
 
-    @AfterEach
-    open fun tearDown() {
-        unmockkAll()
-    }
-
-    protected fun prepareViewModelMock(vararg viewModels: ViewModel) {
-        mockkConstructor(ViewModelProvider::class)
-        viewModels.forEach { viewModel ->
-            every { anyConstructed<ViewModelProvider>().get(viewModel::class.java) } returns viewModel
-        }
-    }
 }

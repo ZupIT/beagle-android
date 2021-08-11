@@ -33,7 +33,7 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.slot
 import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -81,7 +81,7 @@ class GridViewTest : BaseComponentTest() {
 
     private lateinit var gridView: GridView
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
 

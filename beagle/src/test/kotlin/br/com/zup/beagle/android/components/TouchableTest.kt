@@ -30,11 +30,12 @@ import io.mockk.mockkConstructor
 import io.mockk.mockkStatic
 import io.mockk.slot
 import io.mockk.verify
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
-class TouchableViewRenderer : BaseComponentTest() {
+class TouchableTest : BaseComponentTest() {
 
     private val onClickListenerSlot = slot<View.OnClickListener>()
 
@@ -42,27 +43,31 @@ class TouchableViewRenderer : BaseComponentTest() {
 
     private lateinit var touchable: Touchable
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
 
         mockkStatic("br.com.zup.beagle.android.utils.WidgetExtensionsKt")
-        mockkConstructor(PreFetchHelper::class)
 
         every { view.context } returns mockk()
         every { view.setOnClickListener(capture(onClickListenerSlot)) } just Runs
+    }
+
+    @BeforeEach
+    fun clear() {
+        mockkConstructor(PreFetchHelper::class)
         every {
             anyConstructed<PreFetchHelper>().handlePreFetch(
                 any(),
                 any<List<Action>>()
             )
         } just Runs
-
-        touchable = Touchable(actions, mockk(relaxed = true))
     }
 
     @Test
     fun build_should_make_child_view() {
+        // Given
+        touchable = Touchable(actions, mockk(relaxed = true))
         val actual = touchable.buildView(rootView)
 
         // Then
@@ -77,7 +82,10 @@ class TouchableViewRenderer : BaseComponentTest() {
 
     @Test
     fun build_should_call_onClickListener() {
-        // Given When
+        // Given
+        touchable = Touchable(actions, mockk(relaxed = true))
+
+        // When
         callBuildAndClick()
 
         // Then

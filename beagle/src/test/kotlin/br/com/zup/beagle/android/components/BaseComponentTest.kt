@@ -29,17 +29,17 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkConstructor
 import io.mockk.mockkObject
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.BeforeAll
 
 abstract class BaseComponentTest : BaseTest() {
 
-    internal val viewRender: ViewRenderer<ServerDrivenComponent> = mockk()
+    private val viewRender: ViewRenderer<ServerDrivenComponent> = mockk()
 
     internal val beagleFlexView: BeagleFlexView = mockk(relaxed = true)
 
-    protected val view = mockk<View>()
+    protected val view = mockk<View>(relaxed = true)
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
 
@@ -49,6 +49,7 @@ abstract class BaseComponentTest : BaseTest() {
         every { anyConstructed<ViewRendererFactory>().make(any()) } returns viewRender
         every { ViewFactory.makeBeagleFlexView(any()) } returns beagleFlexView
         every { ViewFactory.makeBeagleFlexView(any(), any()) } returns beagleFlexView
+        every { ViewFactory.makeBeagleFlexView(any(), any(), any()) } returns beagleFlexView
         every { viewRender.build(any()) } returns view
         every { view.setTag(any(), any()) } just Runs
     }

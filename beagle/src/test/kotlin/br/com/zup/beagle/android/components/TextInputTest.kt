@@ -35,6 +35,7 @@ import br.com.zup.beagle.android.utils.handleEvent
 import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.widget.core.TextInputType
 import io.mockk.Runs
+import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
@@ -42,6 +43,7 @@ import io.mockk.mockkStatic
 import io.mockk.slot
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -67,7 +69,7 @@ internal class TextInputTest : BaseComponentTest() {
 
     private lateinit var textInput: TextInput
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
 
@@ -85,13 +87,22 @@ internal class TextInputTest : BaseComponentTest() {
 
         textInput = callTextInput(TYPE)
 
-        textInput.setPrivateField("textWatcher", textWatcher)
-
         every { editText.addTextChangedListener(capture(textWatcherCapture)) } just Runs
 
         every { editText.onFocusChangeListener = capture(focusCapture) } just Runs
 
         mockkStatic("br.com.zup.beagle.android.utils.WidgetExtensionsKt")
+    }
+
+    @BeforeEach
+    fun clear() {
+        clearMocks(
+            editText,
+            ViewFactory,
+            answers = false
+        )
+
+        textInput.setPrivateField("textWatcher", textWatcher)
     }
 
     private fun callTextInput(
@@ -261,7 +272,7 @@ internal class TextInputTest : BaseComponentTest() {
             // Then
             assertTrue(view is EditText)
             verify(exactly = once()) {
-                ViewFactory.makeInputText(any(), any())
+                ViewFactory.makeInputText(any())
                 editText.setText(VALUE_KEY)
                 editText.hint = PLACE_HOLDER.value
                 editText.isEnabled = READ_ONLY.value.not()

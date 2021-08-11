@@ -27,10 +27,10 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
+private const val SCREEN_IDENTIFIER = "screenIdentifier"
+
 @DisplayName("Given DataScreenReport")
 internal class DataScreenReportTest : BaseTest() {
-
-    private val SCREEN_IDENTIFIER = "screenIdentifier"
 
     @DisplayName("When report")
     @Nested
@@ -54,7 +54,12 @@ internal class DataScreenReportTest : BaseTest() {
             dataScreenReport.report(analyticsConfig)
 
             //THEN
-            verify(exactly = 1) { ScreenReportFactory.generateScreenAnalyticsRecord(SCREEN_IDENTIFIER, timestamp) }
+            verify(exactly = 1) {
+                ScreenReportFactory.generateScreenAnalyticsRecord(
+                    SCREEN_IDENTIFIER,
+                    timestamp
+                )
+            }
 
         }
     }

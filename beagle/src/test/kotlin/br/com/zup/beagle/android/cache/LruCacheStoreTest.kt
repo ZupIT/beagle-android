@@ -17,45 +17,32 @@
 package br.com.zup.beagle.android.cache
 
 import android.util.LruCache
+import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.extensions.once
-import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.testutil.RandomData
-import io.mockk.MockKAnnotations
 import io.mockk.every
-import io.mockk.impl.annotations.MockK
-import io.mockk.mockkObject
+import io.mockk.mockk
 import io.mockk.slot
-import io.mockk.unmockkAll
 import io.mockk.verify
-import org.junit.jupiter.api.AfterEach
 import org.junit.Assert.assertEquals
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 
 private val CACHE_KEY = RandomData.string()
 
-class LruCacheStoreTest {
+class LruCacheStoreTest : BaseTest() {
 
-    @MockK
-    private lateinit var cachedData: LruCache<String, BeagleCache>
+    private val cachedData: LruCache<String, BeagleCache> = mockk()
 
     private lateinit var cacheStore: LruCacheStore
 
-    @MockK
-    private lateinit var beagleCache: BeagleCache
+    private val beagleCache: BeagleCache = mockk()
 
-    @BeforeEach
-    fun setUp() {
-        MockKAnnotations.init(this)
-
-        mockkObject(BeagleEnvironment)
+    @BeforeAll
+    override fun setUp() {
+        super.setUp()
 
         cacheStore = LruCacheStore(cache = cachedData)
-    }
-
-    @AfterEach
-    fun tearDown() {
-        unmockkAll()
     }
 
     @Test

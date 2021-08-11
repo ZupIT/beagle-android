@@ -19,35 +19,43 @@ package br.com.zup.beagle.android.action
 import android.view.View
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.context.Bind
-import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.context.expressionOf
-import br.com.zup.beagle.android.extensions.once
 import br.com.zup.beagle.android.navigation.DeepLinkHandler
 import br.com.zup.beagle.android.setup.BeagleEnvironment
-import br.com.zup.beagle.android.setup.BeagleSdk
-import br.com.zup.beagle.android.setup.Environment
 import br.com.zup.beagle.android.testutil.RandomData
 import br.com.zup.beagle.android.utils.evaluateExpression
 import br.com.zup.beagle.android.view.custom.BeagleNavigator
-import br.com.zup.beagle.android.widget.RootView
-import io.mockk.*
-import io.mockk.impl.annotations.MockK
-import io.mockk.impl.annotations.RelaxedMockK
-import org.junit.jupiter.api.*
+import io.mockk.Runs
+import io.mockk.clearMocks
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.mockkStatic
+import io.mockk.verify
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.Test
 
 @DisplayName("Given a Navigate class")
 class NavigateTest : BaseTest() {
 
-    @MockK
-    private lateinit var deepLinkHandler: DeepLinkHandler
+    private val deepLinkHandler: DeepLinkHandler = mockk()
 
     private val view: View = mockk()
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
         mockkObject(BeagleNavigator)
         mockkStatic("br.com.zup.beagle.android.utils.ActionExtensionsKt")
+    }
+
+    @BeforeEach
+    fun clear() {
+        clearMocks(rootView)
     }
 
     @DisplayName("When execute method is called")
@@ -117,7 +125,14 @@ class NavigateTest : BaseTest() {
             navigate.execute(rootView, view)
 
             // Then
-            verify(exactly = 1) { BeagleNavigator.openNativeRoute(rootView, route, data, shouldResetApplication) }
+            verify(exactly = 1) {
+                BeagleNavigator.openNativeRoute(
+                    rootView,
+                    route,
+                    data,
+                    shouldResetApplication
+                )
+            }
         }
 
         @DisplayName("Then should call openNativeRoute with expression if type is OpenNativeRoute")
@@ -139,7 +154,14 @@ class NavigateTest : BaseTest() {
             navigate.execute(rootView, view)
 
             // Then
-            verify(exactly = 1) { BeagleNavigator.openNativeRoute(rootView, urlValue, data, shouldResetApplication) }
+            verify(exactly = 1) {
+                BeagleNavigator.openNativeRoute(
+                    rootView,
+                    urlValue,
+                    data,
+                    shouldResetApplication
+                )
+            }
         }
 
         @DisplayName("Then should call resetApplication if type is ResetApplication")
@@ -154,7 +176,13 @@ class NavigateTest : BaseTest() {
             navigate.execute(rootView, view)
 
             // Then
-            verify(exactly = 1) { BeagleNavigator.resetApplication(rootView.getContext(), route, null) }
+            verify(exactly = 1) {
+                BeagleNavigator.resetApplication(
+                    rootView.getContext(),
+                    route,
+                    null
+                )
+            }
         }
 
         @DisplayName("Then should call resetStack if type is ResetStack")
@@ -203,7 +231,12 @@ class NavigateTest : BaseTest() {
             navigate.execute(rootView, view)
 
             // Then
-            verify(exactly = 1) { BeagleNavigator.pushView(rootView.getContext(), route.copy(url = Bind.Value("test"))) }
+            verify(exactly = 1) {
+                BeagleNavigator.pushView(
+                    rootView.getContext(),
+                    route.copy(url = Bind.Value("test"))
+                )
+            }
         }
 
         @DisplayName("Then should call popStack if type is PopStack")

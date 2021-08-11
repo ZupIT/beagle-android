@@ -33,6 +33,7 @@ import br.com.zup.beagle.android.view.viewmodel.ListViewIdViewModel
 import br.com.zup.beagle.android.view.viewmodel.ScreenContextViewModel
 import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 import io.mockk.Runs
+import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
@@ -43,6 +44,7 @@ import org.json.JSONObject
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -66,13 +68,27 @@ class ListViewHolderTest : BaseTest() {
     private val iteratorName = "list"
     private val listItem = mockk<ListItem>(relaxed = true)
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
         mockkConstructor(BeagleSerializer::class)
+    }
+
+    @BeforeEach
+    fun clear() {
+        clearMocks(
+            viewModel,
+            listViewIdViewModel,
+            itemView,
+            template,
+            serializer,
+            listViewModels,
+            listItem
+        )
 
         every { listViewModels.contextViewModel } returns viewModel
         every { listViewModels.listViewIdViewModel } returns listViewIdViewModel
+
         listViewHolder = ListViewHolder(
             itemView,
             template,
@@ -82,6 +98,7 @@ class ListViewHolderTest : BaseTest() {
             iteratorName
         )
     }
+
 
     @DisplayName("When create the holder")
     @Nested

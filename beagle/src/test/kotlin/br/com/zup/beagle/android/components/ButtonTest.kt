@@ -31,6 +31,7 @@ import br.com.zup.beagle.android.utils.handleEvent
 import br.com.zup.beagle.android.view.ViewFactory
 import io.mockk.CapturingSlot
 import io.mockk.Runs
+import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
@@ -38,6 +39,7 @@ import io.mockk.mockkConstructor
 import io.mockk.slot
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -56,7 +58,7 @@ internal class ButtonTest : BaseComponentTest() {
 
     private lateinit var buttonComponent: Button
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
 
@@ -68,11 +70,20 @@ internal class ButtonTest : BaseComponentTest() {
 
         every { ViewFactory.makeButton(any(), buttonStyle) } returns button
         every { ViewFactory.makeButton(any()) } returns button
-        every { anyConstructed<PreFetchHelper>().handlePreFetch(any(), any<List<Action>>()) } just Runs
+        every {
+            anyConstructed<PreFetchHelper>().handlePreFetch(
+                any(),
+                any<List<Action>>()
+            )
+        } just Runs
         every { anyConstructed<StyleManager>().getButtonStyle(DEFAULT_STYLE) } returns buttonStyle
 
         every { BeagleEnvironment.application } returns mockk(relaxed = true)
+    }
 
+    @BeforeEach
+    fun clear() {
+        clearMocks(ViewFactory, button, answers = false)
         buttonComponent = Button(defaultText, styleId = DEFAULT_STYLE)
     }
 
@@ -130,7 +141,12 @@ internal class ButtonTest : BaseComponentTest() {
             buttonComponent.buildView(rootView)
 
             // Then
-            verify(exactly = once()) { anyConstructed<PreFetchHelper>().handlePreFetch(rootView, listOf(action)) }
+            verify(exactly = once()) {
+                anyConstructed<PreFetchHelper>().handlePreFetch(
+                    rootView,
+                    listOf(action)
+                )
+            }
         }
     }
 
@@ -185,7 +201,14 @@ internal class ButtonTest : BaseComponentTest() {
             // GIVEN
             val action: Action = mockk()
             val onClickListenerSlot = CapturingSlot<View.OnClickListener>()
-            every { buttonComponent.handleEvent(rootView, view, listOf(action), analyticsValue = "onPress") } just Runs
+            every {
+                buttonComponent.handleEvent(
+                    rootView,
+                    view,
+                    listOf(action),
+                    analyticsValue = "onPress"
+                )
+            } just Runs
             buttonComponent.copy(onPress = listOf(action))
             // When
             val buttonView = buttonComponent.buildView(rootView)
@@ -193,7 +216,14 @@ internal class ButtonTest : BaseComponentTest() {
             onClickListenerSlot.captured.onClick(view)
 
             // Then
-            verify(exactly = 0) { buttonComponent.handleEvent(rootView, view, listOf(action), analyticsValue = "OnPress") }
+            verify(exactly = 0) {
+                buttonComponent.handleEvent(
+                    rootView,
+                    view,
+                    listOf(action),
+                    analyticsValue = "OnPress"
+                )
+            }
         }
     }
 }

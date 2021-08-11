@@ -20,9 +20,8 @@ import android.view.View
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.action.AnalyticsAction
 import br.com.zup.beagle.android.logger.BeagleMessageLogs
-import io.mockk.Runs
+import io.mockk.clearMocks
 import io.mockk.every
-import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkConstructor
 import io.mockk.mockkObject
@@ -30,6 +29,7 @@ import io.mockk.slot
 import io.mockk.verify
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -38,20 +38,23 @@ import org.junit.jupiter.api.Test
 @DisplayName("Given Analytics Service")
 class AnalyticsServiceTest : BaseTest() {
 
-    private val analyticsProvider: AnalyticsProvider = mockk()
+    private val analyticsProvider: AnalyticsProvider = mockk(relaxed = true)
     private val action: AnalyticsAction = mockk(relaxed = true)
     private val origin: View = mockk()
     private val slot = slot<AnalyticsConfig>()
     private val analyticsConfig: AnalyticsConfig = mockk()
 
-    @BeforeEach
+    @BeforeAll
     fun setup() {
         mockkConstructor(DataScreenReport::class)
         mockkConstructor(DataActionReport::class)
-        every { rootView.activity } returns mockk()
         mockkObject(BeagleMessageLogs)
         every { beagleSdk.analyticsProvider } returns analyticsProvider
-        every { analyticsProvider.createRecord(any()) } just Runs
+    }
+
+    @BeforeEach
+    fun clear() {
+        clearMocks(analyticsProvider)
     }
 
     @DisplayName("When create screen record")
@@ -71,7 +74,7 @@ class AnalyticsServiceTest : BaseTest() {
             every { anyConstructed<DataScreenReport>().report(capture(slot)) } returns analyticsRecord
 
             //When
-            AnalyticsService.createScreenRecord( "url")
+            AnalyticsService.createScreenRecord("url")
 
             //Then
             verify(exactly = 1) { analyticsProvider.createRecord(any()) }
@@ -89,7 +92,7 @@ class AnalyticsServiceTest : BaseTest() {
             every { beagleSdk.analyticsProvider } returns analyticsProvider
             every { anyConstructed<DataScreenReport>().report(capture(slot)) } returns null
             //When
-            AnalyticsService.createScreenRecord( "url")
+            AnalyticsService.createScreenRecord("url")
 
 
             //then
@@ -98,7 +101,7 @@ class AnalyticsServiceTest : BaseTest() {
             assertEquals(analyticsConfig, slot.captured)
         }
     }
-    
+
     @DisplayName("When CreateActionRecord")
     @Nested
     inner class CreateActionRecordWithAnalyticsConfigDisabled {
@@ -131,7 +134,14 @@ class AnalyticsServiceTest : BaseTest() {
         @BeforeEach
         fun setUp() {
             mockkObject(ActionReportFactory)
-            every { ActionReportFactory.generateDataActionReport(any(), any(), any(), any()) } returns dataActionReport
+            every {
+                ActionReportFactory.generateDataActionReport(
+                    any(),
+                    any(),
+                    any(),
+                    any()
+                )
+            } returns dataActionReport
             every { analyticsProvider.getConfig() } returns analyticsConfig
         }
 
@@ -147,7 +157,14 @@ class AnalyticsServiceTest : BaseTest() {
             AnalyticsService.createActionRecord(rootView, origin, action)
 
             //Then
-            verify(exactly = 1) { ActionReportFactory.generateDataActionReport(any(), any(), any(), any()) }
+            verify(exactly = 1) {
+                ActionReportFactory.generateDataActionReport(
+                    any(),
+                    any(),
+                    any(),
+                    any()
+                )
+            }
             verify(exactly = 1) { analyticsProvider.createRecord(any()) }
             assertTrue(slot.isCaptured)
             assertEquals(analyticsConfig, slot.captured)
@@ -163,7 +180,14 @@ class AnalyticsServiceTest : BaseTest() {
             AnalyticsService.createActionRecord(rootView, origin, action)
 
             //Then
-            verify(exactly = 1) { ActionReportFactory.generateDataActionReport(any(), any(), any(), any()) }
+            verify(exactly = 1) {
+                ActionReportFactory.generateDataActionReport(
+                    any(),
+                    any(),
+                    any(),
+                    any()
+                )
+            }
             verify(exactly = 0) { analyticsProvider.createRecord(any()) }
             assertTrue(slot.isCaptured)
             assertEquals(analyticsConfig, slot.captured)

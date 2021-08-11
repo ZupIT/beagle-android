@@ -40,7 +40,7 @@ import io.mockk.slot
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 
 private const val DEFAULT_STYLE = "DummyStyle"
@@ -60,7 +60,7 @@ class TabBarTest : BaseComponentTest() {
 
     private lateinit var tabBar: TabBar
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
         mockkStatic("br.com.zup.beagle.android.utils.WidgetExtensionsKt")
@@ -173,7 +173,13 @@ class TabBarTest : BaseComponentTest() {
         val tabMocked = mockk<TabLayout.Tab>()
         every { tabMocked.position } returns 0
         every {
-            tabBar.handleEvent(rootView, tabLayout, onTabSelection, ContextData("onTabSelection", 0), "onTabSelected")
+            tabBar.handleEvent(
+                rootView,
+                tabLayout,
+                onTabSelection,
+                ContextData("onTabSelection", 0),
+                "onTabSelected"
+            )
         } just Runs
 
         //WHEN
@@ -182,7 +188,13 @@ class TabBarTest : BaseComponentTest() {
 
         //THEN
         verify(exactly = once()) {
-            tabBar.handleEvent(rootView, tabLayout, onTabSelection, ContextData("onTabSelection", 0), "onTabSelected")
+            tabBar.handleEvent(
+                rootView,
+                tabLayout,
+                onTabSelection,
+                ContextData("onTabSelection", 0),
+                "onTabSelected"
+            )
         }
     }
 

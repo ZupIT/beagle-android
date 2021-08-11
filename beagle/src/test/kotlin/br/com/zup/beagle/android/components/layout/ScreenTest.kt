@@ -30,8 +30,6 @@ import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 import br.com.zup.beagle.android.widget.core.Style
 import io.mockk.Runs
 import io.mockk.every
-import io.mockk.impl.annotations.MockK
-import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkConstructor
@@ -41,6 +39,7 @@ import io.mockk.verify
 import io.mockk.verifyOrder
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -48,24 +47,24 @@ private const val DEFAULT_COLOR = 0xFFFFFF
 
 class ScreenTest : BaseComponentTest() {
 
-    @RelaxedMockK
-    private lateinit var context: BeagleActivity
+    private val context: BeagleActivity = mockk(relaxed = true)
 
-    @MockK
-    private lateinit var component: ServerDrivenComponent
+    private val component: ServerDrivenComponent = mockk()
 
     private lateinit var screen: Screen
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
 
         mockkStatic(Color::class)
 
-
         every { Color.parseColor(any()) } returns DEFAULT_COLOR
         every { rootView.getContext() } returns context
+    }
 
+    @BeforeEach
+    fun clear() {
         screen = Screen(navigationBar = null, child = component)
     }
 
