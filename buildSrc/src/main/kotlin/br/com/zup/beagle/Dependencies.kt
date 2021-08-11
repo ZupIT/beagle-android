@@ -48,11 +48,11 @@ class Dependencies : Plugin<Project> {
         const val minSdk = 19
         const val targetSdk = 30
         const val buildTools = "30.0.2"
-        const val kotlin = "1.5.10"
+        const val kotlin = "1.5.21"
 
         const val kotlinCoroutines = "1.5.0"
 
-        const val kotlinPoet = "1.8.0"
+        const val kotlinPoet = "1.9.0"
         const val okio = "2.10.0"
 
         const val appcompat = "1.3.1"
@@ -92,7 +92,7 @@ class Dependencies : Plugin<Project> {
 
         const val incap = "0.3"
 
-        const val kotlinCompileTesting = "1.3.1"
+        const val kotlinCompileTesting = "1.4.2"
 
         const val multidex = "2.0.1"
     }

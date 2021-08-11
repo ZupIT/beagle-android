@@ -24,6 +24,7 @@ import br.com.zup.beagle.android.compiler.extensions.compile
 import br.com.zup.beagle.android.compiler.mocks.BEAGLE_CONFIG_IMPORTS
 import br.com.zup.beagle.android.compiler.mocks.LIST_OF_BEAGLE_CONFIG
 import br.com.zup.beagle.android.compiler.mocks.SIMPLE_BEAGLE_CONFIG
+import br.com.zup.beagle.android.compiler.mocks.VALID_ANALYTICS_PROVIDER
 import br.com.zup.beagle.android.compiler.mocks.VALID_BEAGLE_CONFIG_IN_BEAGLE_SDK
 import br.com.zup.beagle.android.compiler.mocks.VALID_BEAGLE_CONFIG_IN_BEAGLE_SDK_FROM_REGISTRAR
 import br.com.zup.beagle.android.compiler.mocks.VALID_THIRD_BEAGLE_CONFIG
@@ -92,7 +93,7 @@ internal class BeagleConfigTest : BeagleSdkBaseTest() {
             )
 
             val kotlinSource = SourceFile.kotlin(
-                FILE_NAME, BEAGLE_CONFIG_IMPORTS + VALID_THIRD_BEAGLE_CONFIG
+                FILE_NAME, BEAGLE_CONFIG_IMPORTS + VALID_ANALYTICS_PROVIDER + VALID_THIRD_BEAGLE_CONFIG
             )
 
             // WHEN
@@ -145,7 +146,7 @@ internal class BeagleConfigTest : BeagleSdkBaseTest() {
         fun testNotHasBeagleConfig() {
             // GIVEN
             val kotlinSource = SourceFile.kotlin(
-                FILE_NAME, BEAGLE_CONFIG_IMPORTS
+                FILE_NAME, BEAGLE_CONFIG_IMPORTS + VALID_ANALYTICS_PROVIDER
             )
 
             // WHEN

@@ -142,7 +142,7 @@ const val VALID_BEAGLE_CONFIG_IN_BEAGLE_SDK_FROM_REGISTRAR =
         
           public override val urlBuilder: UrlBuilder? = null  
         
-          public override val analyticsProvider: AnalyticsProvider? = null
+          public override val analyticsProvider: AnalyticsProvider = br.com.test.beagle.AnalyticsProviderTest()
         
           public override val logger: BeagleLogger? = null
         

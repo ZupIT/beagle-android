@@ -26,6 +26,10 @@ test {
     useJUnitPlatform()
 }
 
+kapt {
+    correctErrorTypes true
+}
+
 dependencies {
 
     implementation (Dependencies.ProcessorLibraries.kotlinPoet) {

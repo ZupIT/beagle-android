@@ -169,18 +169,7 @@ internal class RegisteredControllerGeneratorTest : RegisteredComponentGeneratorB
                     "br.com.test.beagle.otherModule.ModuleBeagleActivity"
                 ),
             )
-            every {
-                DependenciesRegistrarComponentsProvider.getRegisteredComponentsInDependencies(
-                    any(),
-                    PROPERTIES_REGISTRAR_CLASS_NAME,
-                    PROPERTIES_REGISTRAR_METHOD_NAME,
-                )
-            } returns listOf(
-                Pair(
-                    "serverDrivenActivity",
-                    "br.com.test.beagle.AppDefaultBeagleActivityBeagleComponent::class.java as Class<BeagleActivity>"
-                ),
-            )
+
             val kotlinSource = SourceFile.kotlin(
                 FILE_NAME,
                 BEAGLE_CONFIG_IMPORTS + VALID_LIST_CONTROLLERS
