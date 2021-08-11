@@ -65,7 +65,6 @@ internal class BeagleSetupTest {
 
     }
 
-
     @DisplayName("When build application with empty annotations")
     @Nested
     inner class InvalidBeagleSetup {
