@@ -38,7 +38,7 @@ import javax.lang.model.element.TypeElement
 const val BEAGLE_PACKAGE_INTERNAL = "br.com.zup.beagle.android.setup"
 
 @AutoService(Processor::class)
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
+@SupportedSourceVersion(SourceVersion.RELEASE_11)
 @IncrementalAnnotationProcessor(IncrementalAnnotationProcessorType.ISOLATING)
 class BeagleInternalAnnotationProcessor : AbstractProcessor() {
 

@@ -25,7 +25,7 @@ test {
 
 dependencies {
 
-    implementation(Dependencies.ProcessorLibraries.kotlinPoet) {
+    implementation (Dependencies.ProcessorLibraries.kotlinPoet) {
         exclude group: "com.squareup.okio", module: "okio"
     }
 

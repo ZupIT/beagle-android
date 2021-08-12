@@ -26,10 +26,15 @@ fun TypeElement.implements(
     processingEnvironment: ProcessingEnvironment
 ): Boolean {
 
-    return processingEnvironment.typeUtils.isAssignable(
-        this.asType(),
-        processingEnvironment.elementUtils.getTypeElement(beagleClass.toString()).asType()
-    )
+
+    return try {
+        processingEnvironment.typeUtils.isAssignable(
+            this.asType(),
+            processingEnvironment.elementUtils.getTypeElement(beagleClass.toString()).asType()
+        )
+    } catch (exception: Exception) {
+        false
+    }
 }
 
 
