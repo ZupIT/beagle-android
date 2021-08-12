@@ -288,7 +288,6 @@ internal data class BeagleSetupProcessor(
         internal const val REGISTERED_OPERATIONS_GENERATED = "RegisteredOperations"
         internal const val REGISTERED_ACTIONS_GENERATED = "RegisteredActions"
         internal const val REGISTERED_CUSTOM_TYPE_ADAPTER_GENERATED = "RegisteredCustomTypeAdapter"
-        internal const val REGISTERED_CUSTOM_VALIDATOR_GENERATED = "RegisteredCustomValidator"
         internal const val BEAGLE_SETUP_GENERATED = "BeagleSetup"
     }
 }

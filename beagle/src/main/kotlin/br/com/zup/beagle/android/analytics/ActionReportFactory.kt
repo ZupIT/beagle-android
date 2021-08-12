@@ -53,13 +53,16 @@ internal object ActionReportFactory {
             rootView = rootView,
             origin = origin,
             action = action,
-            parameters = (action::class as KClass<AnalyticsAction>)
-                .primaryConstructor?.parameters?.associateBy { it.name }
+            parameters = getParameters(action)
         ),
         action = action,
         screenId = rootView.getScreenId(),
         actionType = getActionType(action)
     )
+
+    private fun getParameters(action: AnalyticsAction): Map<String?, KParameter>? =
+        @Suppress("UNCHECKED_CAST")
+        (action::class as KClass<AnalyticsAction>).primaryConstructor?.parameters?.associateBy { it.name }
 
     private fun getActionType(action: Action): String =
         if (isCustomAction(action)) getActionName("custom", action::class.java)
@@ -95,6 +98,8 @@ internal object ActionReportFactory {
         parameters: Map<String?, KParameter>?,
     ): HashMap<String, Any> {
         val hashMap = HashMap<String, Any>()
+
+        @Suppress("UNCHECKED_CAST")
         (value::class as KClass<Any>).memberProperties.forEach { property ->
             property.getPropertyValue(value)?.let { it ->
                 val keyName = getKeyName(name, property, parameters)

@@ -21,11 +21,20 @@ import javax.lang.model.element.TypeElement
 import javax.lang.model.type.DeclaredType
 
 // Not working with generic types
-fun TypeElement.implements(beagleClass: BeagleClass,
-                           processingEnvironment: ProcessingEnvironment): Boolean {
+fun TypeElement.implements(
+    beagleClass: BeagleClass,
+    processingEnvironment: ProcessingEnvironment
+): Boolean {
 
-    return processingEnvironment.typeUtils.isAssignable(this.asType(),
-        processingEnvironment.elementUtils.getTypeElement(beagleClass.toString()).asType())
+
+    return try {
+        processingEnvironment.typeUtils.isAssignable(
+            this.asType(),
+            processingEnvironment.elementUtils.getTypeElement(beagleClass.toString()).asType()
+        )
+    } catch (exception: Exception) {
+        false
+    }
 }
 
 

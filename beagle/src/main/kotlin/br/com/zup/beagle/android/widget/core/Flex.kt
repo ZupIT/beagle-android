@@ -35,7 +35,7 @@ package br.com.zup.beagle.android.widget.core
  *                      but instead of affecting the children within a container.
  * @param alignContent Align content defines the distribution of lines along the cross-axis..
  * @param basis is an axis-independent way of providing the default size of an item along the main axis.
- * @param flex TODO.
+ * @param flex will be filled according to the space available along the main axis.
  * @param grow describes how any space within a container should be distributed among its children along the main axis.
  * @param shrink
  *              describes how to shrink children along the main axis in the case that

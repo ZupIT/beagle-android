@@ -61,7 +61,7 @@ internal class ContextDataManipulator(
 
         return try {
             val keys = createKeysFromPath(context.id, path)
-            val lastKey = keys.pollLast()
+            val lastKey = keys.pollLast() ?: ""
             val lastValue = jsonPathFinder.find(keys, context.value)
             if (removePathAtKey(lastKey, lastValue)) {
                 ContextSetResult.Succeed(context)

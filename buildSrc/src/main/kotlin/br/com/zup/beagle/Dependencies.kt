@@ -48,11 +48,11 @@ class Dependencies : Plugin<Project> {
         const val minSdk = 19
         const val targetSdk = 30
         const val buildTools = "30.0.2"
-        const val kotlin = "1.5.10"
+        const val kotlin = "1.5.21"
 
         const val kotlinCoroutines = "1.5.0"
 
-        const val kotlinPoet = "1.8.0"
+        const val kotlinPoet = "1.9.0"
         const val okio = "2.10.0"
 
         const val appcompat = "1.3.1"
@@ -72,10 +72,11 @@ class Dependencies : Plugin<Project> {
         const val jni = "0.2.2"
 
         const val webSocket = "1.5.2"
+        const val slf4jSimple = "1.7.32"
 
         const val kotlinCoroutinesTest = "1.3.9"
         const val materialDesign = "1.2.1"
-        const val googleAutoService = "1.0-rc7"
+        const val googleAutoService = "1.0"
 
         const val jsonObject = "20200518"
 
@@ -91,7 +92,7 @@ class Dependencies : Plugin<Project> {
 
         const val incap = "0.3"
 
-        const val kotlinCompileTesting = "1.3.1"
+        const val kotlinCompileTesting = "1.4.2"
 
         const val multidex = "2.0.1"
     }
@@ -128,6 +129,8 @@ class Dependencies : Plugin<Project> {
         const val jsonObject = "org.json:json:${Versions.jsonObject}"
 
         const val multidex = "androidx.multidex:multidex:${Versions.multidex}"
+
+        const val slf4jSimple = "org.slf4j:slf4j-simple:${Versions.slf4jSimple}"
     }
 
     object GoogleLibraries {
