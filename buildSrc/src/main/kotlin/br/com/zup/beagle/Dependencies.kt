@@ -76,7 +76,7 @@ class Dependencies : Plugin<Project> {
 
         const val kotlinCoroutinesTest = "1.3.9"
         const val materialDesign = "1.2.1"
-        const val googleAutoService = "1.0-rc7"
+        const val googleAutoService = "1.0"
 
         const val jsonObject = "20200518"
 
