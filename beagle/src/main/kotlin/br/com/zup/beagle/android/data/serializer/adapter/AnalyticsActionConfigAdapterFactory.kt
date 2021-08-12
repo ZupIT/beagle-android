@@ -52,20 +52,26 @@ internal class AnalyticsActionConfigAdapter : JsonAdapter<ActionAnalyticsConfig>
                 ActionAnalyticsConfig.Disabled()
             }
         } else {
+
+            @Suppress("UNCHECKED_CAST")
             val value = jsonValue as? Map<String, Any>? ?: return null
 
             var attributes: List<String>? = null
             var additionalEntries: Map<String, Any>? = null
             if (value.containsKey(ATTRIBUTES)) {
-                attributes = value[ATTRIBUTES] as List<String>?
+                @Suppress("UNCHECKED_CAST")
+                attributes = value[ATTRIBUTES] as? List<String>?
             }
             if (value.containsKey(ADDITIONAL_ENTRIES)) {
-                additionalEntries = value[ADDITIONAL_ENTRIES] as Map<String, Any>?
+                @Suppress("UNCHECKED_CAST")
+                additionalEntries = value[ADDITIONAL_ENTRIES] as? Map<String, Any>?
             }
-            actionAnalyticsConfig = ActionAnalyticsConfig.Enabled(ActionAnalyticsProperties(
-                attributes,
-                additionalEntries
-            ))
+            actionAnalyticsConfig = ActionAnalyticsConfig.Enabled(
+                ActionAnalyticsProperties(
+                    attributes,
+                    additionalEntries
+                )
+            )
         }
         return actionAnalyticsConfig
     }
