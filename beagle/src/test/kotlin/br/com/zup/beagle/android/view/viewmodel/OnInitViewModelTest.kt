@@ -39,7 +39,8 @@ class OnInitViewModelTest {
             val onInitiableViewId = 10
             val onInitCalled = true
             val onInitFinished = false
-            val status = onInitViewModel.getPrivateField<MutableMap<Int, OnInitStatus>>("onInitStatusByViewId")
+            val status =
+                onInitViewModel.getPrivateField<MutableMap<Int, OnInitStatus>>("onInitStatusByViewId")
 
             // When
             onInitViewModel.setOnInitCalled(onInitiableViewId, onInitCalled)
@@ -56,7 +57,8 @@ class OnInitViewModelTest {
             val onInitiableViewId = 10
             val onInitCalled = true
             val onInitFinished = true
-            val status = onInitViewModel.getPrivateField<MutableMap<Int, OnInitStatus>>("onInitStatusByViewId")
+            val status =
+                onInitViewModel.getPrivateField<MutableMap<Int, OnInitStatus>>("onInitStatusByViewId")
             status[onInitiableViewId] = OnInitStatus(onInitFinished = onInitFinished)
 
             // When
@@ -74,7 +76,8 @@ class OnInitViewModelTest {
             val onInitiableViewId = 10
             val onInitFinished = true
             val onInitCalled = false
-            val status = onInitViewModel.getPrivateField<MutableMap<Int, OnInitStatus>>("onInitStatusByViewId")
+            val status =
+                onInitViewModel.getPrivateField<MutableMap<Int, OnInitStatus>>("onInitStatusByViewId")
 
             // When
             onInitViewModel.setOnInitFinished(onInitiableViewId, onInitFinished)
@@ -91,7 +94,8 @@ class OnInitViewModelTest {
             val onInitiableViewId = 10
             val onInitFinished = true
             val onInitCalled = true
-            val status = onInitViewModel.getPrivateField<MutableMap<Int, OnInitStatus>>("onInitStatusByViewId")
+            val status =
+                onInitViewModel.getPrivateField<MutableMap<Int, OnInitStatus>>("onInitStatusByViewId")
             status[onInitiableViewId] = OnInitStatus(onInitCalled = onInitCalled)
 
             // When
@@ -145,8 +149,10 @@ class OnInitViewModelTest {
             val onInitiableViewId = 10
             val onInitFinished = false
             val onInitCalled = false
-            val status = onInitViewModel.getPrivateField<MutableMap<Int, OnInitStatus>>("onInitStatusByViewId")
-            status[onInitiableViewId] = OnInitStatus(onInitCalled = true, onInitFinished = onInitFinished)
+            val status =
+                onInitViewModel.getPrivateField<MutableMap<Int, OnInitStatus>>("onInitStatusByViewId")
+            status[onInitiableViewId] =
+                OnInitStatus(onInitCalled = true, onInitFinished = onInitFinished)
 
             // When
             onInitViewModel.markToRerun()
@@ -162,8 +168,10 @@ class OnInitViewModelTest {
             val onInitiableViewId = 10
             val onInitFinished = true
             val onInitCalled = true
-            val status = onInitViewModel.getPrivateField<MutableMap<Int, OnInitStatus>>("onInitStatusByViewId")
-            status[onInitiableViewId] = OnInitStatus(onInitCalled = onInitCalled, onInitFinished = onInitFinished)
+            val status =
+                onInitViewModel.getPrivateField<MutableMap<Int, OnInitStatus>>("onInitStatusByViewId")
+            status[onInitiableViewId] =
+                OnInitStatus(onInitCalled = onInitCalled, onInitFinished = onInitFinished)
 
             // When
             onInitViewModel.markToRerun()

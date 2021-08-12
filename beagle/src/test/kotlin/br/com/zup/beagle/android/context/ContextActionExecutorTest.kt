@@ -21,13 +21,13 @@ import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.action.AnalyticsAction
 import br.com.zup.beagle.android.action.BaseAsyncActionTest
 import br.com.zup.beagle.android.action.SendRequest
-import br.com.zup.beagle.android.extensions.once
 import br.com.zup.beagle.android.testutil.RandomData
 import br.com.zup.beagle.android.utils.generateViewModelInstance
 import br.com.zup.beagle.android.view.viewmodel.AnalyticsViewModel
 import br.com.zup.beagle.android.view.viewmodel.AsyncActionViewModel
 import br.com.zup.beagle.android.view.viewmodel.ScreenContextViewModel
 import io.mockk.Runs
+import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
@@ -38,6 +38,7 @@ import io.mockk.verifySequence
 import org.json.JSONArray
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -59,7 +60,7 @@ class ContextActionExecutorTest : BaseAsyncActionTest() {
 
     private val contextDataSlot = slot<ContextData>()
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
 
@@ -68,6 +69,15 @@ class ContextActionExecutorTest : BaseAsyncActionTest() {
         prepareViewModelMock(viewModel)
 
         every { viewModel.addImplicitContext(capture(contextDataSlot), any(), any()) } just Runs
+    }
+
+    @BeforeEach
+    fun clear(){
+        clearMocks(
+            viewModel,
+            action,
+            answers = false
+        )
     }
 
     @Test
@@ -145,7 +155,7 @@ class ContextActionExecutorTest : BaseAsyncActionTest() {
 
         // Then
         verify(exactly = 0) { viewModel.addImplicitContext(any(), any(), any()) }
-        verify(exactly = once()) { action.execute(rootView, view) }
+        verify(exactly = 1) { action.execute(rootView, view) }
     }
 
     @Test
@@ -172,7 +182,7 @@ class ContextActionExecutorTest : BaseAsyncActionTest() {
 
     @DisplayName("When execute Actions")
     @Nested
-    inner class ExecuteActions() {
+    inner class ExecuteActions {
 
         @DisplayName("Then should report the actions if it's action analytics")
         @Test

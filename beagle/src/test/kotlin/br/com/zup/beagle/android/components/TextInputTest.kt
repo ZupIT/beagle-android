@@ -27,7 +27,6 @@ import br.com.zup.beagle.android.components.utils.styleManagerFactory
 import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.context.valueOf
-import br.com.zup.beagle.android.extensions.once
 import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.testutil.setPrivateField
 import br.com.zup.beagle.android.utils.StyleManager
@@ -138,7 +137,7 @@ internal class TextInputTest : BaseComponentTest() {
 
             // Then
             assertTrue(view is EditText)
-            verify(exactly = once()) {
+            verify(exactly = 1) {
                 editText.error = ERROR.value
             }
         }
@@ -252,7 +251,7 @@ internal class TextInputTest : BaseComponentTest() {
 
             // Then
             assertTrue(view is EditText)
-            verify(exactly = once()) {
+            verify(exactly = 1) {
                 ViewFactory.makeInputText(any())
                 editText.setText(VALUE_KEY)
                 editText.hint = PLACE_HOLDER.value
@@ -271,7 +270,7 @@ internal class TextInputTest : BaseComponentTest() {
 
             // Then
             assertTrue(view is EditText)
-            verify(exactly = once()) {
+            verify(exactly = 1) {
                 ViewFactory.makeInputText(any())
                 editText.setText(VALUE_KEY)
                 editText.hint = PLACE_HOLDER.value
@@ -369,7 +368,7 @@ internal class TextInputTest : BaseComponentTest() {
             textInput.buildView(rootView)
 
             // Then
-            verify(exactly = once()) {
+            verify(exactly = 1) {
                 editText.isEnabled = true
             }
         }
@@ -381,7 +380,7 @@ internal class TextInputTest : BaseComponentTest() {
             textInput.buildView(rootView)
 
             // Then
-            verify(exactly = once()) { editText.removeTextChangedListener(textWatcher) }
+            verify(exactly = 1) { editText.removeTextChangedListener(textWatcher) }
         }
     }
 

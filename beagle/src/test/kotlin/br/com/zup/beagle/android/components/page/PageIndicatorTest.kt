@@ -19,7 +19,6 @@ package br.com.zup.beagle.android.components.page
 import android.graphics.Color
 import br.com.zup.beagle.android.components.BaseComponentTest
 import br.com.zup.beagle.android.context.Bind
-import br.com.zup.beagle.android.extensions.once
 import br.com.zup.beagle.android.testutil.RandomData
 import br.com.zup.beagle.android.utils.ColorUtils
 import br.com.zup.beagle.android.utils.Observer
@@ -92,7 +91,7 @@ class PageIndicatorTest : BaseComponentTest() {
 
             // Then
             assertEquals(beaglePageIndicatorView, view)
-            verify(exactly = once()) {
+            verify(exactly = 1) {
                 ColorUtils.hexColor(SELECTED_COLOR)
                 ColorUtils.hexColor(UNSELECTED_COLOR)
                 beaglePageIndicatorView.setSelectedColor(0)

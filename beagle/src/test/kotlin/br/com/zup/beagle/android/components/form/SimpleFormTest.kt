@@ -23,7 +23,6 @@ import br.com.zup.beagle.android.components.BaseComponentTest
 import br.com.zup.beagle.android.components.TextInput
 import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.context.valueOf
-import br.com.zup.beagle.android.extensions.once
 import br.com.zup.beagle.android.view.custom.BeagleFlexView
 import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 import io.mockk.Runs
@@ -78,7 +77,7 @@ internal class SimpleFormTest : BaseComponentTest() {
             simpleForm.buildView(rootView)
 
             // Then
-            verify(exactly = once()) { beagleFlexView.addView(children) }
+            verify(exactly = 1) { beagleFlexView.addView(children) }
         }
 
     }
@@ -95,7 +94,7 @@ internal class SimpleFormTest : BaseComponentTest() {
             simpleForm.submit(rootView, view)
 
             // Then
-            verify(exactly = once()) {
+            verify(exactly = 1) {
                 simpleFormAction.execute(rootView, view)
             }
         }
@@ -133,7 +132,7 @@ internal class SimpleFormTest : BaseComponentTest() {
             simpleForm.submit(rootView, view)
 
             // Then
-            verify(exactly = once()) {
+            verify(exactly = 1) {
                 errorAction.execute(rootView, view)
             }
         }
@@ -156,7 +155,7 @@ internal class SimpleFormTest : BaseComponentTest() {
             simpleForm.submit(rootView, view)
 
             // Then
-            verify(exactly = once()) {
+            verify(exactly = 1) {
                 errorAction.execute(rootView, view)
             }
         }

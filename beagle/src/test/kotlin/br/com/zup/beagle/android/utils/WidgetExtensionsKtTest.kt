@@ -17,10 +17,7 @@
 package br.com.zup.beagle.android.utils
 
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import br.com.zup.beagle.android.BaseTest
-import br.com.zup.beagle.android.components.layout.NavigationBar
-import br.com.zup.beagle.android.components.layout.Screen
 import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.context.expressionOf
 import br.com.zup.beagle.android.mockdata.createViewForContext
@@ -32,9 +29,8 @@ import br.com.zup.beagle.android.view.viewmodel.ListViewIdViewModel
 import br.com.zup.beagle.android.view.viewmodel.OnInitViewModel
 import br.com.zup.beagle.android.view.viewmodel.ScreenContextViewModel
 import br.com.zup.beagle.android.widget.RootView
-import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
-import br.com.zup.beagle.android.widget.core.Style
 import br.com.zup.beagle.android.widget.Widget
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 import io.mockk.CapturingSlot
 import io.mockk.every
 import io.mockk.mockk
@@ -43,7 +39,7 @@ import io.mockk.mockkStatic
 import io.mockk.slot
 import io.mockk.verifySequence
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -61,7 +57,7 @@ class WidgetExtensionsKtTest : BaseTest() {
     private val onInitViewModel: OnInitViewModel = mockk(relaxed = true)
     private val fragment: Fragment = mockk(relaxed = true)
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
         mockkObject(ViewFactory)

@@ -43,9 +43,18 @@ class PageIndicatorSerializerTest : BaseServerDrivenComponentSerializerTest() {
 
             // Then
             Assertions.assertNotNull(deserializedComponent)
-            Assertions.assertEquals(expectedComponent.selectedColor, deserializedComponent.selectedColor)
-            Assertions.assertEquals(expectedComponent.unselectedColor, deserializedComponent.unselectedColor)
-            Assertions.assertEquals(expectedComponent.numberOfPages, deserializedComponent.numberOfPages)
+            Assertions.assertEquals(
+                expectedComponent.selectedColor,
+                deserializedComponent.selectedColor
+            )
+            Assertions.assertEquals(
+                expectedComponent.unselectedColor,
+                deserializedComponent.unselectedColor
+            )
+            Assertions.assertEquals(
+                expectedComponent.numberOfPages,
+                deserializedComponent.numberOfPages
+            )
         }
     }
 

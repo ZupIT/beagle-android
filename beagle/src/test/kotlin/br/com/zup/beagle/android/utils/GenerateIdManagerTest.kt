@@ -25,11 +25,13 @@ import br.com.zup.beagle.android.view.viewmodel.GenerateIdViewModel
 import br.com.zup.beagle.android.view.viewmodel.ListViewIdViewModel
 import br.com.zup.beagle.android.view.viewmodel.OnInitViewModel
 import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
+import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.verify
 import org.junit.Assert.assertEquals
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -45,15 +47,33 @@ class GenerateIdManagerTest : BaseTest() {
     private val generatedId = 1
     private lateinit var generateIdManager: GenerateIdManager
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
 
+//        mockkStatic(View::class)
+//        every { View.generateViewId() } returns generatedId
+//        every { rootView.generateViewModelInstance<GenerateIdViewModel>() } returns generateIdViewModel
+//        every { rootView.generateViewModelInstance<ListViewIdViewModel>() } returns listViewIdViewModel
+//        every { rootView.generateViewModelInstance<OnInitViewModel>() } returns onInitViewModel
+        every { rootView.getParentId() } returns 10
+
+//        generateIdManager =
+//            GenerateIdManager(rootView, generateIdViewModel, listViewIdViewModel, onInitViewModel)
+    }
+
+    @BeforeEach
+    fun clear() {
+        clearMocks(
+            rootView,
+            generateIdViewModel,
+            view,
+            answers = false
+        )
         mockkStatic(View::class)
         every { View.generateViewId() } returns generatedId
-        every { rootView.generateViewModelInstance<GenerateIdViewModel>() } returns generateIdViewModel
-        every { rootView.generateViewModelInstance<ListViewIdViewModel>() } returns listViewIdViewModel
-        every { rootView.generateViewModelInstance<OnInitViewModel>() } returns onInitViewModel
+//        every { rootView.generateViewModelInstance<GenerateIdViewModel>() } returns generateIdViewModel
+        every { rootView.getParentId() } returns 10
 
         generateIdManager =
             GenerateIdManager(rootView, generateIdViewModel, listViewIdViewModel, onInitViewModel)

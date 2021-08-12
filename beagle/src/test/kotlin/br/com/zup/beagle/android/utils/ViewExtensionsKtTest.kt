@@ -21,21 +21,18 @@ import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.context.ContextBinding
 import br.com.zup.beagle.android.context.ContextData
-import br.com.zup.beagle.android.testutil.InstantExecutorExtension
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.slot
-import io.mockk.verify
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
-import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.api.Test
 
 @DisplayName("Given a View")
-class OnInitiableComponentTest : BaseTest() {
+class ViewExtensionsKtTest : BaseTest() {
 
     private val view: View = mockk()
 

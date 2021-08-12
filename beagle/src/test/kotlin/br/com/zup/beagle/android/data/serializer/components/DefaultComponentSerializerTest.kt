@@ -76,7 +76,6 @@ private val WIDGETS = listOf(
 )
 
 @DisplayName("Given a ServerDrivenComponent")
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class DefaultComponentSerializerTest :
     DefaultSerializerTest<ServerDrivenComponent>(ServerDrivenComponent::class.java) {
 

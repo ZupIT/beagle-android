@@ -20,23 +20,25 @@ import androidx.lifecycle.Observer
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.testutil.CoroutinesTestExtension
 import br.com.zup.beagle.android.testutil.InstantExecutorExtension
-import io.mockk.*
-import io.mockk.impl.annotations.MockK
+import io.mockk.Runs
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExperimentalCoroutinesApi
 @ExtendWith(InstantExecutorExtension::class, CoroutinesTestExtension::class)
-class BeagleScreenViewModelTest: BaseTest() {
+class BeagleScreenViewModelTest : BaseTest() {
 
-    @MockK
-    private lateinit var observer: Observer<Boolean>
+    private val observer: Observer<Boolean> = mockk()
 
     private lateinit var beagleScreenViewModel: BeagleScreenViewModel
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
 

@@ -24,7 +24,6 @@ import br.com.zup.beagle.android.data.serializer.makeButtonJson
 import br.com.zup.beagle.android.data.serializer.makeContextWithPrimitiveValueJson
 import br.com.zup.beagle.android.data.serializer.makeObjectButton
 import br.com.zup.beagle.android.data.serializer.makeObjectContextWithPrimitiveValue
-import br.com.zup.beagle.android.data.serializer.makePageIndicatorJson
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -73,7 +72,10 @@ class PageViewSerializerTest : BaseServerDrivenComponentSerializerTest() {
         @DisplayName("Then should return correct json with PageIndicator")
         @Test
         fun testPageViewSerializationWithPageIndicator() {
-            testSerializeObject(makePageViewWithPageIndicatorJson(), makeObjectPageViewWithPageIndicator())
+            testSerializeObject(
+                makePageViewWithPageIndicatorJson(),
+                makeObjectPageViewWithPageIndicator()
+            )
         }
     }
 

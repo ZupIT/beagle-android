@@ -30,19 +30,21 @@ import io.mockk.slot
 import io.mockk.unmockkAll
 import io.mockk.verify
 import org.junit.Assert.assertEquals
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 
 @DisplayName("Given a BeagleMessageLogs")
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class BeagleMessageLogsTest {
 
     private val beagleLoggerInfoSlot = slot<String>()
     val exception = mockk<java.lang.Exception>()
 
-    @BeforeEach
+    @BeforeAll
     fun setUp() {
         mockkObject(BeagleEnvironment)
 
@@ -56,7 +58,7 @@ internal class BeagleMessageLogsTest {
         every { BeagleLoggerProxy.error(any(), any()) } just Runs
     }
 
-    @AfterEach
+    @AfterAll
     fun tearDown() {
         unmockkAll()
     }
@@ -75,13 +77,15 @@ internal class BeagleMessageLogsTest {
             BeagleMessageLogs.logHttpRequestData(requestData)
 
             // Then
-            assertEquals("""
+            assertEquals(
+                """
             *** HTTP REQUEST ***
             Url=${requestData.url}
             Method=${requestData.httpAdditionalData.method}
             Headers=${requestData.httpAdditionalData.headers}
             Body=${requestData.httpAdditionalData.body}
-        """.trimIndent(), beagleLoggerInfoSlot.captured)
+        """.trimIndent(), beagleLoggerInfoSlot.captured
+            )
         }
 
         @Test
@@ -94,12 +98,14 @@ internal class BeagleMessageLogsTest {
             BeagleMessageLogs.logHttpResponseData(responseData)
 
             // Then
-            assertEquals("""
+            assertEquals(
+                """
             *** HTTP RESPONSE ***
             StatusCode=${responseData.statusCode}
             Body=${String(responseData.data)}
             Headers=${responseData.headers}
-        """.trimIndent(), beagleLoggerInfoSlot.captured)
+        """.trimIndent(), beagleLoggerInfoSlot.captured
+            )
         }
 
 
@@ -149,8 +155,10 @@ internal class BeagleMessageLogsTest {
 
             // Then
             verify(exactly = 1) {
-                BeagleLoggerProxy.warning("Are you missing to declare your FormInput for " +
-                    "form action '$formActionName'?")
+                BeagleLoggerProxy.warning(
+                    "Are you missing to declare your FormInput for " +
+                            "form action '$formActionName'?"
+                )
             }
         }
 
@@ -165,8 +173,10 @@ internal class BeagleMessageLogsTest {
 
             // Then
             verify(exactly = 1) {
-                BeagleLoggerProxy.warning("Are you missing to declare your FormSubmit component for " +
-                    "form action '$formActionName'?")
+                BeagleLoggerProxy.warning(
+                    "Are you missing to declare your FormSubmit component for " +
+                            "form action '$formActionName'?"
+                )
             }
         }
 
@@ -179,13 +189,16 @@ internal class BeagleMessageLogsTest {
             // Then
             verify(exactly = 1) {
                 BeagleLoggerProxy.warning(
-                    "You are trying to use multiple expressions in a type that is not string!")
+                    "You are trying to use multiple expressions in a type that is not string!"
+                )
             }
         }
 
         @Test
-        @DisplayName("Then in an attempt to use a reserved keyword in a Global Context the log " +
-            "should call BeagleLogger info")
+        @DisplayName(
+            "Then in an attempt to use a reserved keyword in a Global Context the log " +
+                    "should call BeagleLogger info"
+        )
         fun `check the message log to global keyword reserved in a global context`() {
             // When
             BeagleMessageLogs.globalKeywordIsReservedForGlobalContext()
@@ -239,7 +252,8 @@ internal class BeagleMessageLogsTest {
             // Then
             verify(exactly = 1) {
                 BeagleLoggerProxy.error(
-                    "Exception thrown while trying to call http client.", throwable)
+                    "Exception thrown while trying to call http client.", throwable
+                )
             }
         }
 
@@ -255,7 +269,9 @@ internal class BeagleMessageLogsTest {
             // Then
             verify(exactly = 1) {
                 BeagleLoggerProxy.error(
-                    "Exception thrown while trying to deserialize the following json: $json", exception)
+                    "Exception thrown while trying to deserialize the following json: $json",
+                    exception
+                )
             }
         }
 
@@ -266,7 +282,12 @@ internal class BeagleMessageLogsTest {
             BeagleMessageLogs.logActionBarAlreadyPresentOnView(exception)
 
             // Then
-            verify(exactly = 1) { BeagleLoggerProxy.error("SupportActionBar is already present", exception) }
+            verify(exactly = 1) {
+                BeagleLoggerProxy.error(
+                    "SupportActionBar is already present",
+                    exception
+                )
+            }
         }
 
         @Test
@@ -278,7 +299,8 @@ internal class BeagleMessageLogsTest {
             // Then
             verify(exactly = 1) {
                 BeagleLoggerProxy.error(
-                    "Error while evaluating expression bindings.", exception)
+                    "Error while evaluating expression bindings.", exception
+                )
             }
         }
 
@@ -289,7 +311,12 @@ internal class BeagleMessageLogsTest {
             BeagleMessageLogs.errorWhileTryingToChangeContext(exception)
 
             // Then
-            verify(exactly = 1) { BeagleLoggerProxy.error("Error while trying to change context.", exception) }
+            verify(exactly = 1) {
+                BeagleLoggerProxy.error(
+                    "Error while trying to change context.",
+                    exception
+                )
+            }
         }
 
         @Test
@@ -327,7 +354,8 @@ internal class BeagleMessageLogsTest {
             // Then
             verify(exactly = 1) {
                 BeagleLoggerProxy.error(
-                    "Could not parses color $color", exception)
+                    "Could not parses color $color", exception
+                )
             }
         }
 
@@ -380,7 +408,10 @@ internal class BeagleMessageLogsTest {
 
             // Then
             verify(exactly = 1) {
-                BeagleLoggerProxy.error("Error while trying to parse expression: $expression", exception)
+                BeagleLoggerProxy.error(
+                    "Error while trying to parse expression: $expression",
+                    exception
+                )
             }
         }
 
@@ -392,7 +423,10 @@ internal class BeagleMessageLogsTest {
 
             // Then
             verify(exactly = 1) {
-                BeagleLoggerProxy.error("Error while trying to execute expression function.", exception)
+                BeagleLoggerProxy.error(
+                    "Error while trying to execute expression function.",
+                    exception
+                )
             }
         }
 

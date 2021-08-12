@@ -17,7 +17,6 @@
 package br.com.zup.beagle.android.components.layout
 
 import br.com.zup.beagle.android.components.BaseComponentTest
-import br.com.zup.beagle.android.extensions.once
 import br.com.zup.beagle.android.utils.StyleManager
 import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
@@ -100,7 +99,7 @@ class ContainerTest : BaseComponentTest() {
             container.buildView(rootView)
 
             // Then
-            verify(exactly = once()) { beagleFlexView.addView(containerChildren) }
+            verify(exactly = 1) { beagleFlexView.addView(containerChildren) }
         }
 
     }

@@ -17,6 +17,7 @@
 package br.com.zup.beagle.android.view.custom
 
 import android.view.View
+import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.engine.mapper.FlexMapper
 import br.com.zup.beagle.android.engine.renderer.ViewRenderer
 import br.com.zup.beagle.android.engine.renderer.ViewRendererFactory
@@ -27,15 +28,18 @@ import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 import br.com.zup.beagle.android.widget.core.Style
 import com.facebook.yoga.YogaNode
 import io.mockk.Runs
+import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.spyk
 import io.mockk.verify
 import io.mockk.verifySequence
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 
-class InternalBeagleFlexViewTest {
+class InternalBeagleFlexViewTest : BaseTest(){
 
     private val rootViewMock = mockk<RootView>(relaxed = true, relaxUnitFun = true)
     private val flexMapperMock = mockk<FlexMapper>(relaxUnitFun = true, relaxed = true)
@@ -43,6 +47,11 @@ class InternalBeagleFlexViewTest {
     private val viewRendererFactoryMock = mockk<ViewRendererFactory>()
     private val screenContextViewModelMock = mockk<ScreenContextViewModel>()
     private val generateIdManagerMock = mockk<GenerateIdManager>(relaxed = true)
+
+    @BeforeEach
+    fun clear() {
+        clearMocks(viewRendererFactoryMock, answers = false)
+    }
 
     @Test
     fun `GIVEN a BeagleFlexView WHEN instance the class THEN should call bind changes`() {

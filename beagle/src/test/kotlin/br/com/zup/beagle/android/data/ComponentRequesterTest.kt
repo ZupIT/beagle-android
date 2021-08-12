@@ -25,6 +25,7 @@ import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.networking.ResponseData
 import br.com.zup.beagle.android.testutil.RandomData
 import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
+import io.mockk.clearMocks
 import io.mockk.coEvery
 import io.mockk.coVerifySequence
 import io.mockk.every
@@ -33,6 +34,7 @@ import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -52,14 +54,23 @@ class ComponentRequesterTest : BaseTest() {
 
     private lateinit var componentRequester: ComponentRequester
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
-
         componentRequester = ComponentRequester(
             beagleApi,
             serializer,
             cacheManager
+        )
+    }
+
+    @BeforeEach
+    fun clear() {
+        clearMocks(
+            beagleApi,
+            serializer,
+            cacheManager,
+            answers = false
         )
     }
 
@@ -107,9 +118,20 @@ class ComponentRequesterTest : BaseTest() {
 
             every { cacheManager.restoreBeagleCacheForUrl(REQUEST_DATA.url!!) } returns beagleCache
             every { beagleCache.isExpired() } returns true
-            every { cacheManager.requestDataWithCache(REQUEST_DATA, beagleCache) } returns newRequestDataMock
+            every {
+                cacheManager.requestDataWithCache(
+                    REQUEST_DATA,
+                    beagleCache
+                )
+            } returns newRequestDataMock
             coEvery { beagleApi.fetchData(newRequestDataMock) } returns responseDataMock
-            every { cacheManager.handleResponseData(REQUEST_DATA.url!!, beagleCache, responseDataMock) } returns newJsonMock
+            every {
+                cacheManager.handleResponseData(
+                    REQUEST_DATA.url!!,
+                    beagleCache,
+                    responseDataMock
+                )
+            } returns newJsonMock
             every { serializer.deserializeComponent(newJsonMock) } returns expected
 
             // When

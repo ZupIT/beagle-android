@@ -18,7 +18,6 @@ package br.com.zup.beagle.android.cache
 
 import android.util.LruCache
 import br.com.zup.beagle.android.BaseTest
-import br.com.zup.beagle.android.extensions.once
 import br.com.zup.beagle.android.testutil.RandomData
 import io.mockk.every
 import io.mockk.mockk
@@ -55,7 +54,7 @@ class LruCacheStoreTest : BaseTest() {
         cacheStore.save(CACHE_KEY, beagleCache)
 
         // Then
-        verify(exactly = once()) { cachedData.put(CACHE_KEY, timerCacheSlot.captured) }
+        verify(exactly = 1) { cachedData.put(CACHE_KEY, timerCacheSlot.captured) }
         assertEquals(timerCacheSlot.captured, beagleCache)
     }
 

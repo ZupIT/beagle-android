@@ -21,7 +21,6 @@ import android.view.ViewGroup
 import android.view.ViewParent
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.components.form.SimpleForm
-import br.com.zup.beagle.android.extensions.once
 import br.com.zup.beagle.android.logger.BeagleLoggerProxy
 import io.mockk.every
 import io.mockk.mockk
@@ -53,7 +52,7 @@ class SubmitFormTest : BaseTest() {
         action.execute(rootView, view)
 
         // Then
-        verify(exactly = once()) { simpleForm.submit(rootView, view) }
+        verify(exactly = 1) { simpleForm.submit(rootView, view) }
     }
 
     @Test
@@ -65,7 +64,7 @@ class SubmitFormTest : BaseTest() {
         action.execute(rootView, view)
 
         // Then
-        verify(exactly = once()) {
+        verify(exactly = 1) {
             BeagleLoggerProxy.error("Not found simple form in the parents")
         }
     }

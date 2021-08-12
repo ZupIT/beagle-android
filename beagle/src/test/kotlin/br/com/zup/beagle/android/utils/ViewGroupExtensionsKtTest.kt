@@ -25,13 +25,18 @@ import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.view.custom.BeagleView
 import br.com.zup.beagle.android.view.custom.OnServerStateChanged
+import br.com.zup.beagle.android.view.viewmodel.GenerateIdViewModel
+import br.com.zup.beagle.android.view.viewmodel.ListViewIdViewModel
+import br.com.zup.beagle.android.view.viewmodel.OnInitViewModel
 import br.com.zup.beagle.android.widget.ActivityRootView
 import br.com.zup.beagle.android.widget.FragmentRootView
 import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
+import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.verifySequence
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -49,16 +54,35 @@ internal class ViewGroupExtensionsKtTest : BaseTest() {
     private val activityMock: AppCompatActivity = mockk(relaxed = true, relaxUnitFun = true)
     private val serializerFactory: BeagleSerializer = mockk(relaxed = true)
     private val component: ServerDrivenComponent = mockk(relaxed = true)
+    private val generateIdViewModel: GenerateIdViewModel = mockk(relaxed = true)
+    private val listViewIdViewModel: ListViewIdViewModel = mockk(relaxed = true)
+    private val onInitViewModel: OnInitViewModel = mockk(relaxed = true)
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
 
         mockkObject(ViewFactory)
+        prepareViewModelMock(
+            generateIdViewModel,
+            listViewIdViewModel,
+            onInitViewModel
+        )
 
         beagleSerializerFactory = serializerFactory
         every { ViewFactory.makeBeagleView(any()) } returns beagleView
         every { serializerFactory.deserializeComponent(any()) } returns component
+    }
+
+    @BeforeEach
+    fun clear() {
+        clearMocks(
+            ViewFactory,
+            viewGroup,
+            serializerFactory,
+            beagleView,
+            answers = false
+        )
     }
 
     @DisplayName("When load view with activity")

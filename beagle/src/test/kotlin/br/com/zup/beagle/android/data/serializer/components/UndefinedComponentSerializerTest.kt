@@ -16,7 +16,6 @@
 
 package br.com.zup.beagle.android.data.serializer.components
 
-import br.com.zup.beagle.android.components.page.PageView
 import br.com.zup.beagle.android.widget.UndefinedWidget
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.DisplayName

@@ -16,7 +16,6 @@
 
 package br.com.zup.beagle.android.components
 
-import br.com.zup.beagle.android.extensions.once
 import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.setup.Environment
 import br.com.zup.beagle.android.view.BeagleActivity
@@ -90,7 +89,7 @@ class WebViewTest : BaseComponentTest() {
 
         // Then
         assertEquals(ServerDrivenState.Finished, stateSlot.captured)
-        verify(exactly = once()) { webView.requestLayout() }
+        verify(exactly = 1) { webView.requestLayout() }
     }
 
     @Test
@@ -104,7 +103,7 @@ class WebViewTest : BaseComponentTest() {
         (stateSlot.captured as ServerDrivenState.WebViewError).retry.invoke()
 
         // Then
-        verify(exactly = once()) { webView.reload() }
+        verify(exactly = 1) { webView.reload() }
     }
 
     private fun createMockedWebViewClient(stateSlot: CapturingSlot<ServerDrivenState>): WebView.BeagleWebViewClient {

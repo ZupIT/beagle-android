@@ -30,13 +30,11 @@ import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import io.mockk.Runs
 import io.mockk.every
-import io.mockk.impl.annotations.MockK
 import io.mockk.just
+import io.mockk.mockk
 import io.mockk.mockkObject
-import io.mockk.unmockkObject
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -46,18 +44,15 @@ import java.io.IOException
 @DisplayName("Given a BeagleSerializer")
 class BeagleSerializerTest : BaseTest() {
 
-    @MockK
-    private lateinit var moshi: Moshi
+    private val moshi: Moshi = mockk()
 
-    @MockK
-    private lateinit var jsonAdapter: JsonAdapter<ServerDrivenComponent>
+    private val jsonAdapter: JsonAdapter<ServerDrivenComponent> = mockk()
 
-    @MockK
-    private lateinit var actionJsonAdapter: JsonAdapter<Action>
+    private val actionJsonAdapter: JsonAdapter<Action> = mockk()
 
     private lateinit var beagleSerializer: BeagleSerializer
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
         beagleSerializer = BeagleSerializer(BeagleMoshi)
@@ -69,13 +64,6 @@ class BeagleSerializerTest : BaseTest() {
         every { BeagleMoshi.moshi } returns moshi
         every { moshi.adapter(ServerDrivenComponent::class.java) } returns jsonAdapter
         every { moshi.adapter(Action::class.java) } returns actionJsonAdapter
-    }
-
-    @AfterEach
-    override fun tearDown() {
-        super.tearDown()
-        unmockkObject(BeagleMessageLogs)
-        unmockkObject(BeagleMoshi)
     }
 
     @DisplayName("When try to serialize json")

@@ -20,7 +20,6 @@ import android.view.View
 import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.action.Navigate
 import br.com.zup.beagle.android.data.PreFetchHelper
-import br.com.zup.beagle.android.extensions.once
 import br.com.zup.beagle.android.utils.handleEvent
 import io.mockk.Runs
 import io.mockk.every
@@ -71,7 +70,7 @@ class TouchableTest : BaseComponentTest() {
         val actual = touchable.buildView(rootView)
 
         // Then
-        verify(exactly = once()) {
+        verify(exactly = 1) {
             anyConstructed<PreFetchHelper>().handlePreFetch(
                 rootView,
                 actions
@@ -89,7 +88,7 @@ class TouchableTest : BaseComponentTest() {
         callBuildAndClick()
 
         // Then
-        verify(exactly = once()) {
+        verify(exactly = 1) {
             touchable.handleEvent(rootView, view, actions, analyticsValue = "onPress")
         }
     }

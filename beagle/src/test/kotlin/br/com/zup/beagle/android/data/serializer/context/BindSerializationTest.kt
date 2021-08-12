@@ -27,6 +27,7 @@ import br.com.zup.beagle.android.widget.WidgetView
 import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 import io.mockk.every
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -38,9 +39,10 @@ private val WIDGETS = listOf(
 )
 
 @DisplayName("Given a Moshi Adapter")
-class BindSerializationTest : BaseSerializerTest<ServerDrivenComponent>(ServerDrivenComponent::class.java) {
+class BindSerializationTest :
+    BaseSerializerTest<ServerDrivenComponent>(ServerDrivenComponent::class.java) {
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
         every { beagleSdk.registeredWidgets() } returns WIDGETS
@@ -54,7 +56,10 @@ class BindSerializationTest : BaseSerializerTest<ServerDrivenComponent>(ServerDr
         @DisplayName("Then should return a ComponentBinding with expressions")
         @Test
         fun testDeserializeJsonComponentBindingWithExpressions() {
-            testDeserializeJson(makeComponentBindingWithExpressionsJson(), makeObjectComponentBindingWithExpressions())
+            testDeserializeJson(
+                makeComponentBindingWithExpressionsJson(),
+                makeObjectComponentBindingWithExpressions()
+            )
         }
 
         @DisplayName("Then should return a ComponentBinding without expressions")
@@ -92,7 +97,8 @@ class BindSerializationTest : BaseSerializerTest<ServerDrivenComponent>(ServerDr
 
             // When
             val bindComponent = deserialize(jsonComponent) as ComponentBinding
-            val internalObject = moshi.adapter<Any>(bindComponent.value4.type).fromJson(internalObjectJson) as InternalObject
+            val internalObject = moshi.adapter<Any>(bindComponent.value4.type)
+                .fromJson(internalObjectJson) as InternalObject
 
             // Then
             Assertions.assertEquals("hello", internalObject.value1)

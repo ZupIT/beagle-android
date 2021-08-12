@@ -23,7 +23,6 @@ import br.com.zup.beagle.android.components.layout.Screen
 import br.com.zup.beagle.android.data.ActionRequester
 import br.com.zup.beagle.android.data.ComponentRequester
 import br.com.zup.beagle.android.exception.BeagleException
-import br.com.zup.beagle.android.extensions.once
 import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.testutil.CoroutinesTestExtension
 import br.com.zup.beagle.android.testutil.InstantExecutorExtension
@@ -31,11 +30,11 @@ import br.com.zup.beagle.android.testutil.RandomData
 import br.com.zup.beagle.android.widget.core.IdentifierComponent
 import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 import io.mockk.Runs
+import io.mockk.clearMocks
 import io.mockk.coEvery
 import io.mockk.coVerifyOrder
 import io.mockk.coVerifySequence
 import io.mockk.every
-import io.mockk.impl.annotations.MockK
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.verify
@@ -54,35 +53,36 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(InstantExecutorExtension::class, CoroutinesTestExtension::class)
 class BeagleViewModelTest : BaseTest() {
 
-    @MockK
-    private lateinit var component: ServerDrivenComponent
+    private val component: ServerDrivenComponent = mockk()
 
-    @MockK
-    private lateinit var action: Action
+    private val action: Action = mockk()
 
-    @MockK
-    private lateinit var componentRequester: ComponentRequester
+    private val componentRequester: ComponentRequester = mockk()
 
-    @MockK
-    private lateinit var actionRequester: ActionRequester
+    private val actionRequester: ActionRequester = mockk()
 
-    @MockK
-    private lateinit var observer: Observer<ViewState>
+    private val observer: Observer<ViewState> = mockk()
 
     private lateinit var beagleUIViewModel: BeagleViewModel
 
     private val slotViewState = mutableListOf<ViewState>()
 
     @BeforeEach
-    override fun setUp() {
-        super.setUp()
-
+    fun clear() {
+        clearMocks(
+            observer,
+            componentRequester,
+            actionRequester,
+            answers = false
+        )
         beagleUIViewModel = BeagleViewModel(componentRequester = componentRequester)
 
         coEvery { componentRequester.fetchComponent(any()) } returns component
         coEvery { actionRequester.fetchAction(any()) } returns action
         every { observer.onChanged(any()) } just Runs
         coEvery { observer.onChanged(capture(slotViewState)) } just Runs
+
+        slotViewState.clear()
     }
 
     @DisplayName("When FetchComponent")
@@ -159,7 +159,7 @@ class BeagleViewModelTest : BaseTest() {
             beagleUIViewModel.fetchComponent(screenRequest, component).observeForever(observer)
 
             //THEN
-            verify(exactly = once()) { observer.onChanged(ViewState.DoRender(null, component)) }
+            verify(exactly = 1) { observer.onChanged(ViewState.DoRender(null, component)) }
         }
 
         @DisplayName("Then should post a ViewStateDoRender")
@@ -175,7 +175,7 @@ class BeagleViewModelTest : BaseTest() {
             beagleUIViewModel.fetchComponent(screenRequest, component).observeForever(observer)
 
             //THEN
-            verify(exactly = once()) { observer.onChanged(ViewState.DoRender(id, component)) }
+            verify(exactly = 1) { observer.onChanged(ViewState.DoRender(id, component)) }
         }
 
         @DisplayName("Then should post ViewState doRender")
@@ -189,7 +189,14 @@ class BeagleViewModelTest : BaseTest() {
             beagleUIViewModel.fetchComponent(screenRequest, null).observeForever(observer)
 
             //THEN
-            verify(exactly = once()) { observer.onChanged(ViewState.DoRender(screenRequest.url, component)) }
+            verify(exactly = 1) {
+                observer.onChanged(
+                    ViewState.DoRender(
+                        screenRequest.url,
+                        component
+                    )
+                )
+            }
         }
 
         @DisplayName("Then should post ViewState doRender with correct screenId")
@@ -204,7 +211,14 @@ class BeagleViewModelTest : BaseTest() {
             beagleUIViewModel.fetchComponent(screenRequest, null).observeForever(observer)
 
             //THEN
-            verify(exactly = once()) { observer.onChanged(ViewState.DoRender(screenRequest.url, component)) }
+            verify(exactly = 1) {
+                observer.onChanged(
+                    ViewState.DoRender(
+                        screenRequest.url,
+                        component
+                    )
+                )
+            }
         }
 
         @DisplayName("Then should post ViewState doRender using identifier as screenId")
@@ -221,7 +235,7 @@ class BeagleViewModelTest : BaseTest() {
             beagleUIViewModel.fetchComponent(screenRequest, component).observeForever(observer)
 
             //THEN
-            verify(exactly = once()) { observer.onChanged(ViewState.DoRender(id, component)) }
+            verify(exactly = 1) { observer.onChanged(ViewState.DoRender(id, component)) }
 
         }
     }
@@ -292,7 +306,7 @@ class BeagleViewModelTest : BaseTest() {
 
             //THEN
             assertTrue { mockJob.isCancelled }
-            verify(exactly = once()) { observer.onChanged(ViewState.DoCancel) }
+            verify(exactly = 1) { observer.onChanged(ViewState.DoCancel) }
             assertTrue { isFetch }
         }
     }

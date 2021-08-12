@@ -21,7 +21,6 @@ import android.view.View
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.widget.Toolbar
 import br.com.zup.beagle.android.components.BaseComponentTest
-import br.com.zup.beagle.android.extensions.once
 import br.com.zup.beagle.android.utils.ToolbarManager
 import br.com.zup.beagle.android.view.BeagleActivity
 import br.com.zup.beagle.android.view.ViewFactory
@@ -93,7 +92,7 @@ class ScreenTest : BaseComponentTest() {
         screen.buildView(rootView)
 
         // Then
-        verify(atLeast = once()) { beagleFlexView.addView(component) }
+        verify(atLeast = 1) { beagleFlexView.addView(component) }
     }
 
     @Test
@@ -113,7 +112,7 @@ class ScreenTest : BaseComponentTest() {
 
         // THEN
         assertEquals(expected, toolbar.visibility)
-        verify(atLeast = once()) { actionBar.hide() }
+        verify(atLeast = 1) { actionBar.hide() }
     }
 
     @Test

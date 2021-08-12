@@ -19,7 +19,6 @@ package br.com.zup.beagle.android.action
 import android.content.DialogInterface
 import android.view.View
 import androidx.appcompat.app.AlertDialog
-import br.com.zup.beagle.android.extensions.once
 import br.com.zup.beagle.android.testutil.RandomData
 import br.com.zup.beagle.android.utils.handleEvent
 import br.com.zup.beagle.android.view.ViewFactory
@@ -126,7 +125,7 @@ class AlertTest {
         listenerSlot.captured.onClick(dialogBox, 0)
 
         // Then
-        verify(exactly = once()) { dialogBox.dismiss() }
+        verify(exactly = 1) { dialogBox.dismiss() }
     }
 
     @Test
@@ -146,7 +145,7 @@ class AlertTest {
         listenerSlot.captured.onClick(dialogBox, 0)
 
         // Then
-        verify(exactly = once()) {
+        verify(exactly = 1) {
             action.handleEvent(
                 rootView,
                 view,

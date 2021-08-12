@@ -16,27 +16,20 @@
 
 package br.com.zup.beagle.android.data
 
+import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.networking.urlbuilder.UrlBuilder
 import br.com.zup.beagle.android.setup.BeagleEnvironment
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
-import io.mockk.unmockkAll
-import org.junit.jupiter.api.AfterEach
 import org.junit.Assert.assertEquals
 import org.junit.jupiter.api.Test
-import java.net.URI
 
-class StringExtensionsKtTest {
+class StringExtensionsKtTest : BaseTest() {
 
     private val urlBuilder: UrlBuilder = mockk()
     private val environment: BeagleEnvironment = mockk(relaxed = true)
-
-    @AfterEach
-    fun tearDown() {
-        unmockkAll()
-    }
 
     @Test
     fun `should return request data when using extension function to mapper`() {

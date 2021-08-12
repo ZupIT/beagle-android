@@ -23,7 +23,6 @@ import android.widget.LinearLayout
 import androidx.core.view.get
 import androidx.viewbinding.ViewBindings
 import br.com.zup.beagle.R
-import br.com.zup.beagle.android.extensions.once
 import br.com.zup.beagle.android.testutil.RandomData
 import br.com.zup.beagle.android.utils.BeagleRetry
 import br.com.zup.beagle.android.view.ServerDrivenState
@@ -105,7 +104,7 @@ class LazyComponentTest : BaseComponentTest() {
             lazyComponent.buildView(rootView)
 
             // Then
-            verify(exactly = once()) {
+            verify(exactly = 1) {
                 beagleView.addServerDrivenComponent(initialState)
                 beagleView.updateView(URL, initialStateView)
 
@@ -125,7 +124,7 @@ class LazyComponentTest : BaseComponentTest() {
             slot.captured.invoke(ServerDrivenState.Error(mockk(), mockk()))
 
             // Then
-            verify(exactly = once()) {
+            verify(exactly = 1) {
                 beagleView.addView(any())
             }
         }

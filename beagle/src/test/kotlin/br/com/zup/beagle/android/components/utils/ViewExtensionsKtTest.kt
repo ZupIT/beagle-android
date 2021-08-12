@@ -27,7 +27,6 @@ import androidx.core.widget.TextViewCompat
 import androidx.fragment.app.Fragment
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.data.serializer.BeagleSerializer
-import br.com.zup.beagle.android.extensions.once
 import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.setup.DesignSystem
 import br.com.zup.beagle.android.testutil.RandomData
@@ -62,7 +61,7 @@ import io.mockk.slot
 import io.mockk.verify
 import io.mockk.verifyOrder
 import io.mockk.verifySequence
-import junit.framework.Assert.assertEquals
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -158,7 +157,7 @@ class ViewExtensionsKtTest : BaseTest() {
             viewGroup.hideKeyboard()
 
             // Then
-            verify(exactly = once()) { inputMethodManager.hideSoftInputFromWindow(any(), 0) }
+            verify(exactly = 1) { inputMethodManager.hideSoftInputFromWindow(any(), 0) }
         }
 
         @DisplayName("Then should call hideSoftInputFromWindow with created view")
@@ -172,7 +171,7 @@ class ViewExtensionsKtTest : BaseTest() {
             viewGroup.hideKeyboard()
 
             // Then
-            verify(exactly = once()) { inputMethodManager.hideSoftInputFromWindow(any(), 0) }
+            verify(exactly = 1) { inputMethodManager.hideSoftInputFromWindow(any(), 0) }
         }
     }
 
@@ -350,7 +349,7 @@ class ViewExtensionsKtTest : BaseTest() {
 
             // Then
             assertEquals(beagleView, viewSlot.captured)
-            verify(exactly = once()) { viewGroup.addView(beagleView) }
+            verify(exactly = 1) { viewGroup.addView(beagleView) }
         }
 
         @DisplayName("Then should set stateChangedListener to beagleView")

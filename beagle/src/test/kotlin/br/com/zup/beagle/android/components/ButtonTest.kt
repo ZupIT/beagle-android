@@ -23,7 +23,6 @@ import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.action.Navigate
 import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.data.PreFetchHelper
-import br.com.zup.beagle.android.extensions.once
 import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.testutil.RandomData
 import br.com.zup.beagle.android.utils.StyleManager
@@ -127,7 +126,7 @@ internal class ButtonTest : BaseComponentTest() {
             buttonComponent.buildView(rootView)
 
             // Then
-            verify(exactly = once()) { button.setOnClickListener(any()) }
+            verify(exactly = 1) { button.setOnClickListener(any()) }
         }
 
         @Test
@@ -141,7 +140,7 @@ internal class ButtonTest : BaseComponentTest() {
             buttonComponent.buildView(rootView)
 
             // Then
-            verify(exactly = once()) {
+            verify(exactly = 1) {
                 anyConstructed<PreFetchHelper>().handlePreFetch(
                     rootView,
                     listOf(action)

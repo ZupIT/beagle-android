@@ -16,30 +16,26 @@
 
 package br.com.zup.beagle.android.logger
 
-import br.com.zup.beagle.android.extensions.once
+import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.testutil.RandomData
-import io.mockk.*
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 
 private val LOG = RandomData.string()
 
-class BeagleLoggerProxyTest {
+class BeagleLoggerProxyTest : BaseTest() {
 
     private val logger = mockk<BeagleLogger>(relaxUnitFun = true, relaxed = true)
 
-    @BeforeEach
-    fun setUp() {
-        mockkObject(BeagleEnvironment)
+    @BeforeAll
+    override fun setUp() {
+        super.setUp()
         every { BeagleEnvironment.beagleSdk.logger } returns logger
         BeagleLoggerProxy.logger = logger
-    }
-
-    @AfterEach
-    fun tearDown() {
-        unmockkAll()
     }
 
     @Test
@@ -48,7 +44,7 @@ class BeagleLoggerProxyTest {
         BeagleLoggerProxy.warning(LOG)
 
         // Then
-        verify(exactly = once()) { logger.warning(LOG) }
+        verify(exactly = 1) { logger.warning(LOG) }
     }
 
     @Test
@@ -58,7 +54,7 @@ class BeagleLoggerProxyTest {
         BeagleLoggerProxy.error(LOG)
 
         // Then
-        verify(exactly = once()) { logger.error(LOG) }
+        verify(exactly = 1) { logger.error(LOG) }
     }
 
     @Test
@@ -67,7 +63,7 @@ class BeagleLoggerProxyTest {
         BeagleLoggerProxy.info(LOG)
 
         // Then
-        verify(exactly = once()) { logger.info(LOG) }
+        verify(exactly = 1) { logger.info(LOG) }
     }
 
 }

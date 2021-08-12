@@ -17,20 +17,18 @@
 package br.com.zup.beagle.android.view.viewmodel
 
 import android.view.View
+import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.action.AnalyticsAction
-import br.com.zup.beagle.android.testutil.CoroutinesTestExtension
-import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.android.analytics.AnalyticsService
+import br.com.zup.beagle.android.testutil.CoroutinesTestExtension
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkObject
-import io.mockk.unmockkObject
 import io.mockk.verify
 import kotlinx.coroutines.test.runBlockingTest
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -39,22 +37,17 @@ import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(CoroutinesTestExtension::class)
 @DisplayName("Given an Analytics View Model")
-internal class AnalyticsViewModelTest {
+internal class AnalyticsViewModelTest : BaseTest() {
 
     private val analyticsViewModel = AnalyticsViewModel()
-    var rootView: RootView = mockk()
     var origin: View = mockk()
     var action: AnalyticsAction = mockk()
     var analyticsValue: String = "any"
 
-    @BeforeEach
-    fun setUp() {
+    @BeforeAll
+    override fun setUp() {
+        super.setUp()
         mockkObject(AnalyticsService)
-    }
-
-    @AfterEach
-    fun tearDown() {
-        unmockkObject(AnalyticsService)
     }
 
     @DisplayName("When create action report")
@@ -65,7 +58,14 @@ internal class AnalyticsViewModelTest {
         @Test
         fun testCreateActionReportShouldCallCorrectFun() = runBlockingTest {
             //given
-            every { AnalyticsService.createActionRecord(rootView, origin, action, analyticsValue) } just Runs
+            every {
+                AnalyticsService.createActionRecord(
+                    rootView,
+                    origin,
+                    action,
+                    analyticsValue
+                )
+            } just Runs
 
             //when
             analyticsViewModel.createActionReport(rootView, origin, action, analyticsValue)
@@ -85,10 +85,10 @@ internal class AnalyticsViewModelTest {
         @Test
         fun testCreateScreenReportShouldCallCorrectFun() = runBlockingTest {
             //given
-            every { AnalyticsService.createScreenRecord( "screenId") } just Runs
+            every { AnalyticsService.createScreenRecord("screenId") } just Runs
 
             //when
-            analyticsViewModel.createScreenReport( "screenId")
+            analyticsViewModel.createScreenReport("screenId")
 
             //then
             verify(exactly = 1) {

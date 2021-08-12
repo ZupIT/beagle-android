@@ -122,7 +122,7 @@ class PullToRefreshTest : BaseComponentTest() {
                     rootView,
                     swipeRefreshLayout,
                     isRefreshing,
-                    captureLambda()
+                    capture(mutableListOf())
                 )
             }
         }
@@ -139,7 +139,7 @@ class PullToRefreshTest : BaseComponentTest() {
                     rootView,
                     swipeRefreshLayout,
                     color,
-                    captureLambda()
+                    capture(mutableListOf())
                 )
             }
         }

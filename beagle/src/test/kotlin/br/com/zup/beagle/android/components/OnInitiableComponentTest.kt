@@ -19,7 +19,6 @@ package br.com.zup.beagle.android.components
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.action.AsyncActionStatus
@@ -31,15 +30,14 @@ import br.com.zup.beagle.android.utils.handleEvent
 import br.com.zup.beagle.android.utils.setIsInitiableComponent
 import br.com.zup.beagle.android.view.viewmodel.OnInitViewModel
 import io.mockk.Runs
+import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
-import io.mockk.mockkConstructor
 import io.mockk.slot
-import io.mockk.spyk
 import io.mockk.verify
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -49,7 +47,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(InstantExecutorExtension::class)
 class OnInitiableComponentTest : BaseTest() {
 
-    private val onInitViewModel = spyk(OnInitViewModel())
+    private val onInitViewModel = mockk<OnInitViewModel>(relaxed = true)
     private val origin = mockk<View>(relaxed = true)
     private val listenerSlot = slot<View.OnAttachStateChangeListener>()
     private val id = 10
@@ -57,16 +55,19 @@ class OnInitiableComponentTest : BaseTest() {
     @BeforeAll
     override fun setUp() {
         super.setUp()
-        mockkConstructor(ViewModelProvider::class)
-        every { anyConstructed<ViewModelProvider>().get(OnInitViewModel::class.java) } returns onInitViewModel
+        prepareViewModelMock(onInitViewModel)
 
         every { origin.id } returns id
         every { origin.addOnAttachStateChangeListener(capture(listenerSlot)) } just Runs
     }
 
-    @AfterEach
-    override fun tearDown() {
-        super.tearDown()
+    @BeforeEach
+    fun clear() {
+        clearMocks(
+            origin,
+            onInitViewModel,
+            answers = false
+        )
     }
 
     @DisplayName("When handleOnInit is called")

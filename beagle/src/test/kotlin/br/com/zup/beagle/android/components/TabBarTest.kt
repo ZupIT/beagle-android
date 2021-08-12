@@ -21,7 +21,6 @@ import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.components.utils.styleManagerFactory
 import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.context.ContextData
-import br.com.zup.beagle.android.extensions.once
 import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.utils.Observer
 import br.com.zup.beagle.android.utils.StyleManager
@@ -187,7 +186,7 @@ class TabBarTest : BaseComponentTest() {
         onTabSelectedSlot.captured.onTabSelected(tabMocked)
 
         //THEN
-        verify(exactly = once()) {
+        verify(exactly = 1) {
             tabBar.handleEvent(
                 rootView,
                 tabLayout,
@@ -217,6 +216,6 @@ class TabBarTest : BaseComponentTest() {
         currentTabSlot.captured.invoke(1)
 
         //THEN
-        verify(exactly = once()) { tabLayout.getTabAt(1)?.select() }
+        verify(exactly = 1) { tabLayout.getTabAt(1)?.select() }
     }
 }

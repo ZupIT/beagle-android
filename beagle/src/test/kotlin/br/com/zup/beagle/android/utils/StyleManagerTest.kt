@@ -31,58 +31,60 @@ import br.com.zup.beagle.android.components.Text
 import br.com.zup.beagle.android.components.layout.Container
 import br.com.zup.beagle.android.components.utils.applyViewBackgroundAndCorner
 import br.com.zup.beagle.android.context.valueOf
-import br.com.zup.beagle.android.extensions.once
 import br.com.zup.beagle.android.setup.DesignSystem
 import br.com.zup.beagle.android.widget.core.StyleComponent
+import io.mockk.clearMocks
 import io.mockk.every
-import io.mockk.impl.annotations.InjectMockKs
-import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.verify
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class StyleManagerTest : BaseTest() {
 
-    @InjectMockKs
     private lateinit var styleManager: StyleManager
 
-    @RelaxedMockK
-    private lateinit var view: View
+    private val view: View = mockk(relaxed = true)
 
-    @RelaxedMockK
-    private lateinit var typedArray: TypedArray
+    private val typedArray: TypedArray = mockk(relaxed = true)
 
-    @RelaxedMockK
-    private lateinit var context: Context
+    private val context: Context = mockk(relaxed = true)
 
-    @RelaxedMockK
-    private lateinit var serverDrivenComponent: StyleComponent
+    private val serverDrivenComponent: StyleComponent = mockk(relaxed = true)
 
-    @RelaxedMockK
-    private lateinit var designSystem: DesignSystem
+    private val designSystem: DesignSystem = mockk(relaxed = true)
 
-    @RelaxedMockK
-    private lateinit var colorDrawable: ColorDrawable
+    private val colorDrawable: ColorDrawable = mockk(relaxed = true)
 
-    @RelaxedMockK
-    private lateinit var drawable: Drawable
+    private val drawable: Drawable = mockk(relaxed = true)
 
-    @RelaxedMockK
-    private lateinit var typedValue: TypedValue
+    private val typedValue: TypedValue = mockk(relaxed = true)
 
     private var textAppearanceInt: Int = 0
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
-        mockkStatic("br.com.zup.beagle.android.components.utils.ViewExtensionsKt")
-        every { beagleSdk.designSystem } returns mockk()
-        every { view.background } returns mockk()
+        every { beagleSdk.designSystem } returns designSystem//mockk(relaxed = true)
         every { designSystem.textStyle(any()) } returns textAppearanceInt
         every { context.obtainStyledAttributes(any<Int>(), any()) } returns mockk()
+    }
+
+    @BeforeEach
+    fun clear() {
+        mockkStatic("br.com.zup.beagle.android.components.utils.ViewExtensionsKt")
+        clearMocks(
+            designSystem,
+            context,
+            typedValue,
+            view,
+            answers = false
+        )
+        every { view.background } returns mockk()
+        styleManager = StyleManager(typedValue = typedValue)
     }
 
     @Test
@@ -95,7 +97,7 @@ class StyleManagerTest : BaseTest() {
         styleManager.applyStyleComponent(serverDrivenComponent, view)
 
         //Then
-        verify(exactly = once()) {
+        verify(exactly = 1) {
             view.applyViewBackgroundAndCorner(
                 expected,
                 serverDrivenComponent
@@ -106,7 +108,7 @@ class StyleManagerTest : BaseTest() {
     @Test
     fun test_getBackgroundColor_when_text_has_a_color_drawable_background() {
         //Given
-        serverDrivenComponent = Text("")
+        val serverDrivenComponent = Text("")
         every { context.obtainStyledAttributes(any<Int>(), any()) } returns typedArray
         every { view.background } returns colorDrawable
         every { colorDrawable.color } returns Color.WHITE
@@ -115,7 +117,7 @@ class StyleManagerTest : BaseTest() {
         styleManager.applyStyleComponent(serverDrivenComponent, view)
 
         //Then
-        verify(exactly = once()) {
+        verify(exactly = 1) {
             view.applyViewBackgroundAndCorner(
                 Color.WHITE,
                 serverDrivenComponent
@@ -126,20 +128,20 @@ class StyleManagerTest : BaseTest() {
     @Test
     fun test_getBackgroundColor_when_text_not_is_color_drawable() {
         //Given
-        serverDrivenComponent = Text("")
+        val serverDrivenComponent = Text("")
         every { context.obtainStyledAttributes(any<Int>(), any()) } returns typedArray
 
         //When
         styleManager.applyStyleComponent(serverDrivenComponent, view)
 
         //Then
-        verify(exactly = once()) { view.applyViewBackgroundAndCorner(null, serverDrivenComponent) }
+        verify(exactly = 1) { view.applyViewBackgroundAndCorner(null, serverDrivenComponent) }
     }
 
     @Test
     fun test_getBackgroundColor_when_button_has_a_color_drawable_background() {
         //Given
-        serverDrivenComponent = Button(valueOf(""))
+        val serverDrivenComponent = Button(valueOf(""))
         every { context.obtainStyledAttributes(any<Int>(), any()) } returns typedArray
         every { view.background } returns colorDrawable
         every { colorDrawable.color } returns Color.WHITE
@@ -148,7 +150,7 @@ class StyleManagerTest : BaseTest() {
         styleManager.applyStyleComponent(serverDrivenComponent, view)
 
         //Then
-        verify(exactly = once()) {
+        verify(exactly = 1) {
             view.applyViewBackgroundAndCorner(
                 Color.WHITE,
                 serverDrivenComponent
@@ -159,20 +161,20 @@ class StyleManagerTest : BaseTest() {
     @Test
     fun test_getBackgroundColor_when_Button_not_is_color_drawable() {
         //Given
-        serverDrivenComponent = Button(valueOf(""))
+        val serverDrivenComponent = Button(valueOf(""))
         every { context.obtainStyledAttributes(any<Int>(), any()) } returns typedArray
 
         //When
         styleManager.applyStyleComponent(serverDrivenComponent, view)
 
         //Then
-        verify(exactly = once()) { view.applyViewBackgroundAndCorner(null, serverDrivenComponent) }
+        verify(exactly = 1) { view.applyViewBackgroundAndCorner(null, serverDrivenComponent) }
     }
 
     @Test
     fun test_getBackgroundColor_when_view_has_a_color_drawable_background() {
         //Given
-        serverDrivenComponent = Container(mockk())
+        val serverDrivenComponent = Container(mockk())
         every { colorDrawable.color } returns Color.BLACK
         every { view.background } returns colorDrawable
 
@@ -180,7 +182,7 @@ class StyleManagerTest : BaseTest() {
         styleManager.applyStyleComponent(serverDrivenComponent, view)
 
         //Then
-        verify(exactly = once()) {
+        verify(exactly = 1) {
             view.applyViewBackgroundAndCorner(
                 Color.BLACK,
                 serverDrivenComponent
@@ -191,14 +193,14 @@ class StyleManagerTest : BaseTest() {
     @Test
     fun test_getBackgroundColor_when_view_has_not_a_color_drawable_background() {
         //Given
-        serverDrivenComponent = Container(mockk())
+        val serverDrivenComponent = Container(mockk())
         every { view.background } returns drawable
 
         //When
         styleManager.applyStyleComponent(serverDrivenComponent, view)
 
         //Then
-        verify(exactly = once()) { view.applyViewBackgroundAndCorner(null, serverDrivenComponent) }
+        verify(exactly = 1) { view.applyViewBackgroundAndCorner(null, serverDrivenComponent) }
     }
 
     @Test
@@ -212,7 +214,7 @@ class StyleManagerTest : BaseTest() {
         val result = styleManager.getTypedValueByResId(resId, context)
 
         // THEN
-        verify(exactly = once()) { theme.resolveAttribute(resId, typedValue, true) }
+        verify(exactly = 1) { theme.resolveAttribute(resId, typedValue, true) }
         assertEquals(typedValue, result)
     }
 
@@ -241,7 +243,7 @@ class StyleManagerTest : BaseTest() {
         val result = styleManager.getButtonStyle(buttonStyle)
 
         // THEN
-        verify(exactly = once()) { designSystem.buttonStyle("") }
+        verify(exactly = 1) { designSystem.buttonStyle("") }
         assertEquals(buttonStyleResource, result)
     }
 
@@ -256,7 +258,7 @@ class StyleManagerTest : BaseTest() {
         styleManager.getTabBarTypedArray(context, tabStyle)
 
         // THEN
-        verify(exactly = once()) {
+        verify(exactly = 1) {
             context.obtainStyledAttributes(tabStyleResource, R.styleable.BeagleTabBarStyle)
         }
     }
@@ -272,7 +274,7 @@ class StyleManagerTest : BaseTest() {
         val result = styleManager.getInputTextStyle(textInputStyle)
 
         // THEN
-        verify(exactly = once()) { designSystem.inputTextStyle("") }
+        verify(exactly = 1) { designSystem.inputTextStyle("") }
         assertEquals(textInputStyleResource, result)
     }
 
@@ -286,7 +288,7 @@ class StyleManagerTest : BaseTest() {
         val result = styleManager.getInputTextStyle("")
 
         // THEN
-        verify(exactly = once()) { designSystem.inputTextStyle("") }
+        verify(exactly = 1) { designSystem.inputTextStyle("") }
         assertEquals(textInputStyle, result)
     }
 }

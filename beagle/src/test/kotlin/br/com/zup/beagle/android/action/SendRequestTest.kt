@@ -21,7 +21,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.context.valueOf
-import br.com.zup.beagle.android.extensions.once
 import br.com.zup.beagle.android.utils.evaluateExpression
 import br.com.zup.beagle.android.utils.handleEvent
 import br.com.zup.beagle.android.view.viewmodel.ActionRequestViewModel
@@ -91,7 +90,7 @@ class SendRequestTest : BaseAsyncActionTest() {
                 rootView,
                 view,
                 listOf(onSuccessAction),
-                any<ContextData>(),
+                any(),
                 analyticsValue = "onSuccess"
             )
         }
@@ -127,7 +126,7 @@ class SendRequestTest : BaseAsyncActionTest() {
                 rootView,
                 view,
                 listOf(onErrorAction),
-                any<ContextData>(),
+                any(),
                 analyticsValue = "onError"
             )
         }
@@ -151,7 +150,7 @@ class SendRequestTest : BaseAsyncActionTest() {
         observerSlot.captured.onChanged(result)
 
         // Then
-        verify(exactly = once()) {
+        verify(exactly = 1) {
             requestAction.handleEvent(
                 rootView,
                 view,
@@ -210,7 +209,7 @@ class SendRequestTest : BaseAsyncActionTest() {
         observerSlot.captured.onChanged(result)
 
         // Then
-        verify(exactly = once()) {
+        verify(exactly = 1) {
             requestAction.handleEvent(
                 rootView,
                 view,
@@ -235,7 +234,7 @@ class SendRequestTest : BaseAsyncActionTest() {
         observerSlot.captured.onChanged(result)
 
         // Then
-        verify(exactly = once()) {
+        verify(exactly = 1) {
             requestAction.handleEvent(
                 rootView,
                 view,

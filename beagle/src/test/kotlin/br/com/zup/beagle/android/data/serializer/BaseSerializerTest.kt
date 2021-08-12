@@ -26,7 +26,6 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.TestInstance
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 abstract class BaseSerializerTest<T>(private val clazz: Class<T>) : BaseTest() {
 
     lateinit var moshi: Moshi
@@ -40,11 +39,6 @@ abstract class BaseSerializerTest<T>(private val clazz: Class<T>) : BaseTest() {
         every { beagleSdk.typeAdapterResolver } returns TypeAdapterResolverImpl()
 
         moshi = BeagleMoshi.createMoshi()
-    }
-
-    @AfterAll // Needed. We are overriding the annotation of the super class.
-    override fun tearDown() {
-        super.tearDown()
     }
 
     fun serialize(anObject: T): String = moshi.adapter(clazz).toJson(anObject)
