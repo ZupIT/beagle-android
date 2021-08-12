@@ -46,9 +46,6 @@ enum class UnitType {
      * Apply the value based in percentage.
      */
     PERCENT,
-
-    /**
-     * TODO.
-     */
+    
     AUTO
 }
