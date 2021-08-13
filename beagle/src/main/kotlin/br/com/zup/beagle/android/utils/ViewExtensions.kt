@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@file:Suppress("TooManyFunctions")
+
 package br.com.zup.beagle.android.utils
 
 import android.content.Context
