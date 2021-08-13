@@ -35,6 +35,7 @@ import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.slot
+import io.mockk.spyk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
@@ -47,7 +48,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(InstantExecutorExtension::class)
 class OnInitiableComponentTest : BaseTest() {
 
-    private val onInitViewModel = mockk<OnInitViewModel>(relaxed = true)
+    private lateinit var onInitViewModel: OnInitViewModel
     private val origin = mockk<View>(relaxed = true)
     private val listenerSlot = slot<View.OnAttachStateChangeListener>()
     private val id = 10
@@ -55,7 +56,6 @@ class OnInitiableComponentTest : BaseTest() {
     @BeforeAll
     override fun setUp() {
         super.setUp()
-        prepareViewModelMock(onInitViewModel)
 
         every { origin.id } returns id
         every { origin.addOnAttachStateChangeListener(capture(listenerSlot)) } just Runs
@@ -64,10 +64,13 @@ class OnInitiableComponentTest : BaseTest() {
     @BeforeEach
     fun clear() {
         clearMocks(
+            rootView,
             origin,
-            onInitViewModel,
             answers = false
         )
+
+        onInitViewModel = spyk(OnInitViewModel())
+        prepareViewModelMock(onInitViewModel)
     }
 
     @DisplayName("When handleOnInit is called")

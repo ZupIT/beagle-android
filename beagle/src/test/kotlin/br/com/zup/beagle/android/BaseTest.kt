@@ -45,7 +45,6 @@ abstract class BaseTest {
     open fun setUp() {
         mockBeagleEnvironment()
         every { rootView.activity } returns activity
-        every { rootView.getContext() } returns activity
     }
 
     @AfterAll

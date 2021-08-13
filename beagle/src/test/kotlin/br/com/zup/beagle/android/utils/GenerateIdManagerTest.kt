@@ -47,33 +47,11 @@ class GenerateIdManagerTest : BaseTest() {
     private val generatedId = 1
     private lateinit var generateIdManager: GenerateIdManager
 
-    @BeforeAll
-    override fun setUp() {
-        super.setUp()
-
-//        mockkStatic(View::class)
-//        every { View.generateViewId() } returns generatedId
-//        every { rootView.generateViewModelInstance<GenerateIdViewModel>() } returns generateIdViewModel
-//        every { rootView.generateViewModelInstance<ListViewIdViewModel>() } returns listViewIdViewModel
-//        every { rootView.generateViewModelInstance<OnInitViewModel>() } returns onInitViewModel
-        every { rootView.getParentId() } returns 10
-
-//        generateIdManager =
-//            GenerateIdManager(rootView, generateIdViewModel, listViewIdViewModel, onInitViewModel)
-    }
-
     @BeforeEach
     fun clear() {
-        clearMocks(
-            rootView,
-            generateIdViewModel,
-            view,
-            answers = false
-        )
+        clearMocks(generateIdViewModel,rootView)
         mockkStatic(View::class)
         every { View.generateViewId() } returns generatedId
-//        every { rootView.generateViewModelInstance<GenerateIdViewModel>() } returns generateIdViewModel
-        every { rootView.getParentId() } returns 10
 
         generateIdManager =
             GenerateIdManager(rootView, generateIdViewModel, listViewIdViewModel, onInitViewModel)
