@@ -6,13 +6,13 @@ platform :android do
 
   desc "Pull Request verification"
   lane :pull_request_verification do
-    gradle(task: "clean --no-daemon")
-    gradle(task: "detekt --no-daemon")
-    gradle(task: "lintDebug --no-daemon")
-    gradle(task: "jacocoDebugTestReport --no-daemon")
-    gradle(task: "jacocoRootReport --no-daemon")
-    gradle(task: "sample:assembleDebug --no-daemon")
-    gradle(task: "sonarqube --no-daemon")
+    gradle(task: "-x sample:clean clean --no-daemon")
+    gradle(task: "-x sample:detekt detekt --no-daemon")
+    gradle(task: "-x sample:lintDebug lintDebug --no-daemon")
+    gradle(task: "-x sample:jacocoDebugTestReport jacocoDebugTestReport --no-daemon")
+    gradle(task: "-x sample:jacocoRootReport jacocoRootReport --no-daemon")
+###    gradle(task: "sample:assembleDebug assembleDebug --no-daemon")
+    gradle(task: "-x sample:sonarqube sonarqube --no-daemon")
   end
 
   desc "Deploy current code to stage"
