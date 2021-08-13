@@ -22,6 +22,7 @@ import android.graphics.Canvas
 import android.graphics.Path
 import android.graphics.RectF
 import androidx.appcompat.widget.AppCompatImageView
+import br.com.zup.beagle.android.utils.FLOAT_ZERO
 import br.com.zup.beagle.android.widget.core.CornerRadius
 
 @SuppressLint("ViewConstructor")

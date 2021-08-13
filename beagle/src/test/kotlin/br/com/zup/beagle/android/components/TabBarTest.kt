@@ -18,7 +18,6 @@ package br.com.zup.beagle.android.components
 
 import android.widget.FrameLayout
 import br.com.zup.beagle.android.action.Action
-import br.com.zup.beagle.android.components.utils.styleManagerFactory
 import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.setup.BeagleEnvironment
@@ -26,6 +25,7 @@ import br.com.zup.beagle.android.utils.Observer
 import br.com.zup.beagle.android.utils.StyleManager
 import br.com.zup.beagle.android.utils.handleEvent
 import br.com.zup.beagle.android.utils.observeBindChanges
+import br.com.zup.beagle.android.utils.styleManagerFactory
 import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.view.custom.BeagleTabLayout
 import br.com.zup.beagle.android.widget.core.Style

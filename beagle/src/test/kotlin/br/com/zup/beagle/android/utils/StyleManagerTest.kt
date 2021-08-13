@@ -29,7 +29,6 @@ import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.components.Button
 import br.com.zup.beagle.android.components.Text
 import br.com.zup.beagle.android.components.layout.Container
-import br.com.zup.beagle.android.components.utils.applyViewBackgroundAndCorner
 import br.com.zup.beagle.android.context.valueOf
 import br.com.zup.beagle.android.setup.DesignSystem
 import br.com.zup.beagle.android.widget.core.StyleComponent
@@ -75,7 +74,7 @@ class StyleManagerTest : BaseTest() {
 
     @BeforeEach
     fun clear() {
-        mockkStatic("br.com.zup.beagle.android.components.utils.ViewExtensionsKt")
+        mockkStatic("br.com.zup.beagle.android.utils.ViewExtensionsKt")
         clearMocks(
             designSystem,
             context,

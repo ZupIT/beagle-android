@@ -22,6 +22,8 @@ import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.annotation.RegisterWidget
 import br.com.zup.beagle.android.components.Text
 import br.com.zup.beagle.android.utils.StyleManager
+import br.com.zup.beagle.android.utils.applyStyle
+import br.com.zup.beagle.android.utils.styleManagerFactory
 import br.com.zup.beagle.android.utils.toAndroidId
 import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.android.widget.WidgetView
@@ -59,7 +61,7 @@ class ComponentStylizationTest : BaseTest() {
     override fun setUp() {
         super.setUp()
         styleManagerFactory = styleManager
-        mockkStatic("br.com.zup.beagle.android.components.utils.ViewExtensionsKt")
+        mockkStatic("br.com.zup.beagle.android.utils.ViewExtensionsKt")
     }
 
     @BeforeEach
