@@ -11,7 +11,7 @@ platform :android do
     gradle(task: "lintDebug --no-daemon")
     gradle(task: "jacocoDebugTestReport --no-daemon")
     gradle(task: "jacocoRootReport --no-daemon")
-###    gradle(task: "sample:assembleDebug --no-daemon")
+    gradle(task: "sample:assembleDebug --no-daemon")
     gradle(task: "sonarqube --no-daemon")
   end
 
