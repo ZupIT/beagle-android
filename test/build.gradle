@@ -1,5 +1,3 @@
-import br.com.zup.beagle.Dependencies
-
 /*
  * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
@@ -16,24 +14,22 @@ import br.com.zup.beagle.Dependencies
  * limitations under the License.
  */
 
-import br.com.zup.beagle.Dependencies
-
 plugins {
     id 'com.android.library'
     id 'kotlin-android'
 }
 
 android {
-    compileSdkVersion Dependencies.Versions.compileSdk
-    buildToolsVersion Dependencies.Versions.buildTools
+    compileSdkVersion versions.compileSdk
+    buildToolsVersion versions.buildTools
 
     defaultConfig {
-        minSdkVersion Dependencies.Versions.minSdk
-        targetSdkVersion Dependencies.Versions.targetSdk
+        minSdkVersion versions.minSdk
+        targetSdkVersion versions.targetSdk
 
 
-        testInstrumentationRunner Dependencies.GeneralNames.testInstrumentationRunner
-        consumerProguardFiles Dependencies.GeneralNames.consumerProguard
+        testInstrumentationRunner application.generalNames.testInstrumentationRunner
+        consumerProguardFiles application.generalNames.consumerProguard
     }
 
     buildTypes {
@@ -59,11 +55,11 @@ android {
 }
 
 dependencies {
-    implementation Dependencies.GeneralLibraries.yoga
-    implementation Dependencies.GeneralLibraries.soLoader
-    implementation Dependencies.TestLibraries.junit4
-    implementation Dependencies.TestLibraries.mockk
-    implementation Dependencies.TestLibraries.testExt
+    implementation deps.general.yoga
+    implementation deps.general.soLoader
+    implementation deps.test.junit4
+    implementation deps.test.mockk
+    implementation deps.test.testExt
 }
 
 apply from: "$rootDir/maven-publish.gradle"

@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import br.com.zup.beagle.Dependencies
-
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
@@ -24,17 +22,17 @@ apply plugin: 'kotlin-parcelize'
 apply plugin: "org.jetbrains.dokka"
 
 android {
-    compileSdkVersion Dependencies.Versions.compileSdk
-    buildToolsVersion Dependencies.Versions.buildTools
+    compileSdkVersion versions.compileSdk
+    buildToolsVersion versions.buildTools
     testOptions.unitTests.includeAndroidResources = true
 
     defaultConfig {
-        minSdkVersion Dependencies.Versions.minSdk
-        targetSdkVersion Dependencies.Versions.targetSdk
+        minSdkVersion versions.minSdk
+        targetSdkVersion versions.targetSdk
 
 
-        testInstrumentationRunner Dependencies.GeneralNames.testInstrumentationRunner
-        consumerProguardFiles Dependencies.GeneralNames.consumerProguard
+        testInstrumentationRunner application.generalNames.testInstrumentationRunner
+        consumerProguardFiles application.generalNames.consumerProguard
     }
 
     buildTypes {
@@ -75,48 +73,48 @@ android {
 }
 
 dependencies {
-    implementation Dependencies.AndroidxLibraries.appcompat
-    implementation Dependencies.AndroidxLibraries.coreKtx
-    implementation Dependencies.AndroidxLibraries.recyclerView
-    implementation Dependencies.AndroidxLibraries.swipeRefreshLayout
-    implementation Dependencies.AndroidxLibraries.viewModel
-    implementation Dependencies.AndroidxLibraries.viewModelExtensions
-    implementation Dependencies.GeneralLibraries.kotlinReflect
+    implementation deps.androidx.appcompat
+    implementation deps.androidx.coreKtx
+    implementation deps.androidx.recyclerView
+    implementation deps.androidx.swipeRefreshLayout
+    implementation deps.androidx.viewModel
+    implementation deps.androidx.viewModelExtensions
+    implementation deps.general.kotlinReflect
 
-    implementation Dependencies.GeneralLibraries.kotlinCoroutines
+    implementation deps.general.kotlinCoroutines
 
-    api project(Dependencies.Modules.androidAnnotation)
+    api project(deps.localModules.androidAnnotation)
 
-    kapt project(Dependencies.Modules.internalProcessor)
+    kapt project(deps.localModules.internalProcessor)
 
-    implementation Dependencies.GeneralLibraries.yoga
-    implementation Dependencies.GeneralLibraries.soLoader
-    implementation Dependencies.GeneralLibraries.jni
+    implementation deps.general.yoga
+    implementation deps.general.soLoader
+    implementation deps.general.jni
 
-    implementation Dependencies.GoogleLibraries.materialDesign
+    implementation deps.google.materialDesign
 
-    implementation Dependencies.MoshiLibraries.moshi
-    implementation Dependencies.MoshiLibraries.kotlin
-    implementation Dependencies.MoshiLibraries.adapters
+    implementation deps.moshi.moshi
+    implementation deps.moshi.kotlin
+    implementation deps.moshi.adapters
 
     // Unit Testing
-    testImplementation Dependencies.TestLibraries.kotlinCoroutinesTest
-    testImplementation Dependencies.TestLibraries.mockk
-    testImplementation Dependencies.TestLibraries.archCoreTesting
-    testImplementation Dependencies.GeneralLibraries.jsonObject
+    testImplementation deps.test.kotlinCoroutinesTest
+    testImplementation deps.test.mockk
+    testImplementation deps.test.archCoreTesting
+    testImplementation deps.general.jsonObject
 
-    testImplementation Dependencies.TestLibraries.junitApi
-    testImplementation Dependencies.TestLibraries.junitEngine
-    testImplementation Dependencies.TestLibraries.junitParams
-    testImplementation Dependencies.TestLibraries.junit4
-    testImplementation Dependencies.TestLibraries.junitVintageEngine
+    testImplementation deps.test.junitApi
+    testImplementation deps.test.junitEngine
+    testImplementation deps.test.junitParams
+    testImplementation deps.test.junit4
+    testImplementation deps.test.junitVintageEngine
 
-    testImplementation Dependencies.TestLibraries.testRunner
-    testImplementation Dependencies.TestLibraries.testExt
-    testImplementation Dependencies.TestLibraries.testCore
-    testImplementation Dependencies.TestLibraries.testRules
-    testImplementation Dependencies.TestLibraries.robolectric
-    testImplementation Dependencies.TestLibraries.fragmentTest
+    testImplementation deps.test.testRunner
+    testImplementation deps.test.testExt
+    testImplementation deps.test.testCore
+    testImplementation deps.test.testRules
+    testImplementation deps.test.robolectric
+    testImplementation deps.test.fragmentTest
 }
 
 apply from: "$rootDir/maven-publish.gradle"

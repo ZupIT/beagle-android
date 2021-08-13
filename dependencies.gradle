@@ -1,0 +1,147 @@
+/*
+ * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+ext.application = [:]
+
+def application = [:]
+application.id = "br.com.zup.beagle.sample"
+
+def generalNames = [:]
+generalNames.testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+generalNames.sampleTestInstrumentationRunner = "br.com.zup.beagle.sample.SampleTestRunner"
+generalNames.consumerProguard = "consumer-rules.pro"
+application.generalNames = generalNames
+
+def releases = [:]
+releases.versionCode = 1
+releases.versionName = "1.0"
+releases.beagleVersionName = "0.0.1"
+application.releases = releases
+
+ext.application = application
+
+ext.deps = [:]
+
+def versions = [:]
+versions.compileSdk = 30
+versions.minSdk = 19
+versions.targetSdk = 30
+versions.buildTools = "30.0.2"
+versions.kotlin = "1.5.21"
+versions.kotlinCoroutines = "1.5.0"
+versions.kotlinPoet = "1.9.0"
+versions.okio = "2.10.0"
+versions.appcompat = "1.3.1"
+versions.viewModel = "2.3.1"
+versions.recyclerView = "1.2.0"
+versions.swipeRefreshLayout = "1.1.0"
+versions.moshi = "1.12.0"
+versions.soLoader = "0.10.1"
+versions.junit5 = "5.7.0"
+versions.junit4 = "4.13"
+versions.yoga = "1.19.0"
+versions.jni = "0.2.2"
+versions.webSocket = "1.5.2"
+versions.slf4jSimple = "1.7.32"
+versions.kotlinCoroutinesTest = "1.3.9"
+versions.materialDesign = "1.2.1"
+versions.googleAutoService = "1.0"
+versions.jsonObject = "20200518"
+versions.mockk = "1.12.0"
+versions.testRunner = "1.3.1-alpha02"
+versions.testExt = "1.1.3-alpha02"
+versions.archCoreTesting = "2.1.0"
+versions.testRules = "1.3.1-alpha02"
+versions.testCore = "1.3.1-alpha02"
+versions.robolectric = "4.6.1"
+versions.fragmentTest = "1.3.6"
+versions.incap = "0.3"
+versions.kotlinCompileTesting = "1.4.2"
+versions.multidex = "2.0.1"
+ext.versions = versions
+
+def deps = [:]
+
+def localModules = [:]
+localModules.androidSample = ":sample"
+localModules.core = ":beagle"
+localModules.processor = ":processor"
+localModules.internalProcessor = ":internal-processor"
+localModules.androidAnnotation = ":android-annotation"
+localModules.preview = ":preview"
+localModules.commonProcessorSharedCode = ":processor-shared-code"
+localModules.test = ":test"
+deps.localModules = localModules
+
+def processor = [:]
+processor.autoService = "com.google.auto.service:auto-service:$versions.googleAutoService"
+processor.incap = "net.ltgt.gradle.incap:incap:$versions.incap"
+processor.incapPrcessor = "net.ltgt.gradle.incap:incap-processor:$versions.incap"
+
+processor.kotlinPoet = "com.squareup:kotlinpoet:$versions.kotlinPoet"
+processor.okio = "com.squareup.okio:okio:$versions.okio"
+deps.processor = processor
+
+def general = [:]
+general.kotlinCoroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$versions.kotlinCoroutines"
+general.kotlinReflect = "org.jetbrains.kotlin:kotlin-reflect:$versions.kotlin"
+general.soLoader = "com.facebook.soloader:soloader:$versions.soLoader"
+general.yoga = "br.com.zup.beagle:beagle-yoga-layout:$versions.yoga"
+general.jni = "com.facebook.fbjni:fbjni:$versions.jni"
+general.webSocket = "org.java-websocket:Java-WebSocket:$versions.webSocket"
+general.jsonObject = "org.json:json:$versions.jsonObject"
+general.multidex = "androidx.multidex:multidex:$versions.multidex"
+general.slf4jSimple = "org.slf4j:slf4j-simple:$versions.slf4jSimple"
+deps.general = general
+
+def google = [:]
+google.materialDesign = "com.google.android.material:material:$versions.materialDesign"
+deps.google = google
+
+def androidx = [:]
+androidx.appcompat = "androidx.appcompat:appcompat:$versions.appcompat"
+androidx.coreKtx = "androidx.core:core-ktx:$versions.appcompat"
+androidx.recyclerView = "androidx.recyclerview:recyclerview:$versions.recyclerView"
+androidx.swipeRefreshLayout ="androidx.swiperefreshlayout:swiperefreshlayout:$versions.swipeRefreshLayout"
+androidx.viewModel = "androidx.lifecycle:lifecycle-viewmodel-ktx:$versions.viewModel"
+androidx.viewModelExtensions = "androidx.lifecycle:lifecycle-runtime-ktx:$versions.viewModel"
+deps.androidx = androidx
+
+def moshi = [:]
+moshi.moshi = "com.squareup.moshi:moshi:$versions.moshi"
+moshi.kotlin = "com.squareup.moshi:moshi-kotlin:$versions.moshi"
+moshi.adapters = "com.squareup.moshi:moshi-adapters:$versions.moshi"
+deps.moshi = moshi
+
+def test = [:]
+test.junit4 = "junit:junit:$versions.junit4"
+test.junitApi = "org.junit.jupiter:junit-jupiter-api:$versions.junit5"
+test.junitEngine = "org.junit.jupiter:junit-jupiter-engine:$versions.junit5"
+test.junitVintageEngine = "org.junit.vintage:junit-vintage-engine:$versions.junit5"
+test.junitParams = "org.junit.jupiter:junit-jupiter-params:$versions.junit5"
+test.mockk = "io.mockk:mockk:$versions.mockk"
+test.kotlinCoroutinesTest = "org.jetbrains.kotlinx:kotlinx-coroutines-test:$versions.kotlinCoroutinesTest"
+test.archCoreTesting = "androidx.arch.core:core-testing:$versions.archCoreTesting"
+test.testRunner = "androidx.test:runner:$versions.testRunner"
+test.testExt = "androidx.test.ext:junit:$versions.testExt"
+test.testCore = "androidx.test:core:$versions.testCore"
+test.testRules = "androidx.test:rules:$versions.testRules"
+test.robolectric = "org.robolectric:robolectric:$versions.robolectric"
+test.fragmentTest = "androidx.fragment:fragment-testing:$versions.fragmentTest"
+test.kotlinCompileTesting = "com.github.tschuchortdev:kotlin-compile-testing:$versions.kotlinCompileTesting"
+deps.test = test
+
+ext.deps = deps
+

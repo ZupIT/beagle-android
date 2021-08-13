@@ -14,25 +14,23 @@
  * limitations under the License.
  */
 
-import br.com.zup.beagle.Dependencies
-
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'de.mannodermaus.android-junit5'
 
 android {
-    compileSdkVersion Dependencies.Versions.compileSdk
-    buildToolsVersion Dependencies.Versions.buildTools
+    compileSdkVersion versions.compileSdk
+    buildToolsVersion versions.buildTools
     testOptions.unitTests.includeAndroidResources = true
 
     defaultConfig {
-        minSdkVersion Dependencies.Versions.minSdk
-        targetSdkVersion Dependencies.Versions.targetSdk
+        minSdkVersion versions.minSdk
+        targetSdkVersion versions.targetSdk
 
 
-        testInstrumentationRunner Dependencies.GeneralNames.testInstrumentationRunner
+        testInstrumentationRunner application.generalNames.testInstrumentationRunner
 
-        consumerProguardFiles Dependencies.GeneralNames.consumerProguard
+        consumerProguardFiles application.generalNames.consumerProguard
     }
 
     buildTypes {
@@ -63,24 +61,24 @@ android {
 }
 
 dependencies {
-    implementation Dependencies.AndroidxLibraries.appcompat
-    implementation Dependencies.GeneralLibraries.webSocket
-    implementation Dependencies.GeneralLibraries.slf4jSimple
+    implementation deps.androidx.appcompat
+    implementation deps.general.webSocket
+    implementation deps.general.slf4jSimple
 
-    implementation project(Dependencies.Modules.core)
+    implementation project(deps.localModules.core)
 
     // Unit Testing
-    testImplementation project(Dependencies.Modules.test)
-    testImplementation Dependencies.TestLibraries.junitApi
-    testImplementation Dependencies.TestLibraries.junitEngine
-    testImplementation Dependencies.TestLibraries.robolectric
-    testImplementation Dependencies.TestLibraries.mockk
-    testImplementation Dependencies.TestLibraries.junit4
-    testImplementation Dependencies.TestLibraries.junitVintageEngine
-    testImplementation Dependencies.TestLibraries.testRunner
-    testImplementation Dependencies.TestLibraries.testExt
-    testImplementation Dependencies.TestLibraries.testCore
-    testImplementation Dependencies.TestLibraries.testRules
+    testImplementation project(deps.localModules.test)
+    testImplementation deps.test.junitApi
+    testImplementation deps.test.junitEngine
+    testImplementation deps.test.robolectric
+    testImplementation deps.test.mockk
+    testImplementation deps.test.junit4
+    testImplementation deps.test.junitVintageEngine
+    testImplementation deps.test.testRunner
+    testImplementation deps.test.testExt
+    testImplementation deps.test.testCore
+    testImplementation deps.test.testRules
 
 }
 

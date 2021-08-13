@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import br.com.zup.beagle.Dependencies
-
 apply plugin: 'kotlin'
 apply plugin: 'kotlin-kapt'
 
@@ -25,27 +23,27 @@ test {
 
 dependencies {
 
-    implementation (Dependencies.ProcessorLibraries.kotlinPoet) {
+    implementation (deps.processor.kotlinPoet) {
         exclude group: "com.squareup.okio", module: "okio"
     }
 
-    implementation Dependencies.ProcessorLibraries.okio
+    implementation deps.processor.okio
 
-    implementation project(Dependencies.Modules.commonProcessorSharedCode)
-    implementation project(Dependencies.Modules.androidAnnotation)
+    implementation project(deps.localModules.commonProcessorSharedCode)
+    implementation project(deps.localModules.androidAnnotation)
 
-    implementation Dependencies.GeneralLibraries.kotlinReflect
+    implementation deps.general.kotlinReflect
 
-    implementation Dependencies.ProcessorLibraries.incap
-    kapt Dependencies.ProcessorLibraries.incapPrcessor
+    implementation deps.processor.incap
+    kapt deps.processor.incapPrcessor
 
-    implementation Dependencies.ProcessorLibraries.autoService
-    kapt Dependencies.ProcessorLibraries.autoService
+    implementation deps.processor.autoService
+    kapt deps.processor.autoService
 
-    testImplementation Dependencies.TestLibraries.kotlinCompileTesting
-    testImplementation Dependencies.TestLibraries.junitApi
-    testImplementation Dependencies.TestLibraries.junitEngine
-    testImplementation Dependencies.TestLibraries.mockk
+    testImplementation deps.test.kotlinCompileTesting
+    testImplementation deps.test.junitApi
+    testImplementation deps.test.junitEngine
+    testImplementation deps.test.mockk
 }
 
 apply from: "$rootDir/maven-publish.gradle"

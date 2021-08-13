@@ -14,25 +14,23 @@
  * limitations under the License.
  */
 
-import br.com.zup.beagle.Dependencies
-
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion Dependencies.Versions.compileSdk
-    buildToolsVersion Dependencies.Versions.buildTools
+    compileSdkVersion versions.compileSdk
+    buildToolsVersion versions.buildTools
     defaultConfig {
-        applicationId Dependencies.ApplicationId.id
+        applicationId application.id
 
-        minSdkVersion Dependencies.Versions.minSdk
-        targetSdkVersion Dependencies.Versions.targetSdk
+        minSdkVersion versions.minSdk
+        targetSdkVersion versions.targetSdk
 
-        versionCode Dependencies.Releases.versionCode
-        versionName Dependencies.Releases.versionName
+        versionCode application.releases.versionCode
+        versionName application.releases.versionName
 
-        testInstrumentationRunner Dependencies.GeneralNames.sampleTestInstrumentationRunner
+        testInstrumentationRunner application.generalNames.sampleTestInstrumentationRunner
         multiDexEnabled true
     }
 
@@ -70,14 +68,14 @@ android {
 }
 
 dependencies {
-    implementation Dependencies.AndroidxLibraries.appcompat
-    implementation Dependencies.AndroidxLibraries.coreKtx
+    implementation deps.androidx.appcompat
+    implementation deps.androidx.coreKtx
 
-    implementation Dependencies.GeneralLibraries.multidex
-    implementation Dependencies.GeneralLibraries.kotlinCoroutines
+    implementation deps.general.multidex
+    implementation deps.general.kotlinCoroutines
 
-    debugImplementation project(Dependencies.Modules.preview)
+    debugImplementation project(deps.localModules.preview)
 
-    implementation project(Dependencies.Modules.core)
-    kapt project(Dependencies.Modules.processor)
+    implementation project(deps.localModules.core)
+    kapt project(deps.localModules.processor)
 }

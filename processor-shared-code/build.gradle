@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-import br.com.zup.beagle.Dependencies
-
 apply plugin: 'kotlin'
 
 dependencies {
-    implementation Dependencies.ProcessorLibraries.kotlinPoet
-    implementation project(Dependencies.Modules.androidAnnotation)
+    implementation deps.processor.kotlinPoet
+    implementation project(deps.localModules.androidAnnotation)
 }
 
 apply from: "$rootDir/maven-publish.gradle"
