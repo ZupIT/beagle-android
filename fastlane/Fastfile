@@ -9,10 +9,10 @@ platform :android do
     gradle(task: "-x sample:clean -x preview:clean clean")
     gradle(task: "-x sample:detekt -x preview:detekt detekt")
     gradle(task: "-x sample:lintDebug -x preview:lintDebug lintDebug")
-    gradle(task: "-x sample:jacocoDebugTestReport -x preview:jacocoDebugTestReport jacocoDebugTestReport --no-daemon")
+    gradle(task: "-x sample:jacocoDebugTestReport -x preview:jacocoDebugTestReport jacocoDebugTestReport")
     gradle(task: "jacocoRootReport --no-daemon")
-###    gradle(task: "sample:assembleDebug assembleDebug --no-daemon")
-    gradle(task: "./sonarqube sonarqube --no-daemon")
+###    gradle(task: "sample:assembleDebug assembleDebug")
+    gradle(task: "./sonarqube sonarqube")
   end
 
   desc "Deploy current code to stage"
