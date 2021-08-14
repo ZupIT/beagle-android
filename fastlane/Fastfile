@@ -8,7 +8,7 @@ platform :android do
   lane :pull_request_verification do
     gradle(task: "-x sample:clean -x preview:clean clean")
     gradle(task: "-x sample:detekt -x preview:detekt detekt")
-    gradle(task: "-x sample:lintDebug -x preview:lintDebug lintDebug")
+    gradle(task: "beagle:lintDebug")
     gradle(task: "-x sample:jacocoDebugTestReport -x preview:jacocoDebugTestReport jacocoDebugTestReport")
     gradle(task: "jacocoRootReport --no-daemon")
 ###    gradle(task: "sample:assembleDebug assembleDebug")
