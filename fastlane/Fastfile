@@ -10,9 +10,9 @@ platform :android do
     gradle(task: "-x sample:detekt -x preview:detekt detekt")
     gradle(task: "beagle:lintDebug")
     gradle(task: "-x sample:jacocoDebugTestReport -x preview:jacocoDebugTestReport jacocoDebugTestReport")
-    gradle(task: "jacocoRootReport --no-daemon")
+    gradle(task: "jacocoRootReport")
 ###    gradle(task: "sample:assembleDebug assembleDebug")
-    gradle(task: "./sonarqube sonarqube")
+    gradle(task: "sonarqube")
   end
 
   desc "Deploy current code to stage"
