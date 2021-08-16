@@ -70,11 +70,6 @@ android {
         test.java.srcDirs += "src/test/kotlin"
     }
 
-    lintOptions {
-        checkDependencies true
-        ignoreTestSources true
-    }
-
 }
 
 dependencies {

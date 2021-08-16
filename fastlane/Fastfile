@@ -6,12 +6,12 @@ platform :android do
 
   desc "Pull Request verification"
   lane :pull_request_verification do
-    gradle(task: "-x sample:clean -x preview:clean clean")
-    gradle(task: "-x sample:detekt -x preview:detekt detekt")
-    gradle(task: "beagle:lintDebug")
-    gradle(task: "-x sample:jacocoDebugTestReport -x preview:jacocoDebugTestReport jacocoDebugTestReport")
+    gradle(task: "clean")
+    gradle(task: "detekt")
+    gradle(task: "lintDebug")
+    gradle(task: "jacocoDebugTestReport")
     gradle(task: "jacocoRootReport")
-###    gradle(task: "sample:assembleDebug assembleDebug")
+    gradle(task: "sample:assembleDebug")
     gradle(task: "sonarqube")
   end
 
