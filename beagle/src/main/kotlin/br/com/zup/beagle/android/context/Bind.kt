@@ -23,7 +23,11 @@ import br.com.zup.beagle.android.context.tokenizer.TokenParser
 import br.com.zup.beagle.android.utils.BeagleRegex
 import br.com.zup.beagle.android.utils.getExpressions
 import br.com.zup.beagle.core.BeagleJson
+import com.squareup.moshi.rawType
+import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
+import kotlin.reflect.javaType
+import kotlin.reflect.typeOf
 
 @BeagleJson
 sealed class Bind<T> {
@@ -35,18 +39,15 @@ sealed class Bind<T> {
         val expressions: List<ExpressionToken>,
         override val value: String,
         override val type: Type,
-    ) : Bind<T>() {
-        constructor(
-            expressions: List<ExpressionToken>,
-            value: String,
-            type: Class<T>
-        ) : this(expressions, value, type as Type)
-    }
+    ) : Bind<T>()
 
     @BeagleJson
-    data class Value<T : Any>(override val value: T) : Bind<T>() {
-        override val type: Class<T> = value.javaClass
+    data class Value<T : Any> constructor(
+        override val value: T
+    ) : Bind<T>() {
+        override val type: Type = value.javaClass
     }
+
 }
 
 internal inline fun <reified T : Any> expressionOrValueOf(text: String): Bind<T> =
@@ -55,12 +56,28 @@ internal inline fun <reified T : Any> expressionOrValueOf(text: String): Bind<T>
 internal fun expressionOrValueOfNullable(text: String?): Bind<String>? =
     if (text?.hasExpression() == true) expressionOf(text) else valueOfNullable(text)
 
+
 inline fun <reified T> expressionOf(expressionText: String): Bind.Expression<T> {
     val tokenParser = TokenParser()
     val expressionTokens = expressionText.getExpressions().map { expression ->
         tokenParser.parse(expression)
     }
-    return Bind.Expression(expressionTokens, expressionText, T::class.java)
+
+
+    @OptIn(ExperimentalStdlibApi::class)
+    var javaType: Type = typeOf<T>().javaType
+
+    /*
+    *  Moshi always returns Java Class Types when use the function typeOf the type
+    *  is some cases is kotlin Types. As most of the time this object is created by moshi
+    *  need to keep equal the moshi,
+    *  because of this when it is not ParameterizedType will be converted to the java class type.
+    */
+    if (javaType !is ParameterizedType) {
+        javaType = T::class.java
+    }
+
+    return Bind.Expression(expressionTokens, expressionText, javaType)
 }
 
 inline fun <reified T : Any> valueOf(value: T) = Bind.Value(value)

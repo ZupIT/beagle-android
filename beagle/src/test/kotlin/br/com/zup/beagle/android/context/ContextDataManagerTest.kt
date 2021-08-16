@@ -114,7 +114,8 @@ class ContextDataManagerTest : BaseTest() {
 
             // When
             val contextDataManager = spyk<ContextDataManager>(recordPrivateCalls = true)
-            val contexts = contextDataManager.getPrivateField<MutableMap<Int, ContextBinding>>("contexts")
+            val contexts =
+                contextDataManager.getPrivateField<MutableMap<Int, ContextBinding>>("contexts")
             contextDataManager.setPrivateField("globalContext", globalContextMock)
             globalContextObserver.captured.invoke(contextData)
 
@@ -223,7 +224,11 @@ class ContextDataManagerTest : BaseTest() {
         fun viewBinding() {
             // Given
             val viewWithBind = mockk<View>()
-            val bind = Bind.Expression(listOf(), "@{$CONTEXT_ID[0]}", type = Boolean::class.java)
+            val bind: Bind.Expression<Boolean> = Bind.Expression(
+                expressions = listOf(),
+                value = "@{$CONTEXT_ID[0]}",
+                type = Boolean::class.java
+            )
             val contextData = ContextData(CONTEXT_ID, listOf(true))
             val observer = mockk<Observer<Boolean?>>()
             contextDataManager.addContext(viewContext, contextData)
@@ -430,18 +435,22 @@ class ContextDataManagerTest : BaseTest() {
             val contextId2 = RandomData.string()
             val bind = expressionOf<String>("@{$contextId1} @{$contextId2}")
             val viewContext1 = createViewForContext()
-            viewContext1.setContextBinding(ContextBinding(
-                ContextData(
-                    id = contextId1,
-                    value = RandomData.string()
-                ))
+            viewContext1.setContextBinding(
+                ContextBinding(
+                    ContextData(
+                        id = contextId1,
+                        value = RandomData.string()
+                    )
+                )
             )
             val viewContext2 = createViewForContext(viewContext1)
-            viewContext2.setContextBinding(ContextBinding(
-                ContextData(
-                    id = contextId2,
-                    value = RandomData.string()
-                ))
+            viewContext2.setContextBinding(
+                ContextBinding(
+                    ContextData(
+                        id = contextId2,
+                        value = RandomData.string()
+                    )
+                )
             )
 
             // When
@@ -488,8 +497,10 @@ class ContextDataManagerTest : BaseTest() {
             contextDataManager.addContext(viewContext, context)
             contextDataManager.addBinding(viewContext, bind, observer)
             val contexts: Map<Int, ContextBinding> = contextDataManager.getPrivateField("contexts")
-            val contextsWithoutId: Map<View, ContextBinding> = contextDataManager.getPrivateField("contextsWithoutId")
-            val viewBinding: Map<View, MutableSet<Binding<*>>> = contextDataManager.getPrivateField("viewBinding")
+            val contextsWithoutId: Map<View, ContextBinding> =
+                contextDataManager.getPrivateField("contextsWithoutId")
+            val viewBinding: Map<View, MutableSet<Binding<*>>> =
+                contextDataManager.getPrivateField("viewBinding")
             val contextsWithoutIdSizeBefore = contextsWithoutId.size
             val contextsSizeBefore = contexts.size
             val viewBindingSizeBefore = viewBinding.size
@@ -573,7 +584,8 @@ class ContextDataManagerTest : BaseTest() {
             }
             contextDataManager.addContext(viewWithId, contextData2)
 
-            val contextsWithoutId: Map<View, ContextBinding> = contextDataManager.getPrivateField("contextsWithoutId")
+            val contextsWithoutId: Map<View, ContextBinding> =
+                contextDataManager.getPrivateField("contextsWithoutId")
             val contextsWithoutIdSizeBefore = contextsWithoutId.size
 
             // When
@@ -599,8 +611,10 @@ class ContextDataManagerTest : BaseTest() {
 
             val viewWithId = viewWithoutId.apply { every { id } returns 10 }
 
-            val contexts = contextDataManager.getPrivateField<MutableMap<Int, ContextBinding>>("contexts")
-            val contextsWithoutId: Map<View, ContextBinding> = contextDataManager.getPrivateField("contextsWithoutId")
+            val contexts =
+                contextDataManager.getPrivateField<MutableMap<Int, ContextBinding>>("contexts")
+            val contextsWithoutId: Map<View, ContextBinding> =
+                contextDataManager.getPrivateField("contextsWithoutId")
             val contextsWithoutIdSizeBefore = contextsWithoutId.size
 
             // When
@@ -631,7 +645,8 @@ class ContextDataManagerTest : BaseTest() {
             }
             contextDataManager.addContext(viewWithId, contextData)
 
-            val contexts = contextDataManager.getPrivateField<MutableMap<Int, ContextBinding>>("contexts")
+            val contexts =
+                contextDataManager.getPrivateField<MutableMap<Int, ContextBinding>>("contexts")
 
             // When
             contextDataManager.onViewIdChanged(oldId, newId, viewWithId)
@@ -665,7 +680,8 @@ class ContextDataManagerTest : BaseTest() {
             }
             contextDataManager.addContext(newViewWithId, newContextData)
 
-            val contexts = contextDataManager.getPrivateField<MutableMap<Int, ContextBinding>>("contexts")
+            val contexts =
+                contextDataManager.getPrivateField<MutableMap<Int, ContextBinding>>("contexts")
 
             // When
             contextDataManager.onViewIdChanged(oldId, newId, newViewWithId)
