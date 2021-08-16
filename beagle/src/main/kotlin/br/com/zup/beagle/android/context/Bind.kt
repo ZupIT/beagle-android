@@ -23,7 +23,6 @@ import br.com.zup.beagle.android.context.tokenizer.TokenParser
 import br.com.zup.beagle.android.utils.BeagleRegex
 import br.com.zup.beagle.android.utils.getExpressions
 import br.com.zup.beagle.core.BeagleJson
-import com.squareup.moshi.rawType
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 import kotlin.reflect.javaType
