@@ -255,7 +255,11 @@ class ContextDataManagerTest : BaseTest() {
         fun viewBinding() {
             // Given
             val viewWithBind = mockk<View>()
-            val bind = Bind.Expression(listOf(), "@{$CONTEXT_ID[0]}", type = Boolean::class.java)
+            val bind: Bind.Expression<Boolean> = Bind.Expression(
+                expressions = listOf(),
+                value = "@{$CONTEXT_ID[0]}",
+                type = Boolean::class.java
+            )
             val contextData = ContextData(CONTEXT_ID, listOf(true))
             val observer = mockk<Observer<Boolean?>>()
             contextDataManager.addContext(viewContext, contextData)
