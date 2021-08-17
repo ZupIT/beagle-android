@@ -26,14 +26,9 @@ import br.com.zup.beagle.android.utils.evaluateExpression
 import br.com.zup.beagle.android.utils.toAndroidId
 import br.com.zup.beagle.android.utils.toView
 import br.com.zup.beagle.android.widget.RootView
-import br.com.zup.beagle.core.BeagleJson
-import br.com.zup.beagle.core.ServerDrivenComponent
-import br.com.zup.beagle.newanalytics.ActionAnalyticsConfig
 import br.com.zup.beagle.android.widget.core.BeagleJson
 import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 import br.com.zup.beagle.android.analytics.ActionAnalyticsConfig
-import com.squareup.moshi.Types
-import java.lang.reflect.Type
 
 /**
  * Defines the placement of where the children will be inserted in the list or if the contents
