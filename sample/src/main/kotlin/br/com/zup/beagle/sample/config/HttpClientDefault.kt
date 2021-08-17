@@ -131,7 +131,9 @@ class HttpClientDefault : HttpClient, CoroutineScope {
     private fun setRequestBody(urlConnection: HttpURLConnection, request: RequestData) {
         try {
             urlConnection.doOutput = true
-            urlConnection.outputStream.write(request.httpAdditionalData.body?.toByteArray())
+            urlConnection.outputStream.write(
+                request.httpAdditionalData.body?.toString()?.toByteArray()
+            )
             urlConnection.outputStream.flush()
         } catch (e: Exception) {
             e.printStackTrace()

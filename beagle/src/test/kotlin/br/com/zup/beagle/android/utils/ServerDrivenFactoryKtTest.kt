@@ -49,7 +49,7 @@ internal class ServerDrivenFactoryKtTest {
             httpAdditionalData = HttpAdditionalData(
                 method = HttpMethod.POST,
                 headers = mapOf("key" to "value"),
-                body = RandomData.string()
+                body = RandomData
             ),
         )
         val context = ApplicationProvider.getApplicationContext<Context>()
@@ -76,7 +76,7 @@ internal class ServerDrivenFactoryKtTest {
             httpAdditionalData = HttpAdditionalData(
                 method = HttpMethod.POST,
                 headers = mapOf("key" to "value"),
-                body = RandomData.string()
+                body = RandomData
             )
 
         )

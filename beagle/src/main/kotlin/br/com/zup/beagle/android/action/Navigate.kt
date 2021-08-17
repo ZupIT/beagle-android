@@ -17,17 +17,16 @@
 package br.com.zup.beagle.android.action
 
 import android.view.View
-import br.com.zup.beagle.android.annotation.ContextDataValue
+import br.com.zup.beagle.android.analytics.ActionAnalyticsConfig
+import br.com.zup.beagle.android.components.layout.Screen
 import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.context.expressionOrValueOf
 import br.com.zup.beagle.android.context.normalizeContextValue
-import br.com.zup.beagle.android.networking.HttpMethod
+import br.com.zup.beagle.android.networking.HttpAdditionalData
 import br.com.zup.beagle.android.utils.evaluateExpression
 import br.com.zup.beagle.android.view.custom.BeagleNavigator
 import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.android.widget.core.BeagleJson
-import br.com.zup.beagle.android.analytics.ActionAnalyticsConfig
-import br.com.zup.beagle.android.components.layout.Screen
 
 /**
  * Class handles transition actions between screens in the application. Its structure is the following:.
@@ -275,17 +274,3 @@ sealed class Route {
         val screen: Screen,
     ) : Route()
 }
-
-/**
- * HttpAdditionalData is used to do requests.
- * @param method HTTP method.
- * @param headers Header items for the request.
- * @param body Content that will be delivered with the request.
- */
-@BeagleJson
-data class HttpAdditionalData(
-    val method: HttpMethod? = HttpMethod.GET,
-    val headers: Map<String, String>? = hashMapOf(),
-    @ContextDataValue
-    val body: Any? = null,
-)

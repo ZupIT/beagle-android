@@ -20,7 +20,6 @@ import br.com.zup.beagle.android.action.AddChildren
 import br.com.zup.beagle.android.action.Alert
 import br.com.zup.beagle.android.action.Condition
 import br.com.zup.beagle.android.action.Confirm
-import br.com.zup.beagle.android.action.HttpAdditionalData
 import br.com.zup.beagle.android.action.Mode
 import br.com.zup.beagle.android.action.Navigate
 import br.com.zup.beagle.android.action.Route
@@ -50,13 +49,14 @@ import br.com.zup.beagle.android.context.valueOf
 import br.com.zup.beagle.android.mockdata.CustomAndroidAction
 import br.com.zup.beagle.android.mockdata.CustomWidget
 import br.com.zup.beagle.android.mockdata.Person
+import br.com.zup.beagle.android.networking.HttpAdditionalData
 import br.com.zup.beagle.android.networking.HttpMethod
-import br.com.zup.beagle.android.widget.core.Style
 import br.com.zup.beagle.android.widget.core.Flex
 import br.com.zup.beagle.android.widget.core.FlexDirection
 import br.com.zup.beagle.android.widget.core.ImageContentMode
 import br.com.zup.beagle.android.widget.core.ListDirection
 import br.com.zup.beagle.android.widget.core.ScrollAxis
+import br.com.zup.beagle.android.widget.core.Style
 import br.com.zup.beagle.android.widget.core.TextAlignment
 import br.com.zup.beagle.android.widget.core.TextInputType
 
@@ -803,10 +803,10 @@ fun makeActionPushStackWithHardcodedUrlJson() = """
         "url": "$TEST_URL",
         "shouldPrefetch": false,
         "httpAdditionalData": {
-           "method": "POST",
            "headers": {
-                "test": "test"
+                "testKey": "testValue"
            },
+           "method": "POST",
            "body": "test"
         }
       },
@@ -821,7 +821,7 @@ fun makeActionPushStackWithHardcodedUrlObject() = Navigate.PushStack(
         httpAdditionalData = HttpAdditionalData(
             method = HttpMethod.POST,
             body = "test",
-            headers = mapOf("test" to "test")
+            headers = mapOf("testKey" to "testValue")
         )
     ),
     controllerId = "controller"
@@ -869,10 +869,10 @@ fun makeActionPushViewWithHardcodedUrlJson() = """
         "url": "$TEST_URL",
         "shouldPrefetch": false,
         "httpAdditionalData": {
-           "method": "POST",
            "headers": {
-                "test": "test"
+                "testKey": "testValue"
            },
+           "method": "POST",
            "body": "test"
         }
       }
@@ -886,7 +886,7 @@ fun makeActionPushViewWithHardcodedUrlObject() = Navigate.PushView(
         httpAdditionalData = HttpAdditionalData(
             method = HttpMethod.POST,
             body = "test",
-            headers = mapOf("test" to "test")
+            headers = mapOf("testKey" to "testValue")
         )
     )
 )
@@ -936,10 +936,10 @@ fun makeActionResetApplicationWithHardcodedUrlJson() = """
         "url": "$TEST_URL",
         "shouldPrefetch": false,
         "httpAdditionalData": {
-           "method": "POST",
            "headers": {
-                "test": "test"
+                "testKey": "testValue"
            },
+           "method": "POST",
            "body": "test"
         }
       },
@@ -954,7 +954,7 @@ fun makeActionResetApplicationWithHardcodedUrlObject() = Navigate.ResetApplicati
         httpAdditionalData = HttpAdditionalData(
             method = HttpMethod.POST,
             body = "test",
-            headers = mapOf("test" to "test")
+            headers = mapOf("testKey" to "testValue")
         )
     ),
     controllerId = "controller"
@@ -1006,10 +1006,10 @@ fun makeResetStackWithHardcodedUrlJson() = """
         "url": "$TEST_URL",
         "shouldPrefetch": false,
         "httpAdditionalData": {
-           "method": "POST",
            "headers": {
-                "test": "test"
+                "testKey": "testValue"
            },
+           "method": "POST",
            "body": "test"
         }
       },
@@ -1024,7 +1024,7 @@ fun makeResetStackWithHardcodedUrlObject() = Navigate.ResetStack(
         httpAdditionalData = HttpAdditionalData(
             method = HttpMethod.POST,
             body = "test",
-            headers = mapOf("test" to "test")
+            headers = mapOf("testKey" to "testValue")
         )
     ),
     controllerId = "controller"

@@ -49,7 +49,6 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    @Suppress("ComplexMethod")
     private fun menuSelected(itemSelected: Int) {
         when (itemSelected) {
             R.id.remote_server -> startActivity(
