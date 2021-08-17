@@ -26,7 +26,8 @@ interface Analytics {
     /**
      * sends the click event had in the view
      */
-
+    @Deprecated("It was deprecated in version 1.10.0 and will be removed in a future version." +
+            " Use the new analytics.")
     fun trackEventOnClick(event: ClickEvent)
 
     /**
