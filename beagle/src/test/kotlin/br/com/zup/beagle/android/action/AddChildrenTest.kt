@@ -20,6 +20,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import br.com.zup.beagle.android.BaseTest
+import br.com.zup.beagle.android.components.layout.Container
 import br.com.zup.beagle.android.context.expressionOf
 import br.com.zup.beagle.android.logger.BeagleMessageLogs
 import br.com.zup.beagle.android.utils.evaluateExpression
@@ -152,9 +153,9 @@ class AddChildrenTest : BaseTest() {
             // Given
             val action = AddChildren(id, expressionOf("@{test}"), Mode.APPEND)
 
-            val list = arrayListOf(linkedMapOf(Pair("_beagleComponent_", " beagle:container")))
+            val list = listOf(Container())
 
-            every { action.evaluateExpression(rootView, origin, action.value) } returns list as List<ServerDrivenComponent>
+            every { action.evaluateExpression(rootView, origin, action.value) } returns list
 
             // When
             action.execute(rootView, origin)
