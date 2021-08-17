@@ -55,7 +55,6 @@ internal inline fun <reified T : Any> expressionOrValueOf(text: String): Bind<T>
 internal fun expressionOrValueOfNullable(text: String?): Bind<String>? =
     if (text?.hasExpression() == true) expressionOf(text) else valueOfNullable(text)
 
-
 inline fun <reified T> expressionOf(expressionText: String): Bind.Expression<T> {
     val tokenParser = TokenParser()
     val expressionTokens = expressionText.getExpressions().map { expression ->

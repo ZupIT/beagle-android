@@ -35,6 +35,9 @@ inline fun <reified T : BeagleActivity> Context.newServerDrivenIntent(screenJson
  * Create a intent to start BeagleActivity's sub-classes.
  * @property screen to be shown
  */
+@Deprecated("This method was deprecated in version 1.10.0 and will be removed in a future version." +
+        " Use the method with json.",
+    replaceWith = ReplaceWith("newServerDrivenIntent(screenJson = screenJson)"))
 inline fun <reified T : BeagleActivity> Context.newServerDrivenIntent(screen: Screen): Intent {
     return Intent(this, T::class.java).putExtras(BeagleActivity.bundleOf(screen))
 }
