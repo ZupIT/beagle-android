@@ -16,7 +16,7 @@
 
 package br.com.zup.beagle.android.networking
 
-import br.com.zup.beagle.core.BeagleJson
+import br.com.zup.beagle.android.widget.core.BeagleJson
 
 /**
  * Http method to indicate the desired action to be performed for a given resource.

@@ -25,8 +25,9 @@ import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.utils.Observer
 import br.com.zup.beagle.android.utils.observeBindChanges
 import br.com.zup.beagle.android.view.ViewFactory
-import br.com.zup.beagle.core.ServerDrivenComponent
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 import io.mockk.Runs
+import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
@@ -34,6 +35,7 @@ import io.mockk.mockkStatic
 import io.mockk.slot
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -54,15 +56,25 @@ class PullToRefreshTest : BaseComponentTest() {
     private val stringObserverSlot = slot<Observer<String?>>()
     private lateinit var pullToRefreshComponent: PullToRefresh
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
 
-        mockkStatic("br.com.zup.beagle.android.utils.WidgetExtensionsKt")
         mockkStatic(Color::class)
 
         every { ViewFactory.makeSwipeRefreshLayout(any()) } returns swipeRefreshLayout
         every { swipeRefreshLayout.setOnRefreshListener(capture(listenerSlot)) } just Runs
+    }
+
+    @BeforeEach
+    fun clear() {
+        mockkStatic("br.com.zup.beagle.android.utils.WidgetExtensionsKt")
+        clearMocks(
+            beagleFlexView,
+            swipeRefreshLayout,
+            rootView,
+            answers = false
+        )
 
         pullToRefreshComponent = PullToRefresh(
             context,
@@ -106,7 +118,12 @@ class PullToRefreshTest : BaseComponentTest() {
 
             // Then
             verify(exactly = 1) {
-                pullToRefreshComponent.observeBindChanges(rootView, swipeRefreshLayout, isRefreshing, captureLambda())
+                pullToRefreshComponent.observeBindChanges(
+                    rootView,
+                    swipeRefreshLayout,
+                    isRefreshing,
+                    capture(mutableListOf())
+                )
             }
         }
 
@@ -118,7 +135,12 @@ class PullToRefreshTest : BaseComponentTest() {
 
             // Then
             verify(exactly = 1) {
-                pullToRefreshComponent.observeBindChanges(rootView, swipeRefreshLayout, color, captureLambda())
+                pullToRefreshComponent.observeBindChanges(
+                    rootView,
+                    swipeRefreshLayout,
+                    color,
+                    capture(mutableListOf())
+                )
             }
         }
 
@@ -156,7 +178,12 @@ class PullToRefreshTest : BaseComponentTest() {
 
             // Then
             verify(exactly = 0) {
-                pullToRefreshComponent.observeBindChanges(rootView, swipeRefreshLayout, isRefreshing, captureLambda())
+                pullToRefreshComponent.observeBindChanges(
+                    rootView,
+                    swipeRefreshLayout,
+                    isRefreshing,
+                    captureLambda()
+                )
             }
         }
 
@@ -177,7 +204,12 @@ class PullToRefreshTest : BaseComponentTest() {
 
             // Then
             verify(exactly = 0) {
-                pullToRefreshComponent.observeBindChanges(rootView, swipeRefreshLayout, color, captureLambda())
+                pullToRefreshComponent.observeBindChanges(
+                    rootView,
+                    swipeRefreshLayout,
+                    color,
+                    captureLambda()
+                )
             }
         }
     }
@@ -221,7 +253,14 @@ class PullToRefreshTest : BaseComponentTest() {
         }
 
         private fun testIsRefreshingStateChange(refreshing: Boolean?) {
-            every { pullToRefreshComponent.observeBindChanges(rootView, swipeRefreshLayout, isRefreshing, capture(booleanObserverSlot)) } just Runs
+            every {
+                pullToRefreshComponent.observeBindChanges(
+                    rootView,
+                    swipeRefreshLayout,
+                    isRefreshing,
+                    capture(booleanObserverSlot)
+                )
+            } just Runs
 
             // When
             pullToRefreshComponent.buildView(rootView)
@@ -240,7 +279,14 @@ class PullToRefreshTest : BaseComponentTest() {
         fun testChangeColorState() {
             // Given
             val colorString = "#FF0000"
-            every { pullToRefreshComponent.observeBindChanges(rootView, swipeRefreshLayout, color, capture(stringObserverSlot)) } just Runs
+            every {
+                pullToRefreshComponent.observeBindChanges(
+                    rootView,
+                    swipeRefreshLayout,
+                    color,
+                    capture(stringObserverSlot)
+                )
+            } just Runs
             every { Color.parseColor(colorString) } returns -65536
             val expectedColor = Color.parseColor(colorString)
 

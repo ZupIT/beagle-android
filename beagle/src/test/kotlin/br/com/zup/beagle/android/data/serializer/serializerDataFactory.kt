@@ -16,14 +16,10 @@
 
 package br.com.zup.beagle.android.data.serializer
 
-import br.com.zup.beagle.analytics.ClickEvent
 import br.com.zup.beagle.android.action.AddChildren
 import br.com.zup.beagle.android.action.Alert
 import br.com.zup.beagle.android.action.Condition
 import br.com.zup.beagle.android.action.Confirm
-import br.com.zup.beagle.android.action.FormLocalAction
-import br.com.zup.beagle.android.action.FormMethodType
-import br.com.zup.beagle.android.action.FormRemoteAction
 import br.com.zup.beagle.android.action.HttpAdditionalData
 import br.com.zup.beagle.android.action.Mode
 import br.com.zup.beagle.android.action.Navigate
@@ -38,14 +34,10 @@ import br.com.zup.beagle.android.components.LazyComponent
 import br.com.zup.beagle.android.components.ListView
 import br.com.zup.beagle.android.components.TabBar
 import br.com.zup.beagle.android.components.TabBarItem
-import br.com.zup.beagle.android.components.TabItem
-import br.com.zup.beagle.android.components.TabView
 import br.com.zup.beagle.android.components.Text
 import br.com.zup.beagle.android.components.TextInput
 import br.com.zup.beagle.android.components.Touchable
 import br.com.zup.beagle.android.components.WebView
-import br.com.zup.beagle.android.components.form.Form
-import br.com.zup.beagle.android.components.form.FormSubmit
 import br.com.zup.beagle.android.components.form.SimpleForm
 import br.com.zup.beagle.android.components.layout.Container
 import br.com.zup.beagle.android.components.layout.ScrollView
@@ -54,18 +46,19 @@ import br.com.zup.beagle.android.components.refresh.PullToRefresh
 import br.com.zup.beagle.android.components.utils.Template
 import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.context.expressionOf
+import br.com.zup.beagle.android.context.valueOf
 import br.com.zup.beagle.android.mockdata.CustomAndroidAction
 import br.com.zup.beagle.android.mockdata.CustomWidget
 import br.com.zup.beagle.android.mockdata.Person
 import br.com.zup.beagle.android.networking.HttpMethod
-import br.com.zup.beagle.ext.applyFlex
-import br.com.zup.beagle.widget.core.Flex
-import br.com.zup.beagle.widget.core.FlexDirection
-import br.com.zup.beagle.widget.core.ImageContentMode
-import br.com.zup.beagle.widget.core.ListDirection
-import br.com.zup.beagle.widget.core.ScrollAxis
-import br.com.zup.beagle.widget.core.TextAlignment
-import br.com.zup.beagle.widget.core.TextInputType
+import br.com.zup.beagle.android.widget.core.Style
+import br.com.zup.beagle.android.widget.core.Flex
+import br.com.zup.beagle.android.widget.core.FlexDirection
+import br.com.zup.beagle.android.widget.core.ImageContentMode
+import br.com.zup.beagle.android.widget.core.ListDirection
+import br.com.zup.beagle.android.widget.core.ScrollAxis
+import br.com.zup.beagle.android.widget.core.TextAlignment
+import br.com.zup.beagle.android.widget.core.TextInputType
 
 const val TEST_URL = "http://test.com"
 const val TEST_EXPRESSION = "@{test}"
@@ -145,29 +138,6 @@ fun makeCustomWidgetJson() = """
     }
 """
 
-fun makeFormJson() = """
-    {
-        "_beagleComponent_": "beagle:form",
-        "child": ${makeButtonJson()},
-        "onSubmit": [{
-            "_beagleAction_": "beagle:formremoteaction",
-            "path": "$TEST_URL",
-            "method": "POST"
-        }],
-        "group": "A group",
-        "additionalData":{"test" : "test"},
-        "shouldStoreFields": true
-    }
-    """
-
-fun makeFormSubmitJson() = """
-    {
-        "_beagleComponent_": "beagle:formsubmit",
-        "child": ${makeButtonJson()},
-        "enabled": true
-    }
-"""
-
 fun makeJsonGridView() = """
     {
       "_beagleComponent_": "beagle:gridview",
@@ -221,7 +191,7 @@ fun makeLazyComponentJson() = """
 """
 
 fun makeObjectButton() = Button(
-    text = "Test"
+    text = valueOf("Test")
 )
 
 fun makeObjectText() = Text(
@@ -253,28 +223,10 @@ fun makeObjectPageIndicator() = PageIndicator(
     currentPage = expressionOf("@{contextTab}")
 )
 
-fun makeObjectCustomWidget() = CustomWidget(arrayListOf(Person(names = arrayListOf("text"))),
+fun makeObjectCustomWidget() = CustomWidget(
+    arrayListOf(Person(names = arrayListOf("text"))),
     Pair(Person(names = arrayListOf("text")), "second"), "charSequence",
-    Person(names = arrayListOf("text")))
-
-fun makeObjectForm() = Form(
-    child = makeObjectButton(),
-    onSubmit = listOf(
-        FormRemoteAction(
-            path = TEST_URL,
-            method = FormMethodType.POST
-        )
-    ),
-    group = "A group",
-    additionalData = mapOf("test" to "test"),
-    shouldStoreFields = true
-)
-
-fun makeObjectFormSubmit() = FormSubmit(
-    enabled = true,
-    child = Button(
-        text = "Test"
-    )
+    Person(names = arrayListOf("text"))
 )
 
 fun makeObjectGridView() = GridView(
@@ -297,15 +249,19 @@ fun makeObjectGridView() = GridView(
 )
 
 fun makeObjectImageWithLocalPath() = Image(
-    path = ImagePath.Local(
-        mobileId = "imageBeagle"
+    path = valueOf(
+        ImagePath.Local(
+            mobileId = "imageBeagle"
+        )
     ),
     mode = ImageContentMode.FIT_CENTER
 )
 
 fun makeObjectImageWithRemotePath() = Image(
-    path = ImagePath.Remote(
-        url = "http://test.com/test.png"
+    path = valueOf(
+        ImagePath.Remote(
+            url = "http://test.com/test.png"
+        )
     ),
     mode = ImageContentMode.CENTER_CROP
 )
@@ -324,7 +280,6 @@ fun makeListViewJson() = """
        "context": ${makeContextWithPrimitiveValueJson()},
        "onInit": [${makeActionAlertJson()}],
        "dataSource":"@{characters}",
-       "template": ${makeTextJson()},
        "onScrollEnd": [${makeActionAlertJson()}],
        "scrollEndThreshold": 80,
        "isScrollIndicatorVisible": false,
@@ -345,7 +300,6 @@ fun makeObjectListView() = ListView(
     context = makeObjectContextWithPrimitiveValue(),
     onInit = listOf(makeActionAlertObject()),
     dataSource = expressionOf("@{characters}"),
-    template = makeObjectText(),
     onScrollEnd = listOf(makeActionAlertObject()),
     scrollEndThreshold = 80,
     isScrollIndicatorVisible = false,
@@ -362,7 +316,6 @@ fun makeObjectListView() = ListView(
 fun makeScreenComponentJson() = """
     {
         "_beagleComponent_": "beagle:screencomponent",
-        "identifier": "id",
         "safeArea": {
             "top": true,
             "leading": true,
@@ -374,10 +327,8 @@ fun makeScreenComponentJson() = """
             "showBackButton": true
         },
         "child": ${makeContainerJson()},
-        "screenAnalyticsEvent": {
-            "screenName": "Test"
-        },
-        "context": ${makeContextWithPrimitiveValueJson()}
+        "context": ${makeContextWithPrimitiveValueJson()},
+        "id": "id"
     }
 """
 
@@ -422,9 +373,11 @@ fun makeObjectScrollView() = ScrollView(
                 makeObjectText(),
                 makeObjectText(),
             )
-        ).applyFlex(
-            flex = Flex(flexDirection = FlexDirection.ROW)
-        )
+        ).apply {
+            style = Style(
+                flex = Flex(flexDirection = FlexDirection.ROW)
+            )
+        }
     )
 )
 
@@ -493,25 +446,6 @@ fun makeObjectTabBarItem() = TabBarItem(
     )
 )
 
-fun makeTabViewJson() = """
-    {
-        "_beagleComponent_": "beagle:tabview",
-        "children":[${makeTabItemJson()},${makeTabItemJson()},${makeTabItemJson()}],
-        "styleId": "style",
-        "context": ${makeContextWithPrimitiveValueJson()}
-    }
-"""
-
-fun makeObjectTabView() = TabView(
-    children = listOf(
-        makeObjectTabItem(),
-        makeObjectTabItem(),
-        makeObjectTabItem(),
-    ),
-    styleId = "style",
-    context = makeObjectContextWithPrimitiveValue()
-)
-
 fun makeTabItemJson() = """
     {
        "title":"Tab 1",
@@ -521,12 +455,6 @@ fun makeTabItemJson() = """
        }
     }
 """
-
-fun makeObjectTabItem() = TabItem(
-    title = "Tab 1",
-    child = makeObjectButton(),
-    icon = ImagePath.Local("beagle")
-)
 
 fun makeTextInputJson() = """
     {
@@ -546,12 +474,12 @@ fun makeTextInputJson() = """
 """
 
 fun makeObjectTextInput() = TextInput(
-    value = "value",
-    placeholder = "placeholder",
-    readOnly = false,
-    type = TextInputType.EMAIL,
-    error = "error",
-    showError = true,
+    value = valueOf("value"),
+    placeholder = valueOf("placeholder"),
+    readOnly = valueOf(false),
+    type = valueOf(TextInputType.EMAIL),
+    error = valueOf("error"),
+    showError = valueOf(true),
     styleId = "styleId",
     onChange = listOf(
         makeActionAlertObject()
@@ -562,7 +490,7 @@ fun makeObjectTextInput() = TextInput(
     onBlur = listOf(
         makeActionAlertObject()
     ),
-    enabled = false
+    enabled = valueOf(false)
 )
 
 fun makeTextInputWithExpressionJson() = """
@@ -606,23 +534,13 @@ fun makeTouchableJson() = """
     {
         "_beagleComponent_": "beagle:touchable",
         "onPress": [${makeActionAlertJson()}],
-        "child": ${makeTextJson()},
-        "clickAnalyticsEvent": {
-            "category": "category",
-            "label": "label",
-            "value": "value"
-        }
+        "child": ${makeTextJson()}
     }
 """
 
 fun makeObjectTouchable() = Touchable(
     onPress = listOf(makeActionAlertObject()),
-    child = makeObjectText(),
-    clickAnalyticsEvent = ClickEvent(
-        category = "category",
-        label = "label",
-        value = "value"
-    )
+    child = makeObjectText()
 )
 
 fun makeWebViewJson() = """
@@ -788,11 +706,6 @@ fun makeActionFormLocalActionJson() = """
     }
 """
 
-fun makeActionFormLocalActionObject() = FormLocalAction(
-    name = "A name",
-    data = mapOf("test" to "test")
-)
-
 fun makeActionFormRemoteActionJson() = """
     {
         "_beagleAction_": "beagle:formremoteaction",
@@ -800,11 +713,6 @@ fun makeActionFormRemoteActionJson() = """
         "method": "POST"
     }
 """
-
-fun makeActionFormRemoteActionObject() = FormRemoteAction(
-    path = TEST_URL,
-    method = FormMethodType.POST
-)
 
 fun makeActionOpenExternalURLJson() = """
     {

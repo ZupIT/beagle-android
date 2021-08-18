@@ -56,7 +56,7 @@ internal class TokenInterpreter(value: String) {
     private fun readUnescapedString(): String {
         val sb = StringBuilder()
         var specialCharacterFound = false
-        loop@ while (lastChar.toInt() != -1) {
+        loop@ while (lastChar.code != -1) {
             lastChar = reader.read().toChar()
             when (lastChar) {
                 '\uFFFF' -> {

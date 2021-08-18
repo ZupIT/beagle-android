@@ -22,8 +22,8 @@ import br.com.zup.beagle.android.context.tokenizer.ExpressionToken
 import br.com.zup.beagle.android.context.tokenizer.TokenParser
 import br.com.zup.beagle.android.utils.BeagleRegex
 import br.com.zup.beagle.android.utils.getExpressions
-import br.com.zup.beagle.core.BeagleJson
 import java.lang.reflect.ParameterizedType
+import br.com.zup.beagle.android.widget.core.BeagleJson
 import java.lang.reflect.Type
 import kotlin.reflect.javaType
 import kotlin.reflect.typeOf

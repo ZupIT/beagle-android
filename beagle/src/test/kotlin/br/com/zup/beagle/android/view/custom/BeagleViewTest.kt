@@ -30,7 +30,6 @@ import br.com.zup.beagle.android.data.formatUrl
 import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.setup.BeagleSdk
 import br.com.zup.beagle.android.view.ApplicationTest
-import br.com.zup.beagle.android.view.ScreenRequest
 import br.com.zup.beagle.android.view.ServerDrivenActivity
 import br.com.zup.beagle.android.view.viewmodel.AnalyticsViewModel
 import br.com.zup.beagle.android.view.viewmodel.BeagleViewModel
@@ -44,7 +43,6 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.slot
-import io.mockk.unmockkAll
 import io.mockk.verify
 import org.junit.After
 import org.junit.Assert
@@ -67,8 +65,8 @@ internal class BeagleViewTest : BaseTest() {
     private val screenIdentifierSlot = slot<String>()
 
     private val mutableLiveData = MutableLiveData<ViewState>()
-    private val url = "/url".formatUrl()
-    private val component = Text("Test component")
+    private lateinit var url: String
+    private lateinit var component: Text
 
     private lateinit var beagleView: BeagleView
 
@@ -83,11 +81,15 @@ internal class BeagleViewTest : BaseTest() {
         prepareViewModelMock(analyticsViewModel)
         every { analyticsViewModel.createScreenReport(capture(screenIdentifierSlot)) } just Runs
         every { viewModel.fetchComponent(any(), any()) } returns mutableLiveData
-        val activityScenario: ActivityScenario<ServerDrivenActivity> = ActivityScenario.launch(ServerDrivenActivity::class.java)
+        val activityScenario: ActivityScenario<ServerDrivenActivity> =
+            ActivityScenario.launch(ServerDrivenActivity::class.java)
         activityScenario.onActivity {
             val rootView = ActivityRootView(it, 10, "")
             beagleView = BeagleView(rootView, viewModel)
         }
+
+        url = "/url".formatUrl()
+        component = Text("Test component")
     }
 
     @After
@@ -111,7 +113,7 @@ internal class BeagleViewTest : BaseTest() {
         mutableLiveData.postValue(ViewState.DoRender(url, component))
 
         // when
-        beagleView.loadView(ScreenRequest(url))
+        beagleView.loadView(RequestData(url))
 
         // Then
         Assert.assertEquals(url, screenIdentifierSlot.captured)
@@ -123,7 +125,7 @@ internal class BeagleViewTest : BaseTest() {
         mutableLiveData.postValue(ViewState.DoRender(null, component))
 
         // when
-        beagleView.loadView(ScreenRequest(url))
+        beagleView.loadView(RequestData(url))
 
         // Then
         Assert.assertEquals(false, screenIdentifierSlot.isCaptured)

@@ -18,26 +18,28 @@ package br.com.zup.beagle.android.components.utils
 
 import android.util.DisplayMetrics
 import br.com.zup.beagle.android.setup.BeagleEnvironment
-import br.com.zup.beagle.core.CornerRadius
+import br.com.zup.beagle.android.widget.core.CornerRadius
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.unmockkObject
 import org.junit.Assert.assertEquals
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DisplayName("Given a CornerRadiusHelper")
 class CornerRadiusHelperTest {
 
-    @BeforeEach
+    @BeforeAll
     fun setUp() {
         mockkObject(BeagleEnvironment)
         every { BeagleEnvironment.application } returns mockk() {
-            every { resources } returns mockk() {
+            every { resources } returns mockk {
                 every { displayMetrics } returns DisplayMetrics().apply {
                     density = 1f
                 }
@@ -45,7 +47,7 @@ class CornerRadiusHelperTest {
         }
     }
 
-    @AfterEach
+    @AfterAll
     fun tearDown() {
         unmockkObject(BeagleEnvironment)
     }

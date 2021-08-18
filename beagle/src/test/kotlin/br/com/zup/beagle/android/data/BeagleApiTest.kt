@@ -16,8 +16,8 @@
 
 package br.com.zup.beagle.android.data
 
+import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.exception.BeagleApiException
-import br.com.zup.beagle.android.extensions.once
 import br.com.zup.beagle.android.logger.BeagleMessageLogs
 import br.com.zup.beagle.android.networking.HttpAdditionalData
 import br.com.zup.beagle.android.networking.HttpClient
@@ -37,25 +37,23 @@ import io.mockk.mockkConstructor
 import io.mockk.mockkObject
 import io.mockk.mockkStatic
 import io.mockk.slot
-import io.mockk.unmockkAll
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import java.net.URI
 
 private val FINAL_URL = RandomData.string()
 private val REQUEST_DATA = RequestData(url = FINAL_URL)
 
 @DisplayName("Given a Beagle Api")
 @ExperimentalCoroutinesApi
-class BeagleApiTest {
+class BeagleApiTest : BaseTest() {
 
     private val httpClient: HttpClient = mockk()
     private val urlBuilder: UrlBuilder = mockk()
@@ -68,8 +66,10 @@ class BeagleApiTest {
 
     private lateinit var beagleApi: BeagleApi
 
-    @BeforeEach
-    fun setUp() {
+    @BeforeAll
+    override fun setUp() {
+        super.setUp()
+
         MockKAnnotations.init(this)
 
         mockkObject(BeagleMessageLogs)
@@ -89,9 +89,9 @@ class BeagleApiTest {
         every { BeagleMessageLogs.logUnknownHttpError(any()) } just Runs
     }
 
-    @AfterEach
-    fun tearDown() {
-        unmockkAll()
+    @BeforeEach
+    fun clear() {
+        requestDataSlot.clear()
     }
 
     @DisplayName("When fetch data")
@@ -105,7 +105,7 @@ class BeagleApiTest {
             val data = beagleApi.fetchData(REQUEST_DATA)
 
             // Then
-            verify(exactly = once()) { BeagleMessageLogs.logHttpResponseData(responseData) }
+            verify(exactly = 1) { BeagleMessageLogs.logHttpResponseData(responseData) }
             assertEquals(data, responseData)
         }
 
@@ -130,11 +130,17 @@ class BeagleApiTest {
             mockListenersAndExecuteHttpClient()
 
             // When
-            beagleApi.fetchData(REQUEST_DATA.copy(headers = headers))
+            beagleApi.fetchData(
+                REQUEST_DATA.copy(
+                    httpAdditionalData = REQUEST_DATA.httpAdditionalData.copy(
+                        headers = headers
+                    )
+                )
+            )
 
             // Then
             checkFixedHeaders(requestDataSlot[0])
-            assertEquals(headers["a"], requestDataSlot[0].headers["a"])
+            assertEquals(headers["a"], requestDataSlot[0].httpAdditionalData.headers["a"])
         }
 
         @DisplayName("Then should replace header with same keys as fixed ones")
@@ -145,7 +151,13 @@ class BeagleApiTest {
             mockListenersAndExecuteHttpClient()
 
             // When
-            beagleApi.fetchData(REQUEST_DATA.copy(headers = headers))
+            beagleApi.fetchData(
+                REQUEST_DATA.copy(
+                    httpAdditionalData = REQUEST_DATA.httpAdditionalData.copy(
+                        headers = headers
+                    )
+                )
+            )
 
             // Then
             checkFixedHeaders(requestDataSlot[0])
@@ -173,12 +185,8 @@ class BeagleApiTest {
             val convertedRequestData = requestDataSlot[0]
             checkFixedHeaders(convertedRequestData)
             assertEquals(FINAL_URL, convertedRequestData.url)
-            assertEquals(URI(FINAL_URL), convertedRequestData.uri)
-            assertEquals(headers["key"], convertedRequestData.headers["key"])
             assertEquals(headers["key"], convertedRequestData.httpAdditionalData.headers["key"])
-            assertEquals(HttpMethod.POST, convertedRequestData.method)
             assertEquals(HttpMethod.POST, convertedRequestData.httpAdditionalData.method)
-            assertEquals(body, convertedRequestData.body)
             assertEquals(body, convertedRequestData.httpAdditionalData.body)
         }
     }
@@ -203,7 +211,7 @@ class BeagleApiTest {
 
             // Then
             assertEquals(expectedException.message, exceptionThrown.message)
-            verify(exactly = once()) { BeagleMessageLogs.logUnknownHttpError(expectedException) }
+            verify(exactly = 1) { BeagleMessageLogs.logUnknownHttpError(expectedException) }
         }
     }
 
@@ -225,9 +233,13 @@ class BeagleApiTest {
     }
 
     private fun checkFixedHeaders(requestData: RequestData) {
-        assertEquals(BeagleApi.APP_JSON, requestData.headers[BeagleApi.CONTENT_TYPE])
-        assertEquals(BeagleApi.BEAGLE_PLATFORM_HEADER_VALUE, requestData.headers[BeagleApi.BEAGLE_PLATFORM_HEADER_KEY])
-        assertEquals(BeagleApi.APP_JSON, requestData.httpAdditionalData.headers[BeagleApi.CONTENT_TYPE])
-        assertEquals(BeagleApi.BEAGLE_PLATFORM_HEADER_VALUE, requestData.httpAdditionalData.headers[BeagleApi.BEAGLE_PLATFORM_HEADER_KEY])
+        assertEquals(
+            BeagleApi.APP_JSON,
+            requestData.httpAdditionalData.headers[BeagleApi.CONTENT_TYPE]
+        )
+        assertEquals(
+            BeagleApi.BEAGLE_PLATFORM_HEADER_VALUE,
+            requestData.httpAdditionalData.headers[BeagleApi.BEAGLE_PLATFORM_HEADER_KEY]
+        )
     }
 }

@@ -63,71 +63,61 @@ class BeagleActivityTest : BaseSoLoaderTest() {
     private var activity: ServerDrivenActivity? = null
     private val analyticsViewModel = mockk<AnalyticsViewModel>()
     private val screenIdentifierSlot = slot<String>()
+    lateinit var activityScenario: ActivityScenario<ServerDrivenActivity>
 
     @Before
     fun mockBeforeTest() {
         coEvery { componentRequester.fetchComponent(RequestData(url = "/url")) } returns component
-        beagleViewModel = BeagleScreenViewModel(ioDispatcher = TestCoroutineDispatcher(), componentRequester)
+        beagleViewModel =
+            BeagleScreenViewModel(ioDispatcher = TestCoroutineDispatcher(), componentRequester)
         prepareViewModelMock(beagleViewModel)
-        val activityScenario: ActivityScenario<ServerDrivenActivity> = ActivityScenario.launch(ServerDrivenActivity::class.java)
+        activityScenario =
+            ActivityScenario.launch(ServerDrivenActivity::class.java)
         activityScenario.onActivity {
-            activityScenario.moveToState(Lifecycle.State.RESUMED)
+            activityScenario.moveToState(Lifecycle.State.STARTED)
             activity = it
         }
     }
 
     @Test
-    fun `Given a screen request When navigate to Then should call BeagleFragment newInstance with right parameters`() = runBlockingTest {
-        // Given
-        val url = "/url"
-        val screenRequest = RequestData(url = url)
-        prepareViewModelMock(analyticsViewModel)
-        every { analyticsViewModel.createScreenReport(capture(screenIdentifierSlot)) } just Runs
+    fun `Given a screen request When navigate to Then should call BeagleFragment newInstance with right parameters`() =
+        runBlockingTest {
+            // Given
+            val url = "/url"
+            val screenRequest = RequestData(url = url)
+            prepareViewModelMock(analyticsViewModel)
+            every { analyticsViewModel.createScreenReport(capture(screenIdentifierSlot)) } just Runs
 
-        //When
-        activity?.navigateTo(screenRequest, null)
+            //When
+            activity?.navigateTo(screenRequest, null)
+            activityScenario.moveToState(Lifecycle.State.RESUMED)
 
-        //Then
-        assertEquals(url, screenIdentifierSlot.captured)
-    }
+            //Then
+            assertEquals(url, screenIdentifierSlot.captured)
+        }
 
 
     @Test
-    fun `Given a screen with id When navigate to Then should call BeagleFragment newInstance with right parameters`() = runBlockingTest {
-        // Given
-        val screenRequest = RequestData(url = "")
-        val screenId = "myScreen"
-        val screen = Screen(id = screenId, child = component)
+    fun `Given a screen with id When navigate to Then should call BeagleFragment newInstance with right parameters`() =
+        runBlockingTest {
+            // Given
+            val screenRequest = RequestData(url = "")
+            val screenId = "myScreen"
+            val screen = Screen(child = component).apply { id = screenId }
 
 
-        prepareViewModelMock(analyticsViewModel)
-        every { analyticsViewModel.createScreenReport(capture(screenIdentifierSlot)) } just Runs
+            prepareViewModelMock(analyticsViewModel)
+            every { analyticsViewModel.createScreenReport(capture(screenIdentifierSlot)) } just Runs
 
-        //When
-        activity?.navigateTo(screenRequest, screen)
-
-        // THEN
-        assertEquals(screenId, screenIdentifierSlot.captured)
-    }
-
-    @Test
-    fun `Given a screen with identifier When navigate to Then should call BeagleFragment newInstance with right parameters`() = runBlockingTest {
-        // Given
-        val screenRequest = RequestData(url = "")
-        val screenIdentifier = "myScreen"
-        val screen = Screen(identifier = screenIdentifier, child = component)
+            //When
+            activity?.navigateTo(screenRequest, screen)
+            activityScenario.moveToState(Lifecycle.State.RESUMED)
 
 
-        prepareViewModelMock(analyticsViewModel)
-        every { analyticsViewModel.createScreenReport(capture(screenIdentifierSlot)) } just Runs
+            // THEN
+            assertEquals(screenId, screenIdentifierSlot.captured)
+        }
 
-
-        //When
-        activity?.navigateTo(screenRequest, screen)
-
-        // THEN
-        assertEquals(screenIdentifier, screenIdentifierSlot.captured)
-    }
 
 }
 

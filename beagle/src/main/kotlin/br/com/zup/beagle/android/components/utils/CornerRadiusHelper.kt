@@ -17,7 +17,7 @@
 package br.com.zup.beagle.android.components.utils
 
 import br.com.zup.beagle.android.utils.dp
-import br.com.zup.beagle.core.CornerRadius
+import br.com.zup.beagle.android.widget.core.CornerRadius
 
 internal fun CornerRadius.getFloatArray(): FloatArray {
     val radius = radius?.dp()?.toFloat() ?: 0f

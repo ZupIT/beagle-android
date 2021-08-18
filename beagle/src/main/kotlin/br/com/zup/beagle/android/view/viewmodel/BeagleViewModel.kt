@@ -19,15 +19,14 @@ package br.com.zup.beagle.android.view.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import br.com.zup.beagle.android.components.layout.ScreenComponent
 import br.com.zup.beagle.android.data.ComponentRequester
 import br.com.zup.beagle.android.exception.BeagleException
 import br.com.zup.beagle.android.logger.BeagleLoggerProxy
 import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.utils.BeagleRetry
 import br.com.zup.beagle.android.utils.CoroutineDispatchers
-import br.com.zup.beagle.core.IdentifierComponent
-import br.com.zup.beagle.core.ServerDrivenComponent
+import br.com.zup.beagle.android.widget.core.IdentifierComponent
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -89,7 +88,7 @@ internal open class BeagleViewModel(
 
         private fun fetchComponents() {
             job = coroutineScope.launch(ioDispatcher) {
-                val identifier = getComponentIdentifier()
+                val identifier = getIdentifierComponentId()
                 if (requestData.url.isNotEmpty()) {
                     try {
                         setLoading(true)
@@ -128,8 +127,6 @@ internal open class BeagleViewModel(
                 postLiveDataResponse(ViewState.DoCancel)
             }
         }
-
-        private fun getComponentIdentifier() = (screen as? ScreenComponent)?.identifier ?: getIdentifierComponentId()
 
         private fun getIdentifierComponentId() = (screen as? IdentifierComponent)?.id
 

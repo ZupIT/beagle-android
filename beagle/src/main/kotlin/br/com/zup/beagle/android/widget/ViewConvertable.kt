@@ -17,7 +17,7 @@
 package br.com.zup.beagle.android.widget
 
 import android.view.View
-import br.com.zup.beagle.core.ServerDrivenComponent
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 
 /**
  * This interface is responsible to convert any server-driven component to a View in Android

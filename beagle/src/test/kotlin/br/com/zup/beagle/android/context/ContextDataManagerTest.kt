@@ -17,10 +17,11 @@
 package br.com.zup.beagle.android.context
 
 import android.view.View
+import android.view.ViewGroup
 import androidx.collection.LruCache
+import br.com.zup.beagle.R
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.action.SetContextInternal
-import br.com.zup.beagle.android.extensions.once
 import br.com.zup.beagle.android.logger.BeagleMessageLogs
 import br.com.zup.beagle.android.mockdata.createViewForContext
 import br.com.zup.beagle.android.testutil.RandomData
@@ -31,6 +32,7 @@ import br.com.zup.beagle.android.utils.getContextBinding
 import br.com.zup.beagle.android.utils.getContextData
 import br.com.zup.beagle.android.utils.setContextBinding
 import io.mockk.Runs
+import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
@@ -46,6 +48,7 @@ import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -60,9 +63,11 @@ class ContextDataManagerTest : BaseTest() {
     private lateinit var contexts: MutableMap<Int, ContextBinding>
     private lateinit var viewBinding: MutableMap<View, MutableSet<Binding<*>>>
 
-    private val viewContext = createViewForContext()
+    private val viewContext: ViewGroup = mockk(relaxed = true)
+    private val viewId = RandomData.int()
+    private val contextBindingSlot = slot<ContextBinding>()
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
 
@@ -74,11 +79,37 @@ class ContextDataManagerTest : BaseTest() {
         every { BeagleMessageLogs.errorWhileTryingToAccessContext(any()) } just Runs
         every { GlobalContext.set(any(), any()) } just Runs
 
+        every { viewContext.id } returns viewId
+        every { viewContext.parent } returns null
+        every {
+            viewContext.setTag(
+                R.id.beagle_context_view,
+                capture(contextBindingSlot)
+            )
+        } just Runs
+        every { viewContext.getTag(R.id.beagle_context_view) } answers {
+            if (contextBindingSlot.isCaptured) {
+                contextBindingSlot.captured
+            } else {
+                null
+            }
+        }
+    }
+
+    @BeforeEach
+    fun clear() {
+        clearMocks(
+            viewContext,
+            GlobalContext,
+            answers = false
+        )
         contextDataManager = ContextDataManager()
 
         contexts = contextDataManager.getPrivateField("contexts")
         viewBinding = contextDataManager.getPrivateField("viewBinding")
+        contextBindingSlot.clear()
     }
+
 
     @DisplayName("When create the ContextDataManager")
     @Nested
@@ -161,7 +192,7 @@ class ContextDataManagerTest : BaseTest() {
             contextDataManager.addContext(viewContext, contextData)
 
             // Then
-            verify(exactly = once()) { BeagleMessageLogs.globalKeywordIsReservedForGlobalContext() }
+            verify(exactly = 1) { BeagleMessageLogs.globalKeywordIsReservedForGlobalContext() }
         }
 
         @DisplayName("Then should not add context if already exists")
@@ -298,7 +329,7 @@ class ContextDataManagerTest : BaseTest() {
             contextDataManager.linkBindingToContextAndEvaluateThem(viewWithBind)
 
             // Then
-            verify(exactly = once()) { contextDataManager.notifyBindingChanges(contextBinding) }
+            verify(exactly = 1) { contextDataManager.notifyBindingChanges(contextBinding) }
         }
 
         @DisplayName("Then should get value from evaluation")
@@ -316,7 +347,7 @@ class ContextDataManagerTest : BaseTest() {
             contextDataManager.linkBindingToContextAndEvaluateThem(viewContext)
 
             // Then
-            verify(exactly = once()) { observer(value) }
+            verify(exactly = 1) { observer(value) }
         }
 
         @DisplayName("Then should get value from operation")
@@ -334,7 +365,7 @@ class ContextDataManagerTest : BaseTest() {
             contextDataManager.linkBindingToContextAndEvaluateThem(viewContext)
 
             // Then
-            verify(exactly = once()) { observer(value) }
+            verify(exactly = 1) { observer(value) }
         }
 
         @DisplayName("Then should get null value from evaluation")
@@ -352,7 +383,7 @@ class ContextDataManagerTest : BaseTest() {
             contextDataManager.linkBindingToContextAndEvaluateThem(viewContext)
 
             // Then
-            verify(exactly = once()) { observer(null) }
+            verify(exactly = 1) { observer(null) }
         }
 
         @DisplayName("Then should get value from different type")
@@ -419,7 +450,7 @@ class ContextDataManagerTest : BaseTest() {
             contextDataManager.updateContext(viewContext, updateContext)
 
             // Then
-            verify(exactly = once()) { GlobalContext.set(updateContext.value, updateContext.path) }
+            verify(exactly = 1) { GlobalContext.set(updateContext.value, updateContext.path) }
         }
     }
 
@@ -516,7 +547,7 @@ class ContextDataManagerTest : BaseTest() {
             assertTrue { contexts.isEmpty() }
             assertTrue { contextsWithoutId.isEmpty() }
             assertTrue { viewBinding.isEmpty() }
-            verify(exactly = once()) { GlobalContext.clearObserverGlobalContext(any()) }
+            verify(exactly = 1) { GlobalContext.clearObserverGlobalContext(any()) }
         }
     }
 

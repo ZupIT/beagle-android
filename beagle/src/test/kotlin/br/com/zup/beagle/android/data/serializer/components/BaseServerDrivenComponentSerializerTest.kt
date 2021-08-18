@@ -17,7 +17,7 @@
 package br.com.zup.beagle.android.data.serializer.components
 
 import br.com.zup.beagle.android.data.serializer.BaseSerializerTest
-import br.com.zup.beagle.core.ServerDrivenComponent
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 
 abstract class BaseServerDrivenComponentSerializerTest
     : BaseSerializerTest<ServerDrivenComponent>(ServerDrivenComponent::class.java)

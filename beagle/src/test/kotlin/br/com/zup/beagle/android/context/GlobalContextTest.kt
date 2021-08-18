@@ -34,9 +34,7 @@ data class User(
 class GlobalContextTest : BaseTest() {
 
     @BeforeEach
-    override fun setUp() {
-        super.setUp()
-
+    fun clear() {
         GlobalContext.clear()
     }
 

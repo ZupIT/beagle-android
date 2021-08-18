@@ -16,7 +16,7 @@
 
 package br.com.zup.beagle.compiler.shared
 
-import br.com.zup.beagle.annotation.RegisterOperation
+import br.com.zup.beagle.android.annotation.RegisterOperation
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy

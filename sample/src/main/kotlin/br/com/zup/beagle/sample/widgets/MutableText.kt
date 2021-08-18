@@ -20,7 +20,7 @@ import android.graphics.Color
 import android.widget.TextView
 import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.android.widget.WidgetView
-import br.com.zup.beagle.annotation.RegisterWidget
+import br.com.zup.beagle.android.annotation.RegisterWidget
 
 @RegisterWidget("mutableText")
 data class MutableText(

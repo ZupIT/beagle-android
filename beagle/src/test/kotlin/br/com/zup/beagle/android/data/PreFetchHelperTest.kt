@@ -21,7 +21,6 @@ import br.com.zup.beagle.android.action.Navigate
 import br.com.zup.beagle.android.action.Route
 import br.com.zup.beagle.android.components.Text
 import br.com.zup.beagle.android.components.layout.Screen
-import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.context.expressionOf
 import br.com.zup.beagle.android.logger.BeagleMessageLogs
 import br.com.zup.beagle.android.testutil.RandomData
@@ -30,12 +29,11 @@ import io.mockk.Runs
 import io.mockk.called
 import io.mockk.coEvery
 import io.mockk.every
-import io.mockk.impl.annotations.MockK
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.verify
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -53,10 +51,9 @@ class PreFetchHelperTest : BaseTest() {
             Navigate.ResetStack(route)
         )
 
-    @MockK
-    private lateinit var beagleViewModel: BeagleViewModel
+    private val beagleViewModel: BeagleViewModel = mockk()
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
 

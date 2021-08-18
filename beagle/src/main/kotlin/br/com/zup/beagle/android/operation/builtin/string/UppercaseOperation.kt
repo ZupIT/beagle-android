@@ -18,7 +18,7 @@ package br.com.zup.beagle.android.operation.builtin.string
 
 import br.com.zup.beagle.android.operation.Operation
 import br.com.zup.beagle.android.operation.OperationType
-import br.com.zup.beagle.annotation.RegisterOperation
+import br.com.zup.beagle.android.annotation.RegisterOperation
 import java.util.*
 
 @RegisterOperation("uppercase")
@@ -26,7 +26,7 @@ internal class UppercaseOperation : Operation {
 
     override fun execute(vararg params: OperationType?): OperationType {
         val operationType = params[0]?.value
-        return OperationType.TypeString(operationType.toString().toUpperCase(Locale.getDefault()))
+        return OperationType.TypeString(operationType.toString().uppercase())
     }
 
 }

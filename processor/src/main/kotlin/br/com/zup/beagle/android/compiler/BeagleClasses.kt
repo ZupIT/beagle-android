@@ -18,30 +18,17 @@ package br.com.zup.beagle.android.compiler
 
 import br.com.zup.beagle.compiler.shared.BeagleClass
 
-val FORM_LOCAL_ACTION_HANDLER = BeagleClass(
-    "br.com.zup.beagle.android.action",
-    "FormLocalActionHandler"
-)
 val DEEP_LINK_HANDLER = BeagleClass(
     "br.com.zup.beagle.android.navigation",
     "DeepLinkHandler"
+
 )
-val HTTP_CLIENT_HANDLER = BeagleClass(
-    "br.com.zup.beagle.android.networking",
-    "HttpClient"
-)
+
 val HTTP_CLIENT_FACTORY_HANDLER = BeagleClass(
     "br.com.zup.beagle.android.networking",
     "HttpClientFactory"
 )
-val VALIDATOR_HANDLER = BeagleClass(
-    "br.com.zup.beagle.android.components.form.core",
-    "ValidatorHandler"
-)
-val VALIDATOR = BeagleClass(
-    "br.com.zup.beagle.android.components.form.core",
-    "Validator"
-)
+
 val DESIGN_SYSTEM = BeagleClass(
     "br.com.zup.beagle.android.setup",
     "DesignSystem"
@@ -73,18 +60,17 @@ val URL_BUILDER_HANDLER = BeagleClass(
     "br.com.zup.beagle.android.networking.urlbuilder",
     "UrlBuilder"
 )
-val ANALYTICS = BeagleClass(
-    "br.com.zup.beagle.analytics",
-    "Analytics"
-)
+
 val ANALYTICS_PROVIDER = BeagleClass(
-    "br.com.zup.beagle.newanalytics",
+    "br.com.zup.beagle.android.analytics",
     "AnalyticsProvider"
 )
+
 val CONTROLLER_REFERENCE = BeagleClass(
     "br.com.zup.beagle.android.navigation",
     "BeagleControllerReference"
 )
+
 val BEAGLE_CUSTOM_ADAPTER = BeagleClass(
     "br.com.zup.beagle.android.data.serializer.adapter.generic",
     "TypeAdapterResolver"

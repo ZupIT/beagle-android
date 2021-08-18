@@ -61,6 +61,11 @@ android {
         }
     }
 
+    lintOptions {
+        checkDependencies true
+        ignoreTestSources true
+    }
+
     buildFeatures {
         viewBinding true
     }
@@ -81,6 +86,7 @@ dependencies {
     implementation Dependencies.AndroidxLibraries.swipeRefreshLayout
     implementation Dependencies.AndroidxLibraries.viewModel
     implementation Dependencies.AndroidxLibraries.viewModelExtensions
+    implementation Dependencies.GeneralLibraries.kotlinReflect
 
     implementation Dependencies.GeneralLibraries.kotlinCoroutines
 
@@ -115,6 +121,7 @@ dependencies {
     testImplementation Dependencies.TestLibraries.testCore
     testImplementation Dependencies.TestLibraries.testRules
     testImplementation Dependencies.TestLibraries.robolectric
+    testImplementation Dependencies.TestLibraries.fragmentTest
 }
 
 apply from: "$rootDir/maven-publish.gradle"
