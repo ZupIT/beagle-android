@@ -29,9 +29,6 @@ import br.com.zup.beagle.android.action.UndefinedAction
 import br.com.zup.beagle.android.data.serializer.PolymorphicJsonAdapterFactory
 import br.com.zup.beagle.android.data.serializer.generateNameSpaceToDefaultAction
 
-@Deprecated(message = "It was deprecated in version 1.0.0 and will be removed in a future version. " +
-    "Use AndroidActionJsonAdapterFactory instead.",
-    replaceWith = ReplaceWith("AndroidActionJsonAdapterFactory"))
 internal object ActionJsonAdapterFactory {
 
     fun make(factory: PolymorphicJsonAdapterFactory<Action>): PolymorphicJsonAdapterFactory<Action> {

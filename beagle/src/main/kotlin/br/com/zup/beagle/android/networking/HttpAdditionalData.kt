@@ -17,8 +17,10 @@
 package br.com.zup.beagle.android.networking
 
 import android.os.Parcelable
+import br.com.zup.beagle.android.annotation.ContextDataValue
 import br.com.zup.beagle.android.widget.core.BeagleJson
 import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.RawValue
 
 /**
  * HttpAdditionalData is used to do requests.
@@ -31,5 +33,6 @@ import kotlinx.parcelize.Parcelize
 data class HttpAdditionalData(
     val method: HttpMethod = HttpMethod.GET,
     val headers: Map<String, String> = hashMapOf(),
-    val body: String? = null,
+    @ContextDataValue
+    val body: @RawValue Any? = null,
 ) : Parcelable

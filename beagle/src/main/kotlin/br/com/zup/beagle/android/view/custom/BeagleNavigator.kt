@@ -159,7 +159,7 @@ internal object BeagleNavigator {
 
     private fun createRequestData(route: Route.Remote): RequestData {
         val httpAdditionalData = HttpAdditionalData(
-            body = route.httpAdditionalData?.body?.toString(),
+            body = route.httpAdditionalData?.body,
             method = route.httpAdditionalData?.method ?: HttpMethod.GET,
             headers = route.httpAdditionalData?.headers ?: hashMapOf()
         )

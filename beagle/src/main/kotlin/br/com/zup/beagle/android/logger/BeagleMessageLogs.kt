@@ -28,7 +28,7 @@ internal object BeagleMessageLogs {
             Url=${requestData.url}
             Method=${requestData.httpAdditionalData.method}
             Headers=${requestData.httpAdditionalData.headers}
-            Body=${requestData.httpAdditionalData.body}
+            Body=${requestData.httpAdditionalData.body?.toString()}
         """.trimIndent())
     }
 
