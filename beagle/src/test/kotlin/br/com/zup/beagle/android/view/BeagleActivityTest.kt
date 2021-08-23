@@ -89,7 +89,8 @@ class BeagleActivityTest : BaseSoLoaderTest() {
             every { analyticsViewModel.createScreenReport(capture(screenIdentifierSlot)) } just Runs
 
             //When
-            activity?.navigateTo(screenRequest, null)
+            //TODO CONTEXT DATA
+            activity?.navigateTo(screenRequest, null, null)
             activityScenario.moveToState(Lifecycle.State.RESUMED)
 
             //Then
@@ -110,7 +111,8 @@ class BeagleActivityTest : BaseSoLoaderTest() {
             every { analyticsViewModel.createScreenReport(capture(screenIdentifierSlot)) } just Runs
 
             //When
-            activity?.navigateTo(screenRequest, screen)
+            //TODO CONTEXT DATA
+            activity?.navigateTo(screenRequest, screen, null)
             activityScenario.moveToState(Lifecycle.State.RESUMED)
 
 

@@ -19,6 +19,7 @@ package br.com.zup.beagle.android.action
 import android.view.View
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.context.Bind
+import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.context.expressionOf
 import br.com.zup.beagle.android.navigation.DeepLinkHandler
 import br.com.zup.beagle.android.setup.BeagleEnvironment
@@ -43,6 +44,7 @@ import org.junit.jupiter.api.Test
 class NavigateTest : BaseTest() {
 
     private val deepLinkHandler: DeepLinkHandler = mockk()
+    private val contextDataStub = ContextData(id = "test", value = "")
 
     private val view: View = mockk()
 
@@ -159,8 +161,9 @@ class NavigateTest : BaseTest() {
                     rootView,
                     urlValue,
                     data,
-                    shouldResetApplication
-                )
+                    shouldResetApplication,
+
+                    )
             }
         }
 
@@ -169,8 +172,8 @@ class NavigateTest : BaseTest() {
         fun testResetApplication() {
             // Given
             val route = Route.Remote(RandomData.httpUrl())
-            val navigate = Navigate.ResetApplication(route)
-            every { BeagleNavigator.resetApplication(any(), any(), any()) } just Runs
+            val navigate = Navigate.ResetApplication(route, context = contextDataStub)
+            every { BeagleNavigator.resetApplication(any(), any(), any(), contextDataStub) } just Runs
 
             // When
             navigate.execute(rootView, view)
@@ -180,7 +183,8 @@ class NavigateTest : BaseTest() {
                 BeagleNavigator.resetApplication(
                     rootView.getContext(),
                     route,
-                    null
+                    null,
+                    contextDataStub
                 )
             }
         }
@@ -190,14 +194,14 @@ class NavigateTest : BaseTest() {
         fun testResetStack() {
             // Given
             val route = Route.Remote(RandomData.httpUrl())
-            val navigate = Navigate.ResetStack(route)
-            every { BeagleNavigator.resetStack(any(), any(), any()) } just Runs
+            val navigate = Navigate.ResetStack(route, context = contextDataStub)
+            every { BeagleNavigator.resetStack(any(), any(), any(), contextDataStub) } just Runs
 
             // When
             navigate.execute(rootView, view)
 
             // Then
-            verify(exactly = 1) { BeagleNavigator.resetStack(rootView.getContext(), route, null) }
+            verify(exactly = 1) { BeagleNavigator.resetStack(rootView.getContext(), route, null, contextDataStub) }
         }
 
         @DisplayName("Then should call pushView if type is PushView")
@@ -205,14 +209,14 @@ class NavigateTest : BaseTest() {
         fun testPushView() {
             // Given
             val route = Route.Remote(RandomData.httpUrl())
-            val navigate = Navigate.PushView(route)
-            every { BeagleNavigator.pushView(any(), any()) } just Runs
+            val navigate = Navigate.PushView(route, context = contextDataStub)
+            every { BeagleNavigator.pushView(any(), any(), contextDataStub) } just Runs
 
             // When
             navigate.execute(rootView, view)
 
             // Then
-            verify(exactly = 1) { BeagleNavigator.pushView(rootView.getContext(), route) }
+            verify(exactly = 1) { BeagleNavigator.pushView(rootView.getContext(), route, contextDataStub) }
         }
 
         @DisplayName("Then should call pushView with expression if type is PushView")
@@ -220,12 +224,12 @@ class NavigateTest : BaseTest() {
         fun testPushViewWithExpression() {
             // Given
             val route = Route.Remote(expressionOf("@{test}"))
-            val navigate = Navigate.PushView(route).apply {
+            val navigate = Navigate.PushView(route, context = contextDataStub).apply {
                 every {
                     evaluateExpression(rootView, view, any<Bind<Any>>())
                 } returns "test"
             }
-            every { BeagleNavigator.pushView(any(), any()) } just Runs
+            every { BeagleNavigator.pushView(any(), any(), contextDataStub) } just Runs
 
             // When
             navigate.execute(rootView, view)
@@ -234,7 +238,8 @@ class NavigateTest : BaseTest() {
             verify(exactly = 1) {
                 BeagleNavigator.pushView(
                     rootView.getContext(),
-                    route.copy(url = Bind.Value("test"))
+                    route.copy(url = Bind.Value("test")),
+                    contextDataStub
                 )
             }
         }
@@ -243,28 +248,28 @@ class NavigateTest : BaseTest() {
         @Test
         fun testPopStack() {
             // Given
-            val navigate = Navigate.PopStack()
-            every { BeagleNavigator.popStack(any()) } just Runs
+            val navigate = Navigate.PopStack(context = contextDataStub)
+            every { BeagleNavigator.popStack(any(), contextDataStub) } just Runs
 
             // When
             navigate.execute(rootView, view)
 
             // Then
-            verify(exactly = 1) { BeagleNavigator.popStack(rootView.getContext()) }
+            verify(exactly = 1) { BeagleNavigator.popStack(rootView.getContext(), contextDataStub) }
         }
 
         @DisplayName("Then should call popView if type is PopView")
         @Test
         fun testPopView() {
             // Given
-            val navigate = Navigate.PopView()
+            val navigate = Navigate.PopView(context = contextDataStub)
             every { BeagleNavigator.popView(any()) } just Runs
 
             // When
             navigate.execute(rootView, view)
 
             // Then
-            verify(exactly = 1) { BeagleNavigator.popView(rootView.getContext()) }
+            verify(exactly = 1) { BeagleNavigator.popView(rootView.getContext(), contextDataStub) }
         }
 
         @DisplayName("Then should call popToView if type is PopToView")
@@ -272,14 +277,14 @@ class NavigateTest : BaseTest() {
         fun testPopToView() {
             // Given
             val path = RandomData.httpUrl()
-            val navigate = Navigate.PopToView(path)
-            every { BeagleNavigator.popToView(any(), any()) } just Runs
+            val navigate = Navigate.PopToView(path, context = contextDataStub)
+            every { BeagleNavigator.popToView(any(), any(), contextDataStub) } just Runs
 
             // When
             navigate.execute(rootView, view)
 
             // Then
-            verify(exactly = 1) { BeagleNavigator.popToView(rootView.getContext(), path) }
+            verify(exactly = 1) { BeagleNavigator.popToView(rootView.getContext(), path, contextDataStub) }
         }
 
         @DisplayName("Then should call popToView with expression if type is PopToView")
@@ -288,18 +293,18 @@ class NavigateTest : BaseTest() {
             // Given
             val path = expressionOf<String>("@{test}")
             val pathValue = "test"
-            val navigate = Navigate.PopToView(path).apply {
+            val navigate = Navigate.PopToView(path, context = contextDataStub).apply {
                 every {
                     evaluateExpression(rootView, view, any<Bind<Any>>())
                 } returns pathValue
             }
-            every { BeagleNavigator.popToView(any(), any()) } just Runs
+            every { BeagleNavigator.popToView(any(), any(), contextDataStub) } just Runs
 
             // When
             navigate.execute(rootView, view)
 
             // Then
-            verify(exactly = 1) { BeagleNavigator.popToView(rootView.getContext(), pathValue) }
+            verify(exactly = 1) { BeagleNavigator.popToView(rootView.getContext(), pathValue, contextDataStub) }
         }
 
         @DisplayName("Then should call pushStack if type is PushStack")
@@ -307,14 +312,14 @@ class NavigateTest : BaseTest() {
         fun testPushStack() {
             // Given
             val route = Route.Remote(RandomData.httpUrl())
-            val navigate = Navigate.PushStack(route)
-            every { BeagleNavigator.pushStack(any(), any(), any()) } just Runs
+            val navigate = Navigate.PushStack(route, context = contextDataStub)
+            every { BeagleNavigator.pushStack(any(), any(), any(), contextDataStub) } just Runs
 
             // When
             navigate.execute(rootView, view)
 
             // Then
-            verify(exactly = 1) { BeagleNavigator.pushStack(rootView.getContext(), route, null) }
+            verify(exactly = 1) { BeagleNavigator.pushStack(rootView.getContext(), route, null, contextDataStub) }
         }
     }
 }

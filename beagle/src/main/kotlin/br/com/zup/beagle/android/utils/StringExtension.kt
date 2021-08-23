@@ -14,23 +14,13 @@
  * limitations under the License.
  */
 
-package br.com.zup.beagle.android.utils;
+package br.com.zup.beagle.android.utils
 
-import static org.junit.Assert.assertEquals;
-
-import org.junit.jupiter.api.Test;
-
-public class BeagleUtilsTest {
-
-    @Test
-    public void toAndroidId_should_return_3546_when_value_is_oi() {
-        // Given
-        final String myId = "oi";
-
-        // When
-        final int result = BeagleUtils.toAndroidId(myId);
-
-        // Then
-        assertEquals(3546, result);
+internal fun String.toAndroidId(): Int {
+    // Validation required to avoid conflict of View.generateViewId() with a component's numeral id
+    return if (toIntOrNull() != null) {
+        toInt()
+    } else {
+        hashCode()
     }
 }

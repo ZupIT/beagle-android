@@ -155,8 +155,8 @@ class ViewExtensionsKtTest : BaseTest() {
         @Test
         fun checkIfContextBindingWasSet() {
             // Given
-            val contextBinding = mockk<ContextBinding>(relaxed = true)
-            val bindingSlot = slot<ContextBinding>()
+            val contextBinding = setOf<ContextBinding>()
+            val bindingSlot = slot<Set<ContextBinding>>()
             every { view.getContextBinding() } returns contextBinding
             every { view.setContextBinding(capture(bindingSlot)) } just Runs
 
@@ -164,8 +164,8 @@ class ViewExtensionsKtTest : BaseTest() {
             view.setContextData(contextData)
 
             // Then
-            assertEquals(bindingSlot.captured.context, contextData)
-            assertEquals(bindingSlot.captured.bindings, contextBinding.bindings)
+            assertEquals(contextData, bindingSlot.captured.first().context)
+            assertEquals(emptySet<Bind<*>>(), bindingSlot.captured.first().bindings)
         }
 
         @DisplayName("Then should not set bindings")
@@ -173,7 +173,7 @@ class ViewExtensionsKtTest : BaseTest() {
         fun checkIfContextBindingWasNotSet() {
             // Given
             val expectedBindings = mutableSetOf<Bind<*>>()
-            val bindingSlot = slot<ContextBinding>()
+            val bindingSlot = slot<Set<ContextBinding>>()
             every { view.getContextBinding() } returns null
             every { view.setContextBinding(capture(bindingSlot)) } just Runs
 
@@ -181,8 +181,8 @@ class ViewExtensionsKtTest : BaseTest() {
             view.setContextData(contextData)
 
             // Then
-            assertEquals(bindingSlot.captured.context, contextData)
-            assertEquals(bindingSlot.captured.bindings, expectedBindings)
+            assertEquals(bindingSlot.captured.first().context, contextData)
+            assertEquals(bindingSlot.captured.first().bindings, expectedBindings)
         }
     }
 

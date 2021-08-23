@@ -22,11 +22,13 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.test.core.app.ApplicationProvider
 import br.com.zup.beagle.android.MyBeagleSetup
+import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.networking.HttpAdditionalData
 import br.com.zup.beagle.android.networking.HttpMethod
 import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.setup.BeagleSdk
 import br.com.zup.beagle.android.testutil.RandomData
+import br.com.zup.beagle.android.view.BeagleActivity.Companion.CONTEXT_DATA_KEY
 import br.com.zup.beagle.android.view.ServerDrivenActivity
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -39,6 +41,8 @@ private const val KEY = "FIRST_SCREEN_REQUEST_KEY"
 @DisplayName("Given a Context")
 @RunWith(RobolectricTestRunner::class)
 internal class ServerDrivenFactoryKtTest {
+
+    private val contextData = ContextData(id = "test", value = "")
 
     @Test
     @DisplayName("When newServerDrivenIntent is called Then should pass RequestData through bundle")
@@ -55,16 +59,20 @@ internal class ServerDrivenFactoryKtTest {
         val context = ApplicationProvider.getApplicationContext<Context>()
 
         // When
-        val result = context.newServerDrivenIntent<ServerDrivenActivity>(requestData)
+        val result = context.newServerDrivenIntent<ServerDrivenActivity>(requestData, contextData)
 
         // Then
         val expected = Intent()
         val bundle = Bundle()
         bundle.putParcelable(KEY, requestData)
+        bundle.putParcelable(CONTEXT_DATA_KEY, contextData)
+
         expected.putExtras(bundle)
+
 
         assertEquals(expected.extras!!.size(), result.extras!!.size())
         assertEquals(expected.extras!!.get(KEY), result.extras!!.get(KEY))
+        assertEquals(expected.extras!!.get(CONTEXT_DATA_KEY), result.extras!!.get(CONTEXT_DATA_KEY))
     }
 
     @Test
@@ -85,15 +93,17 @@ internal class ServerDrivenFactoryKtTest {
         MyBeagleSetup().init(context as Application)
 
         // When
-        val result = context.newServerDrivenIntent<ServerDrivenActivity>(requestData)
+        val result = context.newServerDrivenIntent<ServerDrivenActivity>(requestData, contextData)
 
         // Then
         val expected = Intent()
         val bundle = Bundle()
         bundle.putParcelable(KEY, requestData)
+        bundle.putParcelable(CONTEXT_DATA_KEY, contextData)
         expected.putExtras(bundle)
 
         assertEquals(expected.extras!!.size(), result.extras!!.size())
         assertEquals(expected.extras!!.get(KEY), result.extras!!.get(KEY))
+        assertEquals(expected.extras!!.get(CONTEXT_DATA_KEY), result.extras!!.get(CONTEXT_DATA_KEY))
     }
 }

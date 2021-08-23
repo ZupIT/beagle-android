@@ -28,7 +28,7 @@ import br.com.zup.beagle.android.context.ContextComponent
 import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.data.serializer.BeagleSerializer
 import br.com.zup.beagle.android.utils.COMPONENT_NO_ID
-import br.com.zup.beagle.android.utils.getContextData
+import br.com.zup.beagle.android.utils.getListContextData
 import br.com.zup.beagle.android.utils.isInitiableComponent
 import br.com.zup.beagle.android.utils.safeGet
 import br.com.zup.beagle.android.utils.toAndroidId
@@ -84,7 +84,7 @@ internal class ListViewHolder(
         if (view.isInitiableComponent()) {
             viewsWithOnInit.add(view)
         }
-        if (view.getContextData() != null) {
+        if (view.getListContextData() != null) {
             viewsWithContext.add(view)
         }
         if (view is ImageView) {
@@ -270,10 +270,12 @@ internal class ListViewHolder(
 
     private fun setDefaultContextToEachContextView() {
         viewsWithContext.forEach { view ->
-            val contextInManager = listViewModels.contextViewModel.getContextData(view)
-            val savedContext = contextComponents.firstOrNull { it.id == view.getContextData()?.id }
-            val contextToUseAsDefault = contextInManager ?: savedContext
-            contextToUseAsDefault?.let { contextDefault ->
+            val contextsInManager = listViewModels.contextViewModel.getListContextData(view)
+            val savedContext = contextComponents.firstOrNull { context ->
+                view.getListContextData()?.find { it.id == context.id } != null
+            }
+            val contextsToUseAsDefault = contextsInManager ?: listOf(savedContext)
+            contextsToUseAsDefault.filterNotNull().forEach { contextDefault ->
                 listViewModels.contextViewModel.addContext(
                     view,
                     contextDefault,

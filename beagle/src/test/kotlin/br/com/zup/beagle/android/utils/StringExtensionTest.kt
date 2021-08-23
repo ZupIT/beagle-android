@@ -16,17 +16,32 @@
 
 package br.com.zup.beagle.android.utils
 
-import br.com.zup.beagle.android.view.BeagleActivity
-import br.com.zup.beagle.android.view.custom.BeagleNavigator
+import org.junit.Assert.assertEquals
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 
+import org.junit.jupiter.api.Test
 
-internal fun BeagleActivity.configureSupportActionBar() {
-    val toolbar = this.getToolbar()
-    if (this.supportActionBar == null) {
-        this.setSupportActionBar(toolbar)
-        this.supportActionBar?.hide()
+@DisplayName("Given a String")
+class StringExtensionTest {
+
+    @DisplayName("When call to android id")
+    @Nested
+    inner class AndroidIdTest {
+
+        @DisplayName("Then should return a correct hash")
+        @Test
+        fun testAndroidId() {
+            // Given
+            val myId = "text"
+
+            // When
+            val result = myId.toAndroidId()
+
+            // Then
+            assertEquals(3556653, result.toLong())
+        }
+
     }
-    toolbar.setNavigationOnClickListener {
-        BeagleNavigator.popView(this)
-    }
+
 }

@@ -92,10 +92,10 @@ class ScreenContextViewModelTest: BaseTest() {
     @Test
     fun `GIVEN ScreenContextViewModel WHEN getContextData THEN should call getContextData`() {
         // When
-        screenContextViewModel.getContextData(view)
+        screenContextViewModel.getListContextData(view)
 
         // Then
-        verify(exactly = 1) { contextDataManager.getContextData(view) }
+        verify(exactly = 1) { contextDataManager.getListContextData(view) }
     }
 
     @Test

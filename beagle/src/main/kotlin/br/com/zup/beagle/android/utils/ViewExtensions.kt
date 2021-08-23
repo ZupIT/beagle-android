@@ -39,8 +39,8 @@ const val FLOAT_ZERO = 0.0f
 internal fun View.findParentContextWithId(contextId: String): View? {
     var parentView: View? = this.getParentContextData()
     do {
-        val context = parentView?.getContextBinding()
-        if (context != null && context.context.id == contextId) {
+        val contextBinding = parentView?.getContextBinding()
+        if (contextBinding != null && contextBinding.find { it.context.id == contextId } != null) {
             return parentView
         }
         parentView = (parentView?.parent as? ViewGroup)?.getParentContextData()
@@ -56,7 +56,7 @@ internal fun View.getAllParentContexts(): MutableList<ContextBinding> {
     do {
         val contextBinding = parentView?.getContextBinding()
         if (contextBinding != null) {
-            contexts.add(contextBinding)
+            contexts.addAll(contextBinding)
         }
         parentView = (parentView?.parent as? ViewGroup)?.getParentContextData()
     } while (parentView != null)
@@ -65,13 +65,13 @@ internal fun View.getAllParentContexts(): MutableList<ContextBinding> {
 }
 
 internal fun View.getParentContextData(): View? {
-    if (this.getContextData() != null) {
+    if (this.getListContextData() != null) {
         return this
     }
 
     var parentView: View? = this.parent as? ViewGroup
     do {
-        if (parentView?.getContextData() != null) {
+        if (parentView?.getListContextData() != null) {
             break
         }
         parentView = parentView?.parent as? ViewGroup
@@ -82,24 +82,32 @@ internal fun View.getParentContextData(): View? {
 
 internal fun View.setContextData(context: ContextData) {
     val normalizedContext = context.normalize()
-    val contextBinding = getContextBinding()
-    if (contextBinding != null) {
-        setContextBinding(ContextBinding(normalizedContext, contextBinding.bindings))
+    val contextBindings = getContextBinding()
+    if (contextBindings != null && contextBindings.isNotEmpty()) {
+        val contextBindingsMutable = contextBindings.toMutableSet()
+        val currentContextBinding = contextBindingsMutable.find { contextInsideBinding ->
+            contextInsideBinding.context.id == normalizedContext.id
+        }
+        contextBindingsMutable.remove(currentContextBinding)
+        contextBindingsMutable.add(ContextBinding(normalizedContext,
+            currentContextBinding?.bindings ?: mutableSetOf()))
+        setContextBinding(contextBindingsMutable)
     } else {
-        setContextBinding(ContextBinding(normalizedContext))
+        setContextBinding(setOf(ContextBinding(normalizedContext)))
     }
 }
 
-internal fun View.getContextData(): ContextData? {
-    return getContextBinding()?.context
+internal fun View.getListContextData(): List<ContextData>? {
+    return getContextBinding()?.map { it.context }
 }
 
-internal fun View.setContextBinding(contextBinding: ContextBinding) {
-    setTag(R.id.beagle_context_view, contextBinding)
+internal fun View.setContextBinding(contextBindings: Set<ContextBinding>) {
+    setTag(R.id.beagle_context_view, contextBindings)
 }
 
-internal fun View.getContextBinding(): ContextBinding? {
-    return getTag(R.id.beagle_context_view) as? ContextBinding
+internal fun View.getContextBinding(): Set<ContextBinding>? {
+    @Suppress("UNCHECKED_CAST")
+    return getTag(R.id.beagle_context_view) as? Set<ContextBinding>?
 }
 
 internal fun View.setIsAutoGenerateIdEnabled(autoGenerateId: Boolean) {
