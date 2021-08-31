@@ -244,7 +244,7 @@ internal class ToolbarManagerTest : BaseTest() {
         every { context.getToolbar() } returns toolbar
         every { toolbar.menu } returns menu
         val navigationBarItems = listOf(
-            NavigationBarItem(text = "Stub", image = ImagePath.Local("image"), action = action)
+            NavigationBarItem(text = "Stub", image = "image", action = action)
         )
         every { navigationBar.navigationBarItems } returns navigationBarItems
         val menuItem = spyk<MenuItem>()
