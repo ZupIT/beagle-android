@@ -57,14 +57,14 @@ data class SafeArea(
 )
 
 /**
- *  Defines a List of navigation bar items.
+ *  Defines a list of navigation bar items.
  *
  * @see Accessibility
  *
- * @param text define the Title on the navigation bar
- * @param image defines an image for your navigation bar
- * @param action defines an action to be called when the item is clicked on.
- * @param accessibility define Accessibility details for the item
+ * @param text defines the description for the item
+ * @param image defines the local image for the item
+ * @param action defines an action to be called when the item is clicked on
+ * @param accessibility defines the accessibility details for the item
  *
  */
 @BeagleJson(name = "navigationBarItem")
