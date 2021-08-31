@@ -14,23 +14,11 @@
  * limitations under the License.
  */
 
-package br.com.zup.beagle.android.data.cache
+package br.com.zup.beagle.android.networking
 
-import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
+typealias OnSuccess = (responseData: ResponseData) -> Unit
+typealias OnError = (responseData: ResponseData) -> Unit
 
-internal object BeagleCacheHelper {
-    private val cacheMap = mutableMapOf<String, ServerDrivenComponent>()
-
-    fun cache(
-        url: String,
-        obj: ServerDrivenComponent
-    ): ServerDrivenComponent {
-        cacheMap[url] = obj
-
-        return obj
-    }
-
-    fun getFromCache(url: String) = cacheMap.containsKey(url).let {
-        cacheMap[url]
-    }
+interface RequestCall {
+    fun cancel()
 }

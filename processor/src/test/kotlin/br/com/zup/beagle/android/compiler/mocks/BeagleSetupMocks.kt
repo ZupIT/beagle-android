@@ -32,12 +32,12 @@ const val COMPLETE_BEAGLE_CUSTOM_CLASS =
         import br.com.zup.beagle.android.navigation.DeepLinkHandler
         import br.com.zup.beagle.android.setup.DesignSystem
         import br.com.zup.beagle.android.networking.HttpClientFactory
+        import br.com.zup.beagle.android.networking.ViewClient
         import br.com.zup.beagle.android.imagedownloader.BeagleImageDownloader
         import br.com.zup.beagle.android.logger.BeagleLogger
         import br.com.zup.beagle.android.networking.HttpClient
         import br.com.zup.beagle.android.annotation.RegisterOperation
         import br.com.zup.beagle.android.operation.Operation
-        import br.com.zup.beagle.android.store.StoreHandler
         import br.com.zup.beagle.android.networking.urlbuilder.UrlBuilder
         import br.com.zup.beagle.android.annotation.RegisterWidget
         import br.com.zup.beagle.android.widget.WidgetView
@@ -89,7 +89,7 @@ const val COMPLETE_BEAGLE_CUSTOM_CLASS =
         class OperationTest: Operation { }
         
         @BeagleComponent
-        class StoreHandlerTest: StoreHandler { }
+        class ViewClientTest : ViewClient { }
         
         @BeagleComponent
         class UrlBuilderTest: UrlBuilder { }
@@ -112,12 +112,12 @@ const val BEAGLE_SETUP_COMPLETE =
         import br.com.zup.beagle.android.navigation.BeagleControllerReference
         import br.com.zup.beagle.android.navigation.DeepLinkHandler
         import br.com.zup.beagle.android.networking.HttpClientFactory
+        import br.com.zup.beagle.android.networking.ViewClient
         import br.com.zup.beagle.android.networking.urlbuilder.UrlBuilder
         import br.com.zup.beagle.android.operation.Operation
         import br.com.zup.beagle.android.setup.BeagleConfig
         import br.com.zup.beagle.android.setup.BeagleSdk
         import br.com.zup.beagle.android.setup.DesignSystem
-        import br.com.zup.beagle.android.store.StoreHandler
         import br.com.zup.beagle.android.widget.WidgetView
        
         import java.lang.Class
@@ -134,7 +134,7 @@ const val BEAGLE_SETUP_COMPLETE =
         
           public override val designSystem: DesignSystem = br.com.test.beagle.DesignSystemTest()
         
-          public override val storeHandler: StoreHandler = br.com.test.beagle.StoreHandlerTest()
+          public override val viewClient: ViewClient = br.com.test.beagle.ViewClientTest()
         
           public override val urlBuilder: UrlBuilder = br.com.test.beagle.UrlBuilderTest()
 

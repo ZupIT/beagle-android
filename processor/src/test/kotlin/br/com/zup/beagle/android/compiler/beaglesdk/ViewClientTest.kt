@@ -22,13 +22,13 @@ import br.com.zup.beagle.android.compiler.PROPERTIES_REGISTRAR_CLASS_NAME
 import br.com.zup.beagle.android.compiler.PROPERTIES_REGISTRAR_METHOD_NAME
 import br.com.zup.beagle.android.compiler.extensions.compile
 import br.com.zup.beagle.android.compiler.mocks.BEAGLE_CONFIG_IMPORTS
-import br.com.zup.beagle.android.compiler.mocks.LIST_OF_STORE_HANDLER
+import br.com.zup.beagle.android.compiler.mocks.LIST_OF_VIEW_CLIENT
 import br.com.zup.beagle.android.compiler.mocks.SIMPLE_BEAGLE_CONFIG
-import br.com.zup.beagle.android.compiler.mocks.STORE_HANDLER_IMPORT
-import br.com.zup.beagle.android.compiler.mocks.VALID_STORE_HANDLER
-import br.com.zup.beagle.android.compiler.mocks.VALID_STORE_HANDLER_BEAGLE_SDK
-import br.com.zup.beagle.android.compiler.mocks.VALID_STORE_HANDLER_BEAGLE_SDK_FROM_REGISTRAR
-import br.com.zup.beagle.android.compiler.mocks.VALID_THIRD_STORE_HANDLER
+import br.com.zup.beagle.android.compiler.mocks.VIEW_CLIENT_IMPORT
+import br.com.zup.beagle.android.compiler.mocks.VALID_VIEW_CLIENT
+import br.com.zup.beagle.android.compiler.mocks.VALID_VIEW_CLIENT_BEAGLE_SDK
+import br.com.zup.beagle.android.compiler.mocks.VALID_VIEW_CLIENT_BEAGLE_SDK_FROM_REGISTRAR
+import br.com.zup.beagle.android.compiler.mocks.VALID_THIRD_VIEW_CLIENT
 import br.com.zup.beagle.android.compiler.processor.BeagleAnnotationProcessor
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.SourceFile
@@ -42,21 +42,21 @@ import org.junit.jupiter.api.io.TempDir
 import java.nio.file.Path
 
 @DisplayName("Given Beagle Annotation Processor")
-internal class StoreHandlerTest : BeagleSdkBaseTest() {
+internal class ViewClientTest : BeagleSdkBaseTest() {
 
     @TempDir
     lateinit var tempPath: Path
 
-    @DisplayName("When register store handler")
+    @DisplayName("When register a view client")
     @Nested
-    inner class RegisterStoreHandler {
+    inner class RegisterViewClient {
 
         @Test
-        @DisplayName("Then should add the store handler in beagle sdk")
-        fun testGenerateStoreHandlerCorrect() {
+        @DisplayName("Then should add the view client in beagle sdk")
+        fun testGenerateViewClientCorrect() {
             // GIVEN
             val kotlinSource = SourceFile.kotlin(
-                FILE_NAME, BEAGLE_CONFIG_IMPORTS + VALID_STORE_HANDLER + SIMPLE_BEAGLE_CONFIG)
+                FILE_NAME, BEAGLE_CONFIG_IMPORTS + VALID_VIEW_CLIENT + SIMPLE_BEAGLE_CONFIG)
 
             // WHEN
             val compilationResult = compile(kotlinSource, BeagleAnnotationProcessor(), tempPath)
@@ -67,7 +67,7 @@ internal class StoreHandlerTest : BeagleSdkBaseTest() {
             }!!
 
             val fileGeneratedInString = file.readText().replace(REGEX_REMOVE_SPACE, "")
-            val fileExpectedInString = VALID_STORE_HANDLER_BEAGLE_SDK
+            val fileExpectedInString = VALID_VIEW_CLIENT_BEAGLE_SDK
                 .replace(REGEX_REMOVE_SPACE, "")
 
             assertEquals(fileExpectedInString, fileGeneratedInString)
@@ -80,8 +80,8 @@ internal class StoreHandlerTest : BeagleSdkBaseTest() {
     @Nested
     inner class RegisterFromOtherModule {
         @Test
-        @DisplayName("Then should add the store handler in beagle sdk")
-        fun testGenerateStoreHandlerFromRegistrarCorrect() {
+        @DisplayName("Then should add the view client in beagle sdk")
+        fun testGenerateViewClientFromRegistrarCorrect() {
             // GIVEN
             every {
                 DependenciesRegistrarComponentsProvider.getRegisteredComponentsInDependencies(
@@ -90,12 +90,12 @@ internal class StoreHandlerTest : BeagleSdkBaseTest() {
                     PROPERTIES_REGISTRAR_METHOD_NAME,
                 )
             } returns listOf(
-                Pair("""storeHandler""", "br.com.test.beagle.StoreHandlerTestThree()"),
+                Pair("""viewClient""", "br.com.test.beagle.ViewClientTestThree()"),
             )
             val kotlinSource = SourceFile.kotlin(
                 FILE_NAME,
-                BEAGLE_CONFIG_IMPORTS + STORE_HANDLER_IMPORT +
-                    VALID_THIRD_STORE_HANDLER + SIMPLE_BEAGLE_CONFIG
+                BEAGLE_CONFIG_IMPORTS + VIEW_CLIENT_IMPORT +
+                    VALID_THIRD_VIEW_CLIENT + SIMPLE_BEAGLE_CONFIG
             )
 
             // WHEN
@@ -107,7 +107,7 @@ internal class StoreHandlerTest : BeagleSdkBaseTest() {
             }!!
 
             val fileGeneratedInString = file.readText().replace(REGEX_REMOVE_SPACE, "")
-            val fileExpectedInString = VALID_STORE_HANDLER_BEAGLE_SDK_FROM_REGISTRAR
+            val fileExpectedInString = VALID_VIEW_CLIENT_BEAGLE_SDK_FROM_REGISTRAR
                 .replace(REGEX_REMOVE_SPACE, "")
 
             assertEquals(fileExpectedInString, fileGeneratedInString)
@@ -115,16 +115,16 @@ internal class StoreHandlerTest : BeagleSdkBaseTest() {
         }
     }
 
-    @DisplayName("When register store handler")
+    @DisplayName("When register view client")
     @Nested
-    inner class InvalidStoreHandler {
+    inner class InvalidViewClient {
 
         @Test
-        @DisplayName("Then should show error with duplicate store handler")
+        @DisplayName("Then should show error with duplicate view client")
         fun testDuplicate() {
             // GIVEN
             val kotlinSource = SourceFile.kotlin(
-                FILE_NAME, BEAGLE_CONFIG_IMPORTS + LIST_OF_STORE_HANDLER + SIMPLE_BEAGLE_CONFIG)
+                FILE_NAME, BEAGLE_CONFIG_IMPORTS + LIST_OF_VIEW_CLIENT + SIMPLE_BEAGLE_CONFIG)
 
             // WHEN
             val compilationResult = compile(kotlinSource, BeagleAnnotationProcessor(), tempPath)
@@ -132,11 +132,11 @@ internal class StoreHandlerTest : BeagleSdkBaseTest() {
 
             // THEN
             assertEquals(KotlinCompilation.ExitCode.COMPILATION_ERROR, compilationResult.exitCode)
-            Assertions.assertTrue(compilationResult.messages.contains(MESSAGE_DUPLICATE_STORE_HANDLER))
+            Assertions.assertTrue(compilationResult.messages.contains(MESSAGE_DUPLICATE_VIEW_CLIENT))
         }
 
         @Test
-        @DisplayName("Then should show error with duplicate store handler in PropertiesRegistrar")
+        @DisplayName("Then should show error with duplicate view client in PropertiesRegistrar")
         fun testDuplicateInRegistrar() {
             // GIVEN
             every {
@@ -146,17 +146,17 @@ internal class StoreHandlerTest : BeagleSdkBaseTest() {
                     PROPERTIES_REGISTRAR_METHOD_NAME,
                 )
             } returns listOf(
-                Pair("""storeHandler""", "br.com.test.beagle.StoreHandlerTestThree()"),
+                Pair("""viewClient""", "br.com.test.beagle.ViewClientTestThree()"),
             )
             val kotlinSource = SourceFile.kotlin(FILE_NAME,
-                BEAGLE_CONFIG_IMPORTS + VALID_STORE_HANDLER + VALID_THIRD_STORE_HANDLER + SIMPLE_BEAGLE_CONFIG
+                BEAGLE_CONFIG_IMPORTS + VALID_VIEW_CLIENT + VALID_THIRD_VIEW_CLIENT + SIMPLE_BEAGLE_CONFIG
             )
 
             // WHEN
             val compilationResult = compile(kotlinSource, BeagleAnnotationProcessor(), tempPath)
 
             // THEN
-            Assertions.assertTrue(compilationResult.messages.contains(MESSAGE_DUPLICATE_STORE_HANDLER_REGISTRAR))
+            Assertions.assertTrue(compilationResult.messages.contains(MESSAGE_DUPLICATE_VIEW_CLIENT_REGISTRAR))
             assertEquals(KotlinCompilation.ExitCode.COMPILATION_ERROR, compilationResult.exitCode)
         }
 
@@ -165,15 +165,14 @@ internal class StoreHandlerTest : BeagleSdkBaseTest() {
     companion object {
         private const val FILE_NAME = "File1.kt"
         private val REGEX_REMOVE_SPACE = "\\s".toRegex()
-        private const val MESSAGE_DUPLICATE_STORE_HANDLER = "error: StoreHandler defined multiple times: " +
-            "1 - br.com.test.beagle.StoreHandlerTest " +
-            "2 - br.com.test.beagle.StoreHandlerTestTwo. " +
+        private const val MESSAGE_DUPLICATE_VIEW_CLIENT = "error: ViewClient defined multiple times: " +
+            "1 - br.com.test.beagle.ViewClientTestTwo " +
+            "2 - br.com.test.beagle.ViewClientTest. " +
             "You must remove one implementation from the application."
 
-        private const val MESSAGE_DUPLICATE_STORE_HANDLER_REGISTRAR = "error: StoreHandler defined multiple times: " +
-            "1 - br.com.test.beagle.StoreHandlerTest " +
-            "2 - br.com.test.beagle.StoreHandlerTestThree. " +
+        private const val MESSAGE_DUPLICATE_VIEW_CLIENT_REGISTRAR = "error: ViewClient defined multiple times: " +
+            "1 - br.com.test.beagle.ViewClientTest " +
+            "2 - br.com.test.beagle.ViewClientTestThree. " +
             "You must remove one implementation from the application."
     }
-
 }

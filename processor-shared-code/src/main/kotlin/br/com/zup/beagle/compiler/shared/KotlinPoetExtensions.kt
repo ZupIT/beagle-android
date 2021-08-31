@@ -25,8 +25,6 @@ fun TypeElement.implements(
     beagleClass: BeagleClass,
     processingEnvironment: ProcessingEnvironment
 ): Boolean {
-
-
     return try {
         processingEnvironment.typeUtils.isAssignable(
             this.asType(),
@@ -37,7 +35,6 @@ fun TypeElement.implements(
     }
 }
 
-
 fun TypeElement.implementsInterface(interfaceName: String): Boolean {
     for (interfaceTypeMirror in this.interfaces) {
         val typeMirror = ((interfaceTypeMirror as DeclaredType)).asElement()
@@ -47,4 +44,3 @@ fun TypeElement.implementsInterface(interfaceName: String): Boolean {
     }
     return false
 }
-
