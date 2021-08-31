@@ -18,24 +18,23 @@ package br.com.zup.beagle.android.components.layout
 
 import android.view.View
 import br.com.zup.beagle.android.action.Action
+import br.com.zup.beagle.android.annotation.RegisterWidget
+import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.context.ContextComponent
 import br.com.zup.beagle.android.context.ContextData
+import br.com.zup.beagle.android.context.expressionOrValueOfNullable
 import br.com.zup.beagle.android.utils.ToolbarManager
 import br.com.zup.beagle.android.view.BeagleActivity
 import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.view.custom.BeagleFlexView
 import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.android.widget.WidgetView
-import br.com.zup.beagle.android.annotation.RegisterWidget
-import br.com.zup.beagle.android.components.ImagePath
 import br.com.zup.beagle.android.widget.core.Accessibility
 import br.com.zup.beagle.android.widget.core.BeagleJson
-import br.com.zup.beagle.android.widget.core.IdentifierComponent
+import br.com.zup.beagle.android.widget.core.Flex
 import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 import br.com.zup.beagle.android.widget.core.SingleChildComponent
 import br.com.zup.beagle.android.widget.core.Style
-import br.com.zup.beagle.android.widget.core.Flex
-
 
 /**
  * The SafeArea will enable Safe areas to help you place your views within the visible portion of the overall interface.
@@ -71,11 +70,16 @@ data class SafeArea(
 @BeagleJson(name = "navigationBarItem")
 data class NavigationBarItem(
     val text: String,
-    val image: ImagePath.Local? = null,
+    val image: Bind<String>?,
     val action: Action,
     val accessibility: Accessibility? = null,
-) : IdentifierComponent {
-    override var id: String? = null
+) {
+    constructor(
+        text: String,
+        image: String? = null,
+        action: Action,
+        accessibility: Accessibility? = null,
+    ) : this(text, expressionOrValueOfNullable(image), action, accessibility)
 }
 
 /**
