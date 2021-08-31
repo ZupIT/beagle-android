@@ -19,6 +19,7 @@ package br.com.zup.beagle.android.operation.builtin.array
 import br.com.zup.beagle.android.operation.Operation
 import br.com.zup.beagle.android.operation.OperationType
 import br.com.zup.beagle.android.annotation.RegisterOperation
+import org.json.JSONArray
 
 @RegisterOperation("removeIndex")
 internal class RemoveIndexOperation : Operation {
@@ -27,8 +28,18 @@ internal class RemoveIndexOperation : Operation {
         val array = (params[0] as OperationType.TypeJsonArray).value
         val index = (params[1] as OperationType.TypeNumber).value as Int
 
-        array.remove(index)
-        return OperationType.TypeJsonArray(array)
+        val result = removeOnJSONArray(array, index)
+        return OperationType.TypeJsonArray(result)
+    }
+
+    private fun removeOnJSONArray(array: JSONArray, index: Int?): JSONArray {
+        return JSONArray().apply {
+            for (i in 0 until array.length()) {
+                if (i != index) {
+                    put(array[i])
+                }
+            }
+        }
     }
 
 }
