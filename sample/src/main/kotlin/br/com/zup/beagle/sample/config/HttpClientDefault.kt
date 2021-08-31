@@ -21,6 +21,8 @@ import br.com.zup.beagle.android.exception.BeagleApiException
 import br.com.zup.beagle.android.networking.HttpClient
 import br.com.zup.beagle.android.networking.HttpClientFactory
 import br.com.zup.beagle.android.networking.HttpMethod
+import br.com.zup.beagle.android.networking.OnError
+import br.com.zup.beagle.android.networking.OnSuccess
 import br.com.zup.beagle.android.networking.RequestCall
 import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.networking.ResponseData
@@ -32,14 +34,15 @@ import java.io.EOFException
 import java.net.HttpURLConnection
 import java.net.URI
 
-typealias OnSuccess = (responseData: ResponseData) -> Unit
-typealias OnError = (responseData: ResponseData) -> Unit
-
-
 @BeagleComponent
 class HttpClientFactoryDefault : HttpClientFactory {
+
     override fun create(): HttpClient {
-        return HttpClientDefault()
+        return HTTP_CLIENT
+    }
+
+    companion object {
+        val HTTP_CLIENT = HttpClientDefault()
     }
 }
 
@@ -65,6 +68,7 @@ class HttpClientDefault : HttpClient, CoroutineScope {
         }
         return createRequestCall()
     }
+
     private fun getOrDeleteOrHeadHasData(request: RequestData): Boolean {
         val method = request.httpAdditionalData.method
         val body = request.httpAdditionalData.body
@@ -73,6 +77,7 @@ class HttpClientDefault : HttpClient, CoroutineScope {
             method == HttpMethod.HEAD) &&
             body != null
     }
+
     @Throws(BeagleApiException::class)
     private fun doHttpRequest(
         request: RequestData
@@ -105,6 +110,7 @@ class HttpClientDefault : HttpClient, CoroutineScope {
             urlConnection.disconnect()
         }
     }
+
     private fun tryFormatException(
         urlConnection: HttpURLConnection,
         request: RequestData
@@ -119,6 +125,7 @@ class HttpClientDefault : HttpClient, CoroutineScope {
         )
         return BeagleApiException(responseData, request)
     }
+
     private fun addRequestMethod(urlConnection: HttpURLConnection, method: HttpMethod) {
         val methodValue = method.toString()
         if (method == HttpMethod.PATCH || method == HttpMethod.HEAD) {
@@ -128,6 +135,7 @@ class HttpClientDefault : HttpClient, CoroutineScope {
             urlConnection.requestMethod = methodValue
         }
     }
+
     private fun setRequestBody(urlConnection: HttpURLConnection, request: RequestData) {
         try {
             urlConnection.doOutput = true
@@ -140,6 +148,7 @@ class HttpClientDefault : HttpClient, CoroutineScope {
             throw BeagleApiException(ResponseData(-1, data = byteArrayOf()), request)
         }
     }
+
     private fun createResponseData(urlConnection: HttpURLConnection): ResponseData {
         return ResponseData(
             statusCode = urlConnection.responseCode,
@@ -158,6 +167,7 @@ class HttpClientDefault : HttpClient, CoroutineScope {
             }
         )
     }
+
     private fun createRequestCall() = object : RequestCall {
         override fun cancel() {
             this@HttpClientDefault.cancel()

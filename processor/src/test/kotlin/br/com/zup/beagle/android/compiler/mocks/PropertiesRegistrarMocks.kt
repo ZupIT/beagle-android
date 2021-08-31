@@ -21,8 +21,8 @@ const val BEAGLE_PROPERTIES_IMPORTS =
         import br.com.zup.beagle.android.navigation.DeepLinkHandler
         import br.com.zup.beagle.android.networking.HttpClient
         import br.com.zup.beagle.android.networking.HttpClientFactory
+        import br.com.zup.beagle.android.networking.ViewClient
         import br.com.zup.beagle.android.setup.DesignSystem
-        import br.com.zup.beagle.android.store.StoreHandler
         import br.com.zup.beagle.android.networking.urlbuilder.UrlBuilder
         import br.com.zup.beagle.android.analytics.AnalyticsProvider
         import br.com.zup.beagle.android.logger.BeagleLogger
@@ -35,7 +35,7 @@ const val BEAGLE_PROPERTIES_SOURCE =
         .plus(VALID_SECOND_HTTP_CLIENT)
         .plus(VALID_SECOND_HTTP_CLIENT_FACTORY)
         .plus(VALID_SECOND_DESIGN_SYSTEM)
-        .plus(VALID_SECOND_STORE_HANDLER)
+        .plus(VALID_SECOND_VIEW_CLIENT)
         .plus(VALID_SECOND_URL_BUILDER)
         .plus(VALID_SECOND_ANALYTICS_PROVIDER)
         .plus(VALID_SECOND_LOGGER)
@@ -56,7 +56,7 @@ const val INTERNAL_PROPERTIES_REGISTRAR_EXPECTED =
                 Pair("deepLinkHandler", ""${'"'}br.com.test.beagle.DeepLinkHandlerTestTwo()""${'"'}),
                 Pair("httpClientFactory", ""${'"'}br.com.test.beagle.HttpClientFactoryTestTwo()""${'"'}),
                 Pair("designSystem", ""${'"'}br.com.test.beagle.DesignSystemTestTwo()""${'"'}),
-                Pair("storeHandler", ""${'"'}br.com.test.beagle.StoreHandlerTestTwo()""${'"'}),
+                Pair("viewClient", ""${'"'}br.com.test.beagle.ViewClientTestTwo()""${'"'}),
                 Pair("urlBuilder", ""${'"'}br.com.test.beagle.UrlBuilderTestTwo()""${'"'}),
                 Pair("analyticsProvider", ""${'"'}br.com.test.beagle.AnalyticsProviderTestTwo()""${'"'}),
                 Pair("logger", ""${'"'}br.com.test.beagle.LoggerTestTwo()""${'"'}),

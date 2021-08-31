@@ -22,6 +22,14 @@ import br.com.zup.beagle.android.widget.core.BeagleJson
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.RawValue
 
+internal object FixedHeaders {
+    private const val BEAGLE_PLATFORM_HEADER_KEY = "beagle-platform"
+    private const val BEAGLE_PLATFORM_HEADER_VALUE = "ANDROID"
+    private const val CONTENT_TYPE = "Content-Type"
+    private const val APP_JSON = "application/json"
+    val headers = mapOf(CONTENT_TYPE to APP_JSON, BEAGLE_PLATFORM_HEADER_KEY to BEAGLE_PLATFORM_HEADER_VALUE)
+}
+
 /**
  * HttpAdditionalData is used to do requests.
  * @param method HTTP method.
@@ -35,4 +43,9 @@ data class HttpAdditionalData(
     val headers: Map<String, String> = hashMapOf(),
     @ContextDataValue
     val body: @RawValue Any? = null,
-) : Parcelable
+) : Parcelable {
+
+    init {
+        headers.toMutableMap().putAll(FixedHeaders.headers)
+    }
+}

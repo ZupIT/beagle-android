@@ -133,7 +133,7 @@ internal data class PropertySpecifications(
     var designSystem: TypeElement? = null,
     var beagleActivities: List<TypeElement>? = null,
     var urlBuilder: TypeElement? = null,
-    var storeHandler: TypeElement? = null,
+    var viewClient: TypeElement? = null,
     var analyticsProvider: TypeElement? = null,
     var logger: TypeElement? = null,
     var imageDownloader: TypeElement? = null,

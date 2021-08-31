@@ -14,11 +14,14 @@
  * limitations under the License.
  */
 
-package br.com.zup.beagle.android.store
+package br.com.zup.beagle.android.networking
 
-interface LocalStore {
-    fun save(key: String, value: String)
-    fun restore(key: String): String?
-    fun delete(key: String)
-    fun getAll(): Map<String, String>
+import br.com.zup.beagle.android.setup.BeagleEnvironment
+import br.com.zup.beagle.android.utils.doRequest
+
+open class ViewClientDefault : ViewClient {
+    override fun fetch(requestData: RequestData, onSuccess: OnSuccess, onError: OnError): RequestCall {
+        val httpClient = BeagleEnvironment.beagleSdk.httpClientFactory?.create()
+        return requestData.doRequest(httpClient, onSuccess, onError)
+    }
 }

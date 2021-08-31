@@ -53,12 +53,12 @@ const val VALID_DEEP_LINK_HANDLER_BEAGLE_SDK =
         import br.com.zup.beagle.android.navigation.BeagleControllerReference
         import br.com.zup.beagle.android.navigation.DeepLinkHandler
         import br.com.zup.beagle.android.networking.HttpClientFactory
+        import br.com.zup.beagle.android.networking.ViewClient
         import br.com.zup.beagle.android.networking.urlbuilder.UrlBuilder
         import br.com.zup.beagle.android.operation.Operation
         import br.com.zup.beagle.android.setup.BeagleConfig
         import br.com.zup.beagle.android.setup.BeagleSdk
         import br.com.zup.beagle.android.setup.DesignSystem
-        import br.com.zup.beagle.android.store.StoreHandler
         import br.com.zup.beagle.android.widget.WidgetView
         import java.lang.Class
         import kotlin.String
@@ -71,10 +71,10 @@ const val VALID_DEEP_LINK_HANDLER_BEAGLE_SDK =
             public override val deepLinkHandler : DeepLinkHandler = br.com.test.beagle.DeepLinkHandlerTest()
               
             public override val httpClientFactory : HttpClientFactory? = null
-
+            
             public override val designSystem : DesignSystem? = null
-
-            public override val storeHandler : StoreHandler? = null
+            
+            public override val viewClient : ViewClient? = null
 
             public override val urlBuilder : UrlBuilder? = null
 
@@ -113,12 +113,12 @@ const val VALID_DEEP_LINK_HANDLER_BEAGLE_SDK_FROM_REGISTRAR =
         import br.com.zup.beagle.android.navigation.BeagleControllerReference
         import br.com.zup.beagle.android.navigation.DeepLinkHandler
         import br.com.zup.beagle.android.networking.HttpClientFactory
+        import br.com.zup.beagle.android.networking.ViewClient
         import br.com.zup.beagle.android.networking.urlbuilder.UrlBuilder
         import br.com.zup.beagle.android.operation.Operation
         import br.com.zup.beagle.android.setup.BeagleConfig
         import br.com.zup.beagle.android.setup.BeagleSdk
         import br.com.zup.beagle.android.setup.DesignSystem
-        import br.com.zup.beagle.android.store.StoreHandler
         import br.com.zup.beagle.android.widget.WidgetView
         import java.lang.Class
         import kotlin.String
@@ -134,8 +134,8 @@ const val VALID_DEEP_LINK_HANDLER_BEAGLE_SDK_FROM_REGISTRAR =
           public override val httpClientFactory: HttpClientFactory? = null
         
           public override val designSystem: DesignSystem? = null
-        
-          public override val storeHandler: StoreHandler? = null
+          
+          public override val viewClient: ViewClient? = null
         
           public override val urlBuilder: UrlBuilder? = null
 

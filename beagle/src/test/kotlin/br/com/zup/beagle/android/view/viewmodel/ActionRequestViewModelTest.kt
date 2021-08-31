@@ -33,18 +33,15 @@ import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkStatic
-import io.mockk.unmockkAll
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExperimentalCoroutinesApi
 @ExtendWith(InstantExecutorExtension::class, CoroutinesTestExtension::class)
-class ActionRequestViewModelTest: BaseTest() {
+class ActionRequestViewModelTest : BaseTest() {
 
     private val actionRequester: ActionRequester = mockk()
 
@@ -74,7 +71,7 @@ class ActionRequestViewModelTest: BaseTest() {
         val responseMapped: Response = mockk()
         every { action.toRequestData() } returns mockk()
         every { response.toResponse() } returns responseMapped
-        coEvery { actionRequester.fetchData(any()) } returns response
+        coEvery { actionRequester.fetchAction(any()) } returns response
 
         // When
         viewModel.fetch(action).observeForever(observer)
@@ -93,8 +90,8 @@ class ActionRequestViewModelTest: BaseTest() {
         val responseMapped: Response = mockk()
         every { action.toRequestData() } returns mockk()
         every { responseData.toResponse() } returns responseMapped
-        every { error.responseData } returns  responseData
-        coEvery { actionRequester.fetchData(any()) } throws error
+        every { error.responseData } returns responseData
+        coEvery { actionRequester.fetchAction(any()) } throws error
 
         // When
         viewModel.fetch(action).observeForever(observer)

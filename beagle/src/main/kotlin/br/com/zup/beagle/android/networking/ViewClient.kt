@@ -16,6 +16,24 @@
 
 package br.com.zup.beagle.android.networking
 
-interface RequestCall {
-    fun cancel()
+/**
+ * ViewClient is the contract responsible for making requests
+ * that load the Beagle's components and actions.
+ */
+interface ViewClient {
+
+    /**
+     * Method that executes the request.
+     * This is the recommended place to do processing
+     * before and after the request happens, such as caching.
+     * @param requestData carries all the information of the request
+     * @param onSuccess
+     * @param onError
+     * @return
+     */
+    fun fetch(
+        requestData: RequestData,
+        onSuccess: OnSuccess,
+        onError: OnError,
+    ): RequestCall
 }

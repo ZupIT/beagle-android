@@ -362,7 +362,7 @@ internal class ActionReportFactoryTest : BaseTest() {
         fun testGenerateDataActionReportOfRegisterActionShouldGetNameFromAnnotation() {
             //given
             val action = RegisterActionWithName()
-            every { beagleSdk.registeredActions() } returns listOf(action::class.java as Class<Action>)
+            every { beagleSdk.registeredActions() } returns actionList(action)
 
             //when
             val dataActionReport = ActionReportFactory.generateDataActionReport(
@@ -381,7 +381,7 @@ internal class ActionReportFactoryTest : BaseTest() {
         fun testGenerateDataActionReportOfRegisterActionShouldGetNameFromClass() {
             //given
             val action = RegisterActionWithoutName()
-            every { beagleSdk.registeredActions() } returns listOf(action::class.java as Class<Action>)
+            every { beagleSdk.registeredActions() } returns actionList(action)
 
             //when
             val dataActionReport = ActionReportFactory.generateDataActionReport(
@@ -400,7 +400,7 @@ internal class ActionReportFactoryTest : BaseTest() {
         fun testGenerateDataActionReportWithAnnotationOnAttributeShouldGetTheNameFromAnnotation() {
             //given
             val action = RegisterActionWithoutName("test")
-            every { beagleSdk.registeredActions() } returns listOf(action::class.java as Class<Action>)
+            every { beagleSdk.registeredActions() } returns actionList(action)
 
             //when
             val dataActionReport = ActionReportFactory.generateDataActionReport(
@@ -420,7 +420,7 @@ internal class ActionReportFactoryTest : BaseTest() {
         fun testGenerateDataActionReportWithAnnotationOnAttributeShouldGetTheNameFromAttribute() {
             //given
             val action = RegisterActionWithName("test")
-            every { beagleSdk.registeredActions() } returns listOf(action::class.java as Class<Action>)
+            every { beagleSdk.registeredActions() } returns actionList(action)
 
             //when
             val dataActionReport = ActionReportFactory.generateDataActionReport(
@@ -433,6 +433,9 @@ internal class ActionReportFactoryTest : BaseTest() {
             //then
             Assert.assertEquals("test", dataActionReport.attributes["title"])
         }
+
+        @Suppress("UNCHECKED_CAST")
+        private fun actionList(action: Action) = listOf(action::class.java as Class<Action>)
     }
 }
 
