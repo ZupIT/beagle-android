@@ -1,74 +1,92 @@
 #
-  # Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
-  #
-  # Licensed under the Apache License, Version 2.0 (the "License");
-  # you may not use this file except in compliance with the License.
-  # You may obtain a copy of the License at
-  #
-  #  http://www.apache.org/licenses/LICENSE-2.0
-  #
-  # Unless required by applicable law or agreed to in writing, software
-  # distributed under the License is distributed on an "AS IS" BASIS,
-  # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  # See the License for the specific language governing permissions and
-  # limitations under the License.
+# Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#  http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 #
 
 name: Pull Request
 
-on:  
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-      - release/*
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+        branches:
+            - main
 
 jobs:
-    pr-validation:
-        name: PR validation
-        runs-on: macos-latest
+    static_analysis:
+        runs-on: ubuntu-latest
+        timeout-minutes: 20
+
         steps:
             -   uses: actions/checkout@v2
-            -   name: Read secrets from AWS Secrets Manager into environment variables
-                uses: abhilash1in/aws-secrets-manager-action@v1.0.1
-                with:
-                    aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-                    aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-                    aws-region: us-east-1
-                    secrets: |
-                        beagle/core/*
-                    parse-json: true
-            # Gems for Fastlane
-            -   name: Cache ruby gems dependencies
-                uses: actions/cache@v2
-                env:
-                    keyPath: ${{ runner.os }}-gems
-                with:
-                    path: ~/.gem
-                    key: ${{ env.keyPath }}-${{ hashFiles('Gemfile.lock') }}
-                    restore-keys: ${{ env.keyPath }}
-            -   name: Install gem dependencies
-                run: bundle config set path '~/.gem' && bundle install
 
-            -   name: Cache gradle dependences
-                uses: actions/cache@v2
-                env:
-                    gradle-cache-key: gradle-cache-android
-                    gradle-path: ~/.gradle
+            -   name: Setup Android Build
+                uses: ./.github/setup-config
                 with:
-                    path: ${{ env.gradle-path }}
-                    key: ${{ runner.os }}-build-${{ env.gradle-cache-key }}-${{ hashFiles('android/buildSrc/**') }}
-                    restore-keys: ${{ runner.os }}-build-${{ env.gradle-cache-key }}
-            -   name: Setup JDK (11)
-                uses: actions/setup-java@v2
-                with:
-                    distribution: 'adopt'
-                    java-version: '11'
-            -   name: Run pr check
+                    AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                    AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+            -   name: Check code lint
+                run: ./gradlew detekt beagle:lintDebug
+
+            -   name: Run danger to comment in PR
                 env:
-                    GITHUB_USER: ${{ env.BEAGLE_CORE_GITHUB_GITHUB_USER }}
-                    GITHUB_TOKEN: ${{ env.BEAGLE_CORE_GITHUB_GITHUB_TOKEN }}
-                    SONAR_TOKEN: ${{ env.BEAGLE_CORE_GITHUB_SONAR_TOKEN }}
-                run: bundle exec fastlane android pull_request_verification
+                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                if: always()
+                run: '[ ! -z $GITHUB_TOKEN ] && bundle exec fastlane run_danger danger_id:"android_danger" danger_file_path:"android" || echo "Skipping Danger for External Contributor"'
+    unit_tests:
+        # Use macos because unit test fail in ubuntu the generated file it is different in processor
+        runs-on: macos-latest
+        timeout-minutes: 20
+
+        steps:
+            -   uses: actions/checkout@v2
+
+            -   name: Setup Android Build
+                uses: ./.github/setup-config
+                with:
+                    AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                    AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+            -   name: Run unit tests with jacoco
+                run: ./gradlew jacocoDebugTestReport
+
+            -   name: aggregate all report generated
+                run: ./gradlew jacocoRootReport
+
+            -   name: send report to sonarqube
+                run: ./gradlew sonarqube
+    assemble_apk:
+        runs-on: ubuntu-latest
+        timeout-minutes: 20
+
+        steps:
+            -   uses: actions/checkout@v2
+
+            -   name: Setup Android Build
+                uses: ./.github/setup-config
+                with:
+                    AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                    AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+
+            -   name: Assemble production APK
+                run: ./gradlew sample:assembleRelease
+
+            -   name: Archive APK
+                uses: actions/upload-artifact@v2.2.4
+                with:
+                    name: release-apk
+                    path: sample/build/outputs/apk/release
