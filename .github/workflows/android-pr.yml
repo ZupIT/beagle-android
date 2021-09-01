@@ -43,7 +43,8 @@ jobs:
 
             -   name: Run danger to comment in PR
                 env:
-                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                    GITHUB_USER: ${{ env.BEAGLE_CORE_GITHUB_GITHUB_USER }}
+                    GITHUB_TOKEN: ${{ env.BEAGLE_CORE_GITHUB_GITHUB_TOKEN }}
                 if: always()
                 run: '[ ! -z $GITHUB_TOKEN ] && bundle exec fastlane run_danger danger_id:"android_danger" danger_file_path:"android" || echo "Skipping Danger for External Contributor"'
     unit_tests:
@@ -67,6 +68,8 @@ jobs:
                 run: ./gradlew jacocoRootReport
 
             -   name: send report to sonarqube
+                env:
+                    SONAR_TOKEN: ${{ env.BEAGLE_CORE_GITHUB_SONAR_TOKEN }}
                 run: ./gradlew sonarqube
     assemble_apk:
         runs-on: ubuntu-latest
@@ -80,7 +83,6 @@ jobs:
                 with:
                     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
                     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-
 
             -   name: Assemble production APK
                 run: ./gradlew sample:assembleRelease
