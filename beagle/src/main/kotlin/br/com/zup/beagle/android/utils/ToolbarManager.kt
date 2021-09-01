@@ -196,7 +196,7 @@ internal class ToolbarManager(private val toolbarTextManager: ToolbarTextManager
     ) {
         val designSystem = BeagleEnvironment.beagleSdk.designSystem
         for (i in items.indices) {
-            toolbar.menu.add(Menu.NONE, items[i].id?.toAndroidId() ?: i, Menu.NONE, items[i].text)
+            toolbar.menu.add(Menu.NONE, i, Menu.NONE, items[i].text)
                 .apply {
                     setOnMenuItemClickListener {
                         val action = items[i].action
@@ -239,7 +239,7 @@ internal class ToolbarManager(private val toolbarTextManager: ToolbarTextManager
             items[i].image?.let { image ->
                 setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
 
-                screen.observeBindChanges(rootView, container, image.mobileId) { mobileId ->
+                screen.observeBindChanges(rootView, container, image) { mobileId ->
                     mobileId?.let {
                         icon = designSystem.image(it)?.let { iconRes ->
                             ResourcesCompat.getDrawable(
@@ -250,8 +250,6 @@ internal class ToolbarManager(private val toolbarTextManager: ToolbarTextManager
                         }
                     }
                 }
-
-
             }
         }
     }

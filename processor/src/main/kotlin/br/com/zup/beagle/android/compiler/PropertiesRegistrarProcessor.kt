@@ -81,7 +81,7 @@ class PropertiesRegistrarProcessor {
             |)
         |""".trimMargin()
 
-    fun registeredProperties(properties: List<PropertySpec>): String {
+    private fun registeredProperties(properties: List<PropertySpec>): String {
         val registeredProperties = StringBuilder()
         properties.forEach { propertySpec ->
             if (!propertySpec.initializer.toString().startsWith("null")) {

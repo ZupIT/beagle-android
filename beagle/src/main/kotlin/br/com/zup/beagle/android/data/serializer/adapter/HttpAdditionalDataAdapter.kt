@@ -54,7 +54,7 @@ class HttpAdditionalDataAdapter {
         }
         headersMap
     } catch (exception: Exception) {
-        emptyMap()
+        mutableMapOf()
     }
 
     private fun getBody(httpAdditionalData: JSONObject) = try {

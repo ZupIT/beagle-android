@@ -23,18 +23,14 @@ import br.com.zup.beagle.android.imagedownloader.BeagleImageDownloader
 import br.com.zup.beagle.android.logger.BeagleLogger
 import br.com.zup.beagle.android.navigation.BeagleControllerReference
 import br.com.zup.beagle.android.navigation.DeepLinkHandler
-import br.com.zup.beagle.android.networking.HttpClient
 import br.com.zup.beagle.android.networking.HttpClientFactory
+import br.com.zup.beagle.android.networking.ViewClient
 import br.com.zup.beagle.android.networking.urlbuilder.UrlBuilder
 import br.com.zup.beagle.android.operation.Operation
 import br.com.zup.beagle.android.setup.BeagleConfig
 import br.com.zup.beagle.android.setup.BeagleSdk
-import br.com.zup.beagle.android.setup.Cache
 import br.com.zup.beagle.android.setup.DesignSystem
 import br.com.zup.beagle.android.setup.Environment
-import br.com.zup.beagle.android.store.StoreHandler
-import br.com.zup.beagle.android.view.BeagleActivity
-import br.com.zup.beagle.android.view.ServerDrivenActivity
 import br.com.zup.beagle.android.widget.WidgetView
 
 class MyBeagleSetup(override val analyticsProvider: AnalyticsProvider? = null) : BeagleSdk {
@@ -42,18 +38,17 @@ class MyBeagleSetup(override val analyticsProvider: AnalyticsProvider? = null) :
     override val config: BeagleConfig = object : BeagleConfig {
         override val environment: Environment = Environment.DEBUG
         override val baseUrl: String = ""
-        override val cache: Cache = Cache(enabled = false, maxAge = 0)
     }
 
     override val deepLinkHandler: DeepLinkHandler? = null
 
     override val httpClientFactory: HttpClientFactory? = null
 
+    override val viewClient: ViewClient? = null
+
     override val designSystem: DesignSystem? = null
 
     override val imageDownloader: BeagleImageDownloader? = null
-
-    override val storeHandler: StoreHandler? = null
 
     override val controllerReference: BeagleControllerReference? = null
 

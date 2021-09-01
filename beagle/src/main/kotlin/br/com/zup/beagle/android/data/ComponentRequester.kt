@@ -16,37 +16,42 @@
 
 package br.com.zup.beagle.android.data
 
-import br.com.zup.beagle.android.cache.CacheManager
 import br.com.zup.beagle.android.data.serializer.BeagleSerializer
 import br.com.zup.beagle.android.exception.BeagleException
 import br.com.zup.beagle.android.networking.RequestData
+import br.com.zup.beagle.android.networking.ResponseData
+import br.com.zup.beagle.android.networking.ViewClient
+import br.com.zup.beagle.android.networking.ViewClientDefault
+import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
-import kotlin.jvm.Throws
+import kotlinx.coroutines.suspendCancellableCoroutine
+import java.lang.Exception
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 internal class ComponentRequester(
-    private val beagleApi: BeagleApi = BeagleApi(),
+    private val viewClient: ViewClient = BeagleEnvironment.beagleSdk.viewClient ?: ViewClientDefault(),
     private val serializer: BeagleSerializer = BeagleSerializer(),
-    private val cacheManager: CacheManager = CacheManager(),
 ) {
 
     @Throws(BeagleException::class)
     suspend fun fetchComponent(requestData: RequestData): ServerDrivenComponent {
-        val url = requestData.url
-        val beagleCache = cacheManager.restoreBeagleCacheForUrl(url)
-        val responseBody = if (beagleCache?.isExpired() == false) {
-            beagleCache.json
-        } else {
-            val requestDataFromCache = cacheManager.requestDataWithCache(
-                requestData,
-                beagleCache,
-            )
-            val responseData = beagleApi.fetchData(requestDataFromCache)
-            cacheManager.handleResponseData(
-                url,
-                beagleCache,
-                responseData,
-            )
+        val responseData = fetch(requestData)
+        return serializer.deserializeComponent(String(responseData.data))
+    }
+
+    private suspend fun fetch(requestData: RequestData): ResponseData = suspendCancellableCoroutine { cont ->
+        try {
+            val call = viewClient.fetch(requestData, onSuccess = { response ->
+                cont.resume(response)
+            }, onError = { response ->
+                cont.resume(response)
+            })
+            cont.invokeOnCancellation {
+                call.cancel()
+            }
+        } catch (e: Exception) {
+            cont.resumeWithException(e)
         }
-        return serializer.deserializeComponent(responseBody)
     }
 }

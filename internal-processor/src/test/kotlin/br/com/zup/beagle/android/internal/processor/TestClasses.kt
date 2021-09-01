@@ -40,30 +40,14 @@ const val VALID_WIDGET_WITH_INHERITANCE_WIDGET_VIEW =
         package br.com.test.beagle
         
         import br.com.zup.beagle.android.annotation.RegisterWidget
-        import br.com.zup.beagle.android.components.form.InputWidget
         import br.com.zup.beagle.android.widget.WidgetView
-        import br.com.zup.beagle.android.components.page.PageIndicatorComponent
 
         @RegisterWidget
         class TextTest: WidgetView() { }
     """
 
-const val VALID_WIDGET_WITH_INHERITANCE_INPUT_WIDGET =
-    """
-        @RegisterWidget
-        class InputWidgetTest: InputWidget() { }
-    """
-
-const val VALID_WIDGET_WITH_INHERITANCE_PAGE_INDICATOR =
-    """
-        @RegisterWidget
-        class PageIndicatorTest: PageIndicatorComponent { }
-    """
-
 const val VALID_LIST_WIDGETS =
-    VALID_WIDGET_WITH_INHERITANCE_WIDGET_VIEW +
-        VALID_WIDGET_WITH_INHERITANCE_INPUT_WIDGET +
-        VALID_WIDGET_WITH_INHERITANCE_PAGE_INDICATOR
+    VALID_WIDGET_WITH_INHERITANCE_WIDGET_VIEW
 
 const val INTERNAL_LIST_WIDGET_GENERATED_EXPECTED: String =
     """
@@ -79,9 +63,7 @@ const val INTERNAL_LIST_WIDGET_GENERATED_EXPECTED: String =
             
             public fun registeredWidgets(): List<Class<WidgetView>> {
                 val registeredWidgets = listOf<Class<WidgetView>>(
-                    br.com.test.beagle.PageIndicatorTest::class.java as Class<WidgetView>,
                     br.com.test.beagle.TextTest::class.java as Class<WidgetView>,
-                    br.com.test.beagle.InputWidgetTest::class.java as Class<WidgetView>,
                 )
             
             return registeredWidgets

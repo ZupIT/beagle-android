@@ -70,8 +70,6 @@ class GenerateFunctionWidget(
 
     private fun isValidInheritance(typeElement: TypeElement): Boolean {
         return typeElement.implements(WIDGET_VIEW, processingEnv)
-            || typeElement.implements(BEAGLE_INPUT_WIDGET, processingEnv)
-            || typeElement.implements(BEAGLE_PAGE_INDICATOR, processingEnv)
     }
 
     companion object {

@@ -22,8 +22,8 @@ import br.com.zup.beagle.android.compiler.BEAGLE_LOGGER
 import br.com.zup.beagle.android.compiler.DEEP_LINK_HANDLER
 import br.com.zup.beagle.android.compiler.HTTP_CLIENT_FACTORY_HANDLER
 import br.com.zup.beagle.android.compiler.PropertySpecifications
-import br.com.zup.beagle.android.compiler.STORE_HANDLER
 import br.com.zup.beagle.android.compiler.URL_BUILDER_HANDLER
+import br.com.zup.beagle.android.compiler.VIEW_CLIENT
 import br.com.zup.beagle.compiler.shared.implements
 import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.element.TypeElement
@@ -57,9 +57,9 @@ internal object TypeElementImplementationManager {
                 propertySpecifications?.httpClientFactory =
                     manage.manageTypeElement(element, HTTP_CLIENT_FACTORY_HANDLER.className)
             }
-            typeElement.implements(STORE_HANDLER, processingEnv) -> {
-                val element = propertySpecifications?.storeHandler
-                propertySpecifications?.storeHandler = manage.manageTypeElement(element, STORE_HANDLER.className)
+            typeElement.implements(VIEW_CLIENT, processingEnv) -> {
+                val element = propertySpecifications?.viewClient
+                propertySpecifications?.viewClient = manage.manageTypeElement(element, VIEW_CLIENT.className)
             }
             typeElement.implements(URL_BUILDER_HANDLER, processingEnv) -> {
                 val element = propertySpecifications?.urlBuilder

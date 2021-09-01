@@ -30,6 +30,7 @@
         <item name="android:scrollbarThumbVertical">@color/colorGray</item>
         <item name="android:scrollbarThumbHorizontal">@color/colorGray</item>
         <item name="android:windowBackground">@color/colorWhite</item>
+        <item name="android:fitsSystemWindows">true</item>
     </style>
 
     <style name="DesignSystem.Toolbar" parent="Widget.AppCompat.Toolbar">

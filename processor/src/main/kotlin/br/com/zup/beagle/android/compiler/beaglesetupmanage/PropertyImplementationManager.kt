@@ -24,8 +24,8 @@ import br.com.zup.beagle.android.compiler.DEEP_LINK_HANDLER
 import br.com.zup.beagle.android.compiler.DESIGN_SYSTEM
 import br.com.zup.beagle.android.compiler.HTTP_CLIENT_FACTORY_HANDLER
 import br.com.zup.beagle.android.compiler.PropertySpecifications
-import br.com.zup.beagle.android.compiler.STORE_HANDLER
 import br.com.zup.beagle.android.compiler.URL_BUILDER_HANDLER
+import br.com.zup.beagle.android.compiler.VIEW_CLIENT
 import br.com.zup.beagle.compiler.shared.BeagleClass
 import javax.lang.model.element.TypeElement
 
@@ -46,8 +46,8 @@ internal object PropertyImplementationManager {
                 DESIGN_SYSTEM,
             ),
             propertySpec(
-                propertySpecifications?.storeHandler,
-                STORE_HANDLER,
+                propertySpecifications?.viewClient,
+                VIEW_CLIENT,
             ),
             propertySpec(
                 propertySpecifications?.urlBuilder,
