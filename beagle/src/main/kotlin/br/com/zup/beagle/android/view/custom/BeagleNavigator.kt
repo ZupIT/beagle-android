@@ -112,6 +112,11 @@ internal object BeagleNavigator {
 
     fun popToView(context: Context, route: String, contextData: ContextData?) {
         if (context is AppCompatActivity) {
+            /**
+             * The popBackStackImmediate it's important to update [ContextData] because they get last fragment after pop
+             * and function popBackStack will execute in the next event loop cycle because this has a better performance
+             * but to this case I need to use this function
+             */
             context.supportFragmentManager.popBackStackImmediate(getFragmentName(route, context), 0)
             updateContext(context, contextData)
         }
