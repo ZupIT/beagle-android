@@ -23,7 +23,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import br.com.zup.beagle.android.utils.toAndroidId
 import br.com.zup.beagle.test.rules.BeagleComponentsRule
 import io.mockk.Runs
 import io.mockk.every
@@ -156,8 +155,8 @@ class PreviewActivityTest {
             )
 
             activityScenario.moveToState(Lifecycle.State.RESUMED)
-            textComponent = it.findViewById("textComponent".toAndroidId())
-            incrementButton = it.findViewById("incrementButton".toAndroidId())
+            textComponent = it.findViewById("textComponent".hashCode())
+            incrementButton = it.findViewById("incrementButton".hashCode())
         }
 
         incrementButton?.performClick()
