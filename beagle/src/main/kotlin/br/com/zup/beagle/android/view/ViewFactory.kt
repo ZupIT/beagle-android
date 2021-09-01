@@ -25,8 +25,8 @@ import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.HorizontalScrollView
 import android.widget.ScrollView
-import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import br.com.zup.beagle.R
@@ -73,9 +73,9 @@ internal object ViewFactory {
 
     fun makeButton(context: Context) = Button(context)
 
-    fun makeTextView(context: Context) = TextView(context)
+    fun makeTextView(context: Context) = AppCompatTextView(context)
 
-    fun makeTextView(context: Context, id: Int) = TextView(ContextThemeWrapper(context, id), null, 0)
+    fun makeTextView(context: Context, id: Int) = AppCompatTextView(ContextThemeWrapper(context, id), null, 0)
 
     fun makeInputText(context: Context, id: Int) = EditText(ContextThemeWrapper(context, id), null, 0)
 
