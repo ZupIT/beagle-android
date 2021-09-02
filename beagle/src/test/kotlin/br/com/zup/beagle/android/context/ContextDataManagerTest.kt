@@ -29,7 +29,7 @@ import br.com.zup.beagle.android.testutil.getPrivateField
 import br.com.zup.beagle.android.testutil.setPrivateField
 import br.com.zup.beagle.android.utils.Observer
 import br.com.zup.beagle.android.utils.getContextBinding
-import br.com.zup.beagle.android.utils.getContextData
+import br.com.zup.beagle.android.utils.getListContextData
 import br.com.zup.beagle.android.utils.setContextBinding
 import io.mockk.Runs
 import io.mockk.clearMocks
@@ -60,12 +60,12 @@ private val CONTEXT_ID = RandomData.string()
 class ContextDataManagerTest : BaseTest() {
 
     private lateinit var contextDataManager: ContextDataManager
-    private lateinit var contexts: MutableMap<Int, ContextBinding>
+    private lateinit var contexts: MutableMap<Int, Set<ContextBinding>>
     private lateinit var viewBinding: MutableMap<View, MutableSet<Binding<*>>>
 
     private val viewContext: ViewGroup = mockk(relaxed = true)
     private val viewId = RandomData.int()
-    private val contextBindingSlot = slot<ContextBinding>()
+    private val contextBindingSlot = slot<Set<ContextBinding>>()
 
     @BeforeAll
     override fun setUp() {
@@ -110,7 +110,6 @@ class ContextDataManagerTest : BaseTest() {
         contextBindingSlot.clear()
     }
 
-
     @DisplayName("When create the ContextDataManager")
     @Nested
     inner class Init {
@@ -146,7 +145,7 @@ class ContextDataManagerTest : BaseTest() {
             // When
             val contextDataManager = spyk<ContextDataManager>(recordPrivateCalls = true)
             val contexts =
-                contextDataManager.getPrivateField<MutableMap<Int, ContextBinding>>("contexts")
+                contextDataManager.getPrivateField<MutableMap<Int, Set<ContextBinding>>>("contexts")
             contextDataManager.setPrivateField("globalContext", globalContextMock)
             globalContextObserver.captured.invoke(contextData)
 
@@ -156,7 +155,7 @@ class ContextDataManagerTest : BaseTest() {
                 cache.evictAll()
                 contextDataManager.notifyBindingChanges(globalContextMock)
             }
-            assertEquals(contexts[Int.MAX_VALUE], globalContextMock)
+            assertEquals(contexts[Int.MAX_VALUE], setOf(globalContextMock))
         }
     }
 
@@ -168,17 +167,18 @@ class ContextDataManagerTest : BaseTest() {
         @Test
         fun addNewContext() {
             // Given
-            val contextData = ContextData(CONTEXT_ID, true)
+            val contextDataList = listOf(ContextData(CONTEXT_ID, true))
 
             // When
-            contextDataManager.addContext(viewContext, contextData)
+            contextDataManager.addContext(viewContext, contextDataList)
 
             // Then
             val contextBinding = contexts[viewContext.id]
             assertNotNull(contextBinding)
-            assertEquals(contextBinding?.context, contextData)
-            assertEquals(0, contextBinding?.bindings?.size)
-            assertEquals(contextData, viewContext.getContextData())
+            val contextDataListInBinding = contextBinding!!.map { it.context }
+            assertEquals(contextDataListInBinding, contextDataList)
+            assertEquals(0, contextBinding.last().bindings.size)
+            assertEquals(contextDataList, viewContext.getListContextData())
         }
 
         @DisplayName("Then should not add global context")
@@ -207,8 +207,8 @@ class ContextDataManagerTest : BaseTest() {
             contextDataManager.addContext(viewContext, contextData2)
 
             // Then
-            assertEquals(contextData1, contexts[viewContext.id]?.context)
-            assertEquals(contextData1, viewContext.getContextData())
+            assertEquals(contextData1, contexts[viewContext.id]!!.last().context)
+            assertEquals(listOf(contextData1), viewContext.getListContextData())
         }
 
         @DisplayName("Then should override context only if shouldOverrideExistingContext")
@@ -224,8 +224,8 @@ class ContextDataManagerTest : BaseTest() {
             contextDataManager.addContext(viewContext, contextData2, shouldOverrideExistingContext)
 
             // Then
-            assertEquals(contextData2, contexts[viewContext.id]?.context)
-            assertEquals(contextData2, viewContext.getContextData())
+            assertEquals(contextData2, contexts[viewContext.id]!!.last().context)
+            assertEquals(listOf(contextData2), viewContext.getListContextData())
         }
 
         @DisplayName("Then should clear bindings if already exists")
@@ -233,16 +233,39 @@ class ContextDataManagerTest : BaseTest() {
         fun clearBindings() {
             // Given
             val contextData = ContextData(CONTEXT_ID, true)
-            contexts[viewContext.id] = ContextBinding(
-                context = contextData,
-                bindings = mutableSetOf(Binding<Boolean>(observer = mockk(), bind = mockk()))
+            contexts[viewContext.id] = setOf(
+                ContextBinding(
+                    context = contextData,
+                    bindings = mutableSetOf(Binding<Boolean>(observer = mockk(), bind = mockk()))
+                )
             )
 
             // When
             contextDataManager.addContext(viewContext, contextData)
 
             // Then
-            assertTrue { contexts[viewContext.id]?.bindings?.isEmpty() ?: false }
+            assertTrue { contexts[viewContext.id]!!.last().bindings.isEmpty() }
+        }
+
+
+        @DisplayName("Then should link binding without context data")
+        @Test
+        fun testAddContextWithBindingWithoutContext() {
+            // Given
+            val viewWithBind = createViewForContext(viewContext)
+            val bind = expressionOf<Boolean>("@{$CONTEXT_ID}")
+            val observer = mockk<Observer<Boolean?>>(relaxed = true)
+            val contextData = ContextData(CONTEXT_ID, true)
+
+            // When
+            contextDataManager.addBinding(viewWithBind, bind, observer)
+            contextDataManager.linkBindingToContextAndEvaluateThem(viewWithBind)
+            contextDataManager.addContext(viewContext, contextData)
+
+            // Then
+            val bindingsWithoutContextData: MutableSet<Binding<*>> = contextDataManager.getPrivateField("bindingsWithoutContextData")
+
+            assertEquals(emptySet<Binding<*>>(), bindingsWithoutContextData)
         }
     }
 
@@ -281,18 +304,41 @@ class ContextDataManagerTest : BaseTest() {
             val bind = expressionOf<Boolean>("@{$CONTEXT_ID}")
             val observer = mockk<Observer<Boolean?>>(relaxed = true)
             val contextData = ContextData(CONTEXT_ID, true)
+
+            // When
             contextDataManager.addContext(viewContext, contextData)
+            contextDataManager.addBinding(viewWithBind, bind, observer)
+            contextDataManager.linkBindingToContextAndEvaluateThem(viewWithBind)
+
+            // Then
+            val contextBinding = contexts[viewContext.id]!!.last().bindings.first()
+            assertEquals(bind, contextBinding.bind)
+            assertEquals(observer, contextBinding.observer)
+            assertTrue { viewBinding.isEmpty() }
+        }
+
+        @DisplayName("Then should save binding when not has context data")
+        @Test
+        fun testBindingWithoutContextData() {
+            // Given
+            val viewWithBind = createViewForContext(viewContext)
+            val bind = expressionOf<Boolean>("@{$CONTEXT_ID}")
+            val observer = mockk<Observer<Boolean?>>(relaxed = true)
+            val bindingsWithoutContextData: MutableSet<Binding<*>> = contextDataManager.getPrivateField("bindingsWithoutContextData")
 
             // When
             contextDataManager.addBinding(viewWithBind, bind, observer)
             contextDataManager.linkBindingToContextAndEvaluateThem(viewWithBind)
 
             // Then
-            val contextBinding = contexts[viewContext.id]?.bindings?.first()
-            assertEquals(bind, contextBinding?.bind)
-            assertEquals(observer, contextBinding?.observer)
             assertTrue { viewBinding.isEmpty() }
+            assertEquals(bindingsWithoutContextData,
+                setOf(Binding(
+                    observer = observer,
+                    bind = bind
+                )))
         }
+
 
         @DisplayName("Then should add binding to global context")
         @Test
@@ -307,9 +353,9 @@ class ContextDataManagerTest : BaseTest() {
             contextDataManager.linkBindingToContextAndEvaluateThem(viewWithBind)
 
             // Then
-            val contextBinding = contexts[Int.MAX_VALUE]?.bindings?.first()
-            assertEquals(bind, contextBinding?.bind)
-            assertEquals(observer, contextBinding?.observer)
+            val contextBinding = contexts[Int.MAX_VALUE]?.last()!!.bindings.first()
+            assertEquals(bind, contextBinding.bind)
+            assertEquals(observer, contextBinding.observer)
         }
     }
 
@@ -322,14 +368,14 @@ class ContextDataManagerTest : BaseTest() {
         fun notifyBindingChanges() {
             // Given
             val viewWithBind = createViewForContext()
-            val contextBinding = mockk<ContextBinding>(relaxed = true)
+            val contextBinding = setOf(mockk<ContextBinding>(relaxed = true))
             viewWithBind.setContextBinding(contextBinding)
 
             // When
             contextDataManager.linkBindingToContextAndEvaluateThem(viewWithBind)
 
             // Then
-            verify(exactly = 1) { contextDataManager.notifyBindingChanges(contextBinding) }
+            verify(exactly = 1) { contextDataManager.notifyBindingChanges(contextBinding.first()) }
         }
 
         @DisplayName("Then should get value from evaluation")
@@ -435,9 +481,9 @@ class ContextDataManagerTest : BaseTest() {
             contextDataManager.updateContext(viewContext, updateContext)
 
             // Then
-            val contextBinding = contexts[viewContext.id]?.context
-            assertEquals(updateContext.contextId, contextBinding?.id)
-            assertEquals(updateContext.value, contextBinding?.value)
+            val contextBinding = contexts[viewContext.id]?.last()!!.context
+            assertEquals(updateContext.contextId, contextBinding.id)
+            assertEquals(updateContext.value, contextBinding.value)
         }
 
         @DisplayName("Then should call global context to id global")
@@ -467,19 +513,21 @@ class ContextDataManagerTest : BaseTest() {
             val bind = expressionOf<String>("@{$contextId1} @{$contextId2}")
             val viewContext1 = createViewForContext()
             viewContext1.setContextBinding(
-                ContextBinding(
+                setOf(ContextBinding(
                     ContextData(
                         id = contextId1,
                         value = RandomData.string()
                     )
-                )
+                ))
             )
             val viewContext2 = createViewForContext(viewContext1)
             viewContext2.setContextBinding(
-                ContextBinding(
-                    ContextData(
-                        id = contextId2,
-                        value = RandomData.string()
+                setOf(
+                    ContextBinding(
+                        ContextData(
+                            id = contextId2,
+                            value = RandomData.string()
+                        )
                     )
                 )
             )
@@ -559,11 +607,11 @@ class ContextDataManagerTest : BaseTest() {
         @Test
         fun getContextData() {
             // Given
-            val contextData = ContextData(CONTEXT_ID, true)
+            val contextData = listOf(ContextData(CONTEXT_ID, true))
             contextDataManager.addContext(viewContext, contextData)
 
             // When
-            val result = contextDataManager.getContextData(viewContext)
+            val result = contextDataManager.getListContextData(viewContext)
 
             // Then
             assertEquals(contextData, result)
@@ -585,7 +633,7 @@ class ContextDataManagerTest : BaseTest() {
             contextDataManager.restoreContext(viewContext)
 
             // Then
-            assertEquals(contextData, viewContext.getContextData())
+            assertEquals(contextData, viewContext.getListContextData()!!.last())
         }
     }
 
@@ -600,18 +648,14 @@ class ContextDataManagerTest : BaseTest() {
             val contextData1 = ContextData(CONTEXT_ID, true)
             val viewWithoutId = mockk<View>(relaxed = true) {
                 every { id } returns View.NO_ID
-                every { getContextBinding() } returns mockk(relaxed = true) {
-                    every { context } returns contextData1
-                }
+                every { getContextBinding() } returns setOf(ContextBinding(contextData1))
             }
             contextDataManager.addContext(viewWithoutId, contextData1)
 
             val contextData2 = ContextData(CONTEXT_ID, false)
             val viewWithId = viewWithoutId.apply {
                 every { id } returns 10
-                every { getContextBinding() } returns mockk(relaxed = true) {
-                    every { context } returns contextData2
-                }
+                every { getContextBinding() } returns setOf(ContextBinding(contextData2))
             }
             contextDataManager.addContext(viewWithId, contextData2)
 
@@ -623,7 +667,7 @@ class ContextDataManagerTest : BaseTest() {
             contextDataManager.setIdToViewWithContext(viewWithId)
 
             // Then
-            assertEquals(contextData2, viewWithId.getContextData())
+            assertEquals(contextData2, viewWithId.getListContextData()!!.last())
             assertNotEquals(contextsWithoutIdSizeBefore, contextsWithoutId.size)
         }
 
@@ -634,9 +678,7 @@ class ContextDataManagerTest : BaseTest() {
             val contextData = ContextData(CONTEXT_ID, true)
             val viewWithoutId = mockk<View>(relaxed = true) {
                 every { id } returns View.NO_ID
-                every { getContextBinding() } returns mockk(relaxed = true) {
-                    every { context } returns contextData
-                }
+                every { getContextBinding() } returns setOf(ContextBinding(contextData))
             }
             contextDataManager.addContext(viewWithoutId, contextData)
 
@@ -670,9 +712,7 @@ class ContextDataManagerTest : BaseTest() {
             val contextData = ContextData(CONTEXT_ID, true)
             val viewWithId = mockk<View>(relaxed = true) {
                 every { id } returns oldId
-                every { getContextBinding() } returns mockk(relaxed = true) {
-                    every { context } returns contextData
-                }
+                every { getContextBinding() } returns setOf(ContextBinding(contextData))
             }
             contextDataManager.addContext(viewWithId, contextData)
 
@@ -696,18 +736,14 @@ class ContextDataManagerTest : BaseTest() {
             val oldContextData = ContextData("old", true)
             val oldViewWithId = mockk<View>(relaxed = true) {
                 every { id } returns oldId
-                every { getContextBinding() } returns mockk(relaxed = true) {
-                    every { context } returns oldContextData
-                }
+                every { getContextBinding() } returns setOf(ContextBinding(oldContextData))
             }
             contextDataManager.addContext(oldViewWithId, oldContextData)
 
             val newContextData = ContextData("new", true)
             val newViewWithId = mockk<View>(relaxed = true) {
                 every { id } returns newId
-                every { getContextBinding() } returns mockk(relaxed = true) {
-                    every { context } returns newContextData
-                }
+                every { getContextBinding() } returns setOf(ContextBinding(newContextData))
             }
             contextDataManager.addContext(newViewWithId, newContextData)
 

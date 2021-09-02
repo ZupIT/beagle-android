@@ -22,6 +22,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.components.layout.Container
+import br.com.zup.beagle.android.context.ContextBinding
 import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.data.serializer.BeagleSerializer
 import br.com.zup.beagle.android.testutil.InstantExecutorExtension
@@ -162,9 +163,7 @@ class ListViewHolderTest : BaseTest() {
         @Test
         fun viewsWithContext() {
             // Given
-            every { itemView.getContextBinding() } returns mockk {
-                every { context } returns ContextData("id", "value")
-            }
+            every { itemView.getContextBinding() } returns setOf(ContextBinding(ContextData("id", "value")))
 
             // When
             listViewHolder = ListViewHolder(
@@ -369,11 +368,9 @@ class ListViewHolderTest : BaseTest() {
         fun setDefaultContextToEachContextView() {
             // Given
             every { listItem.firstTimeBinding } returns true
-            every { itemView.getContextBinding() } returns mockk {
-                every { context } returns ContextData("id", "value")
-            }
+            every { itemView.getContextBinding() } returns setOf(ContextBinding(ContextData("id", "value")))
             val context = mockk<ContextData>()
-            every { viewModel.getContextData(itemView) } returns context
+            every { viewModel.getListContextData(itemView) } returns listOf(context)
 
             val contextSlot = mutableListOf<ContextData>()
             every {
@@ -405,10 +402,8 @@ class ListViewHolderTest : BaseTest() {
         fun setDefaultContextToEachContextViewWithContext() {
             // Given
             every { listItem.firstTimeBinding } returns true
-            every { itemView.getContextBinding() } returns mockk {
-                every { context } returns ContextData("id", "otherContext")
-            }
-            every { viewModel.getContextData(itemView) } returns null
+            every { itemView.getContextBinding() } returns setOf(ContextBinding(ContextData("id", "otherContext")))
+            every { viewModel.getListContextData(itemView) } returns null
 
             val context = ContextData("id", "savedContext")
             val template = Container(children = listOf(), context = context)
@@ -567,9 +562,7 @@ class ListViewHolderTest : BaseTest() {
         @Test
         fun restoreContexts() {
             // Given
-            every { itemView.getContextBinding() } returns mockk {
-                every { context } returns ContextData("id", "value")
-            }
+            every { itemView.getContextBinding() } returns setOf(ContextBinding(ContextData("id", "value")))
             listViewHolder = ListViewHolder(
                 itemView,
                 template,

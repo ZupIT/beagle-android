@@ -25,7 +25,7 @@ import io.mockk.*
 fun createViewForContext(parentView: ViewGroup? = null): ViewGroup {
     return mockk {
         val viewId = RandomData.int()
-        val contextBindingSlot = slot<ContextBinding>()
+        val contextBindingSlot = slot<Set<ContextBinding>>()
         every { id } returns viewId
         every { parent } returns parentView
         every { setTag(R.id.beagle_context_view, capture(contextBindingSlot)) } just Runs
