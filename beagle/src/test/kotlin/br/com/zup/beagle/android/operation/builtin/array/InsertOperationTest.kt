@@ -58,5 +58,16 @@ internal class InsertOperationTest {
             val expected = OperationType.TypeJsonArray(JSONArray(listOf(1, 2, 3, 9)))
             assertEquals(expected.toString(), result.toString())
         }
+
+        @Test
+        @DisplayName("Then should not change the original JSONArray")
+        fun shouldNotChangeOriginalArray() {
+            // WHEN
+            insertOperation.execute(list, item)
+
+            // THEN
+            val expected = OperationType.TypeJsonArray(JSONArray(listOf(1, 2, 3)))
+            assertEquals(expected.toString(), list.toString())
+        }
     }
 }

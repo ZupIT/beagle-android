@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@file:Suppress("TooManyFunctions")
+
 package br.com.zup.beagle.android.context
 
 import android.view.View
@@ -38,15 +40,22 @@ internal class ContextDataManager(
 ) {
 
     private var globalContext: ContextBinding = ContextBinding(GlobalContext.getContext())
-    private val contexts = mutableMapOf<Int, ContextBinding>()
-    private val contextsWithoutId = mutableMapOf<View, ContextBinding>()
+    private val contexts = mutableMapOf<Int, Set<ContextBinding>>()
+    private val contextsWithoutId = mutableMapOf<View, Set<ContextBinding>>()
     private val viewBinding = mutableMapOf<View, MutableSet<Binding<*>>>()
+
+    /**
+     * When trying to add [Binding] and the context does not exist in the tree
+     * to link then this [Binding] is saved in this list
+     */
+    private val bindingsWithoutContextData = mutableSetOf<Binding<*>>()
+
     private val globalContextObserver: GlobalContextObserver = {
         updateGlobalContext(it)
     }
 
     init {
-        contexts[GLOBAL_CONTEXT_ID] = globalContext
+        contexts[GLOBAL_CONTEXT_ID] = setOf(globalContext)
         GlobalContext.observeGlobalContextChange(globalContextObserver)
     }
 
@@ -60,7 +69,9 @@ internal class ContextDataManager(
     fun setIdToViewWithContext(view: View) {
         contextsWithoutId[view]?.apply {
             contexts[view.id]?.let {
-                view.setContextData(it.context)
+                it.forEach { binding ->
+                    view.setContextData(binding.context)
+                }
             } ?: run {
                 contexts[view.id] = this
             }
@@ -74,11 +85,17 @@ internal class ContextDataManager(
                 contexts.put(newId, contextBinding)
             } else {
                 contexts[newId]?.let {
-                    updateContextAndReference(view, it.context)
+                    updateContextAndReference(view, it)
                 }
             }
         }
         contexts.remove(oldId)
+    }
+
+    fun addContext(view: View, contextDataList: List<ContextData>, shouldOverrideExistingContext: Boolean = false) {
+        contextDataList.forEach {
+            addContext(view, it, shouldOverrideExistingContext)
+        }
     }
 
     fun addContext(view: View, context: ContextData, shouldOverrideExistingContext: Boolean = false) {
@@ -87,17 +104,25 @@ internal class ContextDataManager(
             return
         }
 
-        val existingContext = contexts[view.id]
+        val existingContextList = contexts[view.id]
 
-        if (existingContext != null) {
+        if (existingContextList != null) {
             if (shouldOverrideExistingContext) {
                 updateContextAndReference(view, context)
             } else {
-                view.setContextBinding(existingContext)
-                existingContext.bindings.clear()
+                view.setContextBinding(existingContextList)
+                existingContextList.forEach { it.bindings.clear() }
             }
         } else {
             updateContextAndReference(view, context)
+        }
+
+        tryLinkContextInBindWithoutContext(view)
+    }
+
+    private fun updateContextAndReference(view: View, contexts: Set<ContextBinding>) {
+        contexts.forEach {
+            updateContextAndReference(view, it.context)
         }
     }
 
@@ -112,7 +137,7 @@ internal class ContextDataManager(
         }
     }
 
-    fun getContextData(view: View) = contexts[view.id]?.context
+    fun getListContextData(view: View) = contexts[view.id]?.map { contextBinding -> contextBinding.context }
 
     fun restoreContext(view: View) {
         contexts[view.id]?.let {
@@ -134,44 +159,58 @@ internal class ContextDataManager(
             val contextStack = view.getAllParentContextWithGlobal()
             viewBinding[view]?.forEach { binding ->
                 val bindingTokens = binding.bind.filterBindingTokens()
-                notifyBindingTokens(bindingTokens, contextStack, binding)
+                val result = tryNotifyBindingTokens(bindingTokens, contextStack, binding)
+                if (!result) {
+                    bindingsWithoutContextData.add(binding)
+                }
             }
             viewBinding.remove(view)
         } else {
-            view.getContextBinding()?.let {
+            view.getContextBinding()?.forEach {
                 notifyBindingChanges(it)
             }
         }
     }
 
-    private fun notifyBindingTokens(
+    /**
+     * the @return is `false` when doesn't find the [ContextData] in the tree
+     *
+     */
+    private fun tryNotifyBindingTokens(
         bindingTokens: List<String>,
         contextStack: MutableList<ContextBinding>,
         binding: Binding<*>
-    ) {
-        if (bindingTokens.isNotEmpty()) {
+    ): Boolean {
+        return if (bindingTokens.isNotEmpty()) {
+            var result = false
             bindingTokens.forEach { expression ->
-                linkBindingsToNotifyListeners(expression, contextStack, binding)
+                result = tryLinkBindingsToNotifyListeners(expression, contextStack, binding)
             }
+            result
         } else {
             val value = contextDataEvaluation.evaluateBindExpression(listOf(), binding.bind)
             binding.notifyChanges(value)
+            true
         }
     }
 
-    private fun linkBindingsToNotifyListeners(
+    /**
+     * the @return is `false` when doesn't find the [ContextData] in the tree
+     *
+     */
+    private fun tryLinkBindingsToNotifyListeners(
         expression: String,
         contextStack: MutableList<ContextBinding>,
         binding: Binding<*>
-    ) {
+    ): Boolean {
         val contextId = expression.getContextId()
-        for (contextBinding in contextStack) {
-            if (contextBinding.context.id == contextId) {
-                contextBinding.bindings.add(binding)
-                notifyBindingChanges(contextBinding)
-                break
-            }
-        }
+
+        val contextBinding = contextStack.find { contextBinding -> contextBinding.context.id == contextId }
+            ?: return false
+
+        contextBinding.bindings.add(binding)
+        notifyBindingChanges(contextBinding)
+        return true
     }
 
     fun getContextsFromBind(originView: View, binding: Bind.Expression<*>): List<ContextData> {
@@ -188,8 +227,8 @@ internal class ContextDataManager(
         } else {
             view.findParentContextWithId(setContextInternal.contextId)?.let { parentView ->
                 val currentContextBinding = parentView.getContextBinding()
-                currentContextBinding?.let {
-                    setContextValue(currentContextBinding, setContextInternal)
+                currentContextBinding?.forEach { contextBinding ->
+                    setContextValue(contextBinding, setContextInternal)
                 }
             }
         }
@@ -237,7 +276,7 @@ internal class ContextDataManager(
     private fun updateGlobalContext(contextData: ContextData) {
         globalContext = globalContext.copy(context = contextData)
         globalContext.cache.evictAll()
-        contexts[GLOBAL_CONTEXT_ID] = globalContext
+        contexts[GLOBAL_CONTEXT_ID] = setOf(globalContext)
         notifyBindingChanges(globalContext)
     }
 
@@ -259,5 +298,23 @@ internal class ContextDataManager(
         }
 
         return bindings
+    }
+
+    /**
+     * When adding new [ContextData] this function checks if existing [Binding] without link
+     * and if the new [ContextData] match with the [Binding] the link will be made
+     */
+    fun tryLinkContextInBindWithoutContext(originView: View) {
+        val contextStack = originView.getAllParentContextWithGlobal()
+        val iterator = bindingsWithoutContextData.iterator()
+
+        iterator.forEach {
+            val bindingTokens = it.bind.filterBindingTokens()
+            val result = tryNotifyBindingTokens(bindingTokens, contextStack, it)
+            if (result) {
+                iterator.remove()
+            }
+        }
+
     }
 }

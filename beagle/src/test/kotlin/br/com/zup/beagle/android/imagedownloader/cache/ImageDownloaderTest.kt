@@ -21,7 +21,9 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.DisplayMetrics
 import android.util.LruCache
-import br.com.zup.beagle.android.BaseTest
+import br.com.zup.beagle.android.imagedownloader.cache.ImageDownloader
+import br.com.zup.beagle.android.imagedownloader.cache.LruImageCache
+import br.com.zup.beagle.android.imagedownloader.cache.URLFactory
 import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.just

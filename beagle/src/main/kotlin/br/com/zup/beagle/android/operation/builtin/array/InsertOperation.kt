@@ -34,28 +34,19 @@ internal class InsertOperation : Operation {
         return OperationType.TypeJsonArray(result)
     }
 
+
     private fun insertOnJSONArray(array: JSONArray, element: Any?, index: Int?): JSONArray {
-        if (index != null) {
-            return appendValueToJSONArray(array, element, index)
-        } else {
-            array.put(element)
-        }
-
-        return array
-    }
-
-    private fun appendValueToJSONArray(array: JSONArray, element: Any?, index: Int): JSONArray {
-        val newArray = JSONArray()
-        for (i in 0 until array.length()) {
-            if (i == index) {
-                newArray.put(element)
-                if (array[i] != null) {
-                    newArray.put(array[i])
+        return JSONArray().apply {
+            for (i in 0 until array.length()) {
+                if (i == index) {
+                    put(element)
                 }
-            } else {
-                newArray.put(array[i])
+                put(array[i])
+            }
+
+            if (index == null) {
+                put(element)
             }
         }
-        return newArray
     }
 }

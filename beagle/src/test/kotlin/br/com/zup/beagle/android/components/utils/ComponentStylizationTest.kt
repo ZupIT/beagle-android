@@ -98,6 +98,7 @@ class ComponentStylizationTest : BaseTest() {
             // Given
             val widgetId = "123"
             val slotId = slot<String>()
+            @Suppress("UNCHECKED_CAST")
             every { beagleSdk.registeredWidgets() } returns listOf(Text::class.java) as List<Class<WidgetView>>
 
             every { view.setTag(R.id.beagle_component_type, capture(slotId)) } just Runs
@@ -205,7 +206,7 @@ class ComponentStylizationTest : BaseTest() {
         fun testApplyOfRegisterActionWidgetShouldGetNameFromAnnotation() {
             val widget = RegisterWidgetWithName()
             //when
-            every { beagleSdk.registeredWidgets() } returns listOf(widget::class.java as Class<WidgetView>)
+            every { beagleSdk.registeredWidgets() } returns widgetList(widget)
             val slotId = slot<String>()
 
             every { view.setTag(R.id.beagle_component_type, capture(slotId)) } just Runs
@@ -225,7 +226,7 @@ class ComponentStylizationTest : BaseTest() {
         fun testApplyOfRegisterActionWidgetShouldGetNameFromClass() {
             //given
             val widget = RegisterWidgetWithoutName()
-            every { beagleSdk.registeredWidgets() } returns listOf(widget::class.java as Class<WidgetView>)
+            every { beagleSdk.registeredWidgets() } returns widgetList(widget)
             val slotId = slot<String>()
 
             every { view.setTag(R.id.beagle_component_type, capture(slotId)) } just Runs
@@ -240,6 +241,9 @@ class ComponentStylizationTest : BaseTest() {
             Assert.assertEquals("custom:registerwidgetwithoutname", slotId.captured)
         }
     }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun widgetList(widget: WidgetView) = listOf(widget::class.java as Class<WidgetView>)
 }
 
 @BeagleJson(name = "widgetName")
@@ -269,4 +273,3 @@ internal class RegisterWidgetWithName() : WidgetView() {
         return View(rootView.getContext())
     }
 }
-

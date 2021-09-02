@@ -22,16 +22,13 @@ import androidx.lifecycle.ViewModelProvider
 import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.setup.BeagleSdk
 import br.com.zup.beagle.android.widget.ActivityRootView
-import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkConstructor
 import io.mockk.mockkObject
 import io.mockk.unmockkAll
 import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.TestInstance
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -69,7 +66,6 @@ abstract class BaseTest {
         mockkObject(BeagleEnvironment)
         every { BeagleEnvironment.beagleSdk } returns beagleSdk
         every { beagleSdk.typeAdapterResolver } returns null
-        every { beagleSdk.config.cache.size } returns 15
         every { beagleSdk.registeredWidgets() } returns listOf()
         every { beagleSdk.registeredActions() } returns listOf()
         every { beagleSdk.registeredOperations() } returns mapOf()

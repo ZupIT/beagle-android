@@ -16,31 +16,30 @@
 
 package br.com.zup.beagle.android.compiler.mocks
 
+const val VIEW_CLIENT_IMPORT = "import br.com.zup.beagle.android.networking.ViewClient"
 
-const val STORE_HANDLER_IMPORT = "import br.com.zup.beagle.android.store.StoreHandler"
-
-const val VALID_STORE_HANDLER =
+const val VALID_VIEW_CLIENT =
     """
-        import br.com.zup.beagle.android.store.StoreHandler
+        import br.com.zup.beagle.android.networking.ViewClient
 
         @BeagleComponent
-        class StoreHandlerTest: StoreHandler { }
+        class ViewClientTest: ViewClient { }
     """
 
-const val VALID_SECOND_STORE_HANDLER =
+const val VALID_SECOND_VIEW_CLIENT =
     """
         @BeagleComponent
-        class StoreHandlerTestTwo: StoreHandler { }
+        class ViewClientTestTwo: ViewClient { }
     """
 
-const val VALID_THIRD_STORE_HANDLER =
+const val VALID_THIRD_VIEW_CLIENT =
     """
-        class StoreHandlerTestThree: StoreHandler { }
+        class ViewClientTestThree: ViewClient { }
     """
 
-const val LIST_OF_STORE_HANDLER = VALID_STORE_HANDLER + VALID_SECOND_STORE_HANDLER
+const val LIST_OF_VIEW_CLIENT = VALID_VIEW_CLIENT + VALID_SECOND_VIEW_CLIENT
 
-const val VALID_STORE_HANDLER_BEAGLE_SDK =
+const val VALID_VIEW_CLIENT_BEAGLE_SDK =
     """
         @file:Suppress("OverridingDeprecatedMember", "DEPRECATION", "UNCHECKED_CAST")
         
@@ -54,12 +53,12 @@ const val VALID_STORE_HANDLER_BEAGLE_SDK =
         import br.com.zup.beagle.android.navigation.BeagleControllerReference
         import br.com.zup.beagle.android.navigation.DeepLinkHandler
         import br.com.zup.beagle.android.networking.HttpClientFactory
+        import br.com.zup.beagle.android.networking.ViewClient
         import br.com.zup.beagle.android.networking.urlbuilder.UrlBuilder
         import br.com.zup.beagle.android.operation.Operation
         import br.com.zup.beagle.android.setup.BeagleConfig
         import br.com.zup.beagle.android.setup.BeagleSdk
         import br.com.zup.beagle.android.setup.DesignSystem
-        import br.com.zup.beagle.android.store.StoreHandler
         import br.com.zup.beagle.android.widget.WidgetView
         import java.lang.Class
         import kotlin.String
@@ -75,7 +74,7 @@ const val VALID_STORE_HANDLER_BEAGLE_SDK =
 
             public override val designSystem : DesignSystem? = null
 
-            public override val storeHandler : StoreHandler = br.com.test.beagle.StoreHandlerTest()
+            public override val viewClient: ViewClient = br.com.test.beagle.ViewClientTest()
 
             public override val urlBuilder : UrlBuilder? = null
 
@@ -100,7 +99,7 @@ const val VALID_STORE_HANDLER_BEAGLE_SDK =
         }
     """
 
-const val VALID_STORE_HANDLER_BEAGLE_SDK_FROM_REGISTRAR =
+const val VALID_VIEW_CLIENT_BEAGLE_SDK_FROM_REGISTRAR =
     """
         @file:Suppress("OverridingDeprecatedMember", "DEPRECATION", "UNCHECKED_CAST")
 
@@ -114,12 +113,12 @@ const val VALID_STORE_HANDLER_BEAGLE_SDK_FROM_REGISTRAR =
         import br.com.zup.beagle.android.navigation.BeagleControllerReference
         import br.com.zup.beagle.android.navigation.DeepLinkHandler
         import br.com.zup.beagle.android.networking.HttpClientFactory
+        import br.com.zup.beagle.android.networking.ViewClient
         import br.com.zup.beagle.android.networking.urlbuilder.UrlBuilder
         import br.com.zup.beagle.android.operation.Operation
         import br.com.zup.beagle.android.setup.BeagleConfig
         import br.com.zup.beagle.android.setup.BeagleSdk
         import br.com.zup.beagle.android.setup.DesignSystem
-        import br.com.zup.beagle.android.store.StoreHandler
         import br.com.zup.beagle.android.widget.WidgetView
         import java.lang.Class
         import kotlin.String
@@ -135,7 +134,7 @@ const val VALID_STORE_HANDLER_BEAGLE_SDK_FROM_REGISTRAR =
         
           public override val designSystem: DesignSystem? = null
         
-          public override val storeHandler: StoreHandler = br.com.test.beagle.StoreHandlerTestThree()
+          public override val viewClient: ViewClient = br.com.test.beagle.ViewClientTestThree()
         
           public override val urlBuilder: UrlBuilder? = null
         

@@ -16,8 +16,11 @@
 
 package br.com.zup.beagle.android.context
 
+import android.os.Parcelable
 import br.com.zup.beagle.android.widget.core.BeagleJson
 import br.com.zup.beagle.android.annotation.ContextDataValue
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.RawValue
 
 /**
  * Context is a variable of any type, including a map that defines a set of key/value pairs.
@@ -27,8 +30,9 @@ import br.com.zup.beagle.android.annotation.ContextDataValue
  * @param value is a parameter (data) of any kind.
  */
 @BeagleJson
+@Parcelize
 data class ContextData(
     val id: String,
     @ContextDataValue
-    val value: Any,
-)
+    val value: @RawValue Any,
+) : Parcelable

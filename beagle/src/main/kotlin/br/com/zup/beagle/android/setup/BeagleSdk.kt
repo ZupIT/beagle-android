@@ -20,6 +20,7 @@ import android.app.Application
 import androidx.annotation.VisibleForTesting
 import br.com.zup.beagle.android.analytics.AnalyticsProvider
 import br.com.zup.beagle.android.action.Action
+import br.com.zup.beagle.android.networking.ViewClient
 import br.com.zup.beagle.android.data.serializer.BeagleMoshi
 import br.com.zup.beagle.android.data.serializer.adapter.generic.TypeAdapterResolver
 import br.com.zup.beagle.android.imagedownloader.BeagleImageDownloader
@@ -29,7 +30,6 @@ import br.com.zup.beagle.android.navigation.DeepLinkHandler
 import br.com.zup.beagle.android.networking.HttpClientFactory
 import br.com.zup.beagle.android.networking.urlbuilder.UrlBuilder
 import br.com.zup.beagle.android.operation.Operation
-import br.com.zup.beagle.android.store.StoreHandler
 import br.com.zup.beagle.android.utils.BeagleScope
 import br.com.zup.beagle.android.utils.CoroutineDispatchers
 import br.com.zup.beagle.android.widget.WidgetView
@@ -43,12 +43,11 @@ interface BeagleSdk {
     val httpClientFactory: HttpClientFactory?
     val designSystem: DesignSystem?
     val imageDownloader: BeagleImageDownloader?
-    val storeHandler: StoreHandler?
+    val viewClient: ViewClient?
     val controllerReference: BeagleControllerReference?
     val typeAdapterResolver: TypeAdapterResolver?
     val analyticsProvider: AnalyticsProvider?
     val urlBuilder: UrlBuilder?
-
     val logger: BeagleLogger?
 
     fun registeredWidgets(): List<Class<WidgetView>>

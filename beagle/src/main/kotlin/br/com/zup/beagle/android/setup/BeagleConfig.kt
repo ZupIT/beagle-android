@@ -33,19 +33,6 @@ enum class Environment {
 }
 
 /**
- * Object responsible for managing the cache of Beagle requests.
- *
- * @param enabled Enables or disables memory and disk caching.
- * @param maxAge Time in seconds that memory cache will live.
- * @param size Memory LRU cache size.
- */
-data class Cache(
-    val enabled: Boolean,
-    val maxAge: Long,
-    val size: Int = 0,
-)
-
-/**
  * Interface that provides initial beagle configuration attributes.
  */
 interface BeagleConfig {
@@ -58,9 +45,4 @@ interface BeagleConfig {
      * Informs the base URL used in Beagle in the application.
      */
     val baseUrl: String
-
-    /**
-     * Object responsible for managing the cache of Beagle requests.
-     */
-    val cache: Cache
 }

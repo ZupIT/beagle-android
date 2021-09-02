@@ -14,6 +14,13 @@
  * limitations under the License.
  */
 
-package br.com.zup.beagle.android.components.form
+package br.com.zup.beagle.android.utils
 
-abstract class InputWidget
+internal fun String.toAndroidId(): Int {
+    // Validation required to avoid conflict of View.generateViewId() with a component's numeral id
+    return if (toIntOrNull() != null) {
+        toInt()
+    } else {
+        hashCode()
+    }
+}

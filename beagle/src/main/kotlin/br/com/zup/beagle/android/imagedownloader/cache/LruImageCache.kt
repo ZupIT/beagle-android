@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package br.com.zup.beagle.android.cache.imagecomponent
+package br.com.zup.beagle.android.imagedownloader.cache
 
 import android.graphics.Bitmap
 import android.util.LruCache

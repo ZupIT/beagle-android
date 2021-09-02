@@ -62,14 +62,14 @@ private class FetchActionLiveData(
 
     override fun onActive() {
         if (value == null) {
-            fetchData()
+            fetchAction()
         }
     }
 
-    private fun fetchData() {
+    private fun fetchAction() {
         coroutineScope.launch(ioDispatcher) {
             try {
-                val response = actionRequester.fetchData(sendRequest.toRequestData())
+                val response = actionRequester.fetchAction(sendRequest.toRequestData())
                 postValue(FetchViewState.Success(response.toResponse()))
             } catch (exception: BeagleApiException) {
                 postValue(FetchViewState.Error(exception.responseData.toResponse()))

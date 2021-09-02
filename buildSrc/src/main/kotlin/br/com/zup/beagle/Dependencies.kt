@@ -50,14 +50,14 @@ class Dependencies : Plugin<Project> {
         const val buildTools = "30.0.2"
         const val kotlin = "1.5.21"
 
-        const val kotlinCoroutines = "1.5.0"
+        const val kotlinCoroutines = "1.5.1"
 
         const val kotlinPoet = "1.9.0"
         const val okio = "2.10.0"
 
         const val appcompat = "1.3.1"
         const val viewModel = "2.3.1"
-        const val recyclerView = "1.2.0"
+        const val recyclerView = "1.2.1"
         const val swipeRefreshLayout = "1.1.0"
 
         const val moshi = "1.12.0"
@@ -65,7 +65,7 @@ class Dependencies : Plugin<Project> {
         const val soLoader = "0.10.1"
 
         const val junit5 = "5.7.0"
-        const val junit4 = "4.13"
+        const val junit4 = "4.13.2"
 
         const val yoga = "1.19.0"
 
@@ -74,7 +74,7 @@ class Dependencies : Plugin<Project> {
         const val webSocket = "1.5.2"
         const val slf4jSimple = "1.7.32"
 
-        const val kotlinCoroutinesTest = "1.3.9"
+        const val kotlinCoroutinesTest = "1.5.1"
         const val materialDesign = "1.2.1"
         const val googleAutoService = "1.0"
 
@@ -82,17 +82,17 @@ class Dependencies : Plugin<Project> {
 
         const val mockk = "1.12.0"
 
-        const val testRunner = "1.3.1-alpha02"
-        const val testExt = "1.1.3-alpha02"
+        const val testRunner = "1.4.0"
+        const val testExt = "1.1.3"
         const val archCoreTesting = "2.1.0"
-        const val testRules = "1.3.1-alpha02"
-        const val testCore = "1.3.1-alpha02"
+        const val testRules = "1.4.0"
+        const val testCore = "1.4.0"
         const val robolectric = "4.6.1"
         const val fragmentTest = "1.3.6"
 
         const val incap = "0.3"
 
-        const val kotlinCompileTesting = "1.4.2"
+        const val kotlinCompileTesting = "1.4.3"
 
         const val multidex = "2.0.1"
     }

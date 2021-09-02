@@ -18,6 +18,7 @@ package br.com.zup.beagle.android.utils
 
 import android.content.Context
 import android.content.Intent
+import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.view.BeagleActivity
 
@@ -25,10 +26,12 @@ import br.com.zup.beagle.android.view.BeagleActivity
  * Create a intent to start BeagleActivity's sub-classes.
  * @property screenJson that represents a Screen to be shown
  */
-inline fun <reified T : BeagleActivity> Context.newServerDrivenIntent(screenJson: String): Intent {
-    return Intent(this, T::class.java).putExtras(BeagleActivity.bundleOf(screenJson))
+inline fun <reified T : BeagleActivity> Context.newServerDrivenIntent(screenJson: String,
+                                                                      contextData: ContextData? = null): Intent {
+    return Intent(this, T::class.java).putExtras(BeagleActivity.bundleOf(screenJson, contextData))
 }
 
-inline fun <reified T : BeagleActivity> Context.newServerDrivenIntent(requestData: RequestData): Intent {
-    return Intent(this, T::class.java).putExtras(BeagleActivity.bundleOf(requestData))
+inline fun <reified T : BeagleActivity> Context.newServerDrivenIntent(requestData: RequestData,
+                                                                      contextData: ContextData? = null): Intent {
+    return Intent(this, T::class.java).putExtras(BeagleActivity.bundleOf(requestData, contextData))
 }

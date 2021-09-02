@@ -14,27 +14,6 @@
  * limitations under the License.
  */
 
-package br.com.zup.beagle.android.cache
+package br.com.zup.beagle.android.networking
 
-import android.util.LruCache
-import br.com.zup.beagle.android.setup.BeagleEnvironment
-
-internal class LruCacheStore(
-    private val cache: LruCache<String, BeagleCache> = LruCache(
-        BeagleEnvironment.beagleSdk.config.cache.size
-    )
-) {
-
-    fun save(cacheKey: String, beagleCache: BeagleCache) {
-        cache.put(cacheKey, beagleCache)
-    }
-
-    fun restore(cacheKey: String): BeagleCache? {
-        return cache[cacheKey]
-    }
-
-
-    companion object {
-        val instance: LruCacheStore by lazy { LruCacheStore() }
-    }
-}
+interface ViewClient

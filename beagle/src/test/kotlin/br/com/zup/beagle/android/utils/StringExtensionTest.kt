@@ -14,27 +14,34 @@
  * limitations under the License.
  */
 
-package br.com.zup.beagle.sample.config
+package br.com.zup.beagle.android.utils
 
-import br.com.zup.beagle.android.store.LocalStore
+import org.junit.Assert.assertEquals
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 
-internal object MemoryLocalStore : LocalStore {
+import org.junit.jupiter.api.Test
 
-    private val cache = mutableMapOf<String, String>()
+@DisplayName("Given a String")
+class StringExtensionTest {
 
-    override fun save(key: String, value: String) {
-        cache[key] = value
+    @DisplayName("When call to android id")
+    @Nested
+    inner class AndroidIdTest {
+
+        @DisplayName("Then should return a correct hash")
+        @Test
+        fun testAndroidId() {
+            // Given
+            val myId = "text"
+
+            // When
+            val result = myId.toAndroidId()
+
+            // Then
+            assertEquals(3556653, result.toLong())
+        }
+
     }
 
-    override fun restore(key: String): String? {
-        return cache[key]
-    }
-
-    override fun delete(key: String) {
-        cache.remove(key)
-    }
-
-    override fun getAll(): Map<String, String> {
-        return cache.toMap()
-    }
 }

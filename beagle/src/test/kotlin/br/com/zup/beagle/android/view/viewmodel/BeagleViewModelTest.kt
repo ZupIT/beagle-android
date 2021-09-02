@@ -55,8 +55,6 @@ class BeagleViewModelTest : BaseTest() {
 
     private val component: ServerDrivenComponent = mockk()
 
-    private val action: Action = mockk()
-
     private val componentRequester: ComponentRequester = mockk()
 
     private val actionRequester: ActionRequester = mockk()
@@ -78,7 +76,6 @@ class BeagleViewModelTest : BaseTest() {
         beagleUIViewModel = BeagleViewModel(componentRequester = componentRequester)
 
         coEvery { componentRequester.fetchComponent(any()) } returns component
-        coEvery { actionRequester.fetchAction(any()) } returns action
         every { observer.onChanged(any()) } just Runs
         coEvery { observer.onChanged(capture(slotViewState)) } just Runs
 
