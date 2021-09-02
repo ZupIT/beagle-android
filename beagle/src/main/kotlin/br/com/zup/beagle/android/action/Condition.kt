@@ -17,14 +17,14 @@
 package br.com.zup.beagle.android.action
 
 import android.view.View
+import br.com.zup.beagle.android.analytics.ActionAnalyticsConfig
 import br.com.zup.beagle.android.context.Bind
-import br.com.zup.beagle.android.context.valueOf
+import br.com.zup.beagle.android.context.constant
 import br.com.zup.beagle.android.logger.BeagleLoggerProxy
 import br.com.zup.beagle.android.utils.evaluateExpression
 import br.com.zup.beagle.android.utils.handleEvent
 import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.android.widget.core.BeagleJson
-import br.com.zup.beagle.android.analytics.ActionAnalyticsConfig
 
 /**
  * Action to resolve condition and call onTrue if return true and onFalse if return is false.
@@ -48,7 +48,7 @@ data class Condition(
         onFalse: List<Action>? = null,
         analytics: ActionAnalyticsConfig? = null,
     ) : this(
-        condition = valueOf(condition),
+        condition = constant(condition),
         onTrue = onTrue,
         onFalse = onFalse,
         analytics = analytics

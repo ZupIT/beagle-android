@@ -21,7 +21,6 @@ package br.com.zup.beagle.android.context
 import br.com.zup.beagle.android.context.tokenizer.ExpressionToken
 import br.com.zup.beagle.android.context.tokenizer.TokenParser
 import br.com.zup.beagle.android.utils.BeagleRegex
-import br.com.zup.beagle.android.utils.DEPRECATED_VALUE_OF
 import br.com.zup.beagle.android.utils.getExpressions
 import br.com.zup.beagle.android.widget.core.BeagleJson
 import java.lang.reflect.ParameterizedType
@@ -79,11 +78,8 @@ inline fun <reified T> expressionOf(expressionText: String): Bind.Expression<T> 
     return Bind.Expression(expressionTokens, expressionText, javaType)
 }
 
-@Deprecated(DEPRECATED_VALUE_OF, ReplaceWith("constant(value)"))
-inline fun <reified T : Any> valueOf(value: T) = Bind.Value(value)
-
 inline fun <reified T : Any> constant(value: T) = Bind.Value(value)
 
-inline fun <reified T : Any> valueOfNullable(value: T?): Bind<T>? = value?.let{valueOf(it)}
+inline fun <reified T : Any> valueOfNullable(value: T?): Bind<T>? = value?.let{ constant(it) }
 
 internal fun Any.hasExpression() = this.toString().contains(BeagleRegex.EXPRESSION_REGEX)
