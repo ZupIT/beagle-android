@@ -21,7 +21,6 @@ on:
        types: [edited, synchronize, reopened, opened]
        branches:
          - main
-         - release/*
 
 jobs:
     danger-validation:
