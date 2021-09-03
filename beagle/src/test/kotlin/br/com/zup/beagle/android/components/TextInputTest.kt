@@ -25,7 +25,7 @@ import androidx.core.widget.TextViewCompat
 import br.com.zup.beagle.android.action.SetContext
 import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.context.ContextData
-import br.com.zup.beagle.android.context.valueOf
+import br.com.zup.beagle.android.context.constant
 import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.testutil.setPrivateField
 import br.com.zup.beagle.android.utils.StyleManager
@@ -49,12 +49,12 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 const val VALUE_KEY = "value"
-val PLACE_HOLDER = valueOf("Text Hint")
-val READ_ONLY = valueOf(true)
-val ENABLED = valueOf(true)
+val PLACE_HOLDER = constant("Text Hint")
+val READ_ONLY = constant(true)
+val ENABLED = constant(true)
 const val STYLE_ID = "Style"
-val ERROR = valueOf("Error")
-val TYPE = valueOf(TextInputType.NUMBER)
+val ERROR = constant("Error")
+val TYPE = constant(TextInputType.NUMBER)
 
 @DisplayName("Given a TextInput")
 internal class TextInputTest : BaseComponentTest() {
@@ -107,9 +107,9 @@ internal class TextInputTest : BaseComponentTest() {
     private fun callTextInput(
         type: Bind<TextInputType> = TYPE,
         styleId: String? = STYLE_ID,
-        showError: Bind<Boolean> = valueOf(false),
+        showError: Bind<Boolean> = constant(false),
     ) = TextInput(
-        value = valueOf(VALUE_KEY),
+        value = constant(VALUE_KEY),
         placeholder = PLACE_HOLDER,
         readOnly = READ_ONLY,
         enabled = ENABLED,
@@ -130,7 +130,7 @@ internal class TextInputTest : BaseComponentTest() {
         @DisplayName("Then should show field error")
         fun testErrorEnabled() {
             // Given
-            textInput = callTextInput(TYPE, styleId = null, showError = valueOf(true))
+            textInput = callTextInput(TYPE, styleId = null, showError = constant(true))
 
             // When
             val view = textInput.buildView(rootView)
@@ -146,7 +146,7 @@ internal class TextInputTest : BaseComponentTest() {
         @DisplayName("Then should show correct it")
         fun testErrorDisabled() {
             // Given
-            textInput = callTextInput(TYPE, styleId = null, showError = valueOf(false))
+            textInput = callTextInput(TYPE, styleId = null, showError = constant(false))
 
             // When
             val view = textInput.buildView(rootView)
@@ -169,7 +169,7 @@ internal class TextInputTest : BaseComponentTest() {
         fun testFieldEnabledTrue() {
             // Given
             textInput =
-                callTextInput().copy(enabled = valueOf(true), readOnly = null)
+                callTextInput().copy(enabled = constant(true), readOnly = null)
 
             // When
             val view = textInput.buildView(rootView)
@@ -186,7 +186,7 @@ internal class TextInputTest : BaseComponentTest() {
         fun testFieldEnabledFalse() {
             // Given
             textInput =
-                callTextInput().copy(enabled = valueOf(false), readOnly = null)
+                callTextInput().copy(enabled = constant(false), readOnly = null)
 
             // When
             val view = textInput.buildView(rootView)
@@ -223,7 +223,7 @@ internal class TextInputTest : BaseComponentTest() {
         @DisplayName("Then should not call field error")
         fun testErrorDisabled() {
             // Given
-            textInput = callTextInput(TYPE, styleId = null, showError = valueOf(false))
+            textInput = callTextInput(TYPE, styleId = null, showError = constant(false))
 
             // When
             val view = textInput.buildView(rootView)
@@ -392,7 +392,7 @@ internal class TextInputTest : BaseComponentTest() {
         @DisplayName("Then should call setRawInputType with TYPE_CLASS_DATETIME")
         fun testInputTypeDate() {
             // Given
-            val type = valueOf(TextInputType.DATE)
+            val type = constant(TextInputType.DATE)
 
             // When
             val textInput = callTextInput(type)
@@ -407,7 +407,7 @@ internal class TextInputTest : BaseComponentTest() {
     @DisplayName("Then should call setRawInputType with TYPE_TEXT_VARIATION_EMAIL_ADDRESS")
     fun setInputTypeEmail() {
         // Given
-        val type = valueOf(TextInputType.EMAIL)
+        val type = constant(TextInputType.EMAIL)
 
         // When
         val textInput = callTextInput(type)
@@ -421,7 +421,7 @@ internal class TextInputTest : BaseComponentTest() {
     @DisplayName("Then should call TYPE_CLASS_TEXT or TYPE_TEXT_VARIATION_PASSWORD")
     fun setInputTypePassword() {
         // Given
-        val type = valueOf(TextInputType.PASSWORD)
+        val type = constant(TextInputType.PASSWORD)
 
         // When
         val textInput = callTextInput(type)
@@ -437,7 +437,7 @@ internal class TextInputTest : BaseComponentTest() {
     @DisplayName("Then should call setRawInputType with TYPE_CLASS_NUMBER")
     fun setInputTypeNumber() {
         // Given
-        val type = valueOf(TextInputType.NUMBER)
+        val type = constant(TextInputType.NUMBER)
 
         // When
         val textInput = callTextInput(type)
@@ -451,7 +451,7 @@ internal class TextInputTest : BaseComponentTest() {
     @DisplayName(" Then should call setRawInputType with TYPE_CLASS_TEXT or TYPE_TEXT_FLAG_CAP_SENTENCES")
     fun setInputTypeText() {
         // Given
-        val type = valueOf(TextInputType.TEXT)
+        val type = constant(TextInputType.TEXT)
 
         // When
         val textInput = callTextInput(type)
