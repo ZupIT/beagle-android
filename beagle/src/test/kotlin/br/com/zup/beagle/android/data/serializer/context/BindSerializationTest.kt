@@ -17,8 +17,8 @@
 package br.com.zup.beagle.android.data.serializer.context
 
 import br.com.zup.beagle.android.context.Bind
-import br.com.zup.beagle.android.context.expressionOf
 import br.com.zup.beagle.android.context.constant
+import br.com.zup.beagle.android.context.expressionOf
 import br.com.zup.beagle.android.data.serializer.BaseSerializerTest
 import br.com.zup.beagle.android.data.serializer.BeagleMoshi
 import br.com.zup.beagle.android.mockdata.ComponentBinding
@@ -28,7 +28,6 @@ import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 import io.mockk.every
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test

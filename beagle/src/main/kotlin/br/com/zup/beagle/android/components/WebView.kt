@@ -25,7 +25,7 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import br.com.zup.beagle.android.context.Bind
-import br.com.zup.beagle.android.context.expressionOrconstant
+import br.com.zup.beagle.android.context.expressionOrConstant
 import br.com.zup.beagle.android.utils.observeBindChanges
 import br.com.zup.beagle.android.view.BeagleActivity
 import br.com.zup.beagle.android.view.ServerDrivenState
@@ -47,7 +47,7 @@ data class WebView(
     val url: Bind<String>,
 ) : WidgetView() {
 
-    constructor(url: String) : this(expressionOrconstant(url))
+    constructor(url: String) : this(expressionOrConstant(url))
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun buildView(rootView: RootView): View {

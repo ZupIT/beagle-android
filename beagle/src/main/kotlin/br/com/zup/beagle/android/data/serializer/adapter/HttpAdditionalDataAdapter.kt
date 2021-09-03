@@ -41,7 +41,7 @@ class HttpAdditionalDataAdapter {
     )
 
     private fun getMethod(httpAdditionalData: JSONObject) = try {
-        HttpMethod.constant(httpAdditionalData["method"].toString())
+        HttpMethod.valueOf(httpAdditionalData["method"].toString())
     } catch (exception: Exception) {
         HttpMethod.GET
     }

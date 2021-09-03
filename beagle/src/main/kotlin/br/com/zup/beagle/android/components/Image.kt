@@ -20,7 +20,7 @@ import android.view.View
 import android.widget.ImageView
 import br.com.zup.beagle.android.components.utils.RoundedImageView
 import br.com.zup.beagle.android.context.Bind
-import br.com.zup.beagle.android.context.expressionOrconstant
+import br.com.zup.beagle.android.context.expressionOrConstant
 import br.com.zup.beagle.android.engine.mapper.ViewMapper
 import br.com.zup.beagle.android.imagedownloader.DefaultImageDownloader
 import br.com.zup.beagle.android.logger.BeagleMessageLogs
@@ -139,7 +139,7 @@ sealed class ImagePath {
     data class Local(
         val mobileId: Bind<String>,
     ) : ImagePath() {
-        constructor(mobileId: String) : this(expressionOrconstant(mobileId))
+        constructor(mobileId: String) : this(expressionOrConstant(mobileId))
     }
 
     /**
@@ -153,6 +153,6 @@ sealed class ImagePath {
         val url: Bind<String>,
         val placeholder: Local? = null,
     ) : ImagePath() {
-        constructor(url: String, placeholder: Local? = null) : this(expressionOrconstant(url), placeholder)
+        constructor(url: String, placeholder: Local? = null) : this(expressionOrConstant(url), placeholder)
     }
 }

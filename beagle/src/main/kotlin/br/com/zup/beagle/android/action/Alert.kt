@@ -18,8 +18,8 @@ package br.com.zup.beagle.android.action
 
 import android.view.View
 import br.com.zup.beagle.android.context.Bind
-import br.com.zup.beagle.android.context.expressionOrconstant
-import br.com.zup.beagle.android.context.expressionOrconstantNullable
+import br.com.zup.beagle.android.context.expressionOrConstant
+import br.com.zup.beagle.android.context.expressionOrvalueOfNullable
 import br.com.zup.beagle.android.utils.evaluateExpression
 import br.com.zup.beagle.android.utils.handleEvent
 import br.com.zup.beagle.android.view.ViewFactory
@@ -54,8 +54,8 @@ data class Alert(
         labelOk: String? = null,
         analytics: ActionAnalyticsConfig? = null,
     ) : this(
-        title = expressionOrconstantNullable(title),
-        message = expressionOrconstant(message),
+        title = expressionOrvalueOfNullable(title),
+        message = expressionOrConstant(message),
         onPressOk = onPressOk,
         labelOk = labelOk,
         analytics = analytics

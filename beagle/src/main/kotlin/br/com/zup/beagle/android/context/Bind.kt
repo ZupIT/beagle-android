@@ -49,11 +49,11 @@ sealed class Bind<T> {
 
 }
 
-internal inline fun <reified T : Any> expressionOrconstant(text: String): Bind<T> =
+internal inline fun <reified T : Any> expressionOrConstant(text: String): Bind<T> =
     if (text.hasExpression()) expressionOf(text) else constant(text) as Bind<T>
 
-internal fun expressionOrconstantNullable(text: String?): Bind<String>? =
-    if (text?.hasExpression() == true) expressionOf(text) else constantNullable(text)
+internal fun expressionOrvalueOfNullable(text: String?): Bind<String>? =
+    if (text?.hasExpression() == true) expressionOf(text) else valueOfNullable(text)
 
 inline fun <reified T> expressionOf(expressionText: String): Bind.Expression<T> {
     val tokenParser = TokenParser()
@@ -80,6 +80,6 @@ inline fun <reified T> expressionOf(expressionText: String): Bind.Expression<T> 
 
 inline fun <reified T : Any> constant(value: T) = Bind.Value(value)
 
-inline fun <reified T : Any> constantNullable(value: T?): Bind<T>? = value?.let{ constant(it) }
+inline fun <reified T : Any> valueOfNullable(value: T?): Bind<T>? = value?.let{ constant(it) }
 
 internal fun Any.hasExpression() = this.toString().contains(BeagleRegex.EXPRESSION_REGEX)
