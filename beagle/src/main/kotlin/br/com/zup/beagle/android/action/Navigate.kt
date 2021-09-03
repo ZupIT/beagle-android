@@ -21,7 +21,7 @@ import br.com.zup.beagle.android.analytics.ActionAnalyticsConfig
 import br.com.zup.beagle.android.components.layout.Screen
 import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.context.ContextData
-import br.com.zup.beagle.android.context.expressionOrValueOf
+import br.com.zup.beagle.android.context.expressionOrconstant
 import br.com.zup.beagle.android.context.normalizeContextValue
 import br.com.zup.beagle.android.networking.HttpAdditionalData
 import br.com.zup.beagle.android.utils.evaluateExpression
@@ -50,7 +50,7 @@ sealed class Navigate : AnalyticsAction {
             url: String,
             analytics: ActionAnalyticsConfig? = null,
         ) : this(
-            url = expressionOrValueOf(url),
+            url = expressionOrconstant(url),
             analytics = analytics
         )
 
@@ -82,7 +82,7 @@ sealed class Navigate : AnalyticsAction {
             data: Map<String, String>? = null,
             analytics: ActionAnalyticsConfig? = null,
         ) : this(
-            route = expressionOrValueOf(route),
+            route = expressionOrconstant(route),
             shouldResetApplication = shouldResetApplication,
             data = data,
             analytics = analytics
@@ -143,7 +143,7 @@ sealed class Navigate : AnalyticsAction {
             analytics: ActionAnalyticsConfig? = null,
             context: ContextData? = null,
         ) : this(
-            route = expressionOrValueOf(route),
+            route = expressionOrconstant(route),
             analytics = analytics,
             context = context
         )
@@ -288,7 +288,7 @@ sealed class Route {
             fallback: Screen? = null,
             httpAdditionalData: HttpAdditionalData? = null,
         ) : this(
-            expressionOrValueOf(url),
+            expressionOrconstant(url),
             shouldPrefetch,
             fallback,
             httpAdditionalData

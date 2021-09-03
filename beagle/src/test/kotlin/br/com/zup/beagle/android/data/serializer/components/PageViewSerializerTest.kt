@@ -17,7 +17,7 @@
 package br.com.zup.beagle.android.data.serializer.components
 
 import br.com.zup.beagle.android.components.page.PageView
-import br.com.zup.beagle.android.context.valueOf
+import br.com.zup.beagle.android.context.constant
 import br.com.zup.beagle.android.data.serializer.makeActionAlertJson
 import br.com.zup.beagle.android.data.serializer.makeActionAlertObject
 import br.com.zup.beagle.android.data.serializer.makeButtonJson
@@ -109,7 +109,7 @@ class PageViewSerializerTest : BaseServerDrivenComponentSerializerTest() {
         ),
         context = makeObjectContextWithPrimitiveValue(),
         onPageChange = listOf(makeActionAlertObject()),
-        currentPage = valueOf(1)
+        currentPage = constant(1)
     )
 
     private fun makeObjectPageViewWithPageIndicator() = PageView(

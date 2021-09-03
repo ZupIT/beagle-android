@@ -29,7 +29,7 @@ import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.components.Button
 import br.com.zup.beagle.android.components.Text
 import br.com.zup.beagle.android.components.layout.Container
-import br.com.zup.beagle.android.context.valueOf
+import br.com.zup.beagle.android.context.constant
 import br.com.zup.beagle.android.setup.DesignSystem
 import br.com.zup.beagle.android.widget.core.StyleComponent
 import io.mockk.clearMocks
@@ -140,7 +140,7 @@ class StyleManagerTest : BaseTest() {
     @Test
     fun test_getBackgroundColor_when_button_has_a_color_drawable_background() {
         //Given
-        val serverDrivenComponent = Button(valueOf(""))
+        val serverDrivenComponent = Button(constant(""))
         every { context.obtainStyledAttributes(any<Int>(), any()) } returns typedArray
         every { view.background } returns colorDrawable
         every { colorDrawable.color } returns Color.WHITE
@@ -160,7 +160,7 @@ class StyleManagerTest : BaseTest() {
     @Test
     fun test_getBackgroundColor_when_Button_not_is_color_drawable() {
         //Given
-        val serverDrivenComponent = Button(valueOf(""))
+        val serverDrivenComponent = Button(constant(""))
         every { context.obtainStyledAttributes(any<Int>(), any()) } returns typedArray
 
         //When

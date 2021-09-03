@@ -24,7 +24,7 @@ import br.com.zup.beagle.android.annotation.RegisterWidget
 import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.context.ContextComponent
 import br.com.zup.beagle.android.context.ContextData
-import br.com.zup.beagle.android.context.valueOfNullable
+import br.com.zup.beagle.android.context.constantNullable
 import br.com.zup.beagle.android.utils.handleEvent
 import br.com.zup.beagle.android.utils.observeBindChanges
 import br.com.zup.beagle.android.view.ViewFactory
@@ -52,7 +52,7 @@ data class PullToRefresh constructor(
         context = context,
         onPull = onPull,
         isRefreshing = isRefreshing,
-        color = valueOfNullable(color),
+        color = constantNullable(color),
         child = child,
     )
 

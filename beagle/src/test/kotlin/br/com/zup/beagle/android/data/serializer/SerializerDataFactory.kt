@@ -45,7 +45,7 @@ import br.com.zup.beagle.android.components.refresh.PullToRefresh
 import br.com.zup.beagle.android.components.utils.Template
 import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.context.expressionOf
-import br.com.zup.beagle.android.context.valueOf
+import br.com.zup.beagle.android.context.constant
 import br.com.zup.beagle.android.mockdata.CustomAndroidAction
 import br.com.zup.beagle.android.mockdata.CustomWidget
 import br.com.zup.beagle.android.mockdata.Person
@@ -191,7 +191,7 @@ fun makeLazyComponentJson() = """
 """
 
 fun makeObjectButton() = Button(
-    text = valueOf("Test")
+    text = constant("Test")
 )
 
 fun makeObjectText() = Text(
@@ -249,7 +249,7 @@ fun makeObjectGridView() = GridView(
 )
 
 fun makeObjectImageWithLocalPath() = Image(
-    path = valueOf(
+    path = constant(
         ImagePath.Local(
             mobileId = "imageBeagle"
         )
@@ -258,7 +258,7 @@ fun makeObjectImageWithLocalPath() = Image(
 )
 
 fun makeObjectImageWithRemotePath() = Image(
-    path = valueOf(
+    path = constant(
         ImagePath.Remote(
             url = "http://test.com/test.png"
         )
@@ -474,12 +474,12 @@ fun makeTextInputJson() = """
 """
 
 fun makeObjectTextInput() = TextInput(
-    value = valueOf("value"),
-    placeholder = valueOf("placeholder"),
-    readOnly = valueOf(false),
-    type = valueOf(TextInputType.EMAIL),
-    error = valueOf("error"),
-    showError = valueOf(true),
+    value = constant("value"),
+    placeholder = constant("placeholder"),
+    readOnly = constant(false),
+    type = constant(TextInputType.EMAIL),
+    error = constant("error"),
+    showError = constant(true),
     styleId = "styleId",
     onChange = listOf(
         makeActionAlertObject()
@@ -490,7 +490,7 @@ fun makeObjectTextInput() = TextInput(
     onBlur = listOf(
         makeActionAlertObject()
     ),
-    enabled = valueOf(false)
+    enabled = constant(false)
 )
 
 fun makeTextInputWithExpressionJson() = """

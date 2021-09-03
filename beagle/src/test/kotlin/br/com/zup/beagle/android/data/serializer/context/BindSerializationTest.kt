@@ -18,7 +18,7 @@ package br.com.zup.beagle.android.data.serializer.context
 
 import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.context.expressionOf
-import br.com.zup.beagle.android.context.valueOf
+import br.com.zup.beagle.android.context.constant
 import br.com.zup.beagle.android.data.serializer.BaseSerializerTest
 import br.com.zup.beagle.android.data.serializer.BeagleMoshi
 import br.com.zup.beagle.android.mockdata.ComponentBinding
@@ -166,10 +166,10 @@ class BindSerializationTest :
 
     private fun makeObjectComponentBindingWithoutExpressions() = ComponentBinding(
         value1 = null,
-        value2 = valueOf("Hello"),
-        value3 = valueOf(true),
-        value4 = valueOf(InternalObject(value1 = "hello", value2 = 123)),
-        value5 = valueOf(mapOf("test1" to "a", "test2" to "b")),
-        value6 = valueOf(listOf("test1", "test2"))
+        value2 = constant("Hello"),
+        value3 = constant(true),
+        value4 = constant(InternalObject(value1 = "hello", value2 = 123)),
+        value5 = constant(mapOf("test1" to "a", "test2" to "b")),
+        value6 = constant(listOf("test1", "test2"))
     )
 }

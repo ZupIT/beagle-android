@@ -20,9 +20,9 @@ import android.view.Gravity
 import android.view.View
 import android.widget.TextView
 import br.com.zup.beagle.android.context.Bind
-import br.com.zup.beagle.android.context.expressionOrValueOf
-import br.com.zup.beagle.android.context.expressionOrValueOfNullable
-import br.com.zup.beagle.android.context.valueOfNullable
+import br.com.zup.beagle.android.context.expressionOrconstant
+import br.com.zup.beagle.android.context.expressionOrconstantNullable
+import br.com.zup.beagle.android.context.constantNullable
 import br.com.zup.beagle.android.utils.StyleManager
 import br.com.zup.beagle.android.utils.observeBindChanges
 import br.com.zup.beagle.android.utils.toAndroidColor
@@ -57,10 +57,10 @@ data class Text(
         textColor: String? = null,
         alignment: TextAlignment? = null,
     ) : this(
-        expressionOrValueOf(text),
+        expressionOrconstant(text),
         styleId,
-        expressionOrValueOfNullable(textColor),
-        valueOfNullable(alignment)
+        expressionOrconstantNullable(textColor),
+        constantNullable(alignment)
     )
 
     @Transient

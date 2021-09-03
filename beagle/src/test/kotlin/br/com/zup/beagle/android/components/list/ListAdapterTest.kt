@@ -36,7 +36,7 @@ import br.com.zup.beagle.android.components.utils.Template
 import br.com.zup.beagle.android.context.AsyncActionData
 import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.context.expressionOf
-import br.com.zup.beagle.android.context.valueOf
+import br.com.zup.beagle.android.context.constant
 import br.com.zup.beagle.android.utils.setIsAutoGenerateIdEnabled
 import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.view.custom.BeagleFlexView
@@ -98,11 +98,11 @@ class ListAdapterTest : BaseTest() {
             ),
             Template(
                 case = null,
-                view = Button(text = valueOf("button test"))
+                view = Button(text = constant("button test"))
             ),
             Template(
                 case = expressionOf("@{eq(item, 'stub 5')}"),
-                view = Image(valueOf(ImagePath.Remote(url = "test")))
+                view = Image(constant(ImagePath.Remote(url = "test")))
             ),
         )
     }
@@ -414,7 +414,7 @@ class ListAdapterTest : BaseTest() {
 
     @Test
     fun `Given a ListAdapter When call onCreateViewHolder Then should create the default template`() {
-        val expectedTemplate = Button(text = valueOf("button test"))
+        val expectedTemplate = Button(text = constant("button test"))
         val expectedViewType = 2
         val subject = ListAdapter(
             orientation = RecyclerView.VERTICAL,

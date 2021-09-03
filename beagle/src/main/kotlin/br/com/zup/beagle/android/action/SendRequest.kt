@@ -20,7 +20,7 @@ import android.view.View
 import br.com.zup.beagle.android.annotation.ContextDataValue
 import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.context.ContextData
-import br.com.zup.beagle.android.context.expressionOrValueOf
+import br.com.zup.beagle.android.context.expressionOrconstant
 import br.com.zup.beagle.android.context.normalizeContextValue
 import br.com.zup.beagle.android.context.constant
 import br.com.zup.beagle.android.utils.evaluateExpression
@@ -103,7 +103,7 @@ data class SendRequest(
         onFinish: List<Action>? = null,
         analytics: ActionAnalyticsConfig? = null,
     ) : this(
-        expressionOrValueOf(url),
+        expressionOrconstant(url),
         constant(method),
         headers?.let { constant(it) },
         data,

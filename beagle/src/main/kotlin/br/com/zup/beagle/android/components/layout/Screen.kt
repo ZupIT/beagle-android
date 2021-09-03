@@ -22,7 +22,7 @@ import br.com.zup.beagle.android.annotation.RegisterWidget
 import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.context.ContextComponent
 import br.com.zup.beagle.android.context.ContextData
-import br.com.zup.beagle.android.context.expressionOrValueOfNullable
+import br.com.zup.beagle.android.context.expressionOrconstantNullable
 import br.com.zup.beagle.android.utils.ToolbarManager
 import br.com.zup.beagle.android.view.BeagleActivity
 import br.com.zup.beagle.android.view.ViewFactory
@@ -79,7 +79,7 @@ data class NavigationBarItem(
         image: String? = null,
         action: Action,
         accessibility: Accessibility? = null,
-    ) : this(text, expressionOrValueOfNullable(image), action, accessibility)
+    ) : this(text, expressionOrconstantNullable(image), action, accessibility)
 }
 
 /**
