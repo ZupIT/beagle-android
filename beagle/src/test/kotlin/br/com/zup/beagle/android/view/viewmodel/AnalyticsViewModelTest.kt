@@ -22,6 +22,7 @@ import br.com.zup.beagle.android.action.AnalyticsAction
 import br.com.zup.beagle.android.analytics.AnalyticsService
 import br.com.zup.beagle.android.testutil.CoroutinesTestExtension
 import io.mockk.Runs
+import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
@@ -30,11 +31,11 @@ import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-
 
 @ExperimentalCoroutinesApi
 @ExtendWith(CoroutinesTestExtension::class)
@@ -42,14 +43,19 @@ import org.junit.jupiter.api.extension.ExtendWith
 internal class AnalyticsViewModelTest : BaseTest() {
 
     private val analyticsViewModel = AnalyticsViewModel()
-    var origin: View = mockk()
-    var action: AnalyticsAction = mockk()
-    var analyticsValue: String = "any"
+    private val origin: View = mockk()
+    private val action: AnalyticsAction = mockk()
+    private val analyticsValue: String = "any"
 
     @BeforeAll
     override fun setUp() {
         super.setUp()
         mockkObject(AnalyticsService)
+    }
+
+    @BeforeEach
+    fun clear() {
+        clearMocks(origin, action)
     }
 
     @DisplayName("When create action report")
@@ -100,5 +106,4 @@ internal class AnalyticsViewModelTest : BaseTest() {
             }
         }
     }
-
 }
