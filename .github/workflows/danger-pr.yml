@@ -39,14 +39,6 @@ jobs:
                     parse-json: true
 
             # Gems for Fastlane
-            -   name: Cache ruby gems dependencies
-                uses: actions/cache@v2
-                env:
-                    keyPath: ${{ runner.os }}-gems
-                with:
-                    path: ~/.gem
-                    key: ${{ env.keyPath }}-${{ hashFiles('Gemfile.lock') }}
-                    restore-keys: ${{ env.keyPath }}
             -   name: Install gem dependencies
                 run: bundle config set path '~/.gem' && bundle install
             -   name: Run danger check
