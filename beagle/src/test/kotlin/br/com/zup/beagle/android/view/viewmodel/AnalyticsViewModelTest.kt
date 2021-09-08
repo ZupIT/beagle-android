@@ -20,31 +20,24 @@ import android.view.View
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.action.AnalyticsAction
 import br.com.zup.beagle.android.analytics.AnalyticsService
-import br.com.zup.beagle.android.testutil.CoroutinesTestExtension
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.verify
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 
-
-@ExperimentalCoroutinesApi
-@ExtendWith(CoroutinesTestExtension::class)
 @DisplayName("Given an Analytics View Model")
-internal class AnalyticsViewModelTest : BaseTest() {
+class AnalyticsViewModelTest : BaseTest() {
 
     private val analyticsViewModel = AnalyticsViewModel()
-    var origin: View = mockk()
-    var action: AnalyticsAction = mockk()
-    var analyticsValue: String = "any"
+    private val origin: View = mockk()
+    private val action: AnalyticsAction = mockk()
+    private val analyticsValue: String = "any"
 
     @BeforeAll
     override fun setUp() {
@@ -56,10 +49,9 @@ internal class AnalyticsViewModelTest : BaseTest() {
     @Nested
     inner class CreateActionReport {
 
-        @ExperimentalCoroutinesApi
         @DisplayName("Should call Analytics Service with correct parameters")
         @Test
-        fun testCreateActionReportShouldCallCorrectFun() = runBlockingTest {
+        fun testCreateActionReportShouldCallCorrectFun() {
             //given
             every {
                 AnalyticsService.createActionRecord(
@@ -84,10 +76,9 @@ internal class AnalyticsViewModelTest : BaseTest() {
     @Nested
     inner class CreateScreenReport {
 
-        @ExperimentalCoroutinesApi
         @DisplayName("Should call Analytics Service with correct parameters")
         @Test
-        fun testCreateScreenReportShouldCallCorrectFun() = runBlockingTest {
+        fun testCreateScreenReportShouldCallCorrectFun() {
             //given
             every { AnalyticsService.createScreenRecord("screenId") } just Runs
 
@@ -100,5 +91,4 @@ internal class AnalyticsViewModelTest : BaseTest() {
             }
         }
     }
-
 }
