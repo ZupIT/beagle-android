@@ -35,7 +35,6 @@ import br.com.zup.beagle.android.view.viewmodel.ListViewIdViewModel
 import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.android.widget.WidgetView
 import br.com.zup.beagle.android.annotation.RegisterWidget
-import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 import br.com.zup.beagle.android.widget.core.ListDirection
 
 /**
@@ -56,7 +55,6 @@ import br.com.zup.beagle.android.widget.core.ListDirection
 
 @RegisterWidget("listView")
 data class ListView constructor(
-    val children: List<ServerDrivenComponent>? = null,
     val direction: ListDirection = ListDirection.VERTICAL,
     override val context: ContextData? = null,
     override val onInit: List<Action>? = null,
