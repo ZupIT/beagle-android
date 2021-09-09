@@ -52,7 +52,7 @@ sealed class Bind<T> {
 internal inline fun <reified T : Any> expressionOrConstant(text: String): Bind<T> =
     if (text.hasExpression()) expressionOf(text) else constant(text) as Bind<T>
 
-internal fun expressionOrvalueOfNullable(text: String?): Bind<String>? =
+internal fun expressionOrValueOfNullable(text: String?): Bind<String>? =
     if (text?.hasExpression() == true) expressionOf(text) else valueOfNullable(text)
 
 inline fun <reified T> expressionOf(expressionText: String): Bind.Expression<T> {

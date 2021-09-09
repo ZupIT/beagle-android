@@ -21,7 +21,7 @@ import android.view.View
 import android.widget.TextView
 import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.context.expressionOrConstant
-import br.com.zup.beagle.android.context.expressionOrvalueOfNullable
+import br.com.zup.beagle.android.context.expressionOrValueOfNullable
 import br.com.zup.beagle.android.context.valueOfNullable
 import br.com.zup.beagle.android.utils.StyleManager
 import br.com.zup.beagle.android.utils.observeBindChanges
@@ -59,7 +59,7 @@ data class Text(
     ) : this(
         expressionOrConstant(text),
         styleId,
-        expressionOrvalueOfNullable(textColor),
+        expressionOrValueOfNullable(textColor),
         valueOfNullable(alignment)
     )
 
