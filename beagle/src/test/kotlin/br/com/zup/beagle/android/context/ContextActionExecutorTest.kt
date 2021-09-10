@@ -165,7 +165,7 @@ class ContextActionExecutorTest : BaseAsyncActionTest() {
         val asyncActionViewModel = mockk<AsyncActionViewModel>()
         prepareViewModelMock(asyncActionViewModel)
         val asyncActionSlot = slot<AsyncActionData>()
-        val asyncAction = SendRequest("http://www.test.com")
+        val asyncAction = SendRequest(constant("http://www.test.com"))
         asyncAction.status.observeForever(observer)
         every { asyncActionViewModel.onAsyncActionExecuted(capture(asyncActionSlot)) } just Runs
 

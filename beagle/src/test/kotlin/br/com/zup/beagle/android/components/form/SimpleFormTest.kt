@@ -22,7 +22,7 @@ import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.components.BaseComponentTest
 import br.com.zup.beagle.android.components.TextInput
 import br.com.zup.beagle.android.context.ContextData
-import br.com.zup.beagle.android.context.valueOf
+import br.com.zup.beagle.android.context.constant
 import br.com.zup.beagle.android.view.custom.BeagleFlexView
 import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 import io.mockk.Runs
@@ -44,7 +44,7 @@ internal class SimpleFormTest : BaseComponentTest() {
     private val context: ContextData = mockk()
     private val onSubmit: List<Action> = listOf(simpleFormAction)
     private val children: List<ServerDrivenComponent> =
-        listOf(TextInput(value = valueOf(""), error = valueOf("ddd")))
+        listOf(TextInput(value = constant(""), error = constant("ddd")))
 
     private lateinit var simpleForm: SimpleForm
 

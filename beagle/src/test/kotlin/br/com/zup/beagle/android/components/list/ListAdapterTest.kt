@@ -36,7 +36,7 @@ import br.com.zup.beagle.android.components.utils.Template
 import br.com.zup.beagle.android.context.AsyncActionData
 import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.context.expressionOf
-import br.com.zup.beagle.android.context.valueOf
+import br.com.zup.beagle.android.context.constant
 import br.com.zup.beagle.android.utils.setIsAutoGenerateIdEnabled
 import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.view.custom.BeagleFlexView
@@ -90,19 +90,19 @@ class ListAdapterTest : BaseTest() {
         listOf(
             Template(
                 case = expressionOf("@{eq(item, 'stub 1')}"),
-                view = Container(children = listOf(Text(text = "test")))
+                view = Container(children = listOf(Text(text = constant("test"))))
             ),
             Template(
                 case = expressionOf("@{eq(item, 'stub 2')}"),
-                view = Text(text = "test")
+                view = Text(text = constant("test"))
             ),
             Template(
                 case = null,
-                view = Button(text = valueOf("button test"))
+                view = Button(text = constant("button test"))
             ),
             Template(
                 case = expressionOf("@{eq(item, 'stub 5')}"),
-                view = Image(valueOf(ImagePath.Remote(url = "test")))
+                view = Image(constant(ImagePath.Remote(url = "test")))
             ),
         )
     }
@@ -376,7 +376,7 @@ class ListAdapterTest : BaseTest() {
 
     @Test
     fun `Given a ListAdapter When call onCreateViewHolder Then should create the correct template`() {
-        val expectedTemplate = Text(text = "test")
+        val expectedTemplate = Text(text = constant("test"))
         val expectedViewType = 1
         val subject = ListAdapter(
             orientation = RecyclerView.VERTICAL,
@@ -414,7 +414,7 @@ class ListAdapterTest : BaseTest() {
 
     @Test
     fun `Given a ListAdapter When call onCreateViewHolder Then should create the default template`() {
-        val expectedTemplate = Button(text = valueOf("button test"))
+        val expectedTemplate = Button(text = constant("button test"))
         val expectedViewType = 2
         val subject = ListAdapter(
             orientation = RecyclerView.VERTICAL,
@@ -448,7 +448,7 @@ class ListAdapterTest : BaseTest() {
         val templateListWithNoDefault = listOf(
             Template(
                 case = expressionOf("@{eq(item, 'stub 1')}"),
-                view = Container(children = listOf(Text(text = "test")))
+                view = Container(children = listOf(Text(text = constant("test"))))
             ),
         )
         val subject = ListAdapter(

@@ -22,6 +22,8 @@ import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.components.BaseComponentTest
 import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.context.ContextData
+import br.com.zup.beagle.android.context.constant
+import br.com.zup.beagle.android.context.constantOfNullable
 import br.com.zup.beagle.android.utils.Observer
 import br.com.zup.beagle.android.utils.observeBindChanges
 import br.com.zup.beagle.android.view.ViewFactory
@@ -169,7 +171,7 @@ class PullToRefreshTest : BaseComponentTest() {
                 context,
                 onPullActions,
                 null,
-                "#FF0000",
+                constant("#FF0000"),
                 child
             )
 
@@ -195,7 +197,7 @@ class PullToRefreshTest : BaseComponentTest() {
                 context,
                 onPullActions,
                 isRefreshing,
-                null as String?,
+                constantOfNullable(null),
                 child
             )
 

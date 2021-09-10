@@ -20,6 +20,7 @@ import android.view.View
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.context.ContextData
+import br.com.zup.beagle.android.context.constant
 import br.com.zup.beagle.android.context.expressionOf
 import br.com.zup.beagle.android.navigation.DeepLinkHandler
 import br.com.zup.beagle.android.setup.BeagleEnvironment
@@ -68,7 +69,7 @@ class NavigateTest : BaseTest() {
         @Test
         fun testDeepLinkHandlerNull() {
             // Given
-            val navigate = Navigate.OpenNativeRoute(RandomData.httpUrl())
+            val navigate = Navigate.OpenNativeRoute(constant(RandomData.httpUrl()))
             every { BeagleEnvironment.beagleSdk.deepLinkHandler } returns null
 
             // When
@@ -82,7 +83,7 @@ class NavigateTest : BaseTest() {
         @Test
         fun testOpenExternalURL() {
             // Given
-            val url = RandomData.httpUrl()
+            val url = constant(RandomData.httpUrl())
             val navigate = Navigate.OpenExternalURL(url)
             every { BeagleNavigator.openExternalURL(any(), any()) } just Runs
 
@@ -90,7 +91,7 @@ class NavigateTest : BaseTest() {
             navigate.execute(rootView, view)
 
             // Then
-            verify(exactly = 1) { BeagleNavigator.openExternalURL(rootView.getContext(), url) }
+            verify(exactly = 1) { BeagleNavigator.openExternalURL(rootView.getContext(), url.value) }
         }
 
         @DisplayName("Then should call openExternalUrl with expression if type is OpenExternalURL")
@@ -117,7 +118,7 @@ class NavigateTest : BaseTest() {
         @Test
         fun testOpenNativeRoute() {
             // Given
-            val route = RandomData.httpUrl()
+            val route = constant(RandomData.httpUrl())
             val data = mapOf("keyStub" to "valueStub")
             val shouldResetApplication = true
             val navigate = Navigate.OpenNativeRoute(route, shouldResetApplication, data)
@@ -130,7 +131,7 @@ class NavigateTest : BaseTest() {
             verify(exactly = 1) {
                 BeagleNavigator.openNativeRoute(
                     rootView,
-                    route,
+                    route.value,
                     data,
                     shouldResetApplication
                 )
@@ -171,7 +172,7 @@ class NavigateTest : BaseTest() {
         @Test
         fun testResetApplication() {
             // Given
-            val route = Route.Remote(RandomData.httpUrl())
+            val route = Route.Remote(constant(RandomData.httpUrl()))
             val navigate = Navigate.ResetApplication(route, context = contextDataStub)
             every { BeagleNavigator.resetApplication(any(), any(), any(), contextDataStub) } just Runs
 
@@ -193,7 +194,7 @@ class NavigateTest : BaseTest() {
         @Test
         fun testResetStack() {
             // Given
-            val route = Route.Remote(RandomData.httpUrl())
+            val route = Route.Remote(constant(RandomData.httpUrl()))
             val navigate = Navigate.ResetStack(route, context = contextDataStub)
             every { BeagleNavigator.resetStack(any(), any(), any(), contextDataStub) } just Runs
 
@@ -208,7 +209,7 @@ class NavigateTest : BaseTest() {
         @Test
         fun testPushView() {
             // Given
-            val route = Route.Remote(RandomData.httpUrl())
+            val route = Route.Remote(constant(RandomData.httpUrl()))
             val navigate = Navigate.PushView(route, context = contextDataStub)
             every { BeagleNavigator.pushView(any(), any(), contextDataStub) } just Runs
 
@@ -277,7 +278,7 @@ class NavigateTest : BaseTest() {
         fun testPopToView() {
             // Given
             val path = RandomData.httpUrl()
-            val navigate = Navigate.PopToView(path, context = contextDataStub)
+            val navigate = Navigate.PopToView(constant(path), context = contextDataStub)
             every { BeagleNavigator.popToView(any(), any(), contextDataStub) } just Runs
 
             // When
@@ -311,7 +312,7 @@ class NavigateTest : BaseTest() {
         @Test
         fun testPushStack() {
             // Given
-            val route = Route.Remote(RandomData.httpUrl())
+            val route = Route.Remote(constant(RandomData.httpUrl()))
             val navigate = Navigate.PushStack(route, context = contextDataStub)
             every { BeagleNavigator.pushStack(any(), any(), any(), contextDataStub) } just Runs
 

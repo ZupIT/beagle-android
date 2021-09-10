@@ -24,6 +24,7 @@ import br.com.zup.beagle.android.components.layout.Container
 import br.com.zup.beagle.android.components.list.ListAdapter
 import br.com.zup.beagle.android.components.utils.Template
 import br.com.zup.beagle.android.context.ContextData
+import br.com.zup.beagle.android.context.constant
 import br.com.zup.beagle.android.context.expressionOf
 import br.com.zup.beagle.android.testutil.InstantExecutorExtension
 import br.com.zup.beagle.android.view.ViewFactory
@@ -62,7 +63,7 @@ class ListViewTest : BaseComponentTest() {
         id = "context",
         value = listOf(Cell(10, "Item 1"), Cell(20, "Item 2"), Cell(30, "Item 3"))
     )
-    private val onInit = listOf(SendRequest("http://www.init.com"))
+    private val onInit = listOf(SendRequest(constant("http://www.init.com")))
     private val dataSource = expressionOf<List<Any>>("@{context}")
 
     private val templates by lazy {

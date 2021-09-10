@@ -25,6 +25,7 @@ import br.com.zup.beagle.R
 import br.com.zup.beagle.android.BaseSoLoaderTest
 import br.com.zup.beagle.android.components.Text
 import br.com.zup.beagle.android.components.layout.Screen
+import br.com.zup.beagle.android.context.constant
 import br.com.zup.beagle.android.data.ComponentRequester
 import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.testutil.CoroutinesTestExtension
@@ -57,7 +58,7 @@ class BeagleActivityTest : BaseSoLoaderTest() {
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
 
-    private val component by lazy { Text("Test component") }
+    private val component by lazy { Text(constant("Test component")) }
     private val componentRequester: ComponentRequester = mockk()
     private lateinit var beagleViewModel: BeagleScreenViewModel
     private var activity: ServerDrivenActivity? = null

@@ -19,6 +19,7 @@ package br.com.zup.beagle.android.action
 import android.content.DialogInterface
 import android.view.View
 import androidx.appcompat.app.AlertDialog
+import br.com.zup.beagle.android.context.constant
 import br.com.zup.beagle.android.testutil.RandomData
 import br.com.zup.beagle.android.utils.handleEvent
 import br.com.zup.beagle.android.view.ViewFactory
@@ -77,8 +78,8 @@ class AlertTest {
     fun `execute should create a AlertAction`() {
         // Given
         val action = Alert(
-            title = RandomData.string(),
-            message = RandomData.string(),
+            title = constant(RandomData.string()),
+            message = constant(RandomData.string()),
             labelOk = RandomData.string()
         )
 
@@ -95,8 +96,8 @@ class AlertTest {
     fun `execute should create a AlertAction with text default`() {
         // Given
         val action = Alert(
-            title = RandomData.string(),
-            message = RandomData.string()
+            title = constant(RandomData.string()),
+            message = constant(RandomData.string())
         )
         val randomLabel = RandomData.string()
         every { rootView.getContext().getString(android.R.string.ok) } returns randomLabel
@@ -114,8 +115,8 @@ class AlertTest {
     fun `click should dismiss dialog`() {
         // Given
         val action = Alert(
-            title = RandomData.string(),
-            message = RandomData.string(),
+            title = constant(RandomData.string()),
+            message = constant(RandomData.string()),
             labelOk = RandomData.string()
         )
         every { dialogBox.dismiss() } just Runs
@@ -133,8 +134,8 @@ class AlertTest {
         // Given
         val onPressOk: Action = mockk(relaxed = true)
         val action = Alert(
-            title = RandomData.string(),
-            message = RandomData.string(),
+            title = constant(RandomData.string()),
+            message = constant(RandomData.string()),
             labelOk = RandomData.string(),
             onPressOk = onPressOk
         )

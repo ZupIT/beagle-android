@@ -25,6 +25,7 @@ import br.com.zup.beagle.android.action.Navigate
 import br.com.zup.beagle.android.action.Route
 import br.com.zup.beagle.android.annotation.RegisterAction
 import br.com.zup.beagle.android.components.Text
+import br.com.zup.beagle.android.context.constant
 import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.android.widget.WidgetView
 import br.com.zup.beagle.android.widget.core.BeagleJson
@@ -115,7 +116,7 @@ internal class ActionReportFactoryTest : BaseTest() {
     inner class ComponentValues {
 
         private val action: AnalyticsAction = mockk()
-        private val originComponent: WidgetView by lazy { Text("test") }
+        private val originComponent: WidgetView by lazy { Text(constant("test")) }
 
         @BeforeEach
         fun setup() {
@@ -193,8 +194,8 @@ internal class ActionReportFactoryTest : BaseTest() {
     @DisplayName("When create record")
     @Nested
     inner class ActionAttributeAndAdditionalEntries {
-        private val url = "/url"
-        private val route = Route.Remote(url = "/url")
+        private val url = constant("/url")
+        private val route = Route.Remote(url = constant("/url"))
         private val actionType = "beagle:pushview"
         private val action: AnalyticsAction = Navigate.PushView(route = route)
 
@@ -239,7 +240,7 @@ internal class ActionReportFactoryTest : BaseTest() {
 
             //Then
             commonAsserts(report, dataActionReport)
-            Assert.assertEquals(url, report.attributes?.get(ROUTE_URL_CONSTANT))
+            Assert.assertEquals(url.value, report.attributes?.get(ROUTE_URL_CONSTANT))
             Assert.assertEquals(null, report.attributes?.get(ROUTE_SHOULD_PREFETCH_CONSTANT))
         }
 
@@ -273,7 +274,7 @@ internal class ActionReportFactoryTest : BaseTest() {
     @DisplayName("When GenerateDataActionReport")
     @Nested
     inner class GenerateDataActionReport {
-        private val url = "/url"
+        private val url = constant("/url")
         private val route = Route.Remote(url = url)
         private val action: AnalyticsAction = Navigate.PushView(route = route)
 
@@ -289,7 +290,7 @@ internal class ActionReportFactoryTest : BaseTest() {
                 attributes = hashMapOf(
                     "route.url.length" to 4,
                     "route" to route,
-                    ROUTE_URL_CONSTANT to url
+                    ROUTE_URL_CONSTANT to url.value
                 ),
                 id = null,
                 type = null,
