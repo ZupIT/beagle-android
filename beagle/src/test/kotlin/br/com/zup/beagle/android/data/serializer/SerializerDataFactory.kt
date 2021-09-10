@@ -275,7 +275,6 @@ fun makeObjectLazyComponent() = LazyComponent(
 fun makeListViewJson() = """
     {
        "_beagleComponent_":"beagle:listview",
-       "children": [${makeTextJson()}],
        "direction":"VERTICAL",
        "context": ${makeContextWithPrimitiveValueJson()},
        "onInit": [${makeActionAlertJson()}],
@@ -295,7 +294,6 @@ fun makeListViewJson() = """
 """
 
 fun makeObjectListView() = ListView(
-    children = listOf(makeObjectText()),
     direction = ListDirection.VERTICAL,
     context = makeObjectContextWithPrimitiveValue(),
     onInit = listOf(makeActionAlertObject()),

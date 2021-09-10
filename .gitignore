@@ -16,6 +16,9 @@ bin/
 gen/
 out/
 
+# Ruby
+Gemfile.lock
+
 # Gradle files
 .gradle/
 build/

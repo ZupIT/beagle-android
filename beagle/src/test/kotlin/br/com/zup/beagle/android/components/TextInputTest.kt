@@ -21,6 +21,8 @@ import android.text.InputType
 import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
+import androidx.appcompat.widget.AppCompatEditText
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.widget.TextViewCompat
 import br.com.zup.beagle.android.action.SetContext
 import br.com.zup.beagle.android.context.Bind
@@ -61,7 +63,7 @@ internal class TextInputTest : BaseComponentTest() {
 
     private val focusCapture = slot<View.OnFocusChangeListener>()
     private val textWatcherCapture = slot<TextWatcher>()
-    private val editText: EditText = mockk(relaxed = true, relaxUnitFun = true)
+    private val editText: AppCompatEditText = mockk(relaxed = true, relaxUnitFun = true)
     private val styleManager: StyleManager = mockk(relaxed = true)
     private val context: Context = mockk()
     private val textWatcher: TextWatcher = mockk()
