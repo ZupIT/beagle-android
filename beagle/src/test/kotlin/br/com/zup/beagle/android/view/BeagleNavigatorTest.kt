@@ -31,6 +31,7 @@ import br.com.zup.beagle.android.action.Route
 import br.com.zup.beagle.android.components.Text
 import br.com.zup.beagle.android.components.layout.Screen
 import br.com.zup.beagle.android.context.ContextData
+import br.com.zup.beagle.android.context.constant
 import br.com.zup.beagle.android.data.formatUrl
 import br.com.zup.beagle.android.logger.BeagleLoggerProxy
 import br.com.zup.beagle.android.navigation.DeepLinkHandler
@@ -57,7 +58,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
-private val route = Route.Remote(RandomData.httpUrl())
+private val route = Route.Remote(constant(RandomData.httpUrl()))
 private val url = RandomData.httpUrl()
 
 @DisplayName("Given a BeagleNavigator")
@@ -289,7 +290,7 @@ class BeagleNavigatorTest : BaseTest() {
         fun testPushViewShouldStartBeagleActivity() {
             // Given
             val context = mockk<Activity>()
-            val route = Route.Local(Screen(child = Text("stub")))
+            val route = Route.Local(Screen(child = Text(constant("stub"))))
             every { context.startActivity(any()) } just Runs
 
             // When

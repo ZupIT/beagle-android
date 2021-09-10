@@ -90,11 +90,11 @@ class ListAdapterTest : BaseTest() {
         listOf(
             Template(
                 case = expressionOf("@{eq(item, 'stub 1')}"),
-                view = Container(children = listOf(Text(text = "test")))
+                view = Container(children = listOf(Text(text = constant("test"))))
             ),
             Template(
                 case = expressionOf("@{eq(item, 'stub 2')}"),
-                view = Text(text = "test")
+                view = Text(text = constant("test"))
             ),
             Template(
                 case = null,
@@ -376,7 +376,7 @@ class ListAdapterTest : BaseTest() {
 
     @Test
     fun `Given a ListAdapter When call onCreateViewHolder Then should create the correct template`() {
-        val expectedTemplate = Text(text = "test")
+        val expectedTemplate = Text(text = constant("test"))
         val expectedViewType = 1
         val subject = ListAdapter(
             orientation = RecyclerView.VERTICAL,
@@ -448,7 +448,7 @@ class ListAdapterTest : BaseTest() {
         val templateListWithNoDefault = listOf(
             Template(
                 case = expressionOf("@{eq(item, 'stub 1')}"),
-                view = Container(children = listOf(Text(text = "test")))
+                view = Container(children = listOf(Text(text = constant("test"))))
             ),
         )
         val subject = ListAdapter(

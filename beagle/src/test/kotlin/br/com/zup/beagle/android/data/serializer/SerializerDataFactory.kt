@@ -195,10 +195,10 @@ fun makeObjectButton() = Button(
 )
 
 fun makeObjectText() = Text(
-    text = "Test",
+    text = constant("Test"),
     styleId = "style",
-    textColor = "#FFFF00",
-    alignment = TextAlignment.CENTER
+    textColor = constant("#FFFF00"),
+    alignment = constant(TextAlignment.CENTER)
 )
 
 fun makeObjectContextWithPrimitiveValue() = ContextData(
@@ -597,7 +597,7 @@ fun makePullToRefreshWithoutExpressionObject() = PullToRefresh(
     context = makeObjectContextWithPrimitiveValue(),
     onPull = listOf(makeActionAlertObject()),
     isRefreshing = expressionOf(TEST_EXPRESSION),
-    color = "#FFFFFF",
+    color = constant("#FFFFFF"),
     child = makeObjectContainer()
 )
 
@@ -612,7 +612,7 @@ fun makeActionAddChildrenJson() = """
 
 fun makeActionAddChildrenObject() = AddChildren(
     componentId = "id",
-    value = listOf(makeObjectText()),
+    value = constant(listOf(makeObjectText())),
     mode = Mode.APPEND
 )
 
@@ -633,12 +633,12 @@ fun makeActionAlertJson() =
     """
 
 fun makeActionAlertObject() = Alert(
-    title = "A title",
-    message = "A message",
+    title = constant("A title"),
+    message = constant("A message"),
     labelOk = "Ok",
     onPressOk = Alert(
-        title = "Another title",
-        message = "Another message",
+        title = constant("Another title"),
+        message = constant("Another message"),
         labelOk = "Ok"
     )
 )
@@ -675,8 +675,8 @@ fun makeActionConfirmJson() = """
 """
 
 fun makeActionConfirmObject() = Confirm(
-    title = "A title",
-    message = "A message",
+    title = constant("A title"),
+    message = constant("A message"),
     onPressOk = makeActionAlertObject(),
     labelOk = "Ok",
     onPressCancel = makeActionAlertObject(),
@@ -720,7 +720,7 @@ fun makeActionOpenExternalURLJson() = """
 """
 
 fun makeActionOpenExternalURLObject() = Navigate.OpenExternalURL(
-    url = TEST_URL,
+    url = constant(TEST_URL),
 )
 
 fun makeActionOpenExternalURLWithExpressionJson() = """
@@ -742,7 +742,7 @@ fun makeActionPopToViewJson() = """
 """
 
 fun makeActionPopToViewObject() = Navigate.PopToView(
-    route = "test"
+    route = constant("test")
 )
 
 fun makeActionPopToViewWithExpressionJson() = """
@@ -769,7 +769,7 @@ fun makeActionPushStackJson() = """
 
 fun makeActionPushStackObject() = Navigate.PushStack(
     route = Route.Remote(
-        url = TEST_URL,
+        url = constant(TEST_URL),
         shouldPrefetch = true
     ),
     controllerId = "controller"
@@ -814,7 +814,7 @@ fun makeActionPushStackWithHardcodedUrlJson() = """
 
 fun makeActionPushStackWithHardcodedUrlObject() = Navigate.PushStack(
     route = Route.Remote(
-        url = TEST_URL,
+        url = constant(TEST_URL),
         shouldPrefetch = false,
         httpAdditionalData = HttpAdditionalData(
             method = HttpMethod.POST,
@@ -837,7 +837,7 @@ fun makeActionPushViewJson() = """
 
 fun makeActionPushViewObject() = Navigate.PushView(
     route = Route.Remote(
-        url = TEST_URL,
+        url = constant(TEST_URL),
         shouldPrefetch = true
 
     )
@@ -879,7 +879,7 @@ fun makeActionPushViewWithHardcodedUrlJson() = """
 
 fun makeActionPushViewWithHardcodedUrlObject() = Navigate.PushView(
     route = Route.Remote(
-        url = TEST_URL,
+        url = constant(TEST_URL),
         shouldPrefetch = false,
         httpAdditionalData = HttpAdditionalData(
             method = HttpMethod.POST,
@@ -902,7 +902,7 @@ fun makeActionResetApplicationJson() = """
 
 fun makeActionResetApplicationObject() = Navigate.ResetApplication(
     route = Route.Remote(
-        url = TEST_URL,
+        url = constant(TEST_URL),
         shouldPrefetch = true
     ),
     controllerId = "controller"
@@ -947,7 +947,7 @@ fun makeActionResetApplicationWithHardcodedUrlJson() = """
 
 fun makeActionResetApplicationWithHardcodedUrlObject() = Navigate.ResetApplication(
     route = Route.Remote(
-        url = TEST_URL,
+        url = constant(TEST_URL),
         shouldPrefetch = false,
         httpAdditionalData = HttpAdditionalData(
             method = HttpMethod.POST,
@@ -971,7 +971,7 @@ fun makeActionResetStackJson() = """
 
 fun makeActionResetStackObject() = Navigate.ResetStack(
     route = Route.Remote(
-        url = TEST_URL,
+        url = constant(TEST_URL),
         shouldPrefetch = true
 
     ),
@@ -1017,7 +1017,7 @@ fun makeResetStackWithHardcodedUrlJson() = """
 
 fun makeResetStackWithHardcodedUrlObject() = Navigate.ResetStack(
     route = Route.Remote(
-        url = TEST_URL,
+        url = constant(TEST_URL),
         shouldPrefetch = false,
         httpAdditionalData = HttpAdditionalData(
             method = HttpMethod.POST,

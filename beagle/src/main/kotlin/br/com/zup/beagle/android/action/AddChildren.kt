@@ -20,7 +20,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import br.com.zup.beagle.android.context.Bind
-import br.com.zup.beagle.android.context.constant
 import br.com.zup.beagle.android.logger.BeagleMessageLogs
 import br.com.zup.beagle.android.utils.evaluateExpression
 import br.com.zup.beagle.android.utils.toAndroidId
@@ -72,18 +71,6 @@ data class AddChildren(
     var mode: Mode? = Mode.APPEND,
     override var analytics: ActionAnalyticsConfig? = null,
 ) : AnalyticsAction {
-
-    constructor(
-        componentId: String,
-        value: List<ServerDrivenComponent>,
-        mode: Mode? = Mode.APPEND,
-        analytics: ActionAnalyticsConfig? = null,
-    ) : this(
-        componentId = componentId,
-        value = constant(value),
-        mode = mode,
-        analytics = analytics
-    )
 
     override fun execute(rootView: RootView, origin: View) {
         try {

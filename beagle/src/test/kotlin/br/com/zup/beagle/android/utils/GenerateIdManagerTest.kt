@@ -20,6 +20,7 @@ import android.view.View
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.components.Text
 import br.com.zup.beagle.android.components.layout.Container
+import br.com.zup.beagle.android.context.constant
 import br.com.zup.beagle.android.view.custom.InternalBeagleFlexView
 import br.com.zup.beagle.android.view.viewmodel.GenerateIdViewModel
 import br.com.zup.beagle.android.view.viewmodel.ListViewIdViewModel
@@ -167,7 +168,7 @@ class GenerateIdManagerTest : BaseTest() {
         @Test
         fun markEachNestedComponentAsNoIdIfNeeded() {
             // Given
-            val componentWithoutId = Text("stub")
+            val componentWithoutId = Text(constant("stub"))
             val children = listOf<ServerDrivenComponent>(componentWithoutId)
             val component = Container(children)
             every { view.isAutoGenerateIdEnabled() } returns false
@@ -185,7 +186,7 @@ class GenerateIdManagerTest : BaseTest() {
         fun keepPreviousIds() {
             // Given
             val previousId = "id"
-            val componentWithId = Text("stub").apply {
+            val componentWithId = Text(constant("stub")).apply {
                 id = previousId
             }
             val children = listOf<ServerDrivenComponent>(componentWithId)

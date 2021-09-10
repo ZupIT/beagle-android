@@ -19,6 +19,7 @@ package br.com.zup.beagle.android.action
 import android.content.DialogInterface
 import android.view.View
 import androidx.appcompat.app.AlertDialog
+import br.com.zup.beagle.android.context.constant
 import br.com.zup.beagle.android.testutil.RandomData
 import br.com.zup.beagle.android.utils.handleEvent
 import br.com.zup.beagle.android.view.ViewFactory
@@ -85,8 +86,8 @@ class ConfirmTest {
         val onPressOk: Action = mockk(relaxed = true)
         val onPressCancel: Action = mockk(relaxed = true)
         val action = Confirm(
-            title = RandomData.string(),
-            message = RandomData.string(),
+            title = constant(RandomData.string()),
+            message = constant(RandomData.string()),
             labelOk = RandomData.string(),
             labelCancel = RandomData.string(),
             onPressOk = onPressOk,
@@ -107,8 +108,8 @@ class ConfirmTest {
     fun `execute should create a ConfirmAction with text default`() {
         // Given
         val action = Confirm(
-            title = RandomData.string(),
-            message = RandomData.string()
+            title = constant(RandomData.string()),
+            message = constant(RandomData.string())
         )
         val randomLabelOk = RandomData.string()
         val randomLabelCancel = RandomData.string()
@@ -129,8 +130,8 @@ class ConfirmTest {
     fun `click should dismiss dialog`() {
         // Given
         val action = Confirm(
-            title = RandomData.string(),
-            message = RandomData.string(),
+            title = constant(RandomData.string()),
+            message = constant(RandomData.string()),
             labelOk = RandomData.string()
         )
         every { dialogBox.dismiss() } just Runs
@@ -148,8 +149,8 @@ class ConfirmTest {
         // Given
         val onPressOk: Action = mockk(relaxed = true)
         val action = Confirm(
-            title = RandomData.string(),
-            message = RandomData.string(),
+            title = constant(RandomData.string()),
+            message = constant(RandomData.string()),
             labelOk = RandomData.string(),
             labelCancel = RandomData.string(),
             onPressOk = onPressOk
@@ -175,8 +176,8 @@ class ConfirmTest {
         // Given
         val onPressCancel: Action = mockk(relaxed = true)
         val action = Confirm(
-            title = RandomData.string(),
-            message = RandomData.string(),
+            title = constant(RandomData.string()),
+            message = constant(RandomData.string()),
             labelOk = RandomData.string(),
             labelCancel = RandomData.string(),
             onPressCancel = onPressCancel

@@ -18,6 +18,7 @@ package br.com.zup.beagle.android.engine.renderer
 
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.components.Text
+import br.com.zup.beagle.android.context.constant
 import br.com.zup.beagle.android.widget.ViewConvertable
 import org.junit.Assert
 import org.junit.jupiter.api.DisplayName
@@ -27,7 +28,7 @@ import org.junit.jupiter.api.Test
 @DisplayName("Given a ViewRendererFactory")
 class ViewRendererFactoryTest : BaseTest() {
 
-    private val component by lazy { Text("") }
+    private val component by lazy { Text(constant("")) }
     private val viewRendererFactory = ViewRendererFactory()
 
     @DisplayName("When a component is requested")

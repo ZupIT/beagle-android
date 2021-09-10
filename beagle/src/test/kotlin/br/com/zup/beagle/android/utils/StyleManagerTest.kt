@@ -107,7 +107,7 @@ class StyleManagerTest : BaseTest() {
     @Test
     fun test_getBackgroundColor_when_text_has_a_color_drawable_background() {
         //Given
-        val serverDrivenComponent = Text("")
+        val serverDrivenComponent = Text(constant(""))
         every { context.obtainStyledAttributes(any<Int>(), any()) } returns typedArray
         every { view.background } returns colorDrawable
         every { colorDrawable.color } returns Color.WHITE
@@ -127,7 +127,7 @@ class StyleManagerTest : BaseTest() {
     @Test
     fun test_getBackgroundColor_when_text_not_is_color_drawable() {
         //Given
-        val serverDrivenComponent = Text("")
+        val serverDrivenComponent = Text(constant(""))
         every { context.obtainStyledAttributes(any<Int>(), any()) } returns typedArray
 
         //When

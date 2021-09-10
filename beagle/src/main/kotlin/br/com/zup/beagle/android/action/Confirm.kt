@@ -18,8 +18,6 @@ package br.com.zup.beagle.android.action
 
 import android.view.View
 import br.com.zup.beagle.android.context.Bind
-import br.com.zup.beagle.android.context.expressionOrConstant
-import br.com.zup.beagle.android.context.expressionOrValueOfNullable
 import br.com.zup.beagle.android.utils.evaluateExpression
 import br.com.zup.beagle.android.utils.handleEvent
 import br.com.zup.beagle.android.view.ViewFactory
@@ -49,24 +47,6 @@ data class Confirm(
     val labelCancel: String? = null,
     override var analytics: ActionAnalyticsConfig? = null,
 ) : AnalyticsAction {
-
-    constructor(
-        title: String? = null,
-        message: String,
-        onPressOk: Action? = null,
-        onPressCancel: Action? = null,
-        labelOk: String? = null,
-        labelCancel: String? = null,
-        analytics: ActionAnalyticsConfig? = null,
-    ) : this(
-        title = expressionOrValueOfNullable(title),
-        message = expressionOrConstant(message),
-        onPressOk = onPressOk,
-        onPressCancel = onPressCancel,
-        labelOk = labelOk,
-        labelCancel = labelCancel,
-        analytics = analytics
-    )
 
     override fun execute(rootView: RootView, origin: View) {
         ViewFactory.makeAlertDialogBuilder(rootView.getContext())

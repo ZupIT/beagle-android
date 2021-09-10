@@ -26,6 +26,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.MyBeagleSetup
 import br.com.zup.beagle.android.components.Text
+import br.com.zup.beagle.android.context.constant
 import br.com.zup.beagle.android.data.formatUrl
 import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.setup.BeagleSdk
@@ -89,7 +90,7 @@ internal class BeagleViewTest : BaseTest() {
         }
 
         url = "/url".formatUrl()
-        component = Text("Test component")
+        component = Text(constant("Test component"))
     }
 
     @After

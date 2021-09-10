@@ -21,6 +21,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.components.layout.Container
+import br.com.zup.beagle.android.context.constant
 import br.com.zup.beagle.android.context.expressionOf
 import br.com.zup.beagle.android.logger.BeagleMessageLogs
 import br.com.zup.beagle.android.utils.evaluateExpression
@@ -44,7 +45,7 @@ import org.junit.jupiter.api.Test
 class AddChildrenTest : BaseTest() {
 
     private val serverDrivenComponent = mockk<ServerDrivenComponent>(relaxed = true)
-    private val value = listOf(serverDrivenComponent)
+    private val value = constant(listOf(serverDrivenComponent))
     private val origin = mockk<View>(relaxed = true)
     private val viewGroup = mockk<ViewGroup>(relaxed = true)
     private val context = mockk<AppCompatActivity>(relaxed = true)

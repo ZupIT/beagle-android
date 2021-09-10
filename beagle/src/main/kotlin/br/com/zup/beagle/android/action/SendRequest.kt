@@ -20,9 +20,7 @@ import android.view.View
 import br.com.zup.beagle.android.annotation.ContextDataValue
 import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.context.ContextData
-import br.com.zup.beagle.android.context.expressionOrConstant
 import br.com.zup.beagle.android.context.normalizeContextValue
-import br.com.zup.beagle.android.context.constant
 import br.com.zup.beagle.android.utils.evaluateExpression
 import br.com.zup.beagle.android.utils.generateViewModelInstance
 import br.com.zup.beagle.android.utils.handleEvent
@@ -92,26 +90,6 @@ data class SendRequest(
     val onFinish: List<Action>? = null,
     override var analytics: ActionAnalyticsConfig? = null,
 ) : AnalyticsAction, AsyncAction by AsyncActionImpl() {
-
-    constructor(
-        url: String,
-        method: RequestActionMethod = RequestActionMethod.GET,
-        headers: Map<String, String>? = null,
-        data: Any? = null,
-        onSuccess: List<Action>? = null,
-        onError: List<Action>? = null,
-        onFinish: List<Action>? = null,
-        analytics: ActionAnalyticsConfig? = null,
-    ) : this(
-        expressionOrConstant(url),
-        constant(method),
-        headers?.let { constant(it) },
-        data,
-        onSuccess,
-        onError,
-        onFinish,
-        analytics
-    )
 
     override fun execute(rootView: RootView, origin: View) {
         val viewModel = rootView.generateViewModelInstance<ActionRequestViewModel>()

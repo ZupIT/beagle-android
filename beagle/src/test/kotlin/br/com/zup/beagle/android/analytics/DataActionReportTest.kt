@@ -20,6 +20,7 @@ import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.action.AnalyticsAction
 import br.com.zup.beagle.android.action.Navigate
 import br.com.zup.beagle.android.action.Route
+import br.com.zup.beagle.android.context.constant
 import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.mockk
@@ -38,7 +39,7 @@ private const val ROUTE_SHOULD_PREFETCH_CONSTANT = "route.shouldPrefetch"
 @DisplayName("Given DataActionReport")
 internal class DataActionReportTest : BaseTest() {
 
-    private val url = "/url"
+    private val url = constant("/url")
     private val route = Route.Remote(url = url)
     private val action: AnalyticsAction = Navigate.PushView(route = route)
     private val analyticsRecord: AnalyticsRecord = mockk()

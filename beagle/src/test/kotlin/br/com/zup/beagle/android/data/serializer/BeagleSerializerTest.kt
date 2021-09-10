@@ -155,7 +155,7 @@ class BeagleSerializerTest : BaseTest() {
         fun testDeserializeActionJson() {
             // Given
             val json = "{}"
-            val navigate = Navigate.PushView(Route.Remote(""))
+            val navigate = Navigate.PushView(Route.Remote(constant("")))
             every { actionJsonAdapter.fromJson(json) } returns navigate
 
             // When

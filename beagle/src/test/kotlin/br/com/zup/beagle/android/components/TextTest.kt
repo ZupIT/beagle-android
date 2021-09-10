@@ -17,6 +17,7 @@
 package br.com.zup.beagle.android.components
 
 import androidx.appcompat.widget.AppCompatTextView
+import br.com.zup.beagle.android.context.constant
 import br.com.zup.beagle.android.utils.StyleManager
 import br.com.zup.beagle.android.view.ViewFactory
 import io.mockk.every
@@ -29,7 +30,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
-private const val DEFAULT_TEXT = "Hello"
+private val DEFAULT_TEXT = constant("Hello")
 private const val DEFAULT_STYLE = "DummyStyle"
 private const val DEFAULT_STYLE_INTEGER = 123
 
