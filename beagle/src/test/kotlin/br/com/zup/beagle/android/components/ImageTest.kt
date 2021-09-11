@@ -18,7 +18,7 @@ package br.com.zup.beagle.android.components
 
 import android.widget.ImageView
 import br.com.zup.beagle.android.components.utils.RoundedImageView
-import br.com.zup.beagle.android.context.valueOf
+import br.com.zup.beagle.android.context.constant
 import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.testutil.RandomData
 import br.com.zup.beagle.android.utils.dp
@@ -82,10 +82,10 @@ internal class ImageTest : BaseComponentTest() {
     fun clear() {
         clearMocks(imageView, answers = false)
         mockBeagleEnvironment()
-        imageLocal = Image(valueOf(ImagePath.Local("imageName")))
+        imageLocal = Image(constant(ImagePath.Local("imageName")))
         imageRemote =
             Image(
-                valueOf(
+                constant(
                     ImagePath.Remote(
                         DEFAULT_URL,
                         ImagePath.Local("imageName"),
@@ -114,7 +114,7 @@ internal class ImageTest : BaseComponentTest() {
         @DisplayName("Then it should return a imageView if imagePath is remote")
         fun testsIfViewIsBuiltAsImageViewWhenImagePathIsRemote() {
             // Given
-            imageRemote = Image(valueOf(ImagePath.Remote("")))
+            imageRemote = Image(constant(ImagePath.Remote("")))
 
             // When
             val view = imageRemote.buildView(rootView)
@@ -127,7 +127,7 @@ internal class ImageTest : BaseComponentTest() {
         @DisplayName("Then it should clear drawable if placeholder is null")
         fun testsIfClearDrawableWhenPlaceholderIsNull() {
             // Given
-            imageRemote = Image(valueOf(ImagePath.Remote(url = "")))
+            imageRemote = Image(constant(ImagePath.Remote(url = "")))
 
             // When
             val view = imageRemote.buildView(rootView)
@@ -142,7 +142,7 @@ internal class ImageTest : BaseComponentTest() {
             // Given
             imageRemote =
                 Image(
-                    valueOf(
+                    constant(
                         ImagePath.Remote(
                             url = "",
                             placeholder = ImagePath.Local("imageName"),
@@ -276,7 +276,7 @@ internal class ImageTest : BaseComponentTest() {
         @DisplayName("Then the placeHolder for a remote image should set a Local Image path")
         fun testsIfTheSetImageResourceForALocalImageIsCalled() {
             //Given
-            imageRemote = Image(valueOf(ImagePath.Remote("", ImagePath.Local("imageName"))))
+            imageRemote = Image(constant(ImagePath.Remote("", ImagePath.Local("imageName"))))
 
             // When
             imageRemote.buildView(rootView)

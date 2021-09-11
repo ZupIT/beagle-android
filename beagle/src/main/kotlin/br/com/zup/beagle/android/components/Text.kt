@@ -20,9 +20,6 @@ import android.view.Gravity
 import android.view.View
 import android.widget.TextView
 import br.com.zup.beagle.android.context.Bind
-import br.com.zup.beagle.android.context.expressionOrValueOf
-import br.com.zup.beagle.android.context.expressionOrValueOfNullable
-import br.com.zup.beagle.android.context.valueOfNullable
 import br.com.zup.beagle.android.utils.StyleManager
 import br.com.zup.beagle.android.utils.observeBindChanges
 import br.com.zup.beagle.android.utils.toAndroidColor
@@ -51,21 +48,8 @@ data class Text(
     val alignment: Bind<TextAlignment>? = null,
 ) : WidgetView() {
 
-    constructor(
-        text: String,
-        styleId: String? = null,
-        textColor: String? = null,
-        alignment: TextAlignment? = null,
-    ) : this(
-        expressionOrValueOf(text),
-        styleId,
-        expressionOrValueOfNullable(textColor),
-        valueOfNullable(alignment)
-    )
-
     @Transient
     private val styleManager: StyleManager = StyleManager()
-
 
     override fun buildView(rootView: RootView): View {
         val textStyle = styleManager.getTextStyle(styleId)

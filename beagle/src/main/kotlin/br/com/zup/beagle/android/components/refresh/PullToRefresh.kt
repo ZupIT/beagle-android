@@ -24,7 +24,6 @@ import br.com.zup.beagle.android.annotation.RegisterWidget
 import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.context.ContextComponent
 import br.com.zup.beagle.android.context.ContextData
-import br.com.zup.beagle.android.context.valueOfNullable
 import br.com.zup.beagle.android.utils.handleEvent
 import br.com.zup.beagle.android.utils.observeBindChanges
 import br.com.zup.beagle.android.view.ViewFactory
@@ -41,20 +40,6 @@ data class PullToRefresh constructor(
     val color: Bind<String>? = null,
     override val child: ServerDrivenComponent,
 ) : WidgetView(), ContextComponent, SingleChildComponent {
-
-    constructor(
-        context: ContextData? = null,
-        onPull: List<Action>,
-        isRefreshing: Bind<Boolean>? = null,
-        color: String? = null,
-        child: ServerDrivenComponent,
-    ) : this(
-        context = context,
-        onPull = onPull,
-        isRefreshing = isRefreshing,
-        color = valueOfNullable(color),
-        child = child,
-    )
 
     override fun buildView(rootView: RootView): View {
         return ViewFactory.makeSwipeRefreshLayout(rootView.getContext()).apply {

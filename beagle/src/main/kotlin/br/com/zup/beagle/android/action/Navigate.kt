@@ -21,7 +21,6 @@ import br.com.zup.beagle.android.analytics.ActionAnalyticsConfig
 import br.com.zup.beagle.android.components.layout.Screen
 import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.context.ContextData
-import br.com.zup.beagle.android.context.expressionOrValueOf
 import br.com.zup.beagle.android.context.normalizeContextValue
 import br.com.zup.beagle.android.networking.HttpAdditionalData
 import br.com.zup.beagle.android.utils.evaluateExpression
@@ -46,14 +45,6 @@ sealed class Navigate : AnalyticsAction {
         override var analytics: ActionAnalyticsConfig? = null,
     ) : Navigate() {
 
-        constructor(
-            url: String,
-            analytics: ActionAnalyticsConfig? = null,
-        ) : this(
-            url = expressionOrValueOf(url),
-            analytics = analytics
-        )
-
         override fun execute(rootView: RootView, origin: View) {
             evaluateExpression(rootView, origin, url)?.let { url ->
                 BeagleNavigator.openExternalURL(rootView.getContext(), url)
@@ -75,18 +66,6 @@ sealed class Navigate : AnalyticsAction {
         val data: Map<String, String>? = null,
         override var analytics: ActionAnalyticsConfig? = null,
     ) : Navigate() {
-
-        constructor(
-            route: String,
-            shouldResetApplication: Boolean = false,
-            data: Map<String, String>? = null,
-            analytics: ActionAnalyticsConfig? = null,
-        ) : this(
-            route = expressionOrValueOf(route),
-            shouldResetApplication = shouldResetApplication,
-            data = data,
-            analytics = analytics
-        )
 
         override fun execute(rootView: RootView, origin: View) {
             evaluateExpression(rootView, origin, route)?.let { route ->
@@ -137,16 +116,6 @@ sealed class Navigate : AnalyticsAction {
         override var analytics: ActionAnalyticsConfig? = null,
         val context: ContextData? = null,
     ) : Navigate() {
-
-        constructor(
-            route: String,
-            analytics: ActionAnalyticsConfig? = null,
-            context: ContextData? = null,
-        ) : this(
-            route = expressionOrValueOf(route),
-            analytics = analytics,
-            context = context
-        )
 
         override fun execute(rootView: RootView, origin: View) {
             evaluateExpression(rootView, origin, route)?.let { route ->
@@ -280,20 +249,7 @@ sealed class Route {
         val shouldPrefetch: Boolean? = null,
         val fallback: Screen? = null,
         val httpAdditionalData: HttpAdditionalData? = null,
-    ) : Route() {
-
-        constructor(
-            url: String,
-            shouldPrefetch: Boolean? = null,
-            fallback: Screen? = null,
-            httpAdditionalData: HttpAdditionalData? = null,
-        ) : this(
-            expressionOrValueOf(url),
-            shouldPrefetch,
-            fallback,
-            httpAdditionalData
-        )
-    }
+    ) : Route()
 
     /**
      * Class indicating navigation to a local screen.

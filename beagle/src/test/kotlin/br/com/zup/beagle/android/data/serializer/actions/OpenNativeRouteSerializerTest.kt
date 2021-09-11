@@ -17,6 +17,7 @@
 package br.com.zup.beagle.android.data.serializer.actions
 
 import br.com.zup.beagle.android.action.Navigate
+import br.com.zup.beagle.android.context.constant
 import br.com.zup.beagle.android.context.expressionOf
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeAll
@@ -111,7 +112,7 @@ class OpenNativeRouteSerializerTest : BaseActionSerializerTest() {
 """
 
     private fun makeObjectOpenNativeRoute() = Navigate.OpenNativeRoute(
-        route = "test",
+        route = constant("test"),
         shouldResetApplication = true,
         data = mapOf("test" to "test")
     )
