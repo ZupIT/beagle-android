@@ -47,7 +47,9 @@ internal class ListAdapter(
     // Recyclerview id for post config changes id management
     private var recyclerId = View.NO_ID
 
+    // Parent list information needed by inner lists
     private var parentListViewSuffix: String? = null
+    private var parentListViewId: Int? = null
 
     // Serializer to provide new template instances
     private val serializer = BeagleSerializer()
@@ -125,8 +127,9 @@ internal class ListAdapter(
         }
     }
 
-    fun setParentSuffix(itemSuffix: String) {
+    fun setParentAttributes(itemSuffix: String, parentListId: Int) {
         parentListViewSuffix = itemSuffix
+        parentListViewId = parentListId
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -268,14 +271,15 @@ internal class ListAdapter(
     }
 
     private fun createTempId(): Int {
-        recyclerId = listViewModels
-            .generateIdViewModel
-            .getViewId(
-                listViewModels
-                    .rootView
-                    .getParentId()
-            )
-
+        recyclerId = if (parentListViewSuffix != null && parentListViewId != null) {
+            listViewModels
+                .listViewIdViewModel
+                .getViewId(parentListViewId!!, parentListViewSuffix!!.toInt())
+        } else {
+            listViewModels
+                .generateIdViewModel
+                .getViewId(listViewModels.rootView.getParentId())
+        }
         return recyclerId
     }
 
