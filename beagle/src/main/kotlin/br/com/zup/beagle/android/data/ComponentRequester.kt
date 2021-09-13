@@ -18,6 +18,9 @@ package br.com.zup.beagle.android.data
 
 import br.com.zup.beagle.android.data.serializer.BeagleSerializer
 import br.com.zup.beagle.android.exception.BeagleException
+import br.com.zup.beagle.android.networking.OnError
+import br.com.zup.beagle.android.networking.OnSuccess
+import br.com.zup.beagle.android.networking.RequestCall
 import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.networking.ResponseData
 import br.com.zup.beagle.android.networking.ViewClient
@@ -30,25 +33,42 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
 internal class ComponentRequester(
-    private val viewClient: ViewClient = BeagleEnvironment.beagleSdk.viewClient ?: ViewClientDefault(),
+    private val viewClient: ViewClient = BeagleEnvironment.beagleSdk.viewClient ?: ViewClientDefault,
     private val serializer: BeagleSerializer = BeagleSerializer(),
 ) {
 
     @Throws(BeagleException::class)
-    suspend fun fetchComponent(requestData: RequestData): ServerDrivenComponent {
-        val responseData = fetch(requestData)
+    suspend fun fetchComponent(requestData: RequestData) = fetchAndDeserialize(requestData, ::fetch)
+
+    @Throws(BeagleException::class)
+    suspend fun prefetchComponent(requestData: RequestData) = fetchAndDeserialize(requestData, ::prefetch)
+
+    private suspend fun fetchAndDeserialize(
+        requestData: RequestData,
+        call: suspend (requestData: RequestData) -> ResponseData,
+    ): ServerDrivenComponent {
+        val responseData = call(requestData.copy(url = requestData.url.formatUrl()))
         return serializer.deserializeComponent(String(responseData.data))
     }
 
-    private suspend fun fetch(requestData: RequestData): ResponseData = suspendCancellableCoroutine { cont ->
+    private suspend fun fetch(requestData: RequestData) =
+        suspendedViewClientCall(requestData, viewClient::fetch)
+
+    private suspend fun prefetch(requestData: RequestData) =
+        suspendedViewClientCall(requestData, viewClient::prefetch)
+
+    private suspend fun suspendedViewClientCall(
+        requestData: RequestData,
+        viewClientCall: (requestData: RequestData, onSuccess: OnSuccess, onError: OnError) -> RequestCall?,
+    ): ResponseData = suspendCancellableCoroutine { cont ->
         try {
-            val call = viewClient.fetch(requestData, onSuccess = { response ->
+            val call = viewClientCall(requestData, { response ->
                 cont.resume(response)
-            }, onError = { response ->
+            }, { response ->
                 cont.resume(response)
             })
             cont.invokeOnCancellation {
-                call.cancel()
+                call?.cancel()
             }
         } catch (e: Exception) {
             cont.resumeWithException(e)

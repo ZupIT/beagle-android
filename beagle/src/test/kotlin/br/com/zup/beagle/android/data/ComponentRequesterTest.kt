@@ -51,7 +51,8 @@ class ComponentRequesterTest : BaseTest() {
     private val viewClient: ViewClient = mockk(relaxed = true)
     private val serializer: BeagleSerializer = mockk()
     private val requestCall: RequestCall = mockk()
-    private val requestData: RequestData = mockk()
+    private val requestData: RequestData = mockk(relaxed = true)
+    private val requestDataCopy: RequestData = RequestData("/test")
     private val responseData: ResponseData = mockk(relaxed = true)
     private val onSuccessSlot = slot<OnSuccess>()
     private val onErrorSlot = slot<OnError>()
@@ -63,6 +64,7 @@ class ComponentRequesterTest : BaseTest() {
     override fun setUp() {
         super.setUp()
         every { serializer.deserializeComponent(any()) } returns component
+        every { requestData.copy(any()) } returns requestDataCopy
 
         componentRequester = ComponentRequester(viewClient, serializer)
     }
@@ -80,7 +82,7 @@ class ComponentRequesterTest : BaseTest() {
         @Test
         fun testFetchComponentSuccess() = runBlockingTest {
             // Given
-            every { viewClient.fetch(requestData, capture(onSuccessSlot), any()) } answers {
+            every { viewClient.fetch(requestDataCopy, capture(onSuccessSlot), any()) } answers {
                 onSuccessSlot.captured(responseData)
                 requestCall
             }
@@ -90,7 +92,7 @@ class ComponentRequesterTest : BaseTest() {
 
             // Then
             verifySequence {
-                viewClient.fetch(requestData, onSuccessSlot.captured, any())
+                viewClient.fetch(requestDataCopy, onSuccessSlot.captured, any())
                 serializer.deserializeComponent(any())
             }
             assertEquals(component, fetchedComponent)
@@ -100,7 +102,7 @@ class ComponentRequesterTest : BaseTest() {
         @Test
         fun testFetchComponentError() = runBlockingTest {
             // Given
-            every { viewClient.fetch(requestData, any(), capture(onErrorSlot)) } answers {
+            every { viewClient.fetch(requestDataCopy, any(), capture(onErrorSlot)) } answers {
                 onErrorSlot.captured(responseData)
                 requestCall
             }
@@ -110,7 +112,7 @@ class ComponentRequesterTest : BaseTest() {
 
             // Then
             verifySequence {
-                viewClient.fetch(requestData, any(), onErrorSlot.captured)
+                viewClient.fetch(requestDataCopy, any(), onErrorSlot.captured)
                 serializer.deserializeComponent(any())
             }
             assertEquals(component, fetchedComponent)
@@ -123,11 +125,71 @@ class ComponentRequesterTest : BaseTest() {
             val exception = BeagleApiException(responseData, requestData)
 
             // When
-            every { viewClient.fetch(requestData, any(), any()) } throws exception
+            every { viewClient.fetch(requestDataCopy, any(), any()) } throws exception
 
             // Then
             assertThrows<BeagleApiException> {
                 componentRequester.fetchComponent(requestData)
+            }
+        }
+    }
+
+    @DisplayName("When prefetchComponent is called")
+    @Nested
+    inner class PrefetchComponent {
+
+        @DisplayName("Then it should call prefetch and deserializeComponent with success")
+        @Test
+        fun testPrefetchComponentSuccess() = runBlockingTest {
+            // Given
+            every { viewClient.prefetch(requestDataCopy, capture(onSuccessSlot), any()) } answers {
+                onSuccessSlot.captured(responseData)
+                requestCall
+            }
+
+            // When
+            val prefetchedComponent = componentRequester.prefetchComponent(requestData)
+
+            // Then
+            verifySequence {
+                viewClient.prefetch(requestDataCopy, onSuccessSlot.captured, any())
+                serializer.deserializeComponent(any())
+            }
+            assertEquals(component, prefetchedComponent)
+        }
+
+        @DisplayName("Then it should call prefetch and deserializeComponent with error")
+        @Test
+        fun testPrefetchComponentError() = runBlockingTest {
+            // Given
+            every { viewClient.prefetch(requestDataCopy, any(), capture(onErrorSlot)) } answers {
+                onErrorSlot.captured(responseData)
+                requestCall
+            }
+
+            // When
+            val prefetchedComponent = componentRequester.prefetchComponent(requestData)
+
+            // Then
+            verifySequence {
+                viewClient.prefetch(requestDataCopy, any(), onErrorSlot.captured)
+                serializer.deserializeComponent(any())
+            }
+            assertEquals(component, prefetchedComponent)
+        }
+
+        @DisplayName("Then it should call prefetch with exception")
+        @Test
+        fun testPrefetchComponentException() = runBlockingTest {
+            // Given
+            val exception = BeagleApiException(responseData, requestData)
+
+            // When
+            every { viewClient.prefetch(requestDataCopy, any(), any()) } throws exception
+
+            // Then
+            assertThrows<BeagleApiException> {
+                componentRequester.prefetchComponent(requestData)
             }
         }
     }

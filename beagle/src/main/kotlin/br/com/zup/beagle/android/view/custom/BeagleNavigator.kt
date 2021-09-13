@@ -25,7 +25,6 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
 import br.com.zup.beagle.android.action.Route
 import br.com.zup.beagle.android.context.ContextData
-import br.com.zup.beagle.android.data.formatUrl
 import br.com.zup.beagle.android.logger.BeagleLoggerProxy
 import br.com.zup.beagle.android.networking.HttpAdditionalData
 import br.com.zup.beagle.android.networking.HttpMethod
@@ -219,9 +218,8 @@ internal object BeagleNavigator {
             headers = route.httpAdditionalData?.headers ?: hashMapOf()
         )
 
-        val url = (route.url.value as String).formatUrl()
         return RequestData(
-            url = url,
+            url = route.url.value as String,
             httpAdditionalData = httpAdditionalData,
         )
     }
