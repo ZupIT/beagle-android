@@ -19,10 +19,10 @@ package br.com.zup.beagle.android.networking
 import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.utils.doRequest
 
-object ViewClientDefault : ViewClient {
-
-    private val httpClient by lazy { BeagleEnvironment.beagleSdk.httpClientFactory?.create() }
+class ViewClientDefault(
+    private val httpClient: HttpClient? = BeagleEnvironment.beagleSdk.httpClientFactory?.create(),
     private val cachedResponses: MutableMap<String, ResponseData> = mutableMapOf()
+) : ViewClient {
 
     override fun fetch(requestData: RequestData, onSuccess: OnSuccess, onError: OnError): RequestCall? {
         val cachedResponse = cachedResponses[requestData.url]
@@ -46,5 +46,9 @@ object ViewClientDefault : ViewClient {
                 cachedResponses[requestData.url] = response
             }, onError)
         }
+    }
+
+    companion object {
+        internal val instance = ViewClientDefault()
     }
 }

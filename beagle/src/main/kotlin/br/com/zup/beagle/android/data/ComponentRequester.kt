@@ -33,7 +33,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
 internal class ComponentRequester(
-    private val viewClient: ViewClient = BeagleEnvironment.beagleSdk.viewClient ?: ViewClientDefault,
+    private val viewClient: ViewClient = BeagleEnvironment.beagleSdk.viewClient ?: ViewClientDefault.instance,
     private val serializer: BeagleSerializer = BeagleSerializer(),
 ) {
 

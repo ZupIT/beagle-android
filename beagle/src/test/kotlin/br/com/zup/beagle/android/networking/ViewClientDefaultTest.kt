@@ -17,12 +17,19 @@
 package br.com.zup.beagle.android.networking
 
 import br.com.zup.beagle.android.BaseTest
-import br.com.zup.beagle.android.utils.doRequest
+import br.com.zup.beagle.android.logger.BeagleLoggerProxy
+import br.com.zup.beagle.android.mockdata.makeResponseData
+import io.mockk.Runs
+import io.mockk.clearMocks
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.slot
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -30,22 +37,30 @@ import org.junit.jupiter.api.Test
 @DisplayName("Given a ViewClientDefault")
 class ViewClientDefaultTest : BaseTest() {
 
-    private val url = "https://www.test.com/test"
-    private val requestData: RequestData = mockk()
-    private val httpClient: HttpClient = mockk(relaxed = true)
-    private val onSuccess: OnSuccess = mockk()
+    private val requestData: RequestData = RequestData(url = "https://www.test.com/test")
+    private val httpClient: HttpClient = mockk(
+        relaxed = true,
+        relaxUnitFun = true,
+    )
+    private val onSuccess: OnSuccess = mockk(relaxed = true, relaxUnitFun = true)
     private val onError: OnError = mockk()
     private val requestCall: RequestCall = mockk()
 
-    val viewClientDefault = ViewClientDefault
+    private lateinit var viewClientDefault: ViewClientDefault
 
     @BeforeAll
     override fun setUp() {
         super.setUp()
-        every { beagleSdk.httpClientFactory } returns mockk() {
-            every { create() } returns httpClient
-        }
-        every { requestData.url } returns url
+
+        mockkObject(BeagleLoggerProxy)
+        every { BeagleLoggerProxy.info(any()) } just Runs
+    }
+
+    @BeforeEach
+    fun clear() {
+        clearMocks(httpClient)
+
+        viewClientDefault = ViewClientDefault(httpClient)
     }
 
     @Nested
@@ -56,34 +71,66 @@ class ViewClientDefaultTest : BaseTest() {
         @DisplayName("Then should call doRequest if cache is empty")
         fun testFetchWithoutCache() {
             // Given
-//            every { requestData.doRequest(httpClient, onSuccess, onError) } returns requestCall
+            every { httpClient.execute(requestData, any(), any()) } returns requestCall
 
             // When
-//            val call = viewClientDefault.fetch(requestData, onSuccess, onError)
+            val call = viewClientDefault.fetch(requestData, onSuccess, onError)
 
             // Then
-//            assertEquals(requestCall, call)
-//            verify(exactly = 1) { requestData.doRequest(httpClient, onSuccess, onError) }
+            assertEquals(requestCall, call)
         }
 
         @Test
         @DisplayName("Then should return and remove the cached response")
         fun testFetchWithCache() {
             // Given
-//            viewClientDefault.prefetch(requestData, onSuccess, onError)
+            val onSuccessSlot = slot<OnSuccess>()
+            every { httpClient.execute(requestData, capture(onSuccessSlot), any()) } returns requestCall
 
             // When
-//            val call = viewClientDefault.fetch(requestData, onSuccess, onError)
+            viewClientDefault.prefetch(requestData, onSuccess, onError)
+            onSuccessSlot.captured.invoke(makeResponseData())
+            val call = viewClientDefault.fetch(requestData, onSuccess, onError)
 
             // Then
-//            assertEquals(null, call)
-            // check onSuccess with cached value
+            verify(exactly = 1) { httpClient.execute(requestData, any(), any()) }
+            assertEquals(null, call)
         }
     }
 
     @Nested
     @DisplayName("When prefetch is called")
     inner class Prefetch {
-        // same asserts with prefetch method
+        @Test
+        @DisplayName("Then should call doRequest if cache is empty")
+        fun testPreFetchWithoutCache() {
+            // Given
+            every { httpClient.execute(requestData, any(), any()) } returns requestCall
+
+            // When
+            val call = viewClientDefault.prefetch(requestData, onSuccess, onError)
+
+            // Then
+            verify(exactly = 1) { httpClient.execute(requestData, any(), any()) }
+            assertEquals(requestCall, call)
+        }
+
+
+        @Test
+        @DisplayName("Then should return from cache")
+        fun testPreFetchWithCache() {
+            // Given
+            val onSuccessSlot = slot<OnSuccess>()
+            every { httpClient.execute(requestData, capture(onSuccessSlot), any()) } returns requestCall
+
+            // When
+            viewClientDefault.prefetch(requestData, onSuccess, onError)
+            onSuccessSlot.captured.invoke(makeResponseData())
+            val call = viewClientDefault.prefetch(requestData, onSuccess, onError)
+
+            // Then
+            verify(exactly = 1) { httpClient.execute(requestData, any(), any()) }
+            assertEquals(null, call)
+        }
     }
 }
