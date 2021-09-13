@@ -491,11 +491,13 @@ class ListViewHolderTest : BaseTest() {
         fun updateDirectNestedAdaptersSuffix() {
             // Given
             val suffix = "suffix"
+            val recyclerId = 1
             val listItem = ListItem(data = "stub", itemSuffix = suffix)
             val itemView = mockk<RecyclerView>(relaxed = true)
             val itemSuffixSlot = slot<String>()
+            val recyclerIdSlot = slot<Int>()
             val adapter = mockk<ListAdapter>(relaxed = true) {
-                every { setParentSuffix(capture(itemSuffixSlot)) } just Runs
+                every { setParentAttributes(capture(itemSuffixSlot), capture(recyclerIdSlot)) } just Runs
             }
             every { itemView.adapter } returns adapter
             listViewHolder = ListViewHolder(
@@ -508,10 +510,11 @@ class ListViewHolderTest : BaseTest() {
             )
 
             // When
-            listViewHolder.onBind(null, null, listItem, 0, 0)
+            listViewHolder.onBind(null, null, listItem, 0, recyclerId)
 
             // Then
             assertEquals(suffix, itemSuffixSlot.captured)
+            assertEquals(recyclerId, recyclerIdSlot.captured)
         }
 
         @DisplayName("Then should restoreIds to a not firstTimeBinding item")

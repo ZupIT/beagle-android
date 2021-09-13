@@ -42,7 +42,6 @@ class ServerDrivenActivity : BeagleActivity() {
         when (state) {
             is ServerDrivenState.Started -> {
                 showLoading(true)
-                binding.serverDrivenContainer.visibility = View.GONE
             }
             is ServerDrivenState.Error -> {
                 handleError(state)

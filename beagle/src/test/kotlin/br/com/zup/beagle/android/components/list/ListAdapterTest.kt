@@ -478,13 +478,11 @@ class ListAdapterTest : BaseTest() {
 
     @Test
     fun `Given a ListAdapter When call onBindViewHolder Then should call viewHolder onBind`() {
-
         val viewHolderMock = mockk<ListViewHolder>(relaxed = true)
         val positionMock = 0
-        val parentListViewSuffixMock = "parent"
+        val parentListViewSuffixMock = null
         val recyclerIdMock = 10
         val listItemMock = ListItem(data = list[positionMock])
-        listAdapter.setParentSuffix(parentListViewSuffixMock)
         listAdapter.setList(list)
 
         listAdapter.onBindViewHolder(viewHolderMock, positionMock)
