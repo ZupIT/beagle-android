@@ -140,8 +140,8 @@ internal class ListViewHolder(
                 // When this item is not recycled, we simply recover your current adapters
                 saveCreatedAdapterToEachDirectNestedRecycler(listItem)
             }
-            // We inform to each adapters directly nested the suffix
-            updateDirectNestedAdaptersSuffix(listItem)
+            // We inform to each adapters directly nested the suffix and the current recyclerId
+            updateDirectNestedAdaptersInformation(listItem, recyclerId)
         } else {
             // But if that item on the list already has ids created, we retrieve them
             restoreIds(listItem)
@@ -300,9 +300,9 @@ internal class ListViewHolder(
         }
     }
 
-    private fun updateDirectNestedAdaptersSuffix(listItem: ListItem) {
+    private fun updateDirectNestedAdaptersInformation(listItem: ListItem, recyclerId: Int) {
         listItem.directNestedAdapters.forEach {
-            it.setParentSuffix(listItem.itemSuffix)
+            it.setParentAttributes(listItem.itemSuffix, recyclerId)
         }
     }
 
