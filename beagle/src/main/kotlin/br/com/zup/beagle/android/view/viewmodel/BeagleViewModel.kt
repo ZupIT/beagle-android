@@ -50,8 +50,13 @@ internal open class BeagleViewModel(
     var fetchComponent: FetchComponentLiveData? = null
 
     fun fetchComponent(requestData: RequestData, screen: ServerDrivenComponent? = null): LiveData<ViewState> {
-        val fetchComponentLiveData = FetchComponentLiveData(requestData, screen, componentRequester,
-            viewModelScope, ioDispatcher)
+        val fetchComponentLiveData = FetchComponentLiveData(
+            requestData,
+            screen,
+            componentRequester,
+            viewModelScope,
+            ioDispatcher,
+        )
         fetchComponent = fetchComponentLiveData
 
         return fetchComponentLiveData
@@ -59,7 +64,7 @@ internal open class BeagleViewModel(
 
     fun fetchForCache(url: String) = viewModelScope.launch(ioDispatcher) {
         try {
-            componentRequester.fetchComponent(RequestData(url = url))
+            componentRequester.prefetchComponent(RequestData(url = url))
         } catch (exception: BeagleException) {
             BeagleLoggerProxy.warning(exception.message)
         }

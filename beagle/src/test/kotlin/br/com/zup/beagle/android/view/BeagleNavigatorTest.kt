@@ -274,7 +274,7 @@ class BeagleNavigatorTest : BaseTest() {
         @Test
         fun testPushViewShouldCallBeagleActivityNavigateTo() {
             // Given
-            val url = (route.url.value as String).formatUrl()
+            val url = route.url.value as String
 
             val requestData = RequestData(url = url)
             every { context.navigateTo(requestData, null, navigationContext) } just Runs
