@@ -599,19 +599,38 @@ class ContextDataManagerTest : BaseTest() {
         }
     }
 
-    @DisplayName("When getContextData is called")
+    @DisplayName("When getListContextData is called")
     @Nested
-    inner class GetContext {
+    inner class GetListContextDataTest {
 
         @DisplayName("Then should return context")
         @Test
-        fun getContextData() {
+        fun testGetListContextData() {
             // Given
             val contextData = listOf(ContextData(CONTEXT_ID, true))
             contextDataManager.addContext(viewContext, contextData)
 
             // When
             val result = contextDataManager.getListContextData(viewContext)
+
+            // Then
+            assertEquals(contextData, result)
+        }
+    }
+
+    @DisplayName("When getContextData is called")
+    @Nested
+    inner class GetContextDataTest {
+
+        @DisplayName("Then should return context")
+        @Test
+        fun testGetContextData() {
+            // Given
+            val contextData = ContextData(CONTEXT_ID, true)
+            contextDataManager.addContext(viewContext, contextData)
+
+            // When
+            val result = contextDataManager.getContextData(CONTEXT_ID)
 
             // Then
             assertEquals(contextData, result)
