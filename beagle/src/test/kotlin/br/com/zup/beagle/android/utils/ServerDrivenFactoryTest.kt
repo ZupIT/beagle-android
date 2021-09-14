@@ -16,17 +16,14 @@
 
 package br.com.zup.beagle.android.utils
 
-import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.test.core.app.ApplicationProvider
-import br.com.zup.beagle.android.MyBeagleSetup
 import br.com.zup.beagle.android.action.NavigationContext
 import br.com.zup.beagle.android.networking.HttpAdditionalData
 import br.com.zup.beagle.android.networking.HttpMethod
 import br.com.zup.beagle.android.networking.RequestData
-import br.com.zup.beagle.android.setup.BeagleSdk
 import br.com.zup.beagle.android.testutil.RandomData
 import br.com.zup.beagle.android.view.BeagleActivity
 import br.com.zup.beagle.android.view.ServerDrivenActivity
@@ -36,11 +33,9 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 
-private const val KEY = "FIRST_SCREEN_REQUEST_KEY"
-
 @DisplayName("Given a Context")
 @RunWith(RobolectricTestRunner::class)
-internal class ServerDrivenFactoryKtTest {
+internal class ServerDrivenFactoryTest {
 
     private val navigationContext = NavigationContext(value = "")
 
@@ -64,46 +59,39 @@ internal class ServerDrivenFactoryKtTest {
         // Then
         val expected = Intent()
         val bundle = Bundle()
-        bundle.putParcelable(KEY, requestData)
+        bundle.putParcelable(BeagleActivity.FIRST_SCREEN_REQUEST_KEY, requestData)
         bundle.putParcelable(BeagleActivity.NAVIGATION_CONTEXT_KEY, navigationContext)
 
         expected.putExtras(bundle)
 
 
         assertEquals(expected.extras!!.size(), result.extras!!.size())
-        assertEquals(expected.extras!!.get(KEY), result.extras!!.get(KEY))
-        assertEquals(expected.extras!!.get(BeagleActivity.NAVIGATION_CONTEXT_KEY), result.extras!!.get(BeagleActivity.NAVIGATION_CONTEXT_KEY))
+        assertEquals(expected.extras!!.get(BeagleActivity.FIRST_SCREEN_REQUEST_KEY), result.extras!!.get(BeagleActivity.FIRST_SCREEN_REQUEST_KEY))
+        assertEquals(expected.extras!!.get(BeagleActivity.NAVIGATION_CONTEXT_KEY),
+            result.extras!!.get(BeagleActivity.NAVIGATION_CONTEXT_KEY))
     }
 
     @Test
-    @DisplayName("When newServerDrivenIntent is called Then should pass RequestData through bundle")
-    fun testCreateIntentWithScreenRequestBundle() {
+    @DisplayName("When newServerDrivenIntent is called Then should pass json screen string through bundle")
+    fun testCreateIntentWithJsonStringInBundle() {
         // Given
-        val requestData = RequestData(
-            url = RandomData.string(),
-            httpAdditionalData = HttpAdditionalData(
-                method = HttpMethod.POST,
-                headers = mapOf("key" to "value"),
-                body = RandomData
-            )
-
-        )
+        val screenJson = "test"
         val context = ApplicationProvider.getApplicationContext<Context>()
-        BeagleSdk.setInTestMode()
-        MyBeagleSetup().init(context as Application)
 
         // When
-        val result = context.newServerDrivenIntent<ServerDrivenActivity>(requestData, navigationContext)
+        val result = context.newServerDrivenIntent<ServerDrivenActivity>(screenJson, navigationContext)
 
         // Then
         val expected = Intent()
         val bundle = Bundle()
-        bundle.putParcelable(KEY, requestData)
+        bundle.putString(BeagleActivity.FIRST_SCREEN_KEY, screenJson)
         bundle.putParcelable(BeagleActivity.NAVIGATION_CONTEXT_KEY, navigationContext)
+
         expected.putExtras(bundle)
 
         assertEquals(expected.extras!!.size(), result.extras!!.size())
-        assertEquals(expected.extras!!.get(KEY), result.extras!!.get(KEY))
-        assertEquals(expected.extras!!.get(BeagleActivity.NAVIGATION_CONTEXT_KEY), result.extras!!.get(BeagleActivity.NAVIGATION_CONTEXT_KEY))
+        assertEquals(expected.extras!!.get(BeagleActivity.FIRST_SCREEN_KEY), result.extras!!.get(BeagleActivity.FIRST_SCREEN_KEY))
+        assertEquals(expected.extras!!.get(BeagleActivity.NAVIGATION_CONTEXT_KEY),
+            result.extras!!.get(BeagleActivity.NAVIGATION_CONTEXT_KEY))
     }
 }

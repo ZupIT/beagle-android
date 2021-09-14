@@ -249,8 +249,8 @@ abstract class BeagleActivity : AppCompatActivity() {
 
     companion object {
         private val beagleSerializer: BeagleSerializer = BeagleSerializer()
-        private const val FIRST_SCREEN_REQUEST_KEY = "FIRST_SCREEN_REQUEST_KEY"
-        private const val FIRST_SCREEN_KEY = "FIRST_SCREEN_KEY"
+        internal const val FIRST_SCREEN_REQUEST_KEY = "FIRST_SCREEN_REQUEST_KEY"
+        internal const val FIRST_SCREEN_KEY = "FIRST_SCREEN_KEY"
         internal const val NAVIGATION_CONTEXT_KEY = "NAVIGATION_CONTEXT_KEY"
 
         fun bundleOf(

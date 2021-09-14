@@ -71,7 +71,7 @@ internal class BeagleFragment : Fragment() {
      * This can be awkward, but to save some data in the fragment you need this strategy
      * https://stackoverflow.com/questions/15313598/how-to-correctly-save-instance-state-of-fragments-in-back-stack
      */
-    private val savedState: Bundle = Bundle()
+    internal val savedState: Bundle = Bundle()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -184,12 +184,12 @@ internal class BeagleFragment : Fragment() {
             screenIdentifier: String? = null,
             navigationContext: NavigationContext? = null,
         ): Bundle {
-            val bundle = Bundle()
+            val bundle = Bundle(3)
             bundle.putString(JSON_SCREEN_KEY, json)
             bundle.putString(SCREEN_IDENTIFIER_KEY, screenIdentifier)
 
             navigationContext?.let {
-                bundle.putParcelable(NAVIGATION_CONTEXT_KEY, navigationContext)
+                bundle.putParcelable(NAVIGATION_CONTEXT_KEY, it)
             }
             return bundle
         }
@@ -197,9 +197,9 @@ internal class BeagleFragment : Fragment() {
         private val beagleSerializer: BeagleSerializer = BeagleSerializer()
         private const val JSON_SCREEN_KEY = "JSON_SCREEN_KEY"
         private const val SCREEN_IDENTIFIER_KEY = "SCREEN_IDENTIFIER_KEY"
-        private const val NAVIGATION_CONTEXT_KEY = "NAVIGATION_CONTEXT_KEY"
-        private const val NAVIGATION_CONTEXT_DATA_KEY = "NAVIGATION_CONTEXT_DATA_KEY"
-        private const val NAVIGATION_CONTEXT_DATA_ID = "navigationContext"
+        internal const val NAVIGATION_CONTEXT_KEY = "NAVIGATION_CONTEXT_KEY"
+        internal const val NAVIGATION_CONTEXT_DATA_KEY = "NAVIGATION_CONTEXT_DATA_KEY"
+        internal const val NAVIGATION_CONTEXT_DATA_ID = "navigationContext"
 
     }
 }

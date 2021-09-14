@@ -23,13 +23,18 @@ import androidx.test.core.app.ActivityScenario
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import br.com.zup.beagle.R
 import br.com.zup.beagle.android.BaseSoLoaderTest
+import br.com.zup.beagle.android.action.NavigationContext
 import br.com.zup.beagle.android.components.Text
 import br.com.zup.beagle.android.components.layout.Screen
+import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.context.constant
 import br.com.zup.beagle.android.data.ComponentRequester
 import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.testutil.CoroutinesTestExtension
 import br.com.zup.beagle.android.testutil.InstantExecutorExtension
+import br.com.zup.beagle.android.view.BeagleFragment.Companion.NAVIGATION_CONTEXT_DATA_ID
+import br.com.zup.beagle.android.view.BeagleFragment.Companion.NAVIGATION_CONTEXT_DATA_KEY
+import br.com.zup.beagle.android.view.BeagleFragment.Companion.NAVIGATION_CONTEXT_KEY
 import br.com.zup.beagle.android.view.viewmodel.AnalyticsViewModel
 import br.com.zup.beagle.android.view.viewmodel.BeagleScreenViewModel
 import io.mockk.Runs
@@ -64,6 +69,8 @@ class BeagleActivityTest : BaseSoLoaderTest() {
     private var activity: ServerDrivenActivity? = null
     private val analyticsViewModel = mockk<AnalyticsViewModel>()
     private val screenIdentifierSlot = slot<String>()
+    private val navigationContext = NavigationContext(value = "test")
+    private val navigationContextData = ContextData(id = NAVIGATION_CONTEXT_DATA_ID, value = "test")
     lateinit var activityScenario: ActivityScenario<ServerDrivenActivity>
 
     @Before
@@ -81,7 +88,7 @@ class BeagleActivityTest : BaseSoLoaderTest() {
     }
 
     @Test
-    fun `Given a screen request When navigate to Then should call BeagleFragment newInstance with right parameters`() =
+    fun `Given a request data When navigate to Then should call BeagleFragment newInstance with right parameters`() =
         runBlockingTest {
             // Given
             val url = "/url"
@@ -90,17 +97,20 @@ class BeagleActivityTest : BaseSoLoaderTest() {
             every { analyticsViewModel.createScreenReport(capture(screenIdentifierSlot)) } just Runs
 
             //When
-            //TODO CONTEXT DATA
-            activity?.navigateTo(screenRequest, null, null)
+            activity?.navigateTo(screenRequest, null, navigationContext)
             activityScenario.moveToState(Lifecycle.State.RESUMED)
+            val fragment = activity?.supportFragmentManager!!.fragments.first() as BeagleFragment
+            fragment.onDestroyView()
 
             //Then
+            val contextData: ContextData = fragment.savedState.getParcelable(NAVIGATION_CONTEXT_DATA_KEY)!!
             assertEquals(url, screenIdentifierSlot.captured)
+            assertEquals(navigationContextData, contextData)
         }
 
 
     @Test
-    fun `Given a screen with id When navigate to Then should call BeagleFragment newInstance with right parameters`() =
+    fun `Given a request data id When navigate to Then should call BeagleFragment newInstance with right parameters`() =
         runBlockingTest {
             // Given
             val screenRequest = RequestData(url = "")
@@ -112,13 +122,15 @@ class BeagleActivityTest : BaseSoLoaderTest() {
             every { analyticsViewModel.createScreenReport(capture(screenIdentifierSlot)) } just Runs
 
             //When
-            //TODO CONTEXT DATA
-            activity?.navigateTo(screenRequest, screen, null)
+            activity?.navigateTo(screenRequest, screen, navigationContext)
             activityScenario.moveToState(Lifecycle.State.RESUMED)
-
+            val fragment = activity?.supportFragmentManager!!.fragments.first() as BeagleFragment
+            fragment.onDestroyView()
 
             // THEN
+            val contextData: ContextData = fragment.savedState.getParcelable(NAVIGATION_CONTEXT_DATA_KEY)!!
             assertEquals(screenId, screenIdentifierSlot.captured)
+            assertEquals(navigationContextData, contextData)
         }
 
 
