@@ -20,6 +20,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import br.com.zup.beagle.android.action.NavigationContext
 import br.com.zup.beagle.android.networking.HttpAdditionalData
 import br.com.zup.beagle.android.networking.HttpMethod
@@ -29,19 +30,15 @@ import br.com.zup.beagle.android.view.BeagleActivity
 import br.com.zup.beagle.android.view.ServerDrivenActivity
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import org.junit.jupiter.api.DisplayName
 import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
 
-@DisplayName("Given a Context")
-@RunWith(RobolectricTestRunner::class)
-internal class ServerDrivenFactoryTest {
+@RunWith(AndroidJUnit4::class)
+class ServerDrivenFactoryTest {
 
     private val navigationContext = NavigationContext(value = "")
 
     @Test
-    @DisplayName("When newServerDrivenIntent is called Then should pass RequestData through bundle")
-    fun testCreateIntentWithRequestDataInBundle() {
+    fun `Given a Context When call newServerDrivenIntent Then should RequestData through bundle`() {
         // Given
         val requestData = RequestData(
             url = RandomData.string(),
@@ -72,8 +69,7 @@ internal class ServerDrivenFactoryTest {
     }
 
     @Test
-    @DisplayName("When newServerDrivenIntent is called Then should pass json screen string through bundle")
-    fun testCreateIntentWithJsonStringInBundle() {
+    fun `Given a Context When call newServerDrivenIntent Then should json screen string through bundle`() {
         // Given
         val screenJson = "test"
         val context = ApplicationProvider.getApplicationContext<Context>()
