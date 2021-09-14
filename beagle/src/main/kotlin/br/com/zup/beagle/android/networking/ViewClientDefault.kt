@@ -19,9 +19,36 @@ package br.com.zup.beagle.android.networking
 import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.utils.doRequest
 
-open class ViewClientDefault : ViewClient {
-    override fun fetch(requestData: RequestData, onSuccess: OnSuccess, onError: OnError): RequestCall {
-        val httpClient = BeagleEnvironment.beagleSdk.httpClientFactory?.create()
-        return requestData.doRequest(httpClient, onSuccess, onError)
+class ViewClientDefault(
+    private val httpClient: HttpClient? = BeagleEnvironment.beagleSdk.httpClientFactory?.create(),
+    private val cachedResponses: MutableMap<String, ResponseData> = mutableMapOf()
+) : ViewClient {
+
+    override fun fetch(requestData: RequestData, onSuccess: OnSuccess, onError: OnError): RequestCall? {
+        val cachedResponse = cachedResponses[requestData.url]
+        return if (cachedResponse != null) {
+            onSuccess(cachedResponse)
+            cachedResponses.remove(requestData.url)
+            null
+        } else {
+            requestData.doRequest(httpClient, onSuccess, onError)
+        }
+    }
+
+    override fun prefetch(requestData: RequestData, onSuccess: OnSuccess, onError: OnError): RequestCall? {
+        val cachedResponse = cachedResponses[requestData.url]
+        return if (cachedResponse != null) {
+            onSuccess(cachedResponse)
+            null
+        } else {
+            requestData.doRequest(httpClient, onSuccess = { response ->
+                onSuccess(response)
+                cachedResponses[requestData.url] = response
+            }, onError)
+        }
+    }
+
+    companion object {
+        internal val instance = ViewClientDefault()
     }
 }

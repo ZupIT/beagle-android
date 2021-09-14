@@ -16,7 +16,6 @@
 
 package br.com.zup.beagle.android.utils
 
-import br.com.zup.beagle.android.data.formatUrl
 import br.com.zup.beagle.android.exception.BeagleApiException
 import br.com.zup.beagle.android.logger.BeagleMessageLogs
 import br.com.zup.beagle.android.networking.HttpClient
@@ -36,12 +35,11 @@ internal fun RequestData.doRequest(
                 data = "An instance of HttpClient was not found.".toByteArray(),
             ), this)
     }
-    val transformedRequest = this.copy(url = this.url.formatUrl())
 
-    BeagleMessageLogs.logHttpRequestData(transformedRequest)
+    BeagleMessageLogs.logHttpRequestData(this)
 
     return httpClient.execute(
-        request = transformedRequest,
+        request = this,
         onSuccess = { response ->
             BeagleMessageLogs.logHttpResponseData(response)
             onSuccess(response)
@@ -50,7 +48,7 @@ internal fun RequestData.doRequest(
         val exception = BeagleApiException(
             response,
             this,
-            "FetchData error for url ${transformedRequest.url}",
+            "FetchData error for url ${this.url}",
         )
         BeagleMessageLogs.logUnknownHttpError(exception)
     })
