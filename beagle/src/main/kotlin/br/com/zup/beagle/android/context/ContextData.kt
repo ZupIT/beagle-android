@@ -16,11 +16,12 @@
 
 package br.com.zup.beagle.android.context
 
+import android.os.Parcel
 import android.os.Parcelable
 import br.com.zup.beagle.android.widget.core.BeagleJson
 import br.com.zup.beagle.android.annotation.ContextDataValue
+import kotlinx.parcelize.Parceler
 import kotlinx.parcelize.Parcelize
-import kotlinx.parcelize.RawValue
 
 /**
  * Context is a variable of any type, including a map that defines a set of key/value pairs.
@@ -34,5 +35,20 @@ import kotlinx.parcelize.RawValue
 data class ContextData(
     val id: String,
     @ContextDataValue
-    val value: @RawValue Any,
-) : Parcelable
+    val value: Any,
+) : Parcelable {
+
+    private companion object : Parceler<ContextData> {
+        override fun ContextData.write(parcel: Parcel, flags: Int) {
+            parcel.writeString(id)
+            parcel.writeString(value.toString())
+        }
+
+        override fun create(parcel: Parcel): ContextData {
+            val id = parcel.readString()!!
+            val value = parcel.readString()!!.normalizeContextValue()
+
+            return ContextData(id = id, value = value)
+        }
+    }
+}

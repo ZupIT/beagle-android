@@ -98,4 +98,6 @@ internal class ScreenContextViewModel(
         contextDataManager.tryLinkContextInBindWithoutContext(originView)
 
     }
+
+    fun getContextData(contextDataId: String): ContextData? = contextDataManager.getContextData(contextDataId)
 }

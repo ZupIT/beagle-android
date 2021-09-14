@@ -89,14 +89,14 @@ internal class ContextDataManipulator(
         }
     }
 
-     fun get(contextData: ContextData, path: String): Any? {
-         return try {
-             val keys = createKeysFromPath(contextData.id, path)
-             jsonPathFinder.find(keys, contextData.value)
-         } catch (ex: Exception) {
-             BeagleMessageLogs.errorWhileTryingToAccessContext(ex)
-             null
-         }
+    fun get(contextData: ContextData, path: String): Any? {
+        return try {
+            val keys = createKeysFromPath(contextData.id, path)
+            jsonPathFinder.find(keys, contextData.value)
+        } catch (ex: Exception) {
+            BeagleMessageLogs.errorWhileTryingToAccessContext(ex)
+            null
+        }
     }
 
     private fun createKeysFromPath(contextId: String, path: String): LinkedList<String> {
