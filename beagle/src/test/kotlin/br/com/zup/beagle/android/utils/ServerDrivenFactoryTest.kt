@@ -16,37 +16,29 @@
 
 package br.com.zup.beagle.android.utils
 
-import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.test.core.app.ApplicationProvider
-import br.com.zup.beagle.android.MyBeagleSetup
-import br.com.zup.beagle.android.context.ContextData
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import br.com.zup.beagle.android.action.NavigationContext
 import br.com.zup.beagle.android.networking.HttpAdditionalData
 import br.com.zup.beagle.android.networking.HttpMethod
 import br.com.zup.beagle.android.networking.RequestData
-import br.com.zup.beagle.android.setup.BeagleSdk
 import br.com.zup.beagle.android.testutil.RandomData
-import br.com.zup.beagle.android.view.BeagleActivity.Companion.CONTEXT_DATA_KEY
+import br.com.zup.beagle.android.view.BeagleActivity
 import br.com.zup.beagle.android.view.ServerDrivenActivity
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import org.junit.jupiter.api.DisplayName
 import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
 
-private const val KEY = "FIRST_SCREEN_REQUEST_KEY"
+@RunWith(AndroidJUnit4::class)
+class ServerDrivenFactoryTest {
 
-@DisplayName("Given a Context")
-@RunWith(RobolectricTestRunner::class)
-internal class ServerDrivenFactoryKtTest {
-
-    private val contextData = ContextData(id = "test", value = "")
+    private val navigationContext = NavigationContext(value = "")
 
     @Test
-    @DisplayName("When newServerDrivenIntent is called Then should pass RequestData through bundle")
-    fun testCreateIntentWithRequestDataInBundle() {
+    fun `Given a Context When call newServerDrivenIntent Then should RequestData through bundle`() {
         // Given
         val requestData = RequestData(
             url = RandomData.string(),
@@ -59,51 +51,43 @@ internal class ServerDrivenFactoryKtTest {
         val context = ApplicationProvider.getApplicationContext<Context>()
 
         // When
-        val result = context.newServerDrivenIntent<ServerDrivenActivity>(requestData, contextData)
+        val result = context.newServerDrivenIntent<ServerDrivenActivity>(requestData, navigationContext)
 
         // Then
         val expected = Intent()
         val bundle = Bundle()
-        bundle.putParcelable(KEY, requestData)
-        bundle.putParcelable(CONTEXT_DATA_KEY, contextData)
+        bundle.putParcelable(BeagleActivity.FIRST_SCREEN_REQUEST_KEY, requestData)
+        bundle.putParcelable(BeagleActivity.NAVIGATION_CONTEXT_KEY, navigationContext)
 
         expected.putExtras(bundle)
 
 
         assertEquals(expected.extras!!.size(), result.extras!!.size())
-        assertEquals(expected.extras!!.get(KEY), result.extras!!.get(KEY))
-        assertEquals(expected.extras!!.get(CONTEXT_DATA_KEY), result.extras!!.get(CONTEXT_DATA_KEY))
+        assertEquals(expected.extras!!.get(BeagleActivity.FIRST_SCREEN_REQUEST_KEY), result.extras!!.get(BeagleActivity.FIRST_SCREEN_REQUEST_KEY))
+        assertEquals(expected.extras!!.get(BeagleActivity.NAVIGATION_CONTEXT_KEY),
+            result.extras!!.get(BeagleActivity.NAVIGATION_CONTEXT_KEY))
     }
 
     @Test
-    @DisplayName("When newServerDrivenIntent is called Then should pass RequestData through bundle")
-    fun testCreateIntentWithScreenRequestBundle() {
+    fun `Given a Context When call newServerDrivenIntent Then should json screen string through bundle`() {
         // Given
-        val requestData = RequestData(
-            url = RandomData.string(),
-            httpAdditionalData = HttpAdditionalData(
-                method = HttpMethod.POST,
-                headers = mapOf("key" to "value"),
-                body = RandomData
-            )
-
-        )
+        val screenJson = "test"
         val context = ApplicationProvider.getApplicationContext<Context>()
-        BeagleSdk.setInTestMode()
-        MyBeagleSetup().init(context as Application)
 
         // When
-        val result = context.newServerDrivenIntent<ServerDrivenActivity>(requestData, contextData)
+        val result = context.newServerDrivenIntent<ServerDrivenActivity>(screenJson, navigationContext)
 
         // Then
         val expected = Intent()
         val bundle = Bundle()
-        bundle.putParcelable(KEY, requestData)
-        bundle.putParcelable(CONTEXT_DATA_KEY, contextData)
+        bundle.putString(BeagleActivity.FIRST_SCREEN_KEY, screenJson)
+        bundle.putParcelable(BeagleActivity.NAVIGATION_CONTEXT_KEY, navigationContext)
+
         expected.putExtras(bundle)
 
         assertEquals(expected.extras!!.size(), result.extras!!.size())
-        assertEquals(expected.extras!!.get(KEY), result.extras!!.get(KEY))
-        assertEquals(expected.extras!!.get(CONTEXT_DATA_KEY), result.extras!!.get(CONTEXT_DATA_KEY))
+        assertEquals(expected.extras!!.get(BeagleActivity.FIRST_SCREEN_KEY), result.extras!!.get(BeagleActivity.FIRST_SCREEN_KEY))
+        assertEquals(expected.extras!!.get(BeagleActivity.NAVIGATION_CONTEXT_KEY),
+            result.extras!!.get(BeagleActivity.NAVIGATION_CONTEXT_KEY))
     }
 }

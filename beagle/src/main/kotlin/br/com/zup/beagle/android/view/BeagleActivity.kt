@@ -32,8 +32,8 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import br.com.zup.beagle.R
+import br.com.zup.beagle.android.action.NavigationContext
 import br.com.zup.beagle.android.components.layout.Screen
-import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.data.serializer.BeagleSerializer
 import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.utils.BeagleRetry
@@ -86,7 +86,7 @@ abstract class BeagleActivity : AppCompatActivity() {
 
     private val screen by lazy { intent.extras?.getString(FIRST_SCREEN_KEY) }
 
-    private var contextData: ContextData? = null
+    private var navigationContext: NavigationContext? = null
 
     private val fragmentManager: FragmentManager = supportFragmentManager
 
@@ -99,7 +99,7 @@ abstract class BeagleActivity : AppCompatActivity() {
     internal val nextActivity = registerForActivityResult(BeagleActivityContract()) { data ->
         val fragment = supportFragmentManager.fragments.lastOrNull() as? BeagleFragment
         if (data != null && fragment != null) {
-            fragment.updateContext(data)
+            fragment.updateNavigationContext(data)
         }
     }
 
@@ -129,7 +129,7 @@ abstract class BeagleActivity : AppCompatActivity() {
         adjustInputMode()
 
         observeScreenLoadFinish()
-        contextData = intent.extras?.getParcelable(CONTEXT_DATA_KEY)
+        navigationContext = intent.extras?.getParcelable(NAVIGATION_CONTEXT_KEY)
     }
 
     @SuppressWarnings("deprecation")
@@ -184,9 +184,9 @@ abstract class BeagleActivity : AppCompatActivity() {
     internal fun navigateTo(
         requestData: RequestData,
         screen: Screen?,
-        contextData: ContextData?,
+        navigationContext: NavigationContext?,
     ) {
-        this.contextData = contextData
+        this.navigationContext = navigationContext
         fetch(requestData, screen)
     }
 
@@ -240,7 +240,7 @@ abstract class BeagleActivity : AppCompatActivity() {
                 BeagleFragment.newInstance(
                     component,
                     screenName,
-                    contextData,
+                    navigationContext,
                 )
             )
             .addToBackStack(screenName)
@@ -249,68 +249,68 @@ abstract class BeagleActivity : AppCompatActivity() {
 
     companion object {
         private val beagleSerializer: BeagleSerializer = BeagleSerializer()
-        private const val FIRST_SCREEN_REQUEST_KEY = "FIRST_SCREEN_REQUEST_KEY"
-        private const val FIRST_SCREEN_KEY = "FIRST_SCREEN_KEY"
-        internal const val CONTEXT_DATA_KEY = "FIRST_CONTEXT_DATA_KEY"
+        internal const val FIRST_SCREEN_REQUEST_KEY = "FIRST_SCREEN_REQUEST_KEY"
+        internal const val FIRST_SCREEN_KEY = "FIRST_SCREEN_KEY"
+        internal const val NAVIGATION_CONTEXT_KEY = "NAVIGATION_CONTEXT_KEY"
 
         fun bundleOf(
             requestData: RequestData,
-            contextData: ContextData? = null,
+            navigationContext: NavigationContext? = null,
         ): Bundle {
             return Bundle(2).apply {
                 putParcelable(FIRST_SCREEN_REQUEST_KEY, requestData)
-                putParcelable(CONTEXT_DATA_KEY, contextData)
+                putParcelable(NAVIGATION_CONTEXT_KEY, navigationContext)
             }
         }
 
         internal fun bundleOf(
             requestData: RequestData,
             fallbackScreen: Screen,
-            contextData: ContextData? = null,
+            navigationContext: NavigationContext? = null,
         ): Bundle {
             return Bundle(3).apply {
                 putParcelable(FIRST_SCREEN_REQUEST_KEY, requestData)
-                putParcelable(CONTEXT_DATA_KEY, contextData)
+                putParcelable(NAVIGATION_CONTEXT_KEY, navigationContext)
                 putString(FIRST_SCREEN_KEY, beagleSerializer.serializeComponent(fallbackScreen))
             }
         }
 
         internal fun bundleOf(
             screen: Screen,
-            contextData: ContextData? = null,
+            navigationContext: NavigationContext? = null,
         ): Bundle {
             return Bundle(2).apply {
                 putString(FIRST_SCREEN_KEY, beagleSerializer.serializeComponent(screen))
-                putParcelable(CONTEXT_DATA_KEY, contextData)
+                putParcelable(NAVIGATION_CONTEXT_KEY, navigationContext)
             }
         }
 
         fun bundleOf(
             screenJson: String,
-            contextData: ContextData? = null,
+            navigationContext: NavigationContext? = null,
         ): Bundle {
             return Bundle(2).apply {
                 putString(FIRST_SCREEN_KEY, screenJson)
-                putParcelable(CONTEXT_DATA_KEY, contextData)
+                putParcelable(NAVIGATION_CONTEXT_KEY, navigationContext)
             }
         }
 
-        internal fun bundleOf(contextData: ContextData): Bundle {
+        internal fun bundleOf(navigationContext: NavigationContext): Bundle {
             return Bundle(1).apply {
-                putParcelable(CONTEXT_DATA_KEY, contextData)
+                putParcelable(NAVIGATION_CONTEXT_KEY, navigationContext)
             }
         }
     }
 }
 
-internal class BeagleActivityContract : ActivityResultContract<Intent, ContextData?>() {
+internal class BeagleActivityContract : ActivityResultContract<Intent, NavigationContext?>() {
 
     override fun createIntent(context: Context, intent: Intent?): Intent {
         return intent ?: Intent(context, BeagleActivity::class.java)
     }
 
-    override fun parseResult(resultCode: Int, intent: Intent?): ContextData? {
-        val data = intent?.getParcelableExtra<ContextData>(BeagleActivity.CONTEXT_DATA_KEY)
+    override fun parseResult(resultCode: Int, intent: Intent?): NavigationContext? {
+        val data = intent?.getParcelableExtra<NavigationContext>(BeagleActivity.NAVIGATION_CONTEXT_KEY)
         return if (resultCode == Activity.RESULT_OK && data != null) data
         else null
     }

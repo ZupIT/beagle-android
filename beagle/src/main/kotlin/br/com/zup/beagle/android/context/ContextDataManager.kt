@@ -139,6 +139,10 @@ internal class ContextDataManager(
 
     fun getListContextData(view: View) = contexts[view.id]?.map { contextBinding -> contextBinding.context }
 
+    fun getContextData(contextDataId: String): ContextData? = contexts.firstNotNullOfOrNull { contextIdAndBinding ->
+        contextIdAndBinding.value.firstOrNull { contextBinding -> contextBinding.context.id == contextDataId }?.context
+    }
+
     fun restoreContext(view: View) {
         contexts[view.id]?.let {
             view.setContextBinding(it)

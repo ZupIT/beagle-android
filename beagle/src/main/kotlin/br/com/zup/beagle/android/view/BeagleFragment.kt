@@ -23,7 +23,10 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import br.com.zup.beagle.android.action.NavigationContext
+import br.com.zup.beagle.android.action.SetContextInternal
 import br.com.zup.beagle.android.context.ContextData
+import br.com.zup.beagle.android.context.normalize
 import br.com.zup.beagle.android.data.serializer.BeagleSerializer
 import br.com.zup.beagle.android.utils.applyBackgroundFromWindowBackgroundTheme
 import br.com.zup.beagle.android.utils.toView
@@ -68,17 +71,19 @@ internal class BeagleFragment : Fragment() {
      * This can be awkward, but to save some data in the fragment you need this strategy
      * https://stackoverflow.com/questions/15313598/how-to-correctly-save-instance-state-of-fragments-in-back-stack
      */
-    private val savedState: Bundle = Bundle()
-
-    private val contextDataList by lazy {
-        savedState.getParcelableArrayList(CONTEXT_DATA_LIST_KEY) ?: arrayListOf<ContextData>()
-    }
+    internal val savedState: Bundle = Bundle()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         screenViewModel.onScreenLoadFinished()
         screenIdentifier?.let { screenIdentifier ->
             analyticsViewModel.createScreenReport(screenIdentifier)
+        }
+
+        val navigationContext = arguments?.getParcelable<NavigationContext>(NAVIGATION_CONTEXT_KEY)
+        if (navigationContext != null) {
+            updateNavigationContext(navigationContext)
+            arguments?.remove(NAVIGATION_CONTEXT_KEY)
         }
     }
 
@@ -87,10 +92,11 @@ internal class BeagleFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        addContextDataInArgumentsToList(savedInstanceState)
+        val navigationContextData = getNavigationContextData(savedInstanceState)
         return context?.let {
             FrameLayout(it).apply {
-                contextViewModel.addContext(this, contextDataList)
+                id = View.generateViewId()
+                contextViewModel.addContext(this, navigationContextData)
                 applyBackgroundFromWindowBackgroundTheme(it)
                 addView(
                     screen.toView(
@@ -101,24 +107,33 @@ internal class BeagleFragment : Fragment() {
         }
     }
 
+
     /**
      * When rotating application the strategy to save data local don't keep the data
      * because this you need to save the data in this bundle
      */
     override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
         saveContextData()
         outState.putAll(savedState)
-
-        super.onSaveInstanceState(outState)
     }
 
     /** In case of rotation the data need to be saved and restored */
-    private fun addContextDataInArgumentsToList(savedInOnCreateView: Bundle?) {
-        val contextDataLocalList = savedInOnCreateView?.getParcelableArrayList<ContextData>(CONTEXT_DATA_LIST_KEY)
-            ?: arguments?.getParcelableArrayList(CONTEXT_DATA_LIST_KEY)
-        contextDataLocalList?.let {
-            contextDataList.addAll(it)
+    private fun getNavigationContextData(savedInOnCreateView: Bundle?): ContextData {
+
+        var contextData = ContextData(
+            id = NAVIGATION_CONTEXT_DATA_ID,
+            value = "",
+        )
+
+        savedState.getParcelable<ContextData>(NAVIGATION_CONTEXT_DATA_KEY)?.let {
+            contextData = it
         }
+
+        contextData = savedInOnCreateView?.getParcelable(NAVIGATION_CONTEXT_DATA_KEY)
+            ?: arguments?.getParcelable(NAVIGATION_CONTEXT_DATA_KEY) ?: contextData
+
+        return contextData
     }
 
     override fun onDestroyView() {
@@ -127,13 +142,19 @@ internal class BeagleFragment : Fragment() {
     }
 
     private fun saveContextData() {
-        savedState.putParcelableArrayList(CONTEXT_DATA_LIST_KEY, contextDataList)
+        val contextData = contextViewModel.getContextData(NAVIGATION_CONTEXT_DATA_ID)
+
+        savedState.putParcelable(NAVIGATION_CONTEXT_DATA_KEY, contextData?.normalize())
     }
 
-    fun updateContext(contextData: ContextData) {
-        contextDataList.add(contextData)
-        contextViewModel.addContext(requireView(), contextData, true)
+    fun updateNavigationContext(navigationContext: NavigationContext) {
+        contextViewModel.updateContext(requireView(), SetContextInternal(
+            contextId = NAVIGATION_CONTEXT_DATA_ID,
+            value = navigationContext.value,
+            path = navigationContext.path,
+        ))
         contextViewModel.linkBindingToContextAndEvaluateThem(requireView())
+        contextViewModel.tryLinkContextInBindWithoutContext(requireView())
     }
 
     companion object {
@@ -142,32 +163,33 @@ internal class BeagleFragment : Fragment() {
         fun newInstance(
             component: ServerDrivenComponent,
             screenIdentifier: String? = null,
-            contextData: ContextData? = null,
+            navigationContext: NavigationContext? = null,
         ) = newInstance(
             beagleSerializer.serializeComponent(component),
             screenIdentifier,
-            contextData
+            navigationContext
         )
 
         @JvmStatic
         fun newInstance(
             json: String,
             screenIdentifier: String? = null,
-            contextData: ContextData? = null,
+            navigationContext: NavigationContext? = null,
         ) = BeagleFragment().apply {
-            arguments = newBundle(json, screenIdentifier, contextData)
+            arguments = newBundle(json, screenIdentifier, navigationContext)
         }
 
         fun newBundle(
             json: String,
             screenIdentifier: String? = null,
-            contextData: ContextData? = null,
+            navigationContext: NavigationContext? = null,
         ): Bundle {
-            val bundle = Bundle()
+            val bundle = Bundle(3)
             bundle.putString(JSON_SCREEN_KEY, json)
             bundle.putString(SCREEN_IDENTIFIER_KEY, screenIdentifier)
-            contextData?.let {
-                bundle.putParcelableArrayList(CONTEXT_DATA_LIST_KEY, arrayListOf(it))
+
+            navigationContext?.let {
+                bundle.putParcelable(NAVIGATION_CONTEXT_KEY, it)
             }
             return bundle
         }
@@ -175,7 +197,9 @@ internal class BeagleFragment : Fragment() {
         private val beagleSerializer: BeagleSerializer = BeagleSerializer()
         private const val JSON_SCREEN_KEY = "JSON_SCREEN_KEY"
         private const val SCREEN_IDENTIFIER_KEY = "SCREEN_IDENTIFIER_KEY"
-        private const val CONTEXT_DATA_LIST_KEY = "CONTEXT_DATA_LIST_KEY"
+        internal const val NAVIGATION_CONTEXT_KEY = "NAVIGATION_CONTEXT_KEY"
+        internal const val NAVIGATION_CONTEXT_DATA_KEY = "NAVIGATION_CONTEXT_DATA_KEY"
+        internal const val NAVIGATION_CONTEXT_DATA_ID = "navigationContext"
 
     }
 }
