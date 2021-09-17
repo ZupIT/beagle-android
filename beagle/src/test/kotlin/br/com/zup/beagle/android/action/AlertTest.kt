@@ -130,7 +130,7 @@ class AlertTest {
     @Test
     fun `should handle onPressOk when click in button`() {
         // Given
-        val onPressOk: List<Action> = listOf()
+        val onPressOk: List<Action> = listOf(mockk(relaxed = true))
         val action = Alert(
             title = constant(RandomData.string()),
             message = constant(RandomData.string()),

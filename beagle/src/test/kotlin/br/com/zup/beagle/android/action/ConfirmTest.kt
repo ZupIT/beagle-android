@@ -147,7 +147,7 @@ class ConfirmTest {
     @Test
     fun `should handle onPressOk when click in button`() {
         // Given
-        val onPressOk: List<Action> = listOf()
+        val onPressOk: List<Action> = listOf(mockk(relaxed = true))
         val action = Confirm(
             title = constant(RandomData.string()),
             message = constant(RandomData.string()),
@@ -174,7 +174,7 @@ class ConfirmTest {
     @Test
     fun `should handle onPressCancel when click in button`() {
         // Given
-        val onPressCancel: List<Action> = listOf()
+        val onPressCancel: List<Action> = listOf(mockk(relaxed = true))
         val action = Confirm(
             title = constant(RandomData.string()),
             message = constant(RandomData.string()),
