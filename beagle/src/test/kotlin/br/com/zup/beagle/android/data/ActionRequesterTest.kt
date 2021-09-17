@@ -91,10 +91,13 @@ class ActionRequesterTest : BaseTest() {
             }
 
             // When
-            val response = actionRequester.fetchAction(requestData)
+            val exception = assertThrows<BeagleApiException> {
+                actionRequester.fetchAction(requestData)
+            }
 
             // Then
-            assertEquals(responseData, response)
+            assertEquals(responseData, exception.responseData)
+            assertEquals(requestData, exception.requestData)
             verify(exactly = 1) { requestData.doRequest(httpClient, any(), onErrorSlot.captured) }
         }
 

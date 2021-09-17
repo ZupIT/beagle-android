@@ -37,7 +37,7 @@ internal class ActionRequester(
             val call = requestData.doRequest(httpClient, onSuccess = { response ->
                 cont.resume(response)
             }, onError = { response ->
-                cont.resume(response)
+                cont.resumeWithException(BeagleApiException(response, requestData))
             })
             cont.invokeOnCancellation {
                 call.cancel()
