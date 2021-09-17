@@ -40,7 +40,7 @@ import br.com.zup.beagle.android.analytics.ActionAnalyticsConfig
 data class Alert(
     val title: Bind<String>? = null,
     val message: Bind<String>,
-    val onPressOk: Action? = null,
+    val onPressOk: List<Action>? = null,
     val labelOk: String? = null,
     override var analytics: ActionAnalyticsConfig? = null,
 ) : AnalyticsAction {

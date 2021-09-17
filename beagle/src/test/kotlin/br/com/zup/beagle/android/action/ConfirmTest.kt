@@ -83,8 +83,8 @@ class ConfirmTest {
     @Test
     fun `execute should create a ConfirmAction`() {
         // Given
-        val onPressOk: Action = mockk(relaxed = true)
-        val onPressCancel: Action = mockk(relaxed = true)
+        val onPressOk: List<Action> = listOf()
+        val onPressCancel: List<Action> = listOf()
         val action = Confirm(
             title = constant(RandomData.string()),
             message = constant(RandomData.string()),
@@ -147,7 +147,7 @@ class ConfirmTest {
     @Test
     fun `should handle onPressOk when click in button`() {
         // Given
-        val onPressOk: Action = mockk(relaxed = true)
+        val onPressOk: List<Action> = listOf()
         val action = Confirm(
             title = constant(RandomData.string()),
             message = constant(RandomData.string()),
@@ -174,7 +174,7 @@ class ConfirmTest {
     @Test
     fun `should handle onPressCancel when click in button`() {
         // Given
-        val onPressCancel: Action = mockk(relaxed = true)
+        val onPressCancel: List<Action> = listOf()
         val action = Confirm(
             title = constant(RandomData.string()),
             message = constant(RandomData.string()),
