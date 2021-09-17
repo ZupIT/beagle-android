@@ -24,11 +24,9 @@ import br.com.zup.beagle.android.testutil.RandomData
 import br.com.zup.beagle.android.utils.handleEvent
 import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.widget.RootView
-import io.mockk.MockKAnnotations
 import io.mockk.Runs
 import io.mockk.clearMocks
 import io.mockk.every
-import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkObject
@@ -132,7 +130,7 @@ class AlertTest {
     @Test
     fun `should handle onPressOk when click in button`() {
         // Given
-        val onPressOk: Action = mockk(relaxed = true)
+        val onPressOk: List<Action> = listOf(mockk(relaxed = true))
         val action = Alert(
             title = constant(RandomData.string()),
             message = constant(RandomData.string()),

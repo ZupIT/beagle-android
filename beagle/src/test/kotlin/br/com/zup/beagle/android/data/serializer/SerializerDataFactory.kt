@@ -622,12 +622,12 @@ fun makeActionAlertJson() =
         "_beagleAction_": "beagle:alert",
         "title": "A title",
         "message": "A message",
-        "onPressOk": {
+        "onPressOk": [{
              "_beagleAction_": "beagle:alert",
              "title": "Another title",
              "message": "Another message",
              "labelOk": "Ok"
-        },
+        }],
         "labelOk": "Ok"
     }
     """
@@ -636,10 +636,12 @@ fun makeActionAlertObject() = Alert(
     title = constant("A title"),
     message = constant("A message"),
     labelOk = "Ok",
-    onPressOk = Alert(
-        title = constant("Another title"),
-        message = constant("Another message"),
-        labelOk = "Ok"
+    onPressOk = listOf(
+        Alert(
+            title = constant("Another title"),
+            message = constant("Another message"),
+            labelOk = "Ok"
+        )
     )
 )
 
@@ -667,8 +669,8 @@ fun makeActionConfirmJson() = """
         "_beagleAction_": "beagle:confirm",
         "title": "A title",
         "message": "A message",
-        "onPressOk": ${makeActionAlertJson()},
-        "onPressCancel": ${makeActionAlertJson()},
+        "onPressOk": [${makeActionAlertJson()}],
+        "onPressCancel": [${makeActionAlertJson()}],
         "labelOk": "Ok",
         "labelCancel": "Cancel"
     }
@@ -677,9 +679,9 @@ fun makeActionConfirmJson() = """
 fun makeActionConfirmObject() = Confirm(
     title = constant("A title"),
     message = constant("A message"),
-    onPressOk = makeActionAlertObject(),
+    onPressOk = listOf(makeActionAlertObject()),
     labelOk = "Ok",
-    onPressCancel = makeActionAlertObject(),
+    onPressCancel = listOf(makeActionAlertObject()),
     labelCancel = "Cancel",
 )
 
@@ -695,22 +697,6 @@ fun makeActionCustomActionObject() = CustomAndroidAction(
     value = "A value",
     intValue = 123
 )
-
-fun makeActionFormLocalActionJson() = """
-    {
-        "_beagleAction_": "beagle:formlocalaction",
-        "name": "A name",
-        "data": {"test": "test"}
-    }
-"""
-
-fun makeActionFormRemoteActionJson() = """
-    {
-        "_beagleAction_": "beagle:formremoteaction",
-        "path": "$TEST_URL",
-        "method": "POST"
-    }
-"""
 
 fun makeActionOpenExternalURLJson() = """
     {

@@ -41,8 +41,8 @@ import br.com.zup.beagle.android.analytics.ActionAnalyticsConfig
 data class Confirm(
     val title: Bind<String>? = null,
     val message: Bind<String>,
-    val onPressOk: Action? = null,
-    val onPressCancel: Action? = null,
+    val onPressOk: List<Action>? = null,
+    val onPressCancel: List<Action>? = null,
     val labelOk: String? = null,
     val labelCancel: String? = null,
     override var analytics: ActionAnalyticsConfig? = null,
