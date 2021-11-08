@@ -1,4 +1,4 @@
-#
+  #
   # Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
   #
   # Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,24 +14,17 @@
   # limitations under the License.
 #
 
-name: DCO validation
+name: DCO GPG VALIDATOR
 on:
   pull_request:
-    branches:
-      - main
-      - release/*
+    types: [opened, synchronize]
+    branches: [main, release/*]
+
 jobs:
-  dco-validation:
+  dco-gpg-validator:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.x
-      uses: actions/setup-python@v1
-      with:
-        python-version: '3.x'
-    - name: Check DCO
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        pip3 install -U dco-check
-        dco-check
+      - uses: ZupIT/zup-dco-validator@18c54faf1f183c4bffddf5d81900559355bdc20a #v1.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VALIDATE_GPG: false
