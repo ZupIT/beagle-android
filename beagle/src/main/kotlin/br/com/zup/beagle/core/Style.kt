@@ -16,6 +16,7 @@
 
 package br.com.zup.beagle.core
 
+import br.com.zup.beagle.android.components.utils.CornerRadiusHelper
 import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.widget.core.EdgeValue
 import br.com.zup.beagle.widget.core.Flex
@@ -75,12 +76,22 @@ data class Style(
  */
 @BeagleJson
 data class CornerRadius(
-    val radius: Double? = null,
-    val topLeft: Double? = null,
-    val topRight: Double? = null,
-    val bottomLeft: Double? = null,
-    val bottomRight: Double? = null,
+    var radius: Bind<Double>? = null,
+    var topLeft: Bind<Double>? = null,
+    var topRight: Bind<Double>? = null,
+    var bottomLeft: Bind<Double>? = null,
+    var bottomRight: Bind<Double>? = null,
 )
+
+internal fun CornerRadius.toValue(): CornerRadiusHelper {
+    return CornerRadiusHelper(
+        radius = this.radius?.value as? Double,
+        topLeft = this.topLeft?.value as? Double,
+        topRight = this.topRight?.value as? Double,
+        bottomLeft = this.bottomLeft?.value as? Double,
+        bottomRight = this.bottomRight?.value as? Double
+    )
+}
 
 /**
  * This defines a flex container;

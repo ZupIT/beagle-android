@@ -26,6 +26,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
 import br.com.zup.beagle.R
+import br.com.zup.beagle.android.components.utils.CornerRadiusHelper
 import br.com.zup.beagle.android.components.utils.getFloatArray
 import br.com.zup.beagle.android.context.ContextBinding
 import br.com.zup.beagle.android.context.ContextData
@@ -183,10 +184,52 @@ internal fun View.applyStroke(styleWidget: StyleComponent) {
 }
 
 internal fun View.applyCornerRadius(styleWidget: StyleComponent) {
-    styleWidget.style?.cornerRadius?.let { radius ->
-        background?.mutate()
-        (this.background as? GradientDrawable)?.cornerRadii = radius.getFloatArray()
+    val cornerRadiusAux = CornerRadiusHelper()
+
+    this.beagleRootView?.let { rootView ->
+            styleWidget.style?.cornerRadius?.let { cornerRadius ->
+                cornerRadius.radius?.let { r ->
+                    internalObserveBindChanges(rootView, this, r) { radius ->
+                        cornerRadiusAux.radius = radius
+                        updateCornerRadius(cornerRadiusAux)
+                    }
+                }
+
+                cornerRadius.topLeft?.let { t ->
+                    internalObserveBindChanges(rootView, this, t) { topLeft ->
+                        cornerRadiusAux.topLeft = topLeft
+                        updateCornerRadius(cornerRadiusAux)
+                    }
+                }
+
+                cornerRadius.topRight?.let { r ->
+                    internalObserveBindChanges(rootView, this, r) { topRight ->
+                        cornerRadiusAux.topRight = topRight
+                        updateCornerRadius(cornerRadiusAux)
+                    }
+                }
+
+                cornerRadius.bottomLeft?.let { l ->
+                    internalObserveBindChanges(rootView, this, l) { bottomLeft ->
+                        cornerRadiusAux.bottomLeft = bottomLeft
+                        updateCornerRadius(cornerRadiusAux)
+                    }
+                }
+
+                cornerRadius.bottomRight?.let { r ->
+                    internalObserveBindChanges(rootView, this, r) { bottomRight ->
+                        cornerRadiusAux.bottomRight = bottomRight
+                        updateCornerRadius(cornerRadiusAux)
+                    }
+                }
+            }
     }
+}
+
+private fun View.updateCornerRadius(cornerRadiusAux: CornerRadiusHelper) {
+    background?.mutate()
+    (this.background as? GradientDrawable)?.cornerRadii = cornerRadiusAux.getFloatArray()
+    requestLayout()
 }
 
 internal fun View.applyBackgroundFromWindowBackgroundTheme(context: Context) {

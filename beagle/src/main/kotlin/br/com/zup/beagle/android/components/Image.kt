@@ -70,7 +70,7 @@ data class Image constructor(
     }
 
     private fun getImageView(rootView: RootView) = ViewFactory.makeImageView(
-        context = rootView.getContext(),
+        rootView = rootView,
         cornerRadius = style?.cornerRadius ?: CornerRadius(),
     ).apply {
         style?.size?.let { size ->

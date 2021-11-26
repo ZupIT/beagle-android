@@ -94,7 +94,7 @@ internal object ViewFactory {
     //we use the context.applicationContext to prevent a crash on android 21
     fun makeWebView(context: Context) = WebView(context.applicationContext)
 
-    fun makeImageView(context: Context, cornerRadius: CornerRadius) = RoundedImageView(context, cornerRadius)
+    fun makeImageView(rootView: RootView, cornerRadius: CornerRadius) = RoundedImageView(rootView, cornerRadius)
 
     fun makeRecyclerView(context: Context) = RecyclerView(context)
 
