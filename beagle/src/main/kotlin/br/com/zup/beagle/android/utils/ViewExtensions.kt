@@ -27,6 +27,8 @@ import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
 import br.com.zup.beagle.R
 import br.com.zup.beagle.android.components.utils.CornerRadiusHelper
+import br.com.zup.beagle.android.components.utils.StrokeHelper
+import br.com.zup.beagle.android.components.utils.applyStroke
 import br.com.zup.beagle.android.components.utils.getFloatArray
 import br.com.zup.beagle.android.context.ContextBinding
 import br.com.zup.beagle.android.context.ContextData
@@ -172,13 +174,20 @@ internal fun View.applyBackgroundColor(styleWidget: StyleComponent) {
 }
 
 internal fun View.applyStroke(styleWidget: StyleComponent) {
-    val color = styleWidget.style?.borderColor?.toAndroidColor()
-    val width = styleWidget.style?.borderWidth?.toInt()?.dp()
-    width?.let { strokeWidth ->
-        color?.let { strokeColor ->
-            val gradient = this.background as? GradientDrawable ?: GradientDrawable()
-            gradient.setStroke(strokeWidth, strokeColor)
-            this.background = gradient
+    val strokeHelper = StrokeHelper()
+    this.beagleRootView?.let { rootView ->
+        styleWidget.style?.borderColor?.let { borderColor ->
+            internalObserveBindChanges(rootView, this, borderColor) {
+                strokeHelper.borderColor = it
+                strokeHelper.applyStroke(this)
+            }
+        }
+
+        styleWidget.style?.borderWidth?.let { borderWidth ->
+            internalObserveBindChanges(rootView, this, borderWidth) {
+                strokeHelper.borderWidth = it
+                strokeHelper.applyStroke(this)
+            }
         }
     }
 }

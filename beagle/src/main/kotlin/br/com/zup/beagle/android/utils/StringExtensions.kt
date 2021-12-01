@@ -19,7 +19,7 @@ package br.com.zup.beagle.android.utils
 import br.com.zup.beagle.android.logger.BeagleMessageLogs
 
 internal fun String.toAndroidColor(): Int? = try {
-    ColorUtils.hexColor(this)
+    if (this.isNotEmpty()) ColorUtils.hexColor(this) else null
 } catch (ex: Exception) {
     BeagleMessageLogs.errorWhenMalformedColorIsProvided(this, ex)
     null

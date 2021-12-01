@@ -54,8 +54,8 @@ import br.com.zup.beagle.widget.core.Size
 data class Style(
     val backgroundColor: Bind<String>? = null,
     val cornerRadius: CornerRadius? = null,
-    val borderColor: String? = null,
-    val borderWidth: Double? = null,
+    val borderColor: Bind<String>? = null,
+    val borderWidth: Bind<Double>? = null,
     val size: Size? = null,
     val margin: EdgeValue? = null,
     val padding: EdgeValue? = null,
