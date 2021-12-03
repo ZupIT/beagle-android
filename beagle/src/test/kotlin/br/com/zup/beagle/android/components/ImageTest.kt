@@ -56,8 +56,8 @@ internal class ImageTest : BaseComponentTest() {
     private val scaleTypeSlot = slot<ImageView.ScaleType>()
     private val styleLocal = Style(
         size = Size(
-            width = UnitValue(100.0, UnitType.REAL),
-            height = UnitValue(100.0, UnitType.REAL)
+            width = UnitValue(constant(100.0), UnitType.REAL),
+            height = UnitValue(constant(100.0), UnitType.REAL)
         ),
         cornerRadius = CornerRadius(radius = constant(10.0))
     )
@@ -184,7 +184,7 @@ internal class ImageTest : BaseComponentTest() {
             val image = imageLocal.apply {
                 style = Style(
                     size = Size(
-                        width = UnitValue(100.0, UnitType.REAL),
+                        width = UnitValue(constant(100.0), UnitType.REAL),
                     ),
                 )
             }
@@ -205,8 +205,8 @@ internal class ImageTest : BaseComponentTest() {
             val image = imageLocal.apply {
                 style = Style(
                     size = Size(
-                        width = UnitValue(100.0, UnitType.REAL),
-                        height = UnitValue(100.0, UnitType.REAL),
+                        width = UnitValue(constant(100.0), UnitType.REAL),
+                        height = UnitValue(constant(100.0), UnitType.REAL),
                     )
                 )
             }
@@ -225,7 +225,7 @@ internal class ImageTest : BaseComponentTest() {
             val image = imageLocal.apply {
                 style = Style(
                     size = Size(
-                        width = UnitValue(100.0, UnitType.REAL)
+                        width = UnitValue(constant(100.0), UnitType.REAL)
                     )
                 )
             }

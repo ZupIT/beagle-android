@@ -18,6 +18,8 @@ package br.com.zup.beagle.widget.core
 
 import br.com.zup.beagle.core.BeagleJson
 
+import br.com.zup.beagle.android.context.Bind
+
 /**
  * Represents measurement values that contain both the numeric magnitude and the unit of measurement.
  * @property value the numeric measurement value.
@@ -25,7 +27,7 @@ import br.com.zup.beagle.core.BeagleJson
  */
 @BeagleJson
 data class UnitValue(
-    val value: Double,
+    val value: Bind<Double>,
     val type: UnitType
 )
 
