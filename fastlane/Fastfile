@@ -4,6 +4,11 @@
 
 platform :android do
 
+  private_lane :sonarqube_token_available? do
+    sonarqube = ENV["SONAR_TOKEN"]
+    !(sonarqube.nil? || sonarqube.empty?)
+  end
+
   desc "Pull Request verification"
   lane :pull_request_verification do
     gradle(task: "clean")
@@ -12,7 +17,9 @@ platform :android do
     gradle(task: "jacocoDebugTestReport")
     gradle(task: "jacocoRootReport")
     gradle(task: "sample:assembleDebug")
-    gradle(task: "sonarqube")
+    if sonarqube_token_available?
+      gradle(task: "sonarqube")
+    end
   end
 
   desc "Deploy current code to stage"
