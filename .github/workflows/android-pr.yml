@@ -32,6 +32,8 @@ jobs:
         steps:
             -   uses: actions/checkout@v2
             -   name: Read secrets from AWS Secrets Manager into environment variables
+                if: always()
+                continue-on-error: true
                 uses: abhilash1in/aws-secrets-manager-action@v1.0.1
                 with:
                     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -60,7 +62,6 @@ jobs:
                     java-version: '11'
             -   name: Run pr check
                 env:
-                    GITHUB_USER: ${{ env.BEAGLE_CORE_GITHUB_GITHUB_USER }}
-                    GITHUB_TOKEN: ${{ env.BEAGLE_CORE_GITHUB_GITHUB_TOKEN }}
+                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                     SONAR_TOKEN: ${{ env.BEAGLE_CORE_GITHUB_SONAR_TOKEN }}
                 run: bundle exec fastlane android pull_request_verification
