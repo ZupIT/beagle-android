@@ -19,6 +19,7 @@ package br.com.zup.beagle.android.engine.mapper
 import android.view.View
 import br.com.zup.beagle.android.components.utils.EdgeValueHelper
 import br.com.zup.beagle.android.components.utils.UnitValueConstant
+import br.com.zup.beagle.android.utils.dp
 import br.com.zup.beagle.android.utils.internalObserveBindChanges
 import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.android.widget.core.EdgeValue
@@ -209,7 +210,7 @@ internal class FlexMapper {
     ) {
         value?.let { v ->
             if (type == UnitType.REAL) {
-                yogaNode.setWidth(v.toFloat())
+                yogaNode.setWidth(v.dp().toFloat())
             } else if (type == UnitType.PERCENT) {
                 yogaNode.setWidthPercent(v.toFloat())
             }
@@ -223,7 +224,7 @@ internal class FlexMapper {
     ) {
         value?.let { v ->
             if (type == UnitType.REAL) {
-                yogaNode.setHeight(v.toFloat())
+                yogaNode.setHeight(v.dp().toFloat())
             } else if (type == UnitType.PERCENT) {
                 yogaNode.setHeightPercent(v.toFloat())
             }
@@ -237,7 +238,7 @@ internal class FlexMapper {
     ) {
         value?.let { v ->
             if (type == UnitType.REAL) {
-                yogaNode.setMaxHeight(v.toFloat())
+                yogaNode.setMaxHeight(v.dp().toFloat())
             } else if (type == UnitType.PERCENT) {
                 yogaNode.setMaxHeightPercent(v.toFloat())
             }
@@ -251,7 +252,7 @@ internal class FlexMapper {
     ) {
         value?.let { v ->
             if (type == UnitType.REAL) {
-                yogaNode.setMaxWidth(v.toFloat())
+                yogaNode.setMaxWidth(v.dp().toFloat())
             } else if (type == UnitType.PERCENT) {
                 yogaNode.setMaxWidthPercent(v.toFloat())
             }
@@ -265,7 +266,7 @@ internal class FlexMapper {
     ) {
         value?.let { v ->
             if (type == UnitType.REAL) {
-                yogaNode.setMinWidth(v.toFloat())
+                yogaNode.setMinWidth(v.dp().toFloat())
             } else if (type == UnitType.PERCENT) {
                 yogaNode.setMinWidthPercent(v.toFloat())
             }
@@ -279,7 +280,7 @@ internal class FlexMapper {
     ) {
         value?.let { v ->
             if (type == UnitType.REAL) {
-                yogaNode.setMinHeight(v.toFloat())
+                yogaNode.setMinHeight(v.dp().toFloat())
             } else if (type == UnitType.PERCENT) {
                 yogaNode.setMinHeightPercent(v.toFloat())
             }
@@ -293,7 +294,7 @@ internal class FlexMapper {
         applyEdgeValue(edgeValue) { yogaEdge, unitValue ->
             unitValue.value?.let { v ->
                 if (unitValue.type == UnitType.REAL) {
-                    yogaNode.setMargin(yogaEdge, v.toFloat())
+                    yogaNode.setMargin(yogaEdge, v.dp().toFloat())
                 } else if (unitValue.type == UnitType.PERCENT) {
                     yogaNode.setMarginPercent(yogaEdge, v.toFloat())
                 }
@@ -308,7 +309,7 @@ internal class FlexMapper {
         applyEdgeValue(edgeValue) { yogaEdge, unitValue ->
             unitValue.value?.let { v ->
                 if (unitValue.type == UnitType.REAL) {
-                    yogaNode.setPadding(yogaEdge, v.toFloat())
+                    yogaNode.setPadding(yogaEdge, v.dp().toFloat())
                 } else if (unitValue.type == UnitType.PERCENT) {
                     yogaNode.setPaddingPercent(yogaEdge, v.toFloat())
                 }
@@ -323,7 +324,7 @@ internal class FlexMapper {
         applyEdgeValue(edgeValue) { yogaEdge, unitValue ->
             unitValue.value?.let { v ->
                 if (unitValue.type == UnitType.REAL) {
-                    yogaNode.setPosition(yogaEdge, v.toFloat())
+                    yogaNode.setPosition(yogaEdge, v.dp().toFloat())
                 } else if (unitValue.type == UnitType.PERCENT) {
                     yogaNode.setPositionPercent(yogaEdge, v.toFloat())
                 }
@@ -353,7 +354,7 @@ internal class FlexMapper {
 
     private fun setAspectRatio(aspectRatio: Double?, yogaNode: YogaNode) {
         aspectRatio?.let {
-            yogaNode.aspectRatio = aspectRatio.toFloat()
+            yogaNode.aspectRatio = aspectRatio.dp().toFloat()
         }
     }
 
