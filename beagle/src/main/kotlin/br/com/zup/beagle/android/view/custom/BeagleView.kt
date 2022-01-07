@@ -17,11 +17,14 @@
 package br.com.zup.beagle.android.view.custom
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.View
+import br.com.zup.beagle.android.components.layout.Container
 import br.com.zup.beagle.android.data.formatUrl
 import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.utils.BeagleRetry
 import br.com.zup.beagle.android.utils.generateViewModelInstance
+import br.com.zup.beagle.android.utils.getRootId
 import br.com.zup.beagle.android.view.ScreenRequest
 import br.com.zup.beagle.android.view.ServerDrivenState
 import br.com.zup.beagle.android.view.mapper.toRequestData
@@ -128,9 +131,10 @@ internal class BeagleView(
             addServerDrivenComponent(component)
             loadCompletedListener?.invoke()
         }
+        Log.i("teste", "view")
         screenIdentifier?.let {
             rootView.generateViewModelInstance<AnalyticsViewModel>().createScreenReport(
-                screenIdentifier
+                screenIdentifier, getRootId(component)
             )
         }
     }

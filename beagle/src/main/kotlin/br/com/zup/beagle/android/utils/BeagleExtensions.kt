@@ -18,8 +18,11 @@
 
 package br.com.zup.beagle.android.utils
 
+import br.com.zup.beagle.android.components.layout.Container
+import br.com.zup.beagle.android.components.layout.ScreenComponent
 import br.com.zup.beagle.android.view.BeagleActivity
 import br.com.zup.beagle.android.view.custom.BeagleNavigator
+import br.com.zup.beagle.core.ServerDrivenComponent
 
 fun String.toAndroidId(): Int {
     // Validation required to avoid conflict of View.generateViewId() with a component's numeral id
@@ -39,4 +42,13 @@ internal fun BeagleActivity.configureSupportActionBar() {
     toolbar.setNavigationOnClickListener {
         BeagleNavigator.popView(this)
     }
+}
+
+fun getRootId(screen: ServerDrivenComponent): String {
+
+    if (screen is Container) {
+        val screenAlt = screen as Container
+        return screenAlt.id.toString()
+    }
+    return (screen as? ScreenComponent)?.identifier.toString()
 }

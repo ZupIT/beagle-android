@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package br.com.beaglesampleandroid.beagle
+package br.com.zup.beagle.sample
 
 import android.util.Log
 import br.com.zup.beagle.android.annotation.BeagleComponent

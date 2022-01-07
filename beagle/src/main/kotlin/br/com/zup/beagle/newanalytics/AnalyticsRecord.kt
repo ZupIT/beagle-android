@@ -39,4 +39,5 @@ data class AnalyticsRecord(
     val additionalEntries: Map<String, Any>? = null,
     val timestamp: Long,
     val screen: String,
+    val rootId:String? = null
 )
