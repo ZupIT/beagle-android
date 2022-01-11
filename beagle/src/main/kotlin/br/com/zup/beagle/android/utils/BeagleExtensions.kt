@@ -44,8 +44,7 @@ internal fun BeagleActivity.configureSupportActionBar() {
     }
 }
 
-fun getRootId(screen: ServerDrivenComponent): String? {
-    if(screen === null) return null
+fun getRootId(screen: ServerDrivenComponent): String {
     if (screen is Container) {
         val containerComponent = screen as Container
         return containerComponent.id.toString()
