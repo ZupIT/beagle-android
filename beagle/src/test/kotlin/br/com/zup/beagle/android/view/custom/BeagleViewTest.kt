@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,6 +65,7 @@ internal class BeagleViewTest : BaseTest() {
     private val analyticsViewModel = mockk<AnalyticsViewModel>()
 
     private val screenIdentifierSlot = slot<String>()
+    private val rootIdSlot = slot<String>()
 
     private val mutableLiveData = MutableLiveData<ViewState>()
     private val url = "/url".formatUrl()
@@ -81,7 +82,7 @@ internal class BeagleViewTest : BaseTest() {
         BeagleSdk.setInTestMode()
         MyBeagleSetup().init(application)
         prepareViewModelMock(analyticsViewModel)
-        every { analyticsViewModel.createScreenReport(capture(screenIdentifierSlot)) } just Runs
+        every { analyticsViewModel.createScreenReport(capture(screenIdentifierSlot), capture(rootIdSlot)) } just Runs
         every { viewModel.fetchComponent(any(), any()) } returns mutableLiveData
         val activityScenario: ActivityScenario<ServerDrivenActivity> = ActivityScenario.launch(ServerDrivenActivity::class.java)
         activityScenario.onActivity {

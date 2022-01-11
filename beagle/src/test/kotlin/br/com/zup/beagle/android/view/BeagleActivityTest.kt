@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -63,6 +63,7 @@ class BeagleActivityTest : BaseSoLoaderTest() {
     private var activity: ServerDrivenActivity? = null
     private val analyticsViewModel = mockk<AnalyticsViewModel>()
     private val screenIdentifierSlot = slot<String>()
+    private val rootIdSlot = slot<String>()
 
     @Before
     fun mockBeforeTest() {
@@ -82,7 +83,7 @@ class BeagleActivityTest : BaseSoLoaderTest() {
         val url = "/url"
         val screenRequest = RequestData(url = url)
         prepareViewModelMock(analyticsViewModel)
-        every { analyticsViewModel.createScreenReport(capture(screenIdentifierSlot)) } just Runs
+        every { analyticsViewModel.createScreenReport(capture(screenIdentifierSlot),capture(rootIdSlot))} just Runs
 
         //When
         activity?.navigateTo(screenRequest, null)
@@ -90,7 +91,6 @@ class BeagleActivityTest : BaseSoLoaderTest() {
         //Then
         assertEquals(url, screenIdentifierSlot.captured)
     }
-
 
     @Test
     fun `Given a screen with id When navigate to Then should call BeagleFragment newInstance with right parameters`() = runBlockingTest {
@@ -101,7 +101,7 @@ class BeagleActivityTest : BaseSoLoaderTest() {
 
 
         prepareViewModelMock(analyticsViewModel)
-        every { analyticsViewModel.createScreenReport(capture(screenIdentifierSlot)) } just Runs
+        every { analyticsViewModel.createScreenReport(capture(screenIdentifierSlot), capture(rootIdSlot)) } just Runs
 
         //When
         activity?.navigateTo(screenRequest, screen)
@@ -119,7 +119,7 @@ class BeagleActivityTest : BaseSoLoaderTest() {
 
 
         prepareViewModelMock(analyticsViewModel)
-        every { analyticsViewModel.createScreenReport(capture(screenIdentifierSlot)) } just Runs
+        every { analyticsViewModel.createScreenReport(capture(screenIdentifierSlot), capture(rootIdSlot)) } just Runs
 
 
         //When

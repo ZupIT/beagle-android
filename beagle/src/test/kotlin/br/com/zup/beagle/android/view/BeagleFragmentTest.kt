@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,8 +41,17 @@ class BeagleFragmentTest : BaseSoLoaderTest() {
 
     private val analyticsViewModel = mockk<AnalyticsViewModel>()
     private val screenIdentifierSlot = slot<String>()
+    private val rootIdSlot = slot<String>()
     private val json = """{
                 "_beagleComponent_" : "beagle:screenComponent",
+                "child" : {
+                "_beagleComponent_" : "beagle:text",
+                "text" : "hello"
+            }
+            }"""
+    private val jsonWithIdentifier = """{
+                "_beagleComponent_" : "beagle:screenComponent",
+                "identifier": "This is an identifier",
                 "child" : {
                 "_beagleComponent_" : "beagle:text",
                 "text" : "hello"
@@ -54,7 +63,7 @@ class BeagleFragmentTest : BaseSoLoaderTest() {
     @Before
     fun mockBeforeTest() {
         prepareViewModelMock(analyticsViewModel)
-        every { analyticsViewModel.createScreenReport(capture(screenIdentifierSlot)) } just Runs
+        every { analyticsViewModel.createScreenReport(capture(screenIdentifierSlot), capture(rootIdSlot)) } just Runs
         val activityScenario: ActivityScenario<ServerDrivenActivity> = ActivityScenario.launch(ServerDrivenActivity::class.java)
         activityScenario.onActivity {
             activityScenario.moveToState(Lifecycle.State.RESUMED)
@@ -83,5 +92,17 @@ class BeagleFragmentTest : BaseSoLoaderTest() {
 
         //then
         assertEquals(false, screenIdentifierSlot.isCaptured)
+    }
+
+    @Test
+    fun `Given  a Tree with identifier screen analytics should be called with root Id as identifier`() {
+        //When
+        activity?.supportFragmentManager?.beginTransaction()?.replace(
+            R.id.server_driven_container,
+            BeagleFragment.newInstance(jsonWithIdentifier, url)
+        )?.commit()
+
+        //then
+        assertEquals("This is an identifier", rootIdSlot.captured)
     }
 }

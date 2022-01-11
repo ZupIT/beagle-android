@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ internal object AnalyticsService {
         }
     }
 
-    fun createScreenRecord(screenIdentifier: String, rootId:String) {
+    fun createScreenRecord(screenIdentifier: String, rootId:String? = null) {
         val analyticsProvider: AnalyticsProvider? = BeagleEnvironment.beagleSdk.analyticsProvider
         analyticsProvider?.getConfig()?.let {
             val dataScreenReport = DataScreenReport(screenIdentifier, rootId)

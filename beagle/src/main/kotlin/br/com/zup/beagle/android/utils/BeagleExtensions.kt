@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,11 +44,11 @@ internal fun BeagleActivity.configureSupportActionBar() {
     }
 }
 
-fun getRootId(screen: ServerDrivenComponent): String {
-
+fun getRootId(screen: ServerDrivenComponent): String? {
+    if(screen === null) return null
     if (screen is Container) {
-        val screenAlt = screen as Container
-        return screenAlt.id.toString()
+        val containerComponent = screen as Container
+        return containerComponent.id.toString()
     }
     return (screen as? ScreenComponent)?.identifier.toString()
 }
