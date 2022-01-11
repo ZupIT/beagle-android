@@ -17,15 +17,12 @@
 package br.com.zup.beagle.android.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import br.com.zup.beagle.android.components.layout.Container
-import br.com.zup.beagle.android.components.layout.ScreenComponent
 import br.com.zup.beagle.android.components.utils.applyBackgroundFromWindowBackgroundTheme
 import br.com.zup.beagle.android.data.serializer.BeagleSerializer
 import br.com.zup.beagle.android.utils.getRootId

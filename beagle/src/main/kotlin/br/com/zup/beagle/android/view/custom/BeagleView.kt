@@ -17,9 +17,7 @@
 package br.com.zup.beagle.android.view.custom
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.View
-import br.com.zup.beagle.android.components.layout.Container
 import br.com.zup.beagle.android.data.formatUrl
 import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.utils.BeagleRetry
