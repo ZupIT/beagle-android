@@ -131,7 +131,6 @@ internal class BeagleView(
             addServerDrivenComponent(component)
             loadCompletedListener?.invoke()
         }
-        Log.i("teste", "view")
         screenIdentifier?.let {
             rootView.generateViewModelInstance<AnalyticsViewModel>().createScreenReport(
                 screenIdentifier, getRootId(component)
