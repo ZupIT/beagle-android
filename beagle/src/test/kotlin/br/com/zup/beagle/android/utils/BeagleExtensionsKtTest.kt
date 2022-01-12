@@ -16,6 +16,10 @@
 
 package br.com.zup.beagle.android.utils
 
+import br.com.zup.beagle.android.components.layout.Container
+import br.com.zup.beagle.android.components.layout.ScreenComponent
+import io.mockk.every
+import io.mockk.mockk
 import org.junit.jupiter.api.Test
 
 import org.junit.Assert.assertEquals
@@ -68,6 +72,32 @@ class BeagleExtensionsKtTest {
 
         // Then
         assertEquals(123, result)
+    }
+
+    @Test
+    fun `GIVEN the component IS a Container and has id THEN should return its id otherwhise "null"`() {
+        // Given
+        val container = mockk<Container>(relaxed = true)
+        every { container.id } returns "This id is from the container"
+
+        // Then
+        assertEquals("This id is from the container", getRootId(container))
+
+        every { container.id } returns null
+        assertEquals("null", getRootId(container))
+    }
+
+    @Test
+    fun `GIVEN the component IS a Screen and has identifier THEN should return its identifier otherwise "null"`() {
+        // Given
+        val screen = mockk<ScreenComponent>(relaxed = true)
+        every { screen.identifier } returns "This id is from the screen"
+
+        // Then
+        assertEquals("This id is from the screen", getRootId(screen))
+
+        every { screen.identifier } returns null
+        assertEquals("null", getRootId(screen))
     }
 
 }
