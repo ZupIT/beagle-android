@@ -35,7 +35,7 @@ buildscript {
 
 plugins {
     id "io.gitlab.arturbosch.detekt" version "1.17.1"
-    id "com.github.ben-manes.versions" version "0.39.0"
+    id "com.github.ben-manes.versions" version "0.41.0"
     id "br.com.zup.beagle.dependencies"
     id "org.jetbrains.dokka" version "1.4.32"
     id "org.sonarqube" version "3.2.0"
