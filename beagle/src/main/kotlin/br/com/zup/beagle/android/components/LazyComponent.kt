@@ -25,8 +25,8 @@ import br.com.zup.beagle.android.view.custom.BeagleView
 import br.com.zup.beagle.android.view.custom.OnServerStateChanged
 import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.android.widget.WidgetView
-import br.com.zup.beagle.annotation.RegisterWidget
-import br.com.zup.beagle.core.ServerDrivenComponent
+import br.com.zup.beagle.android.annotation.RegisterWidget
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 import br.com.zup.beagle.databinding.BeagleIncludeErrorServerDrivenBinding
 
 /**

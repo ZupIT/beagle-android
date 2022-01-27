@@ -20,8 +20,8 @@ import android.view.View
 import androidx.core.view.AccessibilityDelegateCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
-import br.com.zup.beagle.core.AccessibilityComponent
-import br.com.zup.beagle.core.ServerDrivenComponent
+import br.com.zup.beagle.android.widget.core.AccessibilityComponent
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 
 
 class AccessibilitySetup {

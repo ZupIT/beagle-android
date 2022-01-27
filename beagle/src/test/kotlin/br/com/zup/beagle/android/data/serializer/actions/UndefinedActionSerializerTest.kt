@@ -16,9 +16,7 @@
 
 package br.com.zup.beagle.android.data.serializer.actions
 
-import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.action.UndefinedAction
-import br.com.zup.beagle.android.data.serializer.BaseSerializerTest
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested

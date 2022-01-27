@@ -18,7 +18,7 @@ package br.com.zup.beagle.android.operation.builtin.number
 
 import br.com.zup.beagle.android.operation.Operation
 import br.com.zup.beagle.android.operation.OperationType
-import br.com.zup.beagle.annotation.RegisterOperation
+import br.com.zup.beagle.android.annotation.RegisterOperation
 
 @RegisterOperation("subtract")
 internal class SubtractOperation : Operation {

@@ -29,10 +29,6 @@ import br.com.zup.beagle.android.data.serializer.makeActionConfirmJson
 import br.com.zup.beagle.android.data.serializer.makeActionConfirmObject
 import br.com.zup.beagle.android.data.serializer.makeActionCustomActionJson
 import br.com.zup.beagle.android.data.serializer.makeActionCustomActionObject
-import br.com.zup.beagle.android.data.serializer.makeActionFormLocalActionJson
-import br.com.zup.beagle.android.data.serializer.makeActionFormLocalActionObject
-import br.com.zup.beagle.android.data.serializer.makeActionFormRemoteActionJson
-import br.com.zup.beagle.android.data.serializer.makeActionFormRemoteActionObject
 import br.com.zup.beagle.android.data.serializer.makeActionOpenExternalURLJson
 import br.com.zup.beagle.android.data.serializer.makeActionOpenExternalURLObject
 import br.com.zup.beagle.android.data.serializer.makeActionOpenExternalURLWithExpressionJson
@@ -94,8 +90,6 @@ class DefaultActionSerializerTest : DefaultSerializerTest<Action>(Action::class.
         Arguments.of(makeActionConditionJson(), makeActionConditionObject()),
         Arguments.of(makeActionConfirmJson(), makeActionConfirmObject()),
         Arguments.of(makeActionCustomActionJson(), makeActionCustomActionObject()),
-        Arguments.of(makeActionFormLocalActionJson(), makeActionFormLocalActionObject()),
-        Arguments.of(makeActionFormRemoteActionJson(), makeActionFormRemoteActionObject()),
         Arguments.of(makeActionOpenExternalURLJson(), makeActionOpenExternalURLObject()),
         Arguments.of(makeActionOpenExternalURLWithExpressionJson(), makeActionOpenExternalURLWithExpressionObject()),
         Arguments.of(makeActionPopToViewJson(), makeActionPopToViewObject()),

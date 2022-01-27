@@ -16,43 +16,43 @@
 
 package br.com.zup.beagle.android.context
 
-import br.com.zup.beagle.android.extensions.once
+import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.logger.BeagleMessageLogs
 import br.com.zup.beagle.android.testutil.RandomData
 import io.mockk.Runs
+import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockkObject
-import io.mockk.unmockkAll
 import io.mockk.verify
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
 private val CONTEXT_ID = RandomData.string()
 
-class ContextDataManipulatorTest {
+class ContextDataManipulatorTest : BaseTest() {
 
     private val contextDataManipulator = ContextDataManipulator()
 
-    @BeforeEach
-    fun setUp() {
+    @BeforeAll
+    override fun setUp() {
         mockkObject(BeagleMessageLogs)
 
         every { BeagleMessageLogs.errorWhileTryingToChangeContext(any()) } just Runs
         every { BeagleMessageLogs.errorWhileTryingToAccessContext(any()) } just Runs
     }
 
-    @AfterEach
-    fun tearDown() {
-        unmockkAll()
+    @BeforeEach
+    fun clear() {
+        clearMocks(BeagleMessageLogs, answers = false)
     }
 
     @Test
@@ -156,7 +156,7 @@ class ContextDataManipulatorTest {
 
         // Then
         assertTrue { result is ContextSetResult.Failure }
-        verify(exactly = once()) { BeagleMessageLogs.errorWhileTryingToChangeContext(any()) }
+        verify(exactly = 1) { BeagleMessageLogs.errorWhileTryingToChangeContext(any()) }
     }
 
     @Test
@@ -189,7 +189,7 @@ class ContextDataManipulatorTest {
 
         // Then
         assertTrue { result is ContextSetResult.Failure }
-        verify(exactly = once()) { BeagleMessageLogs.errorWhileTryingToChangeContext(any()) }
+        verify(exactly = 1) { BeagleMessageLogs.errorWhileTryingToChangeContext(any()) }
     }
 
     @Test
@@ -359,7 +359,7 @@ class ContextDataManipulatorTest {
 
         // Then
         assertNull(result)
-        verify(exactly = once()) { BeagleMessageLogs.errorWhileTryingToAccessContext(any()) }
+        verify(exactly = 1) { BeagleMessageLogs.errorWhileTryingToAccessContext(any()) }
     }
 
     private fun createMockJSONObject(): JSONObject {

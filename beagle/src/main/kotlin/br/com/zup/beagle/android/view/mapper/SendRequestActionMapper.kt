@@ -39,7 +39,7 @@ internal object SendRequestActionMapper {
             url = urlFormatted,
             httpAdditionalData = HttpAdditionalData(
                 method = method,
-                body = sendRequest.data?.toString(),
+                body = sendRequest.data,
                 headers = headers,
             )
         )

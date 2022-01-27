@@ -16,9 +16,9 @@
 
 package br.com.zup.beagle.android.utils
 
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.jupiter.api.Test
-
-import org.junit.Assert.*
 
 private interface A<T>
 private class B : A<String>

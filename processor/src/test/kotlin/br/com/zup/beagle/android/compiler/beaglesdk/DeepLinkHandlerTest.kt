@@ -113,7 +113,6 @@ internal class DeepLinkHandlerTest : BeagleSdkBaseTest() {
         }
     }
 
-
     @DisplayName("When register deep link handler")
     @Nested
     inner class InvalidDeepLinkHandler {

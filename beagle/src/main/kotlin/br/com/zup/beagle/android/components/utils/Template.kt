@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
@@ -17,10 +18,8 @@
 package br.com.zup.beagle.android.components.utils
 
 import br.com.zup.beagle.android.context.Bind
-import br.com.zup.beagle.android.context.expressionOrValueOf
-import br.com.zup.beagle.android.context.valueOf
-import br.com.zup.beagle.core.BeagleJson
-import br.com.zup.beagle.core.ServerDrivenComponent
+import br.com.zup.beagle.android.widget.core.BeagleJson
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 
 @BeagleJson
 data class Template(
@@ -33,8 +32,4 @@ data class Template(
      * The template itself: view to render
      */
     val view: ServerDrivenComponent,
-) {
-    constructor(case: String, view: ServerDrivenComponent) : this(expressionOrValueOf(case), view)
-
-    constructor(case: Boolean, view: ServerDrivenComponent) : this(valueOf(case), view)
-}
+)

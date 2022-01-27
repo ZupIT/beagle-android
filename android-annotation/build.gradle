@@ -14,18 +14,6 @@
  * limitations under the License.
  */
 
-import br.com.zup.beagle.Dependencies
-
 apply plugin: 'kotlin'
-
-apply plugin: "org.jetbrains.dokka"
-
-
-sourceCompatibility = JavaVersion.VERSION_11
-targetCompatibility = JavaVersion.VERSION_11
-
-dependencies {
-    implementation Dependencies.MoshiLibraries.moshi
-}
 
 apply from: "$rootDir/maven-publish.gradle"

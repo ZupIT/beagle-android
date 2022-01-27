@@ -23,7 +23,7 @@ import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(InstantExecutorExtension::class)
@@ -33,7 +33,7 @@ abstract class BaseAsyncActionTest : BaseTest() {
 
     private val asyncActionStatus = mutableListOf<AsyncActionStatus>()
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
 
@@ -41,7 +41,7 @@ abstract class BaseAsyncActionTest : BaseTest() {
     }
 
     internal fun onActionFinishedWasCalled() = asyncActionStatus[0] == AsyncActionStatus.FINISHED &&
-        asyncActionStatus[1] == AsyncActionStatus.IDLE
+            asyncActionStatus[1] == AsyncActionStatus.IDLE
 
     internal fun onActionStartedWasCalled() = asyncActionStatus[0] == AsyncActionStatus.STARTED
 }

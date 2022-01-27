@@ -25,7 +25,7 @@ import br.com.zup.beagle.android.exception.BeagleApiException
 import br.com.zup.beagle.android.utils.CoroutineDispatchers
 import br.com.zup.beagle.android.view.mapper.toRequestData
 import br.com.zup.beagle.android.view.mapper.toResponse
-import br.com.zup.beagle.core.BeagleJson
+import br.com.zup.beagle.android.widget.core.BeagleJson
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -62,14 +62,14 @@ private class FetchActionLiveData(
 
     override fun onActive() {
         if (value == null) {
-            fetchData()
+            fetchAction()
         }
     }
 
-    private fun fetchData() {
+    private fun fetchAction() {
         coroutineScope.launch(ioDispatcher) {
             try {
-                val response = actionRequester.fetchData(sendRequest.toRequestData())
+                val response = actionRequester.fetchAction(sendRequest.toRequestData())
                 postValue(FetchViewState.Success(response.toResponse()))
             } catch (exception: BeagleApiException) {
                 postValue(FetchViewState.Error(exception.responseData.toResponse()))

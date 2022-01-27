@@ -45,7 +45,8 @@ class ToolbarTextManagerTest {
         every { navigationBarMock.title } returns "title"
 
         // WHEN
-        val generatedTextView = toolbarTextManager.generateTitle(application, navigationBarMock, textAppearanceMock)
+        val generatedTextView =
+            toolbarTextManager.generateTitle(application, navigationBarMock, textAppearanceMock)
 
         // THEN
         Assertions.assertEquals(generatedTextView.id, R.id.beagle_toolbar_text)
@@ -57,7 +58,12 @@ class ToolbarTextManagerTest {
         every { navigationBarMock.title } returns "title"
 
         // WHEN
-        val generatedTextView = toolbarTextManager.generateTitle(application, navigationBarMock, textAppearanceMock, R.id.beagle_toolbar_text)
+        val generatedTextView = toolbarTextManager.generateTitle(
+            application,
+            navigationBarMock,
+            textAppearanceMock,
+            R.id.beagle_toolbar_text
+        )
 
         // THEN
         Assertions.assertEquals(generatedTextView.gravity, Gravity.CENTER)
@@ -71,7 +77,12 @@ class ToolbarTextManagerTest {
         every { navigationBarMock.title } returns "title"
 
         // WHEN
-        val generatedTextView = toolbarTextManager.generateTitle(application, navigationBarMock, textAppearanceMock, R.id.beagle_toolbar_text)
+        val generatedTextView = toolbarTextManager.generateTitle(
+            application,
+            navigationBarMock,
+            textAppearanceMock,
+            R.id.beagle_toolbar_text
+        )
 
         // THEN
         Assertions.assertEquals(generatedTextView.text, "title")

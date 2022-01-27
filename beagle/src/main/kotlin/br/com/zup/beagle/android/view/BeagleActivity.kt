@@ -16,40 +16,34 @@
 
 package br.com.zup.beagle.android.view
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.Window
 import android.view.WindowManager
+import androidx.activity.result.contract.ActivityResultContract
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import br.com.zup.beagle.R
+import br.com.zup.beagle.android.action.NavigationContext
 import br.com.zup.beagle.android.components.layout.Screen
 import br.com.zup.beagle.android.data.serializer.BeagleSerializer
 import br.com.zup.beagle.android.networking.RequestData
-import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.utils.BeagleRetry
-import br.com.zup.beagle.android.utils.toComponent
-import br.com.zup.beagle.android.view.mapper.toRequestData
 import br.com.zup.beagle.android.view.viewmodel.BeagleScreenViewModel
 import br.com.zup.beagle.android.view.viewmodel.ViewState
-import br.com.zup.beagle.core.ServerDrivenComponent
-import kotlinx.parcelize.Parcelize
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 
 sealed class ServerDrivenState {
 
-    class FormError(throwable: Throwable, retry: BeagleRetry) : Error(throwable, retry)
     class WebViewError(throwable: Throwable, retry: BeagleRetry) : Error(throwable, retry)
-
-    @Deprecated("It was deprecated in version 1.2.0 and will be removed in a future version." +
-        " Use Started and Finished instead.")
-    data class Loading(val loading: Boolean) : ServerDrivenState()
 
     /**
      * indicates that a server-driven component fetch has begun
@@ -81,187 +75,31 @@ sealed class ServerDrivenState {
     open class Error(val throwable: Throwable, val retry: BeagleRetry) : ServerDrivenState()
 }
 
-/**
- * ScreenRequest is used to do requests.
- *
- * @param url Server URL.
- * @param method HTTP method.
- * @param headers Header items for the request.
- * @param body Content that will be delivered with the request.
- */
-@Parcelize
-@Deprecated(
-    message = "It was deprecated in version 1.7.0 and will be removed in a future version. " +
-        "Use class RequestData.", replaceWith = ReplaceWith("RequestData()")
-)
-data class ScreenRequest(
-    val url: String,
-    val method: ScreenMethod = ScreenMethod.GET,
-    val headers: Map<String, String> = mapOf(),
-    val body: String? = null,
-) : Parcelable
-
-/**
- * Screen method to indicate the desired action to be performed for a given resource.
- *
- */
-
-@Deprecated(
-    message = "It was deprecated in version 1.7.0 and will be removed in a future version. " +
-        "Use field HttpMethod.")
-enum class ScreenMethod {
-    /**
-     * The GET method requests a representation of the specified resource. Requests using GET should only retrieve
-     * data.
-     */
-    GET,
-
-    /**
-     * The POST method is used to submit an entity to the specified resource, often causing
-     * a change in state or side effects on the server.
-     */
-    POST,
-
-    /**
-     * The PUT method replaces all current representations of the target resource with the request payload.
-     */
-    PUT,
-
-    /**
-     * The DELETE method deletes the specified resource.
-     */
-    DELETE,
-
-    /**
-     * The HEAD method asks for a response identical to that of a GET request, but without the response body.
-     */
-    HEAD,
-
-    /**
-     * The PATCH method is used to apply partial modifications to a resource.
-     */
-    PATCH
-}
-
-private val beagleSerializer: BeagleSerializer = BeagleSerializer()
-private const val FIRST_SCREEN_REQUEST_KEY = "FIRST_SCREEN_REQUEST_KEY"
-private const val FIRST_SCREEN_KEY = "FIRST_SCREEN_KEY"
-
 abstract class BeagleActivity : AppCompatActivity() {
 
     private val screenViewModel by lazy { ViewModelProvider(this).get(BeagleScreenViewModel::class.java) }
-    private val screenRequest by lazy { intent.extras?.getParcelable<RequestData>(FIRST_SCREEN_REQUEST_KEY) }
+    private val screenRequest by lazy {
+        intent.extras?.getParcelable<RequestData>(
+            FIRST_SCREEN_REQUEST_KEY
+        )
+    }
+
     private val screen by lazy { intent.extras?.getString(FIRST_SCREEN_KEY) }
 
-    companion object {
-        @Deprecated(
-            message = "It was deprecated in version 1.2.0 and will be removed in a future version." +
-                " To create a intent of your sub-class of BeagleActivity use Context.newServerDrivenIntent instead.",
-            replaceWith = ReplaceWith(
-                "context.newServerDrivenIntent<YourBeagleActivity>(screenJson)",
-                imports = ["br.com.zup.beagle.android.utils.newServerDrivenIntent"]
-            )
-        )
-        fun newIntent(context: Context, screenJson: String): Intent {
-            return newIntent(context).apply {
-                putExtra(FIRST_SCREEN_KEY, screenJson)
-            }
-        }
+    private var navigationContext: NavigationContext? = null
 
-        @Deprecated(
-            message = "It was deprecated in version 1.2.0 and will be removed in a future version." +
-                " To create a intent of your sub-class of BeagleActivity use Context.newServerDrivenIntent instead.",
-            replaceWith = ReplaceWith(
-                "context.newServerDrivenIntent<YourBeagleActivity>(screen)",
-                imports = ["br.com.zup.beagle.android.utils.newServerDrivenIntent"]
-            )
-        )
-        fun newIntent(context: Context, screen: Screen): Intent {
-            return newIntent(context, null, screen)
-        }
+    private val fragmentManager: FragmentManager = supportFragmentManager
 
-        @Deprecated(
-            message = "It was deprecated in version 1.2.0 and will be removed in a future version." +
-                " To create a intent of your sub-class of BeagleActivity use Context.newServerDrivenIntent instead.",
-            replaceWith = ReplaceWith(
-                "context.newServerDrivenIntent<YourBeagleActivity>(screenRequest)",
-                imports = ["br.com.zup.beagle.android.utils.newServerDrivenIntent"]
-            )
-        )
-        fun newIntent(context: Context, screenRequest: ScreenRequest): Intent {
-            return newIntent(context, screenRequest.toRequestData(), null)
-        }
-
-        internal fun newIntent(
-            context: Context,
-            screenRequest: RequestData? = null,
-            screen: Screen? = null,
-        ): Intent {
-            return newIntent(context).apply {
-                screenRequest?.let {
-                    putExtra(FIRST_SCREEN_REQUEST_KEY, screenRequest)
-                }
-                screen?.let {
-                    putExtra(FIRST_SCREEN_KEY, beagleSerializer.serializeComponent(screen.toComponent()))
-                }
-            }
-        }
-
-        private fun newIntent(context: Context): Intent {
-            val activityClass = BeagleEnvironment.beagleSdk.serverDrivenActivity
-            return Intent(context, activityClass)
-        }
-
-        @Deprecated(
-            message = "It was deprecated in version 1.7.0 and will be removed in a future version." +
-                " To create a intent of your sub-class of BeagleActivity use Context.newServerDrivenIntent instead.",
-            replaceWith = ReplaceWith(
-                "bundleOf(requestData)"
-            )
-        )
-        fun bundleOf(screenRequest: ScreenRequest): Bundle {
-            return Bundle(1).apply {
-                putParcelable(FIRST_SCREEN_REQUEST_KEY, screenRequest.toRequestData())
-            }
-        }
-
-        fun bundleOf(requestData: RequestData): Bundle {
-            return Bundle(1).apply {
-                putParcelable(FIRST_SCREEN_REQUEST_KEY, requestData)
-            }
-        }
-
-        @Deprecated(
-            message = "It was deprecated in version 1.7.0 and will be removed in a future version." +
-                " To create a intent of your sub-class of BeagleActivity use Context.newServerDrivenIntent instead.",
-            replaceWith = ReplaceWith(
-                "bundleOf(requestData, fallbackScreen)"
-            )
-        )
-        fun bundleOf(screenRequest: ScreenRequest, fallbackScreen: Screen): Bundle {
-            return Bundle(2).apply {
-                putParcelable(FIRST_SCREEN_REQUEST_KEY, screenRequest.toRequestData())
-                putAll(bundleOf(fallbackScreen))
-            }
-        }
-
-        fun bundleOf(requestData: RequestData, fallbackScreen: Screen): Bundle {
-            return Bundle(2).apply {
-                putParcelable(FIRST_SCREEN_REQUEST_KEY, requestData)
-                putAll(bundleOf(fallbackScreen))
-            }
-        }
-
-        fun bundleOf(screen: Screen): Bundle {
-            return Bundle(1).apply {
-                putString(FIRST_SCREEN_KEY, beagleSerializer.serializeComponent(screen.toComponent()))
-            }
-        }
-
-        fun bundleOf(screenJson: String): Bundle {
-            return Bundle(1).apply {
-                putString(FIRST_SCREEN_KEY, screenJson)
-            }
+    /**
+     * [br.com.zup.beagle.android.view.custom.BeagleNavigator.pushStack] use this variable to call function
+     * launch after this others functions in navigator can control the result
+     * like: [br.com.zup.beagle.android.view.custom.BeagleNavigator.popView]
+     * and [br.com.zup.beagle.android.view.custom.BeagleNavigator.popStack]
+     */
+    internal val nextActivity = registerForActivityResult(BeagleActivityContract()) { data ->
+        val fragment = supportFragmentManager.fragments.lastOrNull() as? BeagleFragment
+        if (data != null && fragment != null) {
+            fragment.updateNavigationContext(data)
         }
     }
 
@@ -280,23 +118,34 @@ abstract class BeagleActivity : AppCompatActivity() {
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
 
-        if (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.KITKAT) {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
             AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
         }
 
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+
+        adjustInputMode()
 
         observeScreenLoadFinish()
+        navigationContext = intent.extras?.getParcelable(NAVIGATION_CONTEXT_KEY)
+    }
+
+    @SuppressWarnings("deprecation")
+    private fun adjustInputMode() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            window.setDecorFitsSystemWindows(false)
+        } else {
+            @Suppress("DEPRECATION")
+            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+        }
     }
 
     private fun observeScreenLoadFinish() {
         screenViewModel.screenLoadFinished.observe(
             this,
-            Observer {
+            {
                 onServerDrivenContainerStateChanged(ServerDrivenState.Success)
                 onServerDrivenContainerStateChanged(ServerDrivenState.Finished)
             }
@@ -306,7 +155,7 @@ abstract class BeagleActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        if (supportFragmentManager.fragments.size == 0) {
+        if (fragmentManager.fragments.size == 0) {
             screen?.let { screen ->
                 fetch(
                     RequestData(url = ""),
@@ -320,24 +169,29 @@ abstract class BeagleActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         if (screenViewModel.isFetchComponent()) {
-            if (supportFragmentManager.backStackEntryCount == 0) {
+            if (fragmentManager.backStackEntryCount == 0) {
                 finish()
             }
-        } else if (supportFragmentManager.backStackEntryCount == 1) {
+        } else if (fragmentManager.backStackEntryCount == 1) {
             finish()
         } else {
             super.onBackPressed()
         }
     }
 
-    fun hasServerDrivenScreen(): Boolean = supportFragmentManager.backStackEntryCount > 0
+    fun hasServerDrivenScreen(): Boolean = fragmentManager.backStackEntryCount > 0
 
-    internal fun navigateTo(requestData: RequestData, screen: Screen?) {
-        fetch(requestData, screen?.toComponent())
+    internal fun navigateTo(
+        requestData: RequestData,
+        screen: Screen?,
+        navigationContext: NavigationContext?,
+    ) {
+        this.navigationContext = navigationContext
+        fetch(requestData, screen)
     }
 
-    private fun fetch(requestData: RequestData, screenComponent: ServerDrivenComponent? = null) {
-        val liveData = screenViewModel.fetchComponent(requestData, screenComponent)
+    private fun fetch(requestData: RequestData, screen: ServerDrivenComponent? = null) {
+        val liveData = screenViewModel.fetchComponent(requestData, screen)
         handleLiveData(liveData)
     }
 
@@ -345,13 +199,16 @@ abstract class BeagleActivity : AppCompatActivity() {
         state.observe(this, {
             when (it) {
                 is ViewState.Error -> {
-                    onServerDrivenContainerStateChanged(ServerDrivenState.Error(it.throwable, it.retry))
+                    onServerDrivenContainerStateChanged(
+                        ServerDrivenState.Error(
+                            it.throwable,
+                            it.retry
+                        )
+                    )
                     onServerDrivenContainerStateChanged(ServerDrivenState.Finished)
                 }
 
                 is ViewState.Loading -> {
-                    onServerDrivenContainerStateChanged(ServerDrivenState.Loading(it.value))
-
                     if (it.value) {
                         onServerDrivenContainerStateChanged(ServerDrivenState.Started)
                     }
@@ -370,7 +227,7 @@ abstract class BeagleActivity : AppCompatActivity() {
 
     private fun showScreen(screenName: String?, component: ServerDrivenComponent) {
         val transition = getFragmentTransitionAnimation()
-        supportFragmentManager
+        fragmentManager
             .beginTransaction()
             .setCustomAnimations(
                 transition.enter,
@@ -378,8 +235,83 @@ abstract class BeagleActivity : AppCompatActivity() {
                 transition.popEnter,
                 transition.popExit
             )
-            .replace(getServerDrivenContainerId(), BeagleFragment.newInstance(component, screenName))
+            .replace(
+                getServerDrivenContainerId(),
+                BeagleFragment.newInstance(
+                    component,
+                    screenName,
+                    navigationContext,
+                )
+            )
             .addToBackStack(screenName)
             .commit()
+    }
+
+    companion object {
+        private val beagleSerializer: BeagleSerializer = BeagleSerializer()
+        internal const val FIRST_SCREEN_REQUEST_KEY = "FIRST_SCREEN_REQUEST_KEY"
+        internal const val FIRST_SCREEN_KEY = "FIRST_SCREEN_KEY"
+        internal const val NAVIGATION_CONTEXT_KEY = "NAVIGATION_CONTEXT_KEY"
+
+        fun bundleOf(
+            requestData: RequestData,
+            navigationContext: NavigationContext? = null,
+        ): Bundle {
+            return Bundle(2).apply {
+                putParcelable(FIRST_SCREEN_REQUEST_KEY, requestData)
+                putParcelable(NAVIGATION_CONTEXT_KEY, navigationContext)
+            }
+        }
+
+        internal fun bundleOf(
+            requestData: RequestData,
+            fallbackScreen: Screen,
+            navigationContext: NavigationContext? = null,
+        ): Bundle {
+            return Bundle(3).apply {
+                putParcelable(FIRST_SCREEN_REQUEST_KEY, requestData)
+                putParcelable(NAVIGATION_CONTEXT_KEY, navigationContext)
+                putString(FIRST_SCREEN_KEY, beagleSerializer.serializeComponent(fallbackScreen))
+            }
+        }
+
+        internal fun bundleOf(
+            screen: Screen,
+            navigationContext: NavigationContext? = null,
+        ): Bundle {
+            return Bundle(2).apply {
+                putString(FIRST_SCREEN_KEY, beagleSerializer.serializeComponent(screen))
+                putParcelable(NAVIGATION_CONTEXT_KEY, navigationContext)
+            }
+        }
+
+        fun bundleOf(
+            screenJson: String,
+            navigationContext: NavigationContext? = null,
+        ): Bundle {
+            return Bundle(2).apply {
+                putString(FIRST_SCREEN_KEY, screenJson)
+                putParcelable(NAVIGATION_CONTEXT_KEY, navigationContext)
+            }
+        }
+
+        internal fun bundleOf(navigationContext: NavigationContext): Bundle {
+            return Bundle(1).apply {
+                putParcelable(NAVIGATION_CONTEXT_KEY, navigationContext)
+            }
+        }
+    }
+}
+
+internal class BeagleActivityContract : ActivityResultContract<Intent, NavigationContext?>() {
+
+    override fun createIntent(context: Context, intent: Intent?): Intent {
+        return intent ?: Intent(context, BeagleActivity::class.java)
+    }
+
+    override fun parseResult(resultCode: Int, intent: Intent?): NavigationContext? {
+        val data = intent?.getParcelableExtra<NavigationContext>(BeagleActivity.NAVIGATION_CONTEXT_KEY)
+        return if (resultCode == Activity.RESULT_OK && data != null) data
+        else null
     }
 }

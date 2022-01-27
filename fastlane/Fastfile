@@ -4,24 +4,6 @@
 
 platform :android do
 
-  private_lane :sonarqube_token_available? do
-    sonarqube = ENV["SONAR_TOKEN"]
-    !(sonarqube.nil? || sonarqube.empty?)
-  end
-
-  desc "Pull Request verification"
-  lane :pull_request_verification do
-    gradle(task: "clean")
-    gradle(task: "detekt")
-    gradle(task: "lintDebug")
-    gradle(task: "jacocoDebugTestReport")
-    gradle(task: "jacocoRootReport")
-    gradle(task: "sample:assembleDebug")
-    if sonarqube_token_available?
-      gradle(task: "sonarqube")
-    end
-  end
-
   desc "Deploy current code to stage"
   lane :deploy_to_stage do
     gradle(task: "assemble")
@@ -100,27 +82,6 @@ private_lane :release_notes do |params|
   "\nRelease notes #{params[:versionDeploy]}
    \nChanges:
    \n#{changelog}"
-end
-
-private_lane :danger_token_available? do
-  danger = ENV["GITHUB_TOKEN"]
-  !(danger.nil? || danger.empty?)
-end
-
-after_all do |lane, options|
-  if lane == :pull_request_verification
-    if danger_token_available?
-      run_danger
-    end
-  end
-end
-
-error do |lane, exception, options|
-  if lane == :pull_request_verification
-    if danger_token_available?
-      run_danger
-    end
-  end
 end
 
 # input: 1.2.0; output: 1.1.0
