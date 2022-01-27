@@ -19,12 +19,12 @@ package br.com.zup.beagle.android.action
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewParent
-import br.com.zup.beagle.newanalytics.ActionAnalyticsConfig
+import br.com.zup.beagle.android.analytics.ActionAnalyticsConfig
 import br.com.zup.beagle.android.components.form.SimpleForm
-import br.com.zup.beagle.android.components.utils.beagleComponent
 import br.com.zup.beagle.android.logger.BeagleMessageLogs
+import br.com.zup.beagle.android.utils.beagleComponent
 import br.com.zup.beagle.android.widget.RootView
-import br.com.zup.beagle.core.BeagleJson
+import br.com.zup.beagle.android.widget.core.BeagleJson
 
 /**
  * SubmitForm and a specific action of the SimpleForm component when executing it calls SimpleForm's onSubmit attribute.

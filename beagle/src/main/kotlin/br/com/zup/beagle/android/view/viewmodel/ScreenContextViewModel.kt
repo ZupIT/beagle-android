@@ -42,11 +42,15 @@ internal class ScreenContextViewModel(
         contextDataManager.addContext(view, contextData, shouldOverrideExistingContext)
     }
 
+    fun addContext(view: View, contextDataList: List<ContextData>, shouldOverrideExistingContext: Boolean = false) {
+        contextDataManager.addContext(view, contextDataList, shouldOverrideExistingContext)
+    }
+
     fun restoreContext(view: View) {
         contextDataManager.restoreContext(view)
     }
 
-    fun getContextData(view: View) = contextDataManager.getContextData(view)
+    fun getListContextData(view: View) = contextDataManager.getListContextData(view)
 
     fun updateContext(originView: View, setContextInternal: SetContextInternal) {
         contextDataManager.updateContext(originView, setContextInternal)
@@ -89,4 +93,11 @@ internal class ScreenContextViewModel(
         super.onCleared()
         clearContexts()
     }
+
+    fun tryLinkContextInBindWithoutContext(originView: View) {
+        contextDataManager.tryLinkContextInBindWithoutContext(originView)
+
+    }
+
+    fun getContextData(contextDataId: String): ContextData? = contextDataManager.getContextData(contextDataId)
 }

@@ -65,7 +65,6 @@ internal class BeagleSetupTest {
 
     }
 
-
     @DisplayName("When build application with empty annotations")
     @Nested
     inner class InvalidBeagleSetup {
@@ -78,7 +77,7 @@ internal class BeagleSetupTest {
 
             // THEN
             Assertions.assertEquals(KotlinCompilation.ExitCode.OK, compilationResult.exitCode)
-            Assertions.assertEquals(compilationResult.generatedFiles.size, 1)
+            Assertions.assertEquals(compilationResult.generatedFiles.size, 2)
         }
 
     }

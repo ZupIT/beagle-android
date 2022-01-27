@@ -27,7 +27,7 @@ internal class JsonPathFinder {
     tailrec fun find(nextKeys: LinkedList<String>, value: Any?): Any? {
         if (nextKeys.isEmpty()) return value
 
-        val currentKey = nextKeys.poll()
+        val currentKey = nextKeys.poll() ?: ""
 
         val childValue = if (currentKey.endsWith("]")) {
             if (value is JSONArray) {

@@ -25,17 +25,19 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExperimentalCoroutinesApi
 @ExtendWith(InstantExecutorExtension::class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class AsyncActionViewModelTest {
 
     private val observer = mockk<Observer<AsyncActionData>>()
 
-    @BeforeEach
+    @BeforeAll
     fun setUp() {
         every { observer.onChanged(any()) } just Runs
     }

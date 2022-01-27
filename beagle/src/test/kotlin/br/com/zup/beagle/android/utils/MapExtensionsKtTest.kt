@@ -17,8 +17,8 @@
 package br.com.zup.beagle.android.utils
 
 import br.com.zup.beagle.android.testutil.RandomData
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 
 internal class MapExtensionsKtTest {
 

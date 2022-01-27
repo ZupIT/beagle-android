@@ -36,6 +36,11 @@ internal class OnInitViewModel : ViewModel() {
         }
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        markToRerun()
+    }
+
     fun setOnInitFinished(onInitiableViewId: Int, onInitFinished: Boolean) {
         val onInitStatus = onInitStatusByViewId[onInitiableViewId]
         onInitStatus?.let {

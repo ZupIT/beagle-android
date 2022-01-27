@@ -65,6 +65,7 @@ android {
 dependencies {
     implementation Dependencies.AndroidxLibraries.appcompat
     implementation Dependencies.GeneralLibraries.webSocket
+    implementation Dependencies.GeneralLibraries.slf4jSimple
 
     implementation project(Dependencies.Modules.core)
 
@@ -80,7 +81,7 @@ dependencies {
     testImplementation Dependencies.TestLibraries.testExt
     testImplementation Dependencies.TestLibraries.testCore
     testImplementation Dependencies.TestLibraries.testRules
-    testImplementation Dependencies.GeneralLibraries.yoga
+
 }
 
 apply from: "$rootDir/maven-publish.gradle"

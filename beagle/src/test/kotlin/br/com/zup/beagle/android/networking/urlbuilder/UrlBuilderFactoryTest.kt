@@ -22,16 +22,15 @@ import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import org.junit.jupiter.api.Test
 import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 
 class UrlBuilderFactoryTest : BaseTest() {
 
-    @InjectMockKs
-    private lateinit var urlBuilderFactory: UrlBuilderFactory
+    private val urlBuilderFactory = UrlBuilderFactory()
 
-    @MockK
-    private lateinit var urlBuilder: UrlBuilder
+    private val urlBuilder: UrlBuilder = mockk()
 
     @Test
     fun make_should_return_default_builder() {

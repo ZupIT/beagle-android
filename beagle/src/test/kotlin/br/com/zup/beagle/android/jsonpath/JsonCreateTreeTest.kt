@@ -185,7 +185,7 @@ class JsonCreateTreeTest {
         val newValue = RandomData.double()
 
         // When
-        val result = JsonCreateTree().walkingTreeAndFindKey(jsonObject, keys, newValue)
+        JsonCreateTree().walkingTreeAndFindKey(jsonObject, keys, newValue)
 
         // Then
         val actualValue = jsonObject.getJSONObject("b")
@@ -221,7 +221,7 @@ class JsonCreateTreeTest {
         }
 
         // When
-        val result = JsonCreateTree().walkingTreeAndFindKey(jsonObject, keys, newJsonObject)
+        JsonCreateTree().walkingTreeAndFindKey(jsonObject, keys, newJsonObject)
 
         // Then
         val actualValue = jsonObject.getJSONObject("b").getJSONArray("h").getJSONObject(0)

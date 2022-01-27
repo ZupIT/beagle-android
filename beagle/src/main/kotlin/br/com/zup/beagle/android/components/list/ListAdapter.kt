@@ -32,12 +32,11 @@ import br.com.zup.beagle.android.data.serializer.BeagleSerializer
 import br.com.zup.beagle.android.utils.setIsAutoGenerateIdEnabled
 import br.com.zup.beagle.android.utils.toAndroidId
 import br.com.zup.beagle.android.view.ViewFactory
-import br.com.zup.beagle.core.ServerDrivenComponent
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 
 @Suppress("LongParameterList")
 internal class ListAdapter(
     val orientation: Int,
-    val template: ServerDrivenComponent?,
     val iteratorName: String,
     val key: String? = null,
     val listViewModels: ListViewModels,
@@ -48,7 +47,9 @@ internal class ListAdapter(
     // Recyclerview id for post config changes id management
     private var recyclerId = View.NO_ID
 
+    // Parent list information needed by inner lists
     private var parentListViewSuffix: String? = null
+    private var parentListViewId: Int? = null
 
     // Serializer to provide new template instances
     private val serializer = BeagleSerializer()
@@ -61,9 +62,6 @@ internal class ListAdapter(
 
     // Struct to manage created ViewHolders
     private val createdViewHolders = mutableListOf<ListViewHolder>()
-
-    // Each access generate a new instance of the template to avoid reference conflict
-    private val templateJson = template?.let { serializer.serializeComponent(it) }
 
     // Each access generate a new instance of the template to avoid reference conflict
     private val templateJsonList = templateList?.let {
@@ -129,8 +127,9 @@ internal class ListAdapter(
         }
     }
 
-    fun setParentSuffix(itemSuffix: String) {
+    fun setParentAttributes(itemSuffix: String, parentListId: Int) {
         parentListViewSuffix = itemSuffix
+        parentListViewId = parentListId
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -164,7 +163,7 @@ internal class ListAdapter(
     }
 
     private fun getTemplateByViewType(viewType: Int): String {
-        return templateJsonList?.getOrNull(viewType)?.viewJson ?: (templateJson ?: NOT_FOUND_TEMPLATE)
+        return templateJsonList?.getOrNull(viewType)?.viewJson ?: NOT_FOUND_TEMPLATE
     }
 
     private fun getDefaultTemplateIndex(): Int {
@@ -272,21 +271,21 @@ internal class ListAdapter(
     }
 
     private fun createTempId(): Int {
-        recyclerId = listViewModels
-            .generateIdViewModel
-            .getViewId(
-                listViewModels
-                    .rootView
-                    .getParentId()
-            )
-
+        recyclerId = if (parentListViewSuffix != null && parentListViewId != null) {
+            listViewModels
+                .listViewIdViewModel
+                .getViewId(parentListViewId!!, parentListViewSuffix!!.toInt())
+        } else {
+            listViewModels
+                .generateIdViewModel
+                .getViewId(listViewModels.rootView.getParentId())
+        }
         return recyclerId
     }
 
     fun clone(): ListAdapter {
         return ListAdapter(
             this.orientation,
-            this.template,
             this.iteratorName,
             this.key,
             this.listViewModels,

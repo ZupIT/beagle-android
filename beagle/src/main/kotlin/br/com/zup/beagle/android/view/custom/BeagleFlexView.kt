@@ -19,8 +19,8 @@ package br.com.zup.beagle.android.view.custom
 import android.annotation.SuppressLint
 import android.view.View
 import br.com.zup.beagle.android.widget.RootView
-import br.com.zup.beagle.core.ServerDrivenComponent
-import br.com.zup.beagle.core.Style
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
+import br.com.zup.beagle.android.widget.core.Style
 
 /**
  *  The Beagle Flex View is a view group that support style options

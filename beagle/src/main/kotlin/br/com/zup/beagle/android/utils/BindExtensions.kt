@@ -64,6 +64,8 @@ private fun <T> evaluateBind(
     caller: Action?,
     observes: Observer<T?>?,
 ): T? {
+
+    @Suppress("UNCHECKED_CAST")
     return try {
         when (bind) {
             is Bind.Expression -> evaluateExpression(rootView, view, bind, observes, caller)
@@ -84,6 +86,7 @@ private fun <T> evaluateExpression(
 ): T? {
     val viewModel = rootView.generateViewModelInstance<ScreenContextViewModel>()
     return if (caller != null) {
+        @Suppress("UNCHECKED_CAST")
         viewModel.evaluateExpressionForImplicitContext(view, caller, bind) as? T?
     } else {
         observes?.let {

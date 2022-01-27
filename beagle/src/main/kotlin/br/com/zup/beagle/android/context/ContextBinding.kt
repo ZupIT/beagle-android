@@ -26,6 +26,7 @@ internal data class Binding<T>(
 ) {
     fun notifyChanges(value: Any?) {
         try {
+            @Suppress("UNCHECKED_CAST")
             observer.invoke(value as T)
         } catch (ex: ClassCastException) {
             observer.invoke(null)

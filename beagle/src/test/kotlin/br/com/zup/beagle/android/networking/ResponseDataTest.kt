@@ -17,9 +17,10 @@
 package br.com.zup.beagle.android.networking
 
 import io.mockk.mockk
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.jupiter.api.Test
-
-import org.junit.Assert.*
 
 class ResponseDataTest {
 
