@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2021 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,12 +26,15 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.verify
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 @DisplayName("Given an Analytics View Model")
+@ExperimentalCoroutinesApi
 class AnalyticsViewModelTest : BaseTest() {
 
     private val analyticsViewModel = AnalyticsViewModel()
@@ -51,7 +54,7 @@ class AnalyticsViewModelTest : BaseTest() {
 
         @DisplayName("Should call Analytics Service with correct parameters")
         @Test
-        fun testCreateActionReportShouldCallCorrectFun() {
+        fun testCreateActionReportShouldCallCorrectFun() = runBlockingTest {
             //given
             every {
                 AnalyticsService.createActionRecord(
@@ -78,7 +81,7 @@ class AnalyticsViewModelTest : BaseTest() {
 
         @DisplayName("Should call Analytics Service with correct parameters")
         @Test
-        fun testCreateScreenReportShouldCallCorrectFun() {
+        fun testCreateScreenReportShouldCallCorrectFun() = runBlockingTest {
             //given
             every { AnalyticsService.createScreenRecord("screenId") } just Runs
 
