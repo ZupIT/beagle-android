@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,12 +25,10 @@ import android.util.TypedValue
 import android.view.View
 import br.com.zup.beagle.R
 import br.com.zup.beagle.android.components.Button
-import br.com.zup.beagle.android.components.TabView
 import br.com.zup.beagle.android.components.Text
-import br.com.zup.beagle.android.components.utils.applyViewBackgroundAndCorner
 import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.setup.DesignSystem
-import br.com.zup.beagle.core.StyleComponent
+import br.com.zup.beagle.android.widget.core.StyleComponent
 
 class StyleManager(
     private val designSystem: DesignSystem? = BeagleEnvironment.beagleSdk.designSystem,
@@ -43,7 +41,6 @@ class StyleManager(
         } else when (component) {
             is Text -> applyStyleId(view, component)
             is Button -> applyStyleId(view, component)
-            is TabView -> applyStyleId(view, component)
             else -> {
                 val colorInt = fetchDrawableColor(view.background)
                 view.applyViewBackgroundAndCorner(colorInt, component)
@@ -56,7 +53,8 @@ class StyleManager(
         view.applyViewBackgroundAndCorner(colorInt, component)
     }
 
-    private fun fetchDrawableColor(background: Drawable? = null) = (background as? ColorDrawable)?.color
+    private fun fetchDrawableColor(background: Drawable? = null) =
+        (background as? ColorDrawable)?.color
 
     fun getTypedValueByResId(resId: Int, context: Context): TypedValue {
         context.theme.resolveAttribute(resId, typedValue, true)
@@ -64,7 +62,10 @@ class StyleManager(
     }
 
     fun getTabBarTypedArray(context: Context, styleId: String?): TypedArray {
-        return context.obtainStyledAttributes(getTabViewStyle(styleId), R.styleable.BeagleTabBarStyle)
+        return context.obtainStyledAttributes(
+            getTabViewStyle(styleId),
+            R.styleable.BeagleTabBarStyle
+        )
     }
 
     fun getButtonStyle(styleId: String?) = designSystem?.buttonStyle(styleId ?: "") ?: 0

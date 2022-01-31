@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,18 +18,17 @@ package br.com.zup.beagle.android.components
 
 import android.widget.FrameLayout
 import br.com.zup.beagle.android.action.Action
-import br.com.zup.beagle.android.components.utils.styleManagerFactory
 import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.context.ContextData
-import br.com.zup.beagle.android.extensions.once
 import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.utils.Observer
 import br.com.zup.beagle.android.utils.StyleManager
 import br.com.zup.beagle.android.utils.handleEvent
 import br.com.zup.beagle.android.utils.observeBindChanges
+import br.com.zup.beagle.android.utils.styleManagerFactory
 import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.view.custom.BeagleTabLayout
-import br.com.zup.beagle.core.Style
+import br.com.zup.beagle.android.widget.core.Style
 import com.google.android.material.tabs.TabLayout
 import io.mockk.Runs
 import io.mockk.every
@@ -40,7 +39,7 @@ import io.mockk.slot
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 
 private const val DEFAULT_STYLE = "DummyStyle"
@@ -60,7 +59,7 @@ class TabBarTest : BaseComponentTest() {
 
     private lateinit var tabBar: TabBar
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
         mockkStatic("br.com.zup.beagle.android.utils.WidgetExtensionsKt")
@@ -173,7 +172,13 @@ class TabBarTest : BaseComponentTest() {
         val tabMocked = mockk<TabLayout.Tab>()
         every { tabMocked.position } returns 0
         every {
-            tabBar.handleEvent(rootView, tabLayout, onTabSelection, ContextData("onTabSelection", 0), "onTabSelected")
+            tabBar.handleEvent(
+                rootView,
+                tabLayout,
+                onTabSelection,
+                ContextData("onTabSelection", 0),
+                "onTabSelected"
+            )
         } just Runs
 
         //WHEN
@@ -181,8 +186,14 @@ class TabBarTest : BaseComponentTest() {
         onTabSelectedSlot.captured.onTabSelected(tabMocked)
 
         //THEN
-        verify(exactly = once()) {
-            tabBar.handleEvent(rootView, tabLayout, onTabSelection, ContextData("onTabSelection", 0), "onTabSelected")
+        verify(exactly = 1) {
+            tabBar.handleEvent(
+                rootView,
+                tabLayout,
+                onTabSelection,
+                ContextData("onTabSelection", 0),
+                "onTabSelected"
+            )
         }
     }
 
@@ -205,6 +216,6 @@ class TabBarTest : BaseComponentTest() {
         currentTabSlot.captured.invoke(1)
 
         //THEN
-        verify(exactly = once()) { tabLayout.getTabAt(1)?.select() }
+        verify(exactly = 1) { tabLayout.getTabAt(1)?.select() }
     }
 }

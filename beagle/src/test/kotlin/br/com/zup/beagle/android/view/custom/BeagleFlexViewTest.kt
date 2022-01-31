@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,11 +18,21 @@ package br.com.zup.beagle.android.view.custom
 
 import android.view.View
 import br.com.zup.beagle.android.BaseTest
-import br.com.zup.beagle.core.ServerDrivenComponent
-import br.com.zup.beagle.core.Style
+import br.com.zup.beagle.android.setup.BeagleEnvironment
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
+import br.com.zup.beagle.android.widget.core.Style
 import com.facebook.yoga.YogaNode
 import com.facebook.yoga.YogaNodeFactory
-import io.mockk.*
+import io.mockk.Runs
+import io.mockk.clearMocks
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.mockkStatic
+import io.mockk.spyk
+import io.mockk.verify
+import io.mockk.verifyOrder
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -35,13 +45,19 @@ internal class BeagleFlexViewTest : BaseTest() {
 
     private lateinit var beagleFlexView: BeagleFlexView
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
+        every { BeagleEnvironment.application } returns mockk(relaxed = true)
 
         mockYoga()
 
         beagleFlexView = spyk(BeagleFlexView(rootView, styleMock))
+    }
+
+    @BeforeEach
+    fun clear(){
+        clearMocks(beagleFlexView, answers = false)
     }
 
     @DisplayName("When call add view with style")
@@ -127,7 +143,12 @@ internal class BeagleFlexViewTest : BaseTest() {
             beagleFlexView.addView(list, addLayoutChangeListener)
 
             // Then
-            verify(exactly = 0) { beagleFlexView.addServerDrivenComponent(any(), addLayoutChangeListener) }
+            verify(exactly = 0) {
+                beagleFlexView.addServerDrivenComponent(
+                    any(),
+                    addLayoutChangeListener
+                )
+            }
         }
     }
 

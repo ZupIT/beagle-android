@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,25 +22,20 @@ internal object BeagleLoggerProxy : BeagleLogger {
 
     internal var logger: BeagleLogger? = BeagleEnvironment.beagleSdk.logger
 
-    override fun warning(message: String) = runIfEnable {
+    override fun warning(message: String) {
         logger?.warning(message)
     }
 
-    override fun error(message: String) = runIfEnable {
+    override fun error(message: String) {
         logger?.error(message)
     }
 
-    override fun error(message: String, throwable: Throwable) = runIfEnable {
+    override fun error(message: String, throwable: Throwable) {
         logger?.error(message, throwable)
     }
 
-    override fun info(message: String) = runIfEnable {
+    override fun info(message: String) {
         logger?.info(message)
     }
 
-    private fun runIfEnable(runBlock: () -> Unit) {
-        if (BeagleEnvironment.beagleSdk.config.isLoggingEnabled) {
-            runBlock()
-        }
-    }
 }

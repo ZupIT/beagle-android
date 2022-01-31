@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,115 +18,179 @@
 package br.com.zup.beagle.android.data
 
 import br.com.zup.beagle.android.BaseTest
-import br.com.zup.beagle.android.cache.BeagleCache
-import br.com.zup.beagle.android.cache.CacheManager
 import br.com.zup.beagle.android.data.serializer.BeagleSerializer
+import br.com.zup.beagle.android.exception.BeagleApiException
+import br.com.zup.beagle.android.networking.OnError
+import br.com.zup.beagle.android.networking.OnSuccess
+import br.com.zup.beagle.android.networking.RequestCall
 import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.networking.ResponseData
+import br.com.zup.beagle.android.networking.ViewClient
 import br.com.zup.beagle.android.testutil.RandomData
-import br.com.zup.beagle.core.ServerDrivenComponent
-import io.mockk.coEvery
-import io.mockk.coVerifySequence
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
+import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.verify
+import io.mockk.mockkStatic
+import io.mockk.slot
+import io.mockk.verifySequence
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
-private val URL = RandomData.string()
-private val REQUEST_DATA = RequestData(url = URL)
-
-@DisplayName("Given a Component Requester")
+@DisplayName("Given a ComponentRequester")
 @ExperimentalCoroutinesApi
 class ComponentRequesterTest : BaseTest() {
 
-    private val beagleApi: BeagleApi = mockk()
+    private val viewClient: ViewClient = mockk(relaxed = true)
     private val serializer: BeagleSerializer = mockk()
-    private val cacheManager: CacheManager = mockk()
-    private val beagleCache = mockk<BeagleCache>()
+    private val requestCall: RequestCall = mockk()
+    private val requestData: RequestData = mockk(relaxed = true)
+    private val requestDataCopy: RequestData = RequestData("/test")
+    private val responseData: ResponseData = mockk(relaxed = true)
+    private val onSuccessSlot = slot<OnSuccess>()
+    private val onErrorSlot = slot<OnError>()
+    val component = mockk<ServerDrivenComponent>()
 
     private lateinit var componentRequester: ComponentRequester
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
+        every { serializer.deserializeComponent(any()) } returns component
+        every { requestData.copy(any()) } returns requestDataCopy
 
-        componentRequester = ComponentRequester(
-            beagleApi,
-            serializer,
-            cacheManager
-        )
+        componentRequester = ComponentRequester(viewClient, serializer)
     }
 
-    @DisplayName("When beagleCache is not expired")
-    @Nested
-    inner class BeagleCacheIsNotExpiredTest {
-
-        @DisplayName("Then should deserialize cached json")
-        @Test
-        fun testDeserializeCachedJson() = runBlockingTest {
-            // Given
-            val component = mockk<ServerDrivenComponent>()
-            val jsonMock = "jsonMock"
-
-            every {
-                cacheManager.restoreBeagleCacheForUrl(REQUEST_DATA.url!!)
-            } returns beagleCache
-            every { beagleCache.isExpired() } returns false
-            every { beagleCache.json } returns jsonMock
-            every { serializer.deserializeComponent(jsonMock) } returns component
-
-            // When
-            val actualComponent = componentRequester.fetchComponent(REQUEST_DATA)
-
-            // Then
-            verify { serializer.deserializeComponent(jsonMock) }
-            assertEquals(component, actualComponent)
-        }
-
+    @BeforeEach
+    fun clear() {
+        clearMocks(viewClient, serializer, answers = false)
     }
 
-    @DisplayName("When beagleCache is expired")
+    @DisplayName("When fetchComponent is called")
     @Nested
-    inner class BeagleCacheIsExpiredTest {
+    inner class FetchComponent {
 
-        @DisplayName("Then sohuld fetch from api and deserialize this new json")
+        @DisplayName("Then it should call fetch and deserializeComponent with success")
         @Test
-        fun testDeserializeCachedJson() = runBlockingTest {
+        fun testFetchComponentSuccess() = runBlockingTest {
             // Given
-            val newRequestDataMock = mockk<RequestData>()
-            val requestDataMock = mockk<RequestData>()
-            val responseDataMock = mockk<ResponseData>()
-            val newJsonMock = "newJsonMock"
-            val expected = mockk<ServerDrivenComponent>()
-
-            every { cacheManager.restoreBeagleCacheForUrl(REQUEST_DATA.url!!) } returns beagleCache
-            every { beagleCache.isExpired() } returns true
-            every { cacheManager.requestDataWithCache(REQUEST_DATA, beagleCache) } returns newRequestDataMock
-            coEvery { beagleApi.fetchData(newRequestDataMock) } returns responseDataMock
-            every { cacheManager.handleResponseData(REQUEST_DATA.url!!, beagleCache, responseDataMock) } returns newJsonMock
-            every { serializer.deserializeComponent(newJsonMock) } returns expected
-
-            // When
-            val result = componentRequester.fetchComponent(REQUEST_DATA)
-
-            //Then
-            coVerifySequence {
-                cacheManager.restoreBeagleCacheForUrl(REQUEST_DATA.url!!)
-                cacheManager.requestDataWithCache(REQUEST_DATA, beagleCache)
-                beagleApi.fetchData(newRequestDataMock)
-                cacheManager.handleResponseData(REQUEST_DATA.url!!, beagleCache, responseDataMock)
-                serializer.deserializeComponent(newJsonMock)
+            every { viewClient.fetch(requestDataCopy, capture(onSuccessSlot), any()) } answers {
+                onSuccessSlot.captured(responseData)
+                requestCall
             }
 
-            assertEquals(expected, result)
+            // When
+            val fetchedComponent = componentRequester.fetchComponent(requestData)
+
+            // Then
+            verifySequence {
+                viewClient.fetch(requestDataCopy, onSuccessSlot.captured, any())
+                serializer.deserializeComponent(any())
+            }
+            assertEquals(component, fetchedComponent)
         }
 
+        @DisplayName("Then it should call fetch and deserializeComponent with error")
+        @Test
+        fun testFetchComponentError() = runBlockingTest {
+            // Given
+            every { viewClient.fetch(requestDataCopy, any(), capture(onErrorSlot)) } answers {
+                onErrorSlot.captured(responseData)
+                requestCall
+            }
+
+            // When
+            val fetchedComponent = componentRequester.fetchComponent(requestData)
+
+            // Then
+            verifySequence {
+                viewClient.fetch(requestDataCopy, any(), onErrorSlot.captured)
+                serializer.deserializeComponent(any())
+            }
+            assertEquals(component, fetchedComponent)
+        }
+
+        @DisplayName("Then it should call fetch with exception")
+        @Test
+        fun testFetchComponentException() = runBlockingTest {
+            // Given
+            val exception = BeagleApiException(responseData, requestData)
+
+            // When
+            every { viewClient.fetch(requestDataCopy, any(), any()) } throws exception
+
+            // Then
+            assertThrows<BeagleApiException> {
+                componentRequester.fetchComponent(requestData)
+            }
+        }
     }
 
+    @DisplayName("When prefetchComponent is called")
+    @Nested
+    inner class PrefetchComponent {
+
+        @DisplayName("Then it should call prefetch and deserializeComponent with success")
+        @Test
+        fun testPrefetchComponentSuccess() = runBlockingTest {
+            // Given
+            every { viewClient.prefetch(requestDataCopy, capture(onSuccessSlot), any()) } answers {
+                onSuccessSlot.captured(responseData)
+                requestCall
+            }
+
+            // When
+            val prefetchedComponent = componentRequester.prefetchComponent(requestData)
+
+            // Then
+            verifySequence {
+                viewClient.prefetch(requestDataCopy, onSuccessSlot.captured, any())
+                serializer.deserializeComponent(any())
+            }
+            assertEquals(component, prefetchedComponent)
+        }
+
+        @DisplayName("Then it should call prefetch and deserializeComponent with error")
+        @Test
+        fun testPrefetchComponentError() = runBlockingTest {
+            // Given
+            every { viewClient.prefetch(requestDataCopy, any(), capture(onErrorSlot)) } answers {
+                onErrorSlot.captured(responseData)
+                requestCall
+            }
+
+            // When
+            val prefetchedComponent = componentRequester.prefetchComponent(requestData)
+
+            // Then
+            verifySequence {
+                viewClient.prefetch(requestDataCopy, any(), onErrorSlot.captured)
+                serializer.deserializeComponent(any())
+            }
+            assertEquals(component, prefetchedComponent)
+        }
+
+        @DisplayName("Then it should call prefetch with exception")
+        @Test
+        fun testPrefetchComponentException() = runBlockingTest {
+            // Given
+            val exception = BeagleApiException(responseData, requestData)
+
+            // When
+            every { viewClient.prefetch(requestDataCopy, any(), any()) } throws exception
+
+            // Then
+            assertThrows<BeagleApiException> {
+                componentRequester.prefetchComponent(requestData)
+            }
+        }
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,14 @@
 
 package br.com.zup.beagle.android.engine.mapper
 
-import br.com.zup.beagle.core.Display
-import br.com.zup.beagle.core.PositionType
-import br.com.zup.beagle.widget.core.AlignContent
-import br.com.zup.beagle.widget.core.AlignItems
-import br.com.zup.beagle.widget.core.AlignSelf
-import br.com.zup.beagle.widget.core.FlexDirection
-import br.com.zup.beagle.widget.core.FlexWrap
-import br.com.zup.beagle.widget.core.JustifyContent
+import br.com.zup.beagle.android.widget.core.Display
+import br.com.zup.beagle.android.widget.core.PositionType
+import br.com.zup.beagle.android.widget.core.AlignContent
+import br.com.zup.beagle.android.widget.core.AlignItems
+import br.com.zup.beagle.android.widget.core.AlignSelf
+import br.com.zup.beagle.android.widget.core.FlexDirection
+import br.com.zup.beagle.android.widget.core.FlexWrap
+import br.com.zup.beagle.android.widget.core.JustifyContent
 import com.facebook.yoga.YogaAlign
 import com.facebook.yoga.YogaDisplay
 import com.facebook.yoga.YogaFlexDirection

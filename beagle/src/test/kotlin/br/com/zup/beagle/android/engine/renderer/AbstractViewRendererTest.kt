@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 package br.com.zup.beagle.android.engine.renderer
 
 import android.view.View
-import androidx.lifecycle.ViewModelProvider
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.components.utils.ComponentStylization
 import br.com.zup.beagle.android.context.ContextComponentHandler
@@ -25,14 +24,16 @@ import br.com.zup.beagle.android.testutil.RandomData
 import br.com.zup.beagle.android.view.viewmodel.GenerateIdViewModel
 import br.com.zup.beagle.android.view.viewmodel.ScreenContextViewModel
 import br.com.zup.beagle.android.widget.RootView
-import br.com.zup.beagle.widget.Widget
+import br.com.zup.beagle.android.widget.Widget
 import io.mockk.Runs
+import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.spyk
 import io.mockk.verify
 import io.mockk.verifySequence
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -56,18 +57,29 @@ class AbstractViewRendererTest : BaseTest() {
 
     private lateinit var viewRenderer: AbstractViewRenderer
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
 
-        prepareViewModelMock(generateIdViewModel)
-        every { anyConstructed<ViewModelProvider>().get(contextViewModel::class.java) } returns contextViewModel
+        prepareViewModelMock(generateIdViewModel, contextViewModel)
 
-        viewRenderer = spyk(AbstractViewRenderer(
-            component,
+        viewRenderer = spyk(
+            AbstractViewRenderer(
+                component,
+                componentStylization,
+                contextViewRenderer
+            )
+        )
+    }
+
+    @BeforeEach
+    fun clear() {
+        clearMocks(
+            rootView,
             componentStylization,
-            contextViewRenderer
-        ))
+            contextViewRenderer,
+            answers = false
+        )
     }
 
     @Test

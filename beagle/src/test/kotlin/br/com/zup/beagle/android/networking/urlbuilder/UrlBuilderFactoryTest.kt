@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,16 +22,15 @@ import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import org.junit.jupiter.api.Test
 import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 
 class UrlBuilderFactoryTest : BaseTest() {
 
-    @InjectMockKs
-    private lateinit var urlBuilderFactory: UrlBuilderFactory
+    private val urlBuilderFactory = UrlBuilderFactory()
 
-    @MockK
-    private lateinit var urlBuilder: UrlBuilder
+    private val urlBuilder: UrlBuilder = mockk()
 
     @Test
     fun make_should_return_default_builder() {

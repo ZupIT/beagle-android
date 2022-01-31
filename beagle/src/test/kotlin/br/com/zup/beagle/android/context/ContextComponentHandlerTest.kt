@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,25 +17,22 @@
 package br.com.zup.beagle.android.context
 
 import android.view.View
-import androidx.lifecycle.ViewModelProvider
+import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.components.layout.Container
 import br.com.zup.beagle.android.view.viewmodel.ScreenContextViewModel
-import br.com.zup.beagle.android.widget.ActivityRootView
 import io.mockk.Runs
+import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
-import io.mockk.mockkConstructor
 import io.mockk.slot
-import io.mockk.unmockkAll
 import io.mockk.verify
-import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class ContextComponentHandlerTest {
+class ContextComponentHandlerTest : BaseTest() {
 
-    private val rootView = mockk<ActivityRootView>()
     private val view = mockk<View>(relaxed = true)
     private val viewModel = mockk<ScreenContextViewModel>(relaxed = true)
     private val component = mockk<Container>()
@@ -43,18 +40,16 @@ class ContextComponentHandlerTest {
 
     private val contextComponentHandler = ContextComponentHandler()
 
-    @BeforeEach
-    fun setUp() {
-        every { rootView.activity } returns mockk(relaxed = true)
+    @BeforeAll
+    override fun setUp() {
         every { rootView.getViewModelStoreOwner() } returns rootView.activity
         every { component.context } returns context
-        mockkConstructor(ViewModelProvider::class)
-        every { anyConstructed<ViewModelProvider>().get(ScreenContextViewModel::class.java) } returns viewModel
+        prepareViewModelMock(viewModel)
     }
 
-    @AfterEach
-    fun tearDown() {
-        unmockkAll()
+    @BeforeEach
+    fun clear() {
+        clearMocks(viewModel)
     }
 
     @Test

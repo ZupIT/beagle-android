@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,10 +21,12 @@ import android.view.ViewGroup
 import android.view.ViewParent
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.components.form.SimpleForm
-import br.com.zup.beagle.android.extensions.once
 import br.com.zup.beagle.android.logger.BeagleLoggerProxy
-import io.mockk.*
-import org.junit.jupiter.api.BeforeEach
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.verify
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 
 class SubmitFormTest : BaseTest() {
@@ -33,7 +35,7 @@ class SubmitFormTest : BaseTest() {
     private val parent = mockk<ViewGroup>()
     private val simpleForm = mockk<SimpleForm>(relaxed = true)
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
         every { beagleSdk.logger } returns null
@@ -50,7 +52,7 @@ class SubmitFormTest : BaseTest() {
         action.execute(rootView, view)
 
         // Then
-        verify(exactly = once()) { simpleForm.submit(rootView, view) }
+        verify(exactly = 1) { simpleForm.submit(rootView, view) }
     }
 
     @Test
@@ -62,7 +64,7 @@ class SubmitFormTest : BaseTest() {
         action.execute(rootView, view)
 
         // Then
-        verify(exactly = once()) {
+        verify(exactly = 1) {
             BeagleLoggerProxy.error("Not found simple form in the parents")
         }
     }

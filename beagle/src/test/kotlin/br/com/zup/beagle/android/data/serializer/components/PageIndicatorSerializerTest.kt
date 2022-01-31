@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,8 @@
 package br.com.zup.beagle.android.data.serializer.components
 
 import br.com.zup.beagle.android.components.page.PageIndicator
-import br.com.zup.beagle.android.data.serializer.BaseSerializerTest
 import br.com.zup.beagle.android.data.serializer.makeObjectPageIndicator
 import br.com.zup.beagle.android.data.serializer.makePageIndicatorJson
-import br.com.zup.beagle.core.ServerDrivenComponent
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -45,9 +43,18 @@ class PageIndicatorSerializerTest : BaseServerDrivenComponentSerializerTest() {
 
             // Then
             Assertions.assertNotNull(deserializedComponent)
-            Assertions.assertEquals(expectedComponent.selectedColor, deserializedComponent.selectedColor)
-            Assertions.assertEquals(expectedComponent.unselectedColor, deserializedComponent.unselectedColor)
-            Assertions.assertEquals(expectedComponent.numberOfPages, deserializedComponent.numberOfPages)
+            Assertions.assertEquals(
+                expectedComponent.selectedColor,
+                deserializedComponent.selectedColor
+            )
+            Assertions.assertEquals(
+                expectedComponent.unselectedColor,
+                deserializedComponent.unselectedColor
+            )
+            Assertions.assertEquals(
+                expectedComponent.numberOfPages,
+                deserializedComponent.numberOfPages
+            )
         }
     }
 

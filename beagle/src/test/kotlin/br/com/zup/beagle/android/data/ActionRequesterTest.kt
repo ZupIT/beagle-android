@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,88 +16,104 @@
 
 package br.com.zup.beagle.android.data
 
-import br.com.zup.beagle.android.action.Action
-import br.com.zup.beagle.android.data.serializer.BeagleSerializer
-import br.com.zup.beagle.android.data.serializer.makeActionFormLocalActionJson
-import br.com.zup.beagle.android.extensions.once
+import br.com.zup.beagle.android.BaseTest
+import br.com.zup.beagle.android.exception.BeagleApiException
+import br.com.zup.beagle.android.networking.HttpClient
+import br.com.zup.beagle.android.networking.OnError
+import br.com.zup.beagle.android.networking.OnSuccess
+import br.com.zup.beagle.android.networking.RequestCall
 import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.networking.ResponseData
-import br.com.zup.beagle.android.setup.BeagleEnvironment
-import io.mockk.MockKAnnotations
-import io.mockk.coEvery
-import io.mockk.coVerify
+import br.com.zup.beagle.android.utils.doRequest
 import io.mockk.every
-import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.mockk
-import io.mockk.mockkObject
 import io.mockk.mockkStatic
-import io.mockk.unmockkAll
+import io.mockk.slot
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
-private val JSON_SUCCESS = makeActionFormLocalActionJson()
-
+@DisplayName("Given an ActionRequester")
 @ExperimentalCoroutinesApi
-class ActionRequesterTest {
+class ActionRequesterTest : BaseTest() {
 
-    private val beagleApi: BeagleApi = mockk()
-    private val serializer: BeagleSerializer = mockk()
+    private val httpClient: HttpClient = mockk(relaxed = true)
+    private val requestCall: RequestCall = mockk()
+    private val requestData: RequestData = mockk()
+    private val responseData: ResponseData = mockk()
 
-    @InjectMockKs
-    private lateinit var actionRequester: ActionRequester
+    private val onSuccessSlot = slot<OnSuccess>()
+    private val onErrorSlot = slot<OnError>()
 
-    @BeforeEach
-    fun setUp() {
-        MockKAnnotations.init(this)
+    private val actionRequester = ActionRequester(httpClient)
 
-        mockkObject(BeagleEnvironment)
-        mockkStatic("br.com.zup.beagle.android.data.StringExtensionsKt")
+    @BeforeAll
+    override fun setUp() {
+        super.setUp()
+
+        mockkStatic("br.com.zup.beagle.android.utils.RequestDataExtensionsKt")
     }
 
-    @AfterEach
-    fun tearDown() {
-        unmockkAll()
-    }
+    @DisplayName("When fetchAction is called")
+    @Nested
+    inner class FetchAction {
 
-    @Test
-    fun `should action response when fetch action`() = runBlockingTest {
-        // Given
-        val action = mockk<Action>()
-        val responseData = mockk<ResponseData> {
-            every { data } returns JSON_SUCCESS.toByteArray()
+        @DisplayName("Then it should execute doRequest with success")
+        @Test
+        fun testDoRequestSuccess() = runBlockingTest {
+            // Given
+            every { requestData.doRequest(httpClient, capture(onSuccessSlot), any()) } answers {
+                onSuccessSlot.captured(responseData)
+                requestCall
+            }
+
+            // When
+            val response = actionRequester.fetchAction(requestData)
+
+            // Then
+            assertEquals(responseData, response)
+            verify(exactly = 1) { requestData.doRequest(httpClient, onSuccessSlot.captured, any()) }
         }
-        val requestData: RequestData = mockk()
 
-        every { any<String>().toRequestData() } returns requestData
+        @DisplayName("Then it should execute doRequest with error")
+        @Test
+        fun testDoRequestError() = runBlockingTest {
+            // Given
+            every { requestData.doRequest(httpClient, any(), capture(onErrorSlot)) } answers {
+                onErrorSlot.captured(responseData)
+                requestCall
+            }
 
-        coEvery { beagleApi.fetchData(requestData) } returns responseData
-        every { serializer.deserializeAction(JSON_SUCCESS) } returns action
+            // When
+            val exception = assertThrows<BeagleApiException> {
+                actionRequester.fetchAction(requestData)
+            }
 
-        // When
-        val actionResult = actionRequester.fetchAction("")
+            // Then
+            assertEquals(responseData, exception.responseData)
+            assertEquals(requestData, exception.requestData)
+            verify(exactly = 1) { requestData.doRequest(httpClient, any(), onErrorSlot.captured) }
+        }
 
-        // Then
-        verify(exactly = once()) { serializer.deserializeAction(JSON_SUCCESS) }
-        assertEquals(action, actionResult)
+        @DisplayName("Then it should execute doRequest with exception")
+        @Test
+        fun testDoRequestException() = runBlockingTest {
+            // Given
+            val exception = BeagleApiException(responseData, requestData)
+
+            // When
+            every { requestData.doRequest(httpClient, any(), any()) } throws exception
+
+            // Then
+            assertThrows<BeagleApiException> {
+                actionRequester.fetchAction(requestData)
+            }
+        }
     }
-
-    @Test
-    fun `should response data when fetch data`() = runBlockingTest {
-        // Given
-        val requestData: RequestData = mockk()
-        val responseData: ResponseData = mockk()
-        coEvery { beagleApi.fetchData(requestData) } returns responseData
-
-        // When
-        actionRequester.fetchData(requestData)
-
-        // Then
-        coVerify(exactly = once()) { beagleApi.fetchData(requestData) }
-    }
-
 }

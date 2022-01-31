@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,11 @@
 package br.com.zup.beagle.android.networking
 
 import br.com.zup.beagle.android.testutil.RandomData
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import java.net.URI
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class RequestDataTest {
 
@@ -30,21 +29,21 @@ class RequestDataTest {
 
     @BeforeEach
     fun setUp() {
-        requestData = RequestData(URI(RandomData.httpUrl()))
+        requestData = RequestData(url = RandomData.httpUrl())
     }
 
     @Test
     fun requestData_should_have_method_GET_as_default() {
-        assertEquals(HttpMethod.GET, requestData.method)
+        assertEquals(HttpMethod.GET, requestData.httpAdditionalData.method)
     }
 
     @Test
     fun requestData_should_have_empty_headers() {
-        assertTrue(requestData.headers.isEmpty())
+        assertEquals(requestData.httpAdditionalData.headers, FixedHeaders.headers)
     }
 
     @Test
     fun requestData_should_have_data_null() {
-        assertNull(requestData.body)
+        assertNull(requestData.httpAdditionalData.body)
     }
 }

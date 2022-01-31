@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package br.com.zup.beagle.android.operation.builtin.array
 
 import br.com.zup.beagle.android.operation.Operation
 import br.com.zup.beagle.android.operation.OperationType
-import br.com.zup.beagle.annotation.RegisterOperation
+import br.com.zup.beagle.android.annotation.RegisterOperation
 import org.json.JSONArray
 
 @RegisterOperation("insert")
@@ -34,28 +34,19 @@ internal class InsertOperation : Operation {
         return OperationType.TypeJsonArray(result)
     }
 
+
     private fun insertOnJSONArray(array: JSONArray, element: Any?, index: Int?): JSONArray {
-        if (index != null) {
-            return appendValueToJSONArray(array, element, index)
-        } else {
-            array.put(element)
-        }
-
-        return array
-    }
-
-    private fun appendValueToJSONArray(array: JSONArray, element: Any?, index: Int): JSONArray {
-        val newArray = JSONArray()
-        for (i in 0 until array.length()) {
-            if (i == index) {
-                newArray.put(element)
-                if (array[i] != null) {
-                    newArray.put(array[i])
+        return JSONArray().apply {
+            for (i in 0 until array.length()) {
+                if (i == index) {
+                    put(element)
                 }
-            } else {
-                newArray.put(array[i])
+                put(array[i])
+            }
+
+            if (index == null) {
+                put(element)
             }
         }
-        return newArray
     }
 }

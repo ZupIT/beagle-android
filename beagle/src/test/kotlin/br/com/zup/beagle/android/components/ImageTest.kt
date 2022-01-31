@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,17 +18,19 @@ package br.com.zup.beagle.android.components
 
 import android.widget.ImageView
 import br.com.zup.beagle.android.components.utils.RoundedImageView
+import br.com.zup.beagle.android.context.constant
 import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.testutil.RandomData
 import br.com.zup.beagle.android.utils.dp
 import br.com.zup.beagle.android.view.ViewFactory
-import br.com.zup.beagle.core.CornerRadius
-import br.com.zup.beagle.core.Style
-import br.com.zup.beagle.ext.applyStyle
-import br.com.zup.beagle.ext.unitReal
-import br.com.zup.beagle.widget.core.ImageContentMode
-import br.com.zup.beagle.widget.core.Size
+import br.com.zup.beagle.android.widget.core.CornerRadius
+import br.com.zup.beagle.android.widget.core.ImageContentMode
+import br.com.zup.beagle.android.widget.core.Size
+import br.com.zup.beagle.android.widget.core.Style
+import br.com.zup.beagle.android.widget.core.UnitType
+import br.com.zup.beagle.android.widget.core.UnitValue
 import io.mockk.Runs
+import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
@@ -38,6 +40,7 @@ import io.mockk.verify
 import io.mockk.verifyOrder
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -51,26 +54,46 @@ internal class ImageTest : BaseComponentTest() {
 
     private val imageView: RoundedImageView = mockk(relaxed = true, relaxUnitFun = true)
     private val scaleTypeSlot = slot<ImageView.ScaleType>()
-    private val style = Style(size = Size(width = 100.unitReal(), height = 100.unitReal()),
-        cornerRadius = CornerRadius(radius = 10.0))
+    private val styleLocal = Style(
+        size = Size(
+            width = UnitValue(constant(100.0), UnitType.REAL),
+            height = UnitValue(constant(100.0), UnitType.REAL)
+        ),
+        cornerRadius = CornerRadius(radius = constant(10.0))
+    )
 
     private lateinit var imageLocal: Image
     private lateinit var imageRemote: Image
     private val scaleType = ImageView.ScaleType.FIT_CENTER
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
 
         mockkStatic("br.com.zup.beagle.android.utils.NumberExtensionsKt")
 
-        every { ViewFactory.makeImageView(rootView.getContext(), any()) } returns imageView
+        every { ViewFactory.makeImageView(rootView, any()) } returns imageView
         every { beagleSdk.designSystem } returns mockk(relaxed = true)
         every { beagleSdk.designSystem!!.image(any()) } returns IMAGE_RES
         every { 10.0.dp() } returns 20.0
+    }
 
-        imageLocal = Image(ImagePath.Local("imageName"))
-        imageRemote = Image(ImagePath.Remote(DEFAULT_URL, ImagePath.Local("imageName"))).applyStyle(style)
+    @BeforeEach
+    fun clear() {
+        clearMocks(imageView, answers = false)
+        mockBeagleEnvironment()
+        imageLocal = Image(constant(ImagePath.Local("imageName")))
+        imageRemote =
+            Image(
+                constant(
+                    ImagePath.Remote(
+                        DEFAULT_URL,
+                        ImagePath.Local("imageName"),
+                    )
+                )
+            ).apply {
+                style = styleLocal
+            }
     }
 
     @DisplayName("When an imageView is built")
@@ -91,7 +114,7 @@ internal class ImageTest : BaseComponentTest() {
         @DisplayName("Then it should return a imageView if imagePath is remote")
         fun testsIfViewIsBuiltAsImageViewWhenImagePathIsRemote() {
             // Given
-            imageRemote = Image(ImagePath.Remote(""))
+            imageRemote = Image(constant(ImagePath.Remote("")))
 
             // When
             val view = imageRemote.buildView(rootView)
@@ -104,7 +127,7 @@ internal class ImageTest : BaseComponentTest() {
         @DisplayName("Then it should clear drawable if placeholder is null")
         fun testsIfClearDrawableWhenPlaceholderIsNull() {
             // Given
-            imageRemote = Image(ImagePath.Remote(url = ""))
+            imageRemote = Image(constant(ImagePath.Remote(url = "")))
 
             // When
             val view = imageRemote.buildView(rootView)
@@ -117,7 +140,15 @@ internal class ImageTest : BaseComponentTest() {
         @DisplayName("Then it should not clear drawable with placeholder")
         fun testsIfDrawableNullWasNotCalledWithPlaceholder() {
             // Given
-            imageRemote = Image(ImagePath.Remote(url = "", placeholder = ImagePath.Local("imageName")))
+            imageRemote =
+                Image(
+                    constant(
+                        ImagePath.Remote(
+                            url = "",
+                            placeholder = ImagePath.Local("imageName"),
+                        )
+                    )
+                )
 
             // When
             val view = imageRemote.buildView(rootView)
@@ -150,7 +181,13 @@ internal class ImageTest : BaseComponentTest() {
         @DisplayName("Then adjustViewBounds should be TRUE if there is size")
         fun testsIfTheAdjustViewBoundsIsSetTrue() {
             // Given
-            val image = imageLocal.applyStyle(Style(size = Size(width = 100.unitReal())))
+            val image = imageLocal.apply {
+                style = Style(
+                    size = Size(
+                        width = UnitValue(constant(100.0), UnitType.REAL),
+                    ),
+                )
+            }
             val adjustViewBoundsSlot = slot<Boolean>()
             every { imageView.adjustViewBounds = capture(adjustViewBoundsSlot) } just Runs
 
@@ -165,14 +202,14 @@ internal class ImageTest : BaseComponentTest() {
         @DisplayName("Then adjustViewBounds should not be set when both width and height are not null")
         fun testsIfTheAdjustViewBoundsIsNotSet() {
             // Given
-            val image = imageLocal.applyStyle(
-                Style(
+            val image = imageLocal.apply {
+                style = Style(
                     size = Size(
-                        width = 100.unitReal(),
-                        height = 100.unitReal(),
+                        width = UnitValue(constant(100.0), UnitType.REAL),
+                        height = UnitValue(constant(100.0), UnitType.REAL),
                     )
                 )
-            )
+            }
 
             // When
             image.buildView(rootView)
@@ -185,7 +222,13 @@ internal class ImageTest : BaseComponentTest() {
         @DisplayName("Then adjustViewBounds should be set before scaleType")
         fun testsIfTheAdjustViewBoundsIsSetBeforeScaleType() {
             // Given
-            val image = imageLocal.applyStyle(Style(size = Size(width = 100.unitReal())))
+            val image = imageLocal.apply {
+                style = Style(
+                    size = Size(
+                        width = UnitValue(constant(100.0), UnitType.REAL)
+                    )
+                )
+            }
             every { imageView.scaleType = any() } just Runs
 
             // When
@@ -233,7 +276,7 @@ internal class ImageTest : BaseComponentTest() {
         @DisplayName("Then the placeHolder for a remote image should set a Local Image path")
         fun testsIfTheSetImageResourceForALocalImageIsCalled() {
             //Given
-            imageRemote = Image(ImagePath.Remote("", ImagePath.Local("imageName")))
+            imageRemote = Image(constant(ImagePath.Remote("", ImagePath.Local("imageName"))))
 
             // When
             imageRemote.buildView(rootView)
@@ -250,7 +293,7 @@ internal class ImageTest : BaseComponentTest() {
 
             // Then
             verify {
-                ViewFactory.makeImageView(rootView.getContext(), CornerRadius(radius = 10.0))
+                ViewFactory.makeImageView(rootView, CornerRadius(radius = constant(10.0)))
             }
         }
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,22 +21,24 @@ import android.widget.TextView
 import androidx.core.view.AccessibilityDelegateCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
-import br.com.zup.beagle.core.AccessibilityComponent
-import io.mockk.MockKAnnotations
+import br.com.zup.beagle.android.widget.core.AccessibilityComponent
 import io.mockk.Runs
 import io.mockk.every
-import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.slot
+import io.mockk.unmockkAll
 import io.mockk.verify
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 
 @DisplayName("Given Component with accessibility")
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class AccessibilitySetupTest {
 
     private val view: TextView = mockk(relaxUnitFun = true, relaxed = true)
@@ -45,19 +47,20 @@ class AccessibilitySetupTest {
 
     private val accessibilityDelegate = slot<AccessibilityDelegateCompat>()
 
-    @InjectMockKs
-    private lateinit var accessibilitySetup: AccessibilitySetup
+    private val accessibilitySetup: AccessibilitySetup = AccessibilitySetup()
 
-    @BeforeEach
+    @BeforeAll
     fun setUp() {
-        MockKAnnotations.init(this)
-
         mockkStatic(ViewCompat::class)
-
 
         every {
             ViewCompat.setAccessibilityDelegate(view, capture(accessibilityDelegate))
         } just Runs
+    }
+
+    @AfterAll
+    fun tearDown() {
+        unmockkAll()
     }
 
     @DisplayName("When apply accessibility")
@@ -103,12 +106,16 @@ class AccessibilitySetupTest {
         @Test
         @DisplayName("Then the component should set heading")
         fun testHeading() {
-            val accessibilityNodeInfoCompatMock: AccessibilityNodeInfoCompat = mockk(relaxed = true, relaxUnitFun = true)
+            val accessibilityNodeInfoCompatMock: AccessibilityNodeInfoCompat =
+                mockk(relaxed = true, relaxUnitFun = true)
 
             every { component.accessibility?.isHeader } returns true
 
             accessibilitySetup.applyAccessibility(view, component)
-            accessibilityDelegate.captured.onInitializeAccessibilityNodeInfo(view, accessibilityNodeInfoCompatMock)
+            accessibilityDelegate.captured.onInitializeAccessibilityNodeInfo(
+                view,
+                accessibilityNodeInfoCompatMock
+            )
 
             verify { accessibilityNodeInfoCompatMock.isHeading = true }
         }

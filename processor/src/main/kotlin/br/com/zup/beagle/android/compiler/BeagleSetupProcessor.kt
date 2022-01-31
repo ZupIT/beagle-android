@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,16 +18,14 @@ package br.com.zup.beagle.android.compiler
 
 import br.com.zup.beagle.android.annotation.RegisterBeagleAdapter
 import br.com.zup.beagle.android.annotation.RegisterController
-import br.com.zup.beagle.android.annotation.RegisterValidator
 import br.com.zup.beagle.android.compiler.generatefunction.GenerateFunctionAction
 import br.com.zup.beagle.android.compiler.generatefunction.GenerateFunctionComponentRegistrar
 import br.com.zup.beagle.android.compiler.generatefunction.GenerateFunctionCustomAdapter
-import br.com.zup.beagle.android.compiler.generatefunction.GenerateFunctionCustomValidator
 import br.com.zup.beagle.android.compiler.generatefunction.REGISTERED_CONTROLLERS_GENERATED
 import br.com.zup.beagle.android.compiler.generatefunction.RegisterControllerProcessor
-import br.com.zup.beagle.annotation.RegisterAction
-import br.com.zup.beagle.annotation.RegisterOperation
-import br.com.zup.beagle.annotation.RegisterWidget
+import br.com.zup.beagle.android.annotation.RegisterAction
+import br.com.zup.beagle.android.annotation.RegisterOperation
+import br.com.zup.beagle.android.annotation.RegisterWidget
 import br.com.zup.beagle.compiler.shared.ANDROID_OPERATION
 import br.com.zup.beagle.compiler.shared.GenerateFunctionOperation
 import br.com.zup.beagle.compiler.shared.GenerateFunctionWidget
@@ -152,27 +150,6 @@ internal data class BeagleSetupProcessor(
         ),
     )
 
-    private val customValidatorRegistrarFactoryProcessor = GenericFactoryProcessor(
-        processingEnv,
-        generateRegistrarClassName(REGISTERED_CUSTOM_VALIDATOR_GENERATED),
-        GenerateFunctionComponentRegistrar(
-            processingEnv,
-            GenerateFunctionCustomValidator.REGISTERED_CUSTOM_VALIDATOR,
-            RegisterValidator::class.java,
-        ) { _, annotation ->
-            (annotation as RegisterValidator).name
-        },
-    )
-
-    private val customValidatorFactoryProcessor = GenericFactoryProcessor(
-        processingEnv,
-        REGISTERED_CUSTOM_VALIDATOR_GENERATED,
-        GenerateFunctionCustomValidator(
-            processingEnv,
-            DependenciesRegistrarComponentsProvider,
-        ),
-    )
-
     private fun generateModuleName(): String {
         return processingEnv.options[KAPT_BEAGLE_MODULE_NAME_OPTION_NAME]
             ?.replaceFirstChar {
@@ -214,24 +191,10 @@ internal data class BeagleSetupProcessor(
 
         val beagleSetupFile = addDefaultImports(basePackageName)
 
-        val propertyIndex = properties.indexOfFirst { it.name == "serverDrivenActivity" }
 
-        var property = properties[propertyIndex]
+        handleAllProcess(basePackageName, roundEnvironment)
 
-        handleAllProcess(basePackageName, roundEnvironment, property)
-
-        val defaultActivity = registerAnnotationProcessor.defaultActivityRegistered
-        property = beagleSetupPropertyGenerator.implementServerDrivenActivityProperty(
-            defaultActivity,
-            isFormatted = true
-        )
-
-        val newProperties = properties.toMutableList().apply {
-            this[propertyIndex] = property
-        }
-
-        val newTypeSpecBuilder = typeSpec.addProperties(newProperties)
-
+        val newTypeSpecBuilder = typeSpec.addProperties(properties)
             .addProperty(PropertySpec.builder(
                 "controllerReference",
                 ClassName(CONTROLLER_REFERENCE.packageName, CONTROLLER_REFERENCE.className),
@@ -246,12 +209,7 @@ internal data class BeagleSetupProcessor(
             ).initializer(REGISTERED_CUSTOM_TYPE_ADAPTER_GENERATED)
                 .build())
 
-            .addProperty(PropertySpec.builder(
-                "validatorHandler",
-                ClassName(VALIDATOR_HANDLER.packageName, VALIDATOR_HANDLER.className),
-                KModifier.OVERRIDE
-            ).initializer(REGISTERED_CUSTOM_VALIDATOR_GENERATED)
-                .build())
+
         try {
             beagleSetupFile
                 .addType(newTypeSpecBuilder.build())
@@ -284,16 +242,14 @@ internal data class BeagleSetupProcessor(
             }
     }
 
-    private fun handleAllProcess(basePackageName: String, roundEnvironment: RoundEnvironment, property: PropertySpec) {
+    private fun handleAllProcess(basePackageName: String, roundEnvironment: RoundEnvironment) {
 
         widgetFactoryProcessor.process(basePackageName, roundEnvironment, WIDGET_VIEW)
         operationFactoryProcessor.process(basePackageName, roundEnvironment, ANDROID_OPERATION)
         actionFactoryProcessor.process(basePackageName, roundEnvironment, ANDROID_ACTION)
         customAdapterFactoryProcessor.process(basePackageName, roundEnvironment,
             listOf(BEAGLE_CUSTOM_ADAPTER, BEAGLE_PARAMETERIZED_TYPE_FACTORY), false, BEAGLE_CUSTOM_ADAPTER)
-        registerAnnotationProcessor.process(basePackageName, roundEnvironment, property.initializer.toString())
-        customValidatorFactoryProcessor.process(basePackageName, roundEnvironment,
-            listOf(VALIDATOR_HANDLER, VALIDATOR), false, VALIDATOR_HANDLER)
+        registerAnnotationProcessor.process(basePackageName, roundEnvironment)
 
         handleRegistrarProcess(roundEnvironment)
     }
@@ -304,7 +260,6 @@ internal data class BeagleSetupProcessor(
         actionRegistrarFactoryProcessor.process(REGISTRAR_COMPONENTS_PACKAGE, roundEnvironment, listOf())
         controllerRegistrarFactoryProcessor.process(REGISTRAR_COMPONENTS_PACKAGE, roundEnvironment, listOf())
         customAdapterRegistrarFactoryProcessor.process(REGISTRAR_COMPONENTS_PACKAGE, roundEnvironment, listOf())
-        customValidatorRegistrarFactoryProcessor.process(REGISTRAR_COMPONENTS_PACKAGE, roundEnvironment, listOf())
     }
 
     private fun addDefaultImports(
@@ -315,9 +270,7 @@ internal data class BeagleSetupProcessor(
             BEAGLE_SETUP_GENERATED
         ).addImport(BEAGLE_CONFIG.packageName, BEAGLE_CONFIG.className)
             .addImport(BEAGLE_SDK.packageName, BEAGLE_SDK.className)
-            .addImport(FORM_LOCAL_ACTION_HANDLER.packageName, FORM_LOCAL_ACTION_HANDLER.className)
             .addImport(DEEP_LINK_HANDLER.packageName, DEEP_LINK_HANDLER.className)
-            .addImport(HTTP_CLIENT_HANDLER.packageName, HTTP_CLIENT_HANDLER.className)
             .addImport(BEAGLE_LOGGER.packageName, BEAGLE_LOGGER.className)
             .addImport(BEAGLE_IMAGE_DOWNLOADER.packageName, BEAGLE_IMAGE_DOWNLOADER.className)
             .addImport(CONTROLLER_REFERENCE.packageName, CONTROLLER_REFERENCE.className)
@@ -335,7 +288,6 @@ internal data class BeagleSetupProcessor(
         internal const val REGISTERED_OPERATIONS_GENERATED = "RegisteredOperations"
         internal const val REGISTERED_ACTIONS_GENERATED = "RegisteredActions"
         internal const val REGISTERED_CUSTOM_TYPE_ADAPTER_GENERATED = "RegisteredCustomTypeAdapter"
-        internal const val REGISTERED_CUSTOM_VALIDATOR_GENERATED = "RegisteredCustomValidator"
         internal const val BEAGLE_SETUP_GENERATED = "BeagleSetup"
     }
 }

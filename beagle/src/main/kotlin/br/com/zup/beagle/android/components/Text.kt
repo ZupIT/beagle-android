@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,17 +20,14 @@ import android.view.Gravity
 import android.view.View
 import android.widget.TextView
 import br.com.zup.beagle.android.context.Bind
-import br.com.zup.beagle.android.context.expressionOrValueOf
-import br.com.zup.beagle.android.context.expressionOrValueOfNullable
-import br.com.zup.beagle.android.context.valueOfNullable
 import br.com.zup.beagle.android.utils.StyleManager
 import br.com.zup.beagle.android.utils.observeBindChanges
 import br.com.zup.beagle.android.utils.toAndroidColor
 import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.android.widget.WidgetView
-import br.com.zup.beagle.annotation.RegisterWidget
-import br.com.zup.beagle.widget.core.TextAlignment
+import br.com.zup.beagle.android.annotation.RegisterWidget
+import br.com.zup.beagle.android.widget.core.TextAlignment
 
 /**
  * A text widget will define a text view natively using the server driven information received through Beagle.
@@ -51,21 +48,8 @@ data class Text(
     val alignment: Bind<TextAlignment>? = null,
 ) : WidgetView() {
 
-    constructor(
-        text: String,
-        styleId: String? = null,
-        textColor: String? = null,
-        alignment: TextAlignment? = null,
-    ) : this(
-        expressionOrValueOf(text),
-        styleId,
-        expressionOrValueOfNullable(textColor),
-        valueOfNullable(alignment)
-    )
-
     @Transient
     private val styleManager: StyleManager = StyleManager()
-
 
     override fun buildView(rootView: RootView): View {
         val textStyle = styleManager.getTextStyle(styleId)

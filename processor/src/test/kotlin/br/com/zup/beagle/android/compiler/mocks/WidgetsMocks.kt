@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package br.com.zup.beagle.android.compiler.mocks
 
 const val INVALID_WIDGET =
     """
-        import br.com.zup.beagle.annotation.RegisterWidget
+        import br.com.zup.beagle.android.annotation.RegisterWidget
 
         @RegisterWidget
         class InvalidWidget { }
@@ -26,7 +26,7 @@ const val INVALID_WIDGET =
 
 const val INVALID_WIDGET_WITH_INHERITANCE =
     """
-        import br.com.zup.beagle.annotation.RegisterWidget
+        import br.com.zup.beagle.android.annotation.RegisterWidget
         import br.com.zup.beagle.android.operation.Operation
 
         @RegisterWidget
@@ -35,31 +35,15 @@ const val INVALID_WIDGET_WITH_INHERITANCE =
 
 const val VALID_WIDGET_WITH_INHERITANCE_WIDGET_VIEW =
     """ 
-        import br.com.zup.beagle.annotation.RegisterWidget
-        import br.com.zup.beagle.android.components.form.InputWidget
+        import br.com.zup.beagle.android.annotation.RegisterWidget
         import br.com.zup.beagle.android.widget.WidgetView
-        import br.com.zup.beagle.android.components.page.PageIndicatorComponent
 
         @RegisterWidget
         class TextTest: WidgetView() { }
     """
 
-const val VALID_WIDGET_WITH_INHERITANCE_INPUT_WIDGET =
-    """
-        @RegisterWidget
-        class InputWidgetTest: InputWidget() { }
-    """
 
-const val VALID_WIDGET_WITH_INHERITANCE_PAGE_INDICATOR =
-    """
-        @RegisterWidget
-        class PageIndicatorTest: PageIndicatorComponent { }
-    """
-
-const val VALID_LIST_WIDGETS =
-    VALID_WIDGET_WITH_INHERITANCE_WIDGET_VIEW +
-        VALID_WIDGET_WITH_INHERITANCE_INPUT_WIDGET +
-        VALID_WIDGET_WITH_INHERITANCE_PAGE_INDICATOR
+const val VALID_LIST_WIDGETS = VALID_WIDGET_WITH_INHERITANCE_WIDGET_VIEW
 
 const val INTERNAL_LIST_WIDGET_GENERATED_EXPECTED: String =
     """
@@ -73,9 +57,7 @@ const val INTERNAL_LIST_WIDGET_GENERATED_EXPECTED: String =
         public final object RegisteredWidgets { 
             public fun registeredWidgets() : List<Class<WidgetView>> {
                 val registeredWidgets = listOf<Class<WidgetView>>(
-                    br.com.test.beagle.PageIndicatorTest::class.java as Class<WidgetView>,
                     br.com.test.beagle.TextTest::class.java as Class<WidgetView>,
-                    br.com.test.beagle.InputWidgetTest::class.java as Class<WidgetView>,
                     )
                 return registeredWidgets
             }
@@ -97,9 +79,7 @@ const val INTERNAL_LIST_WIDGET_WITH_REGISTRAR_GENERATED_EXPECTED: String =
         public final object RegisteredWidgets {
           public fun registeredWidgets(): List<Class<WidgetView>> {
             val registeredWidgets = listOf<Class<WidgetView>>(
-                br.com.test.beagle.PageIndicatorTest::class.java as Class<WidgetView>,
                 br.com.test.beagle.TextTest::class.java as Class<WidgetView>,
-                br.com.test.beagle.InputWidgetTest::class.java as Class<WidgetView>,
                 br.com.test.beagle.otherModule.ModuleWidget::class.java as Class<WidgetView>,
         
             )
@@ -144,10 +124,7 @@ const val INTERNAL_LIST_WIDGET_REGISTRAR_EXPECTED =
         public final object RegisteredWidgetsRegistrarTest {
           public fun registeredWidgets(): List<Pair<String, String>> {
             val registeredComponents = listOf<Pair<String, String>>(
-               
-                Pair(""${'"'}${'"'}${'"'}${'"'},"br.com.test.beagle.PageIndicatorTest"),
                 Pair(""${'"'}${'"'}${'"'}${'"'},"br.com.test.beagle.TextTest"),
-                Pair(""${'"'}${'"'}${'"'}${'"'},"br.com.test.beagle.InputWidgetTest"),
             )
             return registeredComponents
           }

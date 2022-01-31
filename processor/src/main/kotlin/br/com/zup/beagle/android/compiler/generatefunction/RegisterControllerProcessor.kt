@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,14 +47,16 @@ internal class RegisterControllerProcessor(private val processingEnv: Processing
 
     var defaultActivityRegistered: String = ""
 
-    fun process(packageName: String, roundEnvironment: RoundEnvironment, defaultActivity: String) {
+    fun process(packageName: String, roundEnvironment: RoundEnvironment) {
         val typeSpec = TypeSpec.classBuilder(REGISTERED_CONTROLLERS_GENERATED)
             .addModifiers(KModifier.PUBLIC, KModifier.FINAL)
-            .addSuperinterface(ClassName(
-                CONTROLLER_REFERENCE.packageName,
-                CONTROLLER_REFERENCE.className,
-            ))
-            .addFunction(createClassForMethod(roundEnvironment, defaultActivity))
+            .addSuperinterface(
+                ClassName(
+                    CONTROLLER_REFERENCE.packageName,
+                    CONTROLLER_REFERENCE.className,
+                )
+            )
+            .addFunction(createClassForMethod(roundEnvironment))
             .build()
 
         try {
@@ -75,7 +77,7 @@ internal class RegisterControllerProcessor(private val processingEnv: Processing
         }
     }
 
-    private fun createClassForMethod(roundEnvironment: RoundEnvironment, defaultActivity: String): FunSpec {
+    private fun createClassForMethod(roundEnvironment: RoundEnvironment): FunSpec {
         val validatorLines = createValidatorLines(roundEnvironment)
         val returnType = Class::class.asClassName().parameterizedBy(
             ClassName(BEAGLE_ACTIVITY.packageName, BEAGLE_ACTIVITY.className)
@@ -86,17 +88,16 @@ internal class RegisterControllerProcessor(private val processingEnv: Processing
             .addParameter("id", String::class.asTypeName().copy(true))
 
 
-        val defaultBeagleClass = ClassName(DEFAULT_BEAGLE_ACTIVITY.packageName,
-            DEFAULT_BEAGLE_ACTIVITY.className).canonicalName
+        val defaultBeagleClass = ClassName(
+            DEFAULT_BEAGLE_ACTIVITY.packageName,
+            DEFAULT_BEAGLE_ACTIVITY.className
+        ).canonicalName
 
-        defaultActivityRegistered =
-            if (defaultActivityRegistered.isEmpty() && !defaultActivity.startsWith("null::class")) {
-                defaultActivity
-            } else if (defaultActivityRegistered.isEmpty()) {
-                "$defaultBeagleClass$CONTROLLER_DEFINITION_SUFFIX"
-            } else {
-                defaultActivityRegistered
-            }
+        defaultActivityRegistered = if (defaultActivityRegistered.isEmpty()) {
+            "$defaultBeagleClass$CONTROLLER_DEFINITION_SUFFIX"
+        } else {
+            defaultActivityRegistered
+        }
 
         var code = ""
 
@@ -161,19 +162,26 @@ internal class RegisterControllerProcessor(private val processingEnv: Processing
             )
             .forEach { registeredDependency ->
                 if (defaultActivityRegistered.isNotEmpty() && registeredDependency.first.isEmpty()) {
-                    processingEnv.messager?.error("Default controller defined multiple times: " +
-                        "1 - ${defaultActivityRegistered.substringBefore(CONTROLLER_DEFINITION_SUFFIX)} " +
-                        "2 - ${registeredDependency.second}. " +
-                        "You must remove one implementation from the application.")
+                    processingEnv.messager?.error(
+                        "Default controller defined multiple times: " +
+                                "1 - ${
+                                    defaultActivityRegistered.substringBefore(
+                                        CONTROLLER_DEFINITION_SUFFIX
+                                    )
+                                } " +
+                                "2 - ${registeredDependency.second}. " +
+                                "You must remove one implementation from the application."
+                    )
                 }
 
                 if (registeredDependency.first.isEmpty()) {
-                    defaultActivityRegistered = "${registeredDependency.second}$CONTROLLER_DEFINITION_SUFFIX"
+                    defaultActivityRegistered =
+                        "${registeredDependency.second}$CONTROLLER_DEFINITION_SUFFIX"
                 } else {
                     registeredWidgets
                         .append(
                             "\n    \"${registeredDependency.first}\" -> " +
-                                "${registeredDependency.second}$CONTROLLER_DEFINITION_SUFFIX"
+                                    "${registeredDependency.second}$CONTROLLER_DEFINITION_SUFFIX"
                         )
                 }
 

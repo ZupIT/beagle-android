@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,11 @@
 
 package br.com.zup.beagle.android.data.serializer.actions
 
-import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.action.Navigate
+import br.com.zup.beagle.android.context.constant
 import br.com.zup.beagle.android.context.expressionOf
-import br.com.zup.beagle.android.data.serializer.BaseSerializerTest
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -45,7 +45,10 @@ class OpenNativeRouteSerializerTest : BaseActionSerializerTest() {
             // Then
             Assertions.assertNotNull(actual)
             Assertions.assertEquals(expectedAction.route, actual.route)
-            Assertions.assertEquals(expectedAction.shouldResetApplication, actual.shouldResetApplication)
+            Assertions.assertEquals(
+                expectedAction.shouldResetApplication,
+                actual.shouldResetApplication
+            )
             Assertions.assertEquals(expectedAction.data, actual.data)
         }
 
@@ -62,7 +65,10 @@ class OpenNativeRouteSerializerTest : BaseActionSerializerTest() {
             // Then
             Assertions.assertNotNull(actual)
             Assertions.assertEquals(expectedAction.route, actual.route)
-            Assertions.assertEquals(expectedAction.shouldResetApplication, actual.shouldResetApplication)
+            Assertions.assertEquals(
+                expectedAction.shouldResetApplication,
+                actual.shouldResetApplication
+            )
             Assertions.assertEquals(expectedAction.data, actual.data)
         }
     }
@@ -106,7 +112,7 @@ class OpenNativeRouteSerializerTest : BaseActionSerializerTest() {
 """
 
     private fun makeObjectOpenNativeRoute() = Navigate.OpenNativeRoute(
-        route = "test",
+        route = constant("test"),
         shouldResetApplication = true,
         data = mapOf("test" to "test")
     )

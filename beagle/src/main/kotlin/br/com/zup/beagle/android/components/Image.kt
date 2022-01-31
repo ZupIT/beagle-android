@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +20,7 @@ import android.view.View
 import android.widget.ImageView
 import br.com.zup.beagle.android.components.utils.RoundedImageView
 import br.com.zup.beagle.android.context.Bind
-import br.com.zup.beagle.android.context.expressionOrValueOf
-import br.com.zup.beagle.android.context.valueOf
+import br.com.zup.beagle.android.context.expressionOrConstant
 import br.com.zup.beagle.android.engine.mapper.ViewMapper
 import br.com.zup.beagle.android.imagedownloader.DefaultImageDownloader
 import br.com.zup.beagle.android.logger.BeagleMessageLogs
@@ -30,10 +29,10 @@ import br.com.zup.beagle.android.utils.observeBindChanges
 import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.android.widget.WidgetView
-import br.com.zup.beagle.annotation.RegisterWidget
-import br.com.zup.beagle.core.BeagleJson
-import br.com.zup.beagle.core.CornerRadius
-import br.com.zup.beagle.widget.core.ImageContentMode
+import br.com.zup.beagle.android.annotation.RegisterWidget
+import br.com.zup.beagle.android.widget.core.BeagleJson
+import br.com.zup.beagle.android.widget.core.CornerRadius
+import br.com.zup.beagle.android.widget.core.ImageContentMode
 
 /**
  * Define an image view using the server driven information received through Beagle.
@@ -46,8 +45,6 @@ data class Image constructor(
     val path: Bind<ImagePath>,
     val mode: ImageContentMode? = null,
 ) : WidgetView() {
-
-    constructor(path: ImagePath, mode: ImageContentMode? = null) : this(valueOf(path), mode)
 
     @Transient
     private val viewMapper: ViewMapper = ViewMapper()
@@ -70,7 +67,7 @@ data class Image constructor(
     }
 
     private fun getImageView(rootView: RootView) = ViewFactory.makeImageView(
-        context = rootView.getContext(),
+        rootView = rootView,
         cornerRadius = style?.cornerRadius ?: CornerRadius(),
     ).apply {
         style?.size?.let { size ->
@@ -142,7 +139,7 @@ sealed class ImagePath {
     data class Local(
         val mobileId: Bind<String>,
     ) : ImagePath() {
-        constructor(mobileId: String) : this(expressionOrValueOf(mobileId))
+        constructor(mobileId: String) : this(expressionOrConstant(mobileId))
     }
 
     /**
@@ -156,6 +153,6 @@ sealed class ImagePath {
         val url: Bind<String>,
         val placeholder: Local? = null,
     ) : ImagePath() {
-        constructor(url: String, placeholder: Local? = null) : this(expressionOrValueOf(url), placeholder)
+        constructor(url: String, placeholder: Local? = null) : this(expressionOrConstant(url), placeholder)
     }
 }

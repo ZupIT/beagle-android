@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,18 @@
 package br.com.zup.beagle.android.networking
 
 import android.os.Parcelable
-import br.com.zup.beagle.core.BeagleJson
+import br.com.zup.beagle.android.annotation.ContextDataValue
+import br.com.zup.beagle.android.widget.core.BeagleJson
 import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.RawValue
+
+internal object FixedHeaders {
+    private const val BEAGLE_PLATFORM_HEADER_KEY = "beagle-platform"
+    private const val BEAGLE_PLATFORM_HEADER_VALUE = "ANDROID"
+    private const val CONTENT_TYPE = "Content-Type"
+    private const val APP_JSON = "application/json"
+    val headers = mapOf(CONTENT_TYPE to APP_JSON, BEAGLE_PLATFORM_HEADER_KEY to BEAGLE_PLATFORM_HEADER_VALUE)
+}
 
 /**
  * HttpAdditionalData is used to do requests.
@@ -30,6 +40,12 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class HttpAdditionalData(
     val method: HttpMethod = HttpMethod.GET,
-    val headers: Map<String, String> = hashMapOf(),
-    val body: String? = null,
-) : Parcelable
+    var headers: Map<String, String> = hashMapOf(),
+    @ContextDataValue
+    val body: @RawValue Any? = null,
+) : Parcelable {
+
+    init {
+        headers = headers.toMutableMap().plus(FixedHeaders.headers)
+    }
+}

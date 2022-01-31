@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,20 +17,16 @@
 package br.com.zup.beagle.android.components
 
 import android.view.View
-import br.com.zup.beagle.analytics.ClickEvent
 import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.context.Bind
-import br.com.zup.beagle.android.context.expressionOrValueOf
-import br.com.zup.beagle.android.context.valueOfNullable
 import br.com.zup.beagle.android.data.PreFetchHelper
-import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.utils.StyleManager
 import br.com.zup.beagle.android.utils.handleEvent
 import br.com.zup.beagle.android.utils.observeBindChanges
 import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.android.widget.WidgetView
-import br.com.zup.beagle.annotation.RegisterWidget
+import br.com.zup.beagle.android.annotation.RegisterWidget
 
 /**
  * Define a button natively using the server driven information received through Beagle
@@ -38,7 +34,6 @@ import br.com.zup.beagle.annotation.RegisterWidget
  * @param text define the button text content.
  * @param styleId reference a native style in your local styles file to be applied on this button.
  * @param onPress attribute to define actions when this component is pressed
- * @param clickAnalyticsEvent attribute to define click event name
  *
  */
 @RegisterWidget("button")
@@ -46,25 +41,8 @@ data class Button(
     val text: Bind<String>,
     val styleId: String? = null,
     val onPress: List<Action>? = null,
-    @Deprecated("It was deprecated in version 1.10.0 and will be removed in a future version." +
-        " Use the new analytics.")
-    val clickAnalyticsEvent: ClickEvent? = null,
     val enabled: Bind<Boolean>? = null,
 ) : WidgetView() {
-
-    constructor(
-        text: String,
-        styleId: String? = null,
-        onPress: List<Action>? = null,
-        clickAnalyticsEvent: ClickEvent? = null,
-        enabled: Boolean? = null,
-    ) : this(
-        expressionOrValueOf(text),
-        styleId,
-        onPress,
-        clickAnalyticsEvent,
-        valueOfNullable(enabled)
-    )
 
     @Transient
     private val preFetchHelper: PreFetchHelper = PreFetchHelper()
@@ -85,9 +63,6 @@ data class Button(
         button.setOnClickListener { view ->
             onPress?.let {
                 this@Button.handleEvent(rootView, view, it, analyticsValue = "onPress")
-            }
-            clickAnalyticsEvent?.let {
-                BeagleEnvironment.beagleSdk.analytics?.trackEventOnClick(it)
             }
         }
 

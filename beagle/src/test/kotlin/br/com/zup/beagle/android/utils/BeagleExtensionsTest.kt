@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,24 +16,15 @@
 
 package br.com.zup.beagle.android.utils
 
-import br.com.zup.beagle.android.extensions.once
 import br.com.zup.beagle.android.view.BeagleActivity
-import io.mockk.MockKAnnotations
 import io.mockk.every
-import io.mockk.impl.annotations.RelaxedMockK
+import io.mockk.mockk
 import io.mockk.verify
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class BeagleExtensionsTest {
 
-    @RelaxedMockK
-    private lateinit var beagleActivity: BeagleActivity
-
-    @BeforeEach
-    fun setUp() {
-        MockKAnnotations.init(this)
-    }
+    private val beagleActivity: BeagleActivity = mockk(relaxed = true)
 
     @Test
     fun configureSupportActionBarShouldSetSupportActionBar() {
@@ -41,6 +32,6 @@ class BeagleExtensionsTest {
 
         beagleActivity.configureSupportActionBar()
 
-        verify(exactly = once()) { beagleActivity.setSupportActionBar(any()) }
+        verify(exactly = 1) { beagleActivity.setSupportActionBar(any()) }
     }
 }

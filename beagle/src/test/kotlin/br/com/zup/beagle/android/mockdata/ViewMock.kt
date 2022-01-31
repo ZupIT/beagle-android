@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import io.mockk.*
 fun createViewForContext(parentView: ViewGroup? = null): ViewGroup {
     return mockk {
         val viewId = RandomData.int()
-        val contextBindingSlot = slot<ContextBinding>()
+        val contextBindingSlot = slot<Set<ContextBinding>>()
         every { id } returns viewId
         every { parent } returns parentView
         every { setTag(R.id.beagle_context_view, capture(contextBindingSlot)) } just Runs

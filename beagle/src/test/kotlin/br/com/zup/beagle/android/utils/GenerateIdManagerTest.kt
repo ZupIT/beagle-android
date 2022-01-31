@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,12 +20,12 @@ import android.view.View
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.components.Text
 import br.com.zup.beagle.android.components.layout.Container
+import br.com.zup.beagle.android.context.constant
 import br.com.zup.beagle.android.view.custom.InternalBeagleFlexView
 import br.com.zup.beagle.android.view.viewmodel.GenerateIdViewModel
 import br.com.zup.beagle.android.view.viewmodel.ListViewIdViewModel
-import br.com.zup.beagle.android.view.viewmodel.OnInitViewModel
-import br.com.zup.beagle.core.ServerDrivenComponent
-import br.com.zup.beagle.ext.setId
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
+import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
@@ -37,26 +37,22 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 @DisplayName("Given a GenerateIdManager")
-class GenerateIdManagerTest: BaseTest() {
+class GenerateIdManagerTest : BaseTest() {
 
     private val generateIdViewModel = mockk<GenerateIdViewModel>(relaxed = true)
     private val listViewIdViewModel = mockk<ListViewIdViewModel>(relaxed = true)
-    private val onInitViewModel = mockk<OnInitViewModel>(relaxed = true)
     private val view = mockk<InternalBeagleFlexView>()
     private val generatedId = 1
     private lateinit var generateIdManager: GenerateIdManager
 
     @BeforeEach
-    override fun setUp() {
-        super.setUp()
-
+    fun clear() {
+        clearMocks(generateIdViewModel,rootView)
         mockkStatic(View::class)
         every { View.generateViewId() } returns generatedId
-        every { rootView.generateViewModelInstance<GenerateIdViewModel>() } returns generateIdViewModel
-        every { rootView.generateViewModelInstance<ListViewIdViewModel>() } returns listViewIdViewModel
-        every { rootView.generateViewModelInstance<OnInitViewModel>() } returns onInitViewModel
 
-        generateIdManager = GenerateIdManager(rootView, generateIdViewModel, listViewIdViewModel, onInitViewModel)
+        generateIdManager =
+            GenerateIdManager(rootView, generateIdViewModel, listViewIdViewModel)
     }
 
     @DisplayName("When createSingleManagerByRootViewId is called")
@@ -95,7 +91,6 @@ class GenerateIdManagerTest: BaseTest() {
             // Then
             verify(exactly = 1) { generateIdViewModel.setViewCreated(parentId) }
             verify(exactly = 1) { listViewIdViewModel.prepareToReuseIds(view) }
-            verify(exactly = 1) { onInitViewModel.markToRerun() }
         }
     }
 
@@ -120,7 +115,9 @@ class GenerateIdManagerTest: BaseTest() {
         @Test
         fun notGenerateViewIdWithId() {
             // Given
-            val component = Container(listOf()).setId("stub")
+            val component = Container(listOf()).apply {
+                id = "stub"
+            }
             every { view.isAutoGenerateIdEnabled() } returns true
 
             // When
@@ -167,7 +164,7 @@ class GenerateIdManagerTest: BaseTest() {
         @Test
         fun markEachNestedComponentAsNoIdIfNeeded() {
             // Given
-            val componentWithoutId = Text("stub")
+            val componentWithoutId = Text(constant("stub"))
             val children = listOf<ServerDrivenComponent>(componentWithoutId)
             val component = Container(children)
             every { view.isAutoGenerateIdEnabled() } returns false
@@ -185,7 +182,9 @@ class GenerateIdManagerTest: BaseTest() {
         fun keepPreviousIds() {
             // Given
             val previousId = "id"
-            val componentWithId = Text("stub").setId(previousId)
+            val componentWithId = Text(constant("stub")).apply {
+                id = previousId
+            }
             val children = listOf<ServerDrivenComponent>(componentWithId)
             val component = Container(children)
             every { view.isAutoGenerateIdEnabled() } returns false

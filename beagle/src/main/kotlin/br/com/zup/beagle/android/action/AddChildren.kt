@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,15 +20,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import br.com.zup.beagle.android.context.Bind
-import br.com.zup.beagle.android.context.valueOf
 import br.com.zup.beagle.android.logger.BeagleMessageLogs
 import br.com.zup.beagle.android.utils.evaluateExpression
 import br.com.zup.beagle.android.utils.toAndroidId
 import br.com.zup.beagle.android.utils.toView
 import br.com.zup.beagle.android.widget.RootView
-import br.com.zup.beagle.core.BeagleJson
-import br.com.zup.beagle.core.ServerDrivenComponent
-import br.com.zup.beagle.newanalytics.ActionAnalyticsConfig
+import br.com.zup.beagle.android.widget.core.BeagleJson
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
+import br.com.zup.beagle.android.analytics.ActionAnalyticsConfig
 
 /**
  * Defines the placement of where the children will be inserted in the list or if the contents
@@ -72,18 +71,6 @@ data class AddChildren(
     var mode: Mode? = Mode.APPEND,
     override var analytics: ActionAnalyticsConfig? = null,
 ) : AnalyticsAction {
-
-    constructor(
-        componentId: String,
-        value: List<ServerDrivenComponent>,
-        mode: Mode? = Mode.APPEND,
-        analytics: ActionAnalyticsConfig? = null,
-    ) : this(
-        componentId = componentId,
-        value = valueOf(value),
-        mode = mode,
-        analytics = analytics
-    )
 
     override fun execute(rootView: RootView, origin: View) {
         try {

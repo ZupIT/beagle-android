@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package br.com.zup.beagle.android.components
 
 import androidx.appcompat.widget.AppCompatTextView
+import br.com.zup.beagle.android.context.constant
 import br.com.zup.beagle.android.utils.StyleManager
 import br.com.zup.beagle.android.view.ViewFactory
 import io.mockk.every
@@ -24,11 +25,12 @@ import io.mockk.mockk
 import io.mockk.mockkConstructor
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
-private const val DEFAULT_TEXT = "Hello"
+private val DEFAULT_TEXT = constant("Hello")
 private const val DEFAULT_STYLE = "DummyStyle"
 private const val DEFAULT_STYLE_INTEGER = 123
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,7 @@
 package br.com.zup.beagle.android.data.serializer.adapter
 
 import br.com.zup.beagle.android.components.Touchable
-import br.com.zup.beagle.android.components.form.FormInput
-import br.com.zup.beagle.android.components.form.FormSubmit
-import br.com.zup.beagle.android.components.form.InputWidget
 import br.com.zup.beagle.android.components.page.PageIndicator
-import br.com.zup.beagle.android.components.page.PageIndicatorComponent
 import br.com.zup.beagle.android.components.page.PageView
 import br.com.zup.beagle.android.data.serializer.PolymorphicJsonAdapterFactory
 import br.com.zup.beagle.android.data.serializer.generateNameSpaceToDefaultWidget
@@ -30,8 +26,7 @@ import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.setup.InternalWidgetFactory
 import br.com.zup.beagle.android.widget.UndefinedWidget
 import br.com.zup.beagle.android.widget.WidgetView
-import br.com.zup.beagle.core.ServerDrivenComponent
-import br.com.zup.beagle.widget.Widget
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 
 private const val BEAGLE_WIDGET_TYPE = "_beagleComponent_"
 private const val CUSTOM_NAMESPACE = "custom"
@@ -43,7 +38,6 @@ internal object ComponentJsonAdapterFactory {
             ServerDrivenComponent::class.java, BEAGLE_WIDGET_TYPE
         )
 
-        factory = registerBaseSubTypes(factory)
         factory = registerUIClass(factory)
         factory = registerWidgets(factory, true, InternalWidgetFactory.registeredWidgets())
         factory = registerWidgets(factory, false, BeagleEnvironment.beagleSdk.registeredWidgets())
@@ -52,21 +46,12 @@ internal object ComponentJsonAdapterFactory {
         return factory
     }
 
-    private fun registerBaseSubTypes(
-        factory: PolymorphicJsonAdapterFactory<ServerDrivenComponent>,
-    ): PolymorphicJsonAdapterFactory<ServerDrivenComponent> {
-        return factory.withBaseSubType(PageIndicatorComponent::class.java)
-            .withBaseSubType(InputWidget::class.java)
-            .withBaseSubType(Widget::class.java)
-    }
 
     private fun registerUIClass(
         factory: PolymorphicJsonAdapterFactory<ServerDrivenComponent>,
     ): PolymorphicJsonAdapterFactory<ServerDrivenComponent> {
         return factory
             .withSubtype(Touchable::class.java, createNameSpaceToDefaultWidget<Touchable>("touchable"))
-            .withSubtype(FormInput::class.java, createNameSpaceToDefaultWidget<FormInput>("formInput"))
-            .withSubtype(FormSubmit::class.java, createNameSpaceToDefaultWidget<FormSubmit>("formSubmit"))
             .withSubtype(PageView::class.java, createNameSpaceToDefaultWidget<PageView>("pageView"))
             .withSubtype(PageIndicator::class.java, createNameSpaceToDefaultWidget<PageIndicator>("pageIndicator"))
     }

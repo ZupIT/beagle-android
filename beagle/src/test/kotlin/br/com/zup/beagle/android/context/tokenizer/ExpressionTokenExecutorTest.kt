@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,16 +20,16 @@ import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.testutil.RandomData
 import org.junit.Assert.assertNull
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.Test
 
 class ExpressionTokenExecutorTest : BaseTest() {
 
     private lateinit var expressionTokenExecutor: ExpressionTokenExecutor
     private val tokenParser = TokenParser()
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
         expressionTokenExecutor = ExpressionTokenExecutor()

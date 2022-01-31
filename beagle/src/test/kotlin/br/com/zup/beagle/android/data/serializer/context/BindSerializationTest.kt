@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,17 +17,17 @@
 package br.com.zup.beagle.android.data.serializer.context
 
 import br.com.zup.beagle.android.context.Bind
+import br.com.zup.beagle.android.context.constant
 import br.com.zup.beagle.android.context.expressionOf
-import br.com.zup.beagle.android.context.valueOf
 import br.com.zup.beagle.android.data.serializer.BaseSerializerTest
 import br.com.zup.beagle.android.data.serializer.BeagleMoshi
 import br.com.zup.beagle.android.mockdata.ComponentBinding
 import br.com.zup.beagle.android.mockdata.InternalObject
 import br.com.zup.beagle.android.widget.WidgetView
-import br.com.zup.beagle.core.ServerDrivenComponent
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 import io.mockk.every
 import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -38,9 +38,10 @@ private val WIDGETS = listOf(
 )
 
 @DisplayName("Given a Moshi Adapter")
-class BindSerializationTest : BaseSerializerTest<ServerDrivenComponent>(ServerDrivenComponent::class.java) {
+class BindSerializationTest :
+    BaseSerializerTest<ServerDrivenComponent>(ServerDrivenComponent::class.java) {
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
         every { beagleSdk.registeredWidgets() } returns WIDGETS
@@ -54,7 +55,10 @@ class BindSerializationTest : BaseSerializerTest<ServerDrivenComponent>(ServerDr
         @DisplayName("Then should return a ComponentBinding with expressions")
         @Test
         fun testDeserializeJsonComponentBindingWithExpressions() {
-            testDeserializeJson(makeComponentBindingWithExpressionsJson(), makeObjectComponentBindingWithExpressions())
+            testDeserializeJson(
+                makeComponentBindingWithExpressionsJson(),
+                makeObjectComponentBindingWithExpressions()
+            )
         }
 
         @DisplayName("Then should return a ComponentBinding without expressions")
@@ -92,7 +96,8 @@ class BindSerializationTest : BaseSerializerTest<ServerDrivenComponent>(ServerDr
 
             // When
             val bindComponent = deserialize(jsonComponent) as ComponentBinding
-            val internalObject = moshi.adapter<Any>(bindComponent.value4.type).fromJson(internalObjectJson) as InternalObject
+            val internalObject = moshi.adapter<Any>(bindComponent.value4.type)
+                .fromJson(internalObjectJson) as InternalObject
 
             // Then
             Assertions.assertEquals("hello", internalObject.value1)
@@ -160,10 +165,10 @@ class BindSerializationTest : BaseSerializerTest<ServerDrivenComponent>(ServerDr
 
     private fun makeObjectComponentBindingWithoutExpressions() = ComponentBinding(
         value1 = null,
-        value2 = valueOf("Hello"),
-        value3 = valueOf(true),
-        value4 = valueOf(InternalObject(value1 = "hello", value2 = 123)),
-        value5 = valueOf(mapOf("test1" to "a", "test2" to "b")),
-        value6 = valueOf(listOf("test1", "test2"))
+        value2 = constant("Hello"),
+        value3 = constant(true),
+        value4 = constant(InternalObject(value1 = "hello", value2 = 123)),
+        value5 = constant(mapOf("test1" to "a", "test2" to "b")),
+        value6 = constant(listOf("test1", "test2"))
     )
 }

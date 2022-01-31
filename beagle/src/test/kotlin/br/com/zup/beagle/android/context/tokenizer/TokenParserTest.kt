@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,31 +16,29 @@
 
 package br.com.zup.beagle.android.context.tokenizer
 
+import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.logger.BeagleMessageLogs
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockkObject
 import io.mockk.verify
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.assertThrows
-import java.lang.IllegalArgumentException
-import java.lang.IllegalStateException
+import org.junit.jupiter.api.Test
 
-class TokenParserTest {
+class TokenParserTest : BaseTest() {
 
     private val tokenParser = TokenParser()
 
     @Test
     fun parse_should_return_string() {
-        shouldReturnStringFormatted( "'hello'", "hello")
-        shouldReturnStringFormatted( "'\\'hello\\''", "'hello'")
-        shouldReturnStringFormatted( "'hello \\'world\\'!'", "hello 'world'!")
-        shouldReturnStringFormatted( "'hello \\'world!'", "hello 'world!")
-        shouldReturnStringFormatted( "'hello \\ \\' \\' \\'world!'", "hello \\ ' ' 'world!")
+        shouldReturnStringFormatted("'hello'", "hello")
+        shouldReturnStringFormatted("'\\'hello\\''", "'hello'")
+        shouldReturnStringFormatted("'hello \\'world\\'!'", "hello 'world'!")
+        shouldReturnStringFormatted("'hello \\'world!'", "hello 'world!")
+        shouldReturnStringFormatted("'hello \\ \\' \\' \\'world!'", "hello \\ ' ' 'world!")
     }
 
     @Test
@@ -49,7 +47,12 @@ class TokenParserTest {
         val expression = "'hello"
         mockkObject(BeagleMessageLogs)
 
-        every { BeagleMessageLogs.errorWhileTryingParseExpressionFunction(expression, any()) } just Runs
+        every {
+            BeagleMessageLogs.errorWhileTryingParseExpressionFunction(
+                expression,
+                any()
+            )
+        } just Runs
         val result = tokenParser.parse(expression)
 
         // When Then

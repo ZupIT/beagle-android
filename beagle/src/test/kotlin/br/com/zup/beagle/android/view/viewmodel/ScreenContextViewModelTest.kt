@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package br.com.zup.beagle.android.view.viewmodel
 
 import android.view.View
+import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.action.SetContextInternal
 import br.com.zup.beagle.android.context.Bind
@@ -29,9 +30,12 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
-class ScreenContextViewModelTest {
+@DisplayName("Given a ScreenContextViewModel")
+class ScreenContextViewModelTest : BaseTest() {
 
     private val contextDataManager = mockk<ContextDataManager>(relaxed = true)
     private val contextDataEvaluation = mockk<ContextDataEvaluation>(relaxed = true)
@@ -41,7 +45,7 @@ class ScreenContextViewModelTest {
     private lateinit var screenContextViewModel: ScreenContextViewModel
 
     @BeforeEach
-    fun setUp() {
+    fun clear() {
         screenContextViewModel = ScreenContextViewModel(contextDataManager, contextDataEvaluation, implicitContextManager)
     }
 
@@ -91,10 +95,10 @@ class ScreenContextViewModelTest {
     @Test
     fun `GIVEN ScreenContextViewModel WHEN getContextData THEN should call getContextData`() {
         // When
-        screenContextViewModel.getContextData(view)
+        screenContextViewModel.getListContextData(view)
 
         // Then
-        verify(exactly = 1) { contextDataManager.getContextData(view) }
+        verify(exactly = 1) { contextDataManager.getListContextData(view) }
     }
 
     @Test
@@ -201,4 +205,73 @@ class ScreenContextViewModelTest {
         // Then
         verify(exactly = 1) { contextDataManager.clearContexts() }
     }
+
+    @DisplayName("When tryLinkContextInBindWithoutContext is called")
+    @Nested
+    inner class ContextInBindWithoutContextTest {
+
+        @DisplayName("Then should call manager")
+        @Test
+        fun testTryLinkContextInBindWithoutContext() {
+
+            // When
+            screenContextViewModel.tryLinkContextInBindWithoutContext(view)
+
+            // Then
+            verify(exactly = 1) { contextDataManager.tryLinkContextInBindWithoutContext(view) }
+        }
+    }
+
+    @DisplayName("When getContextData is called")
+    @Nested
+    inner class GetContextDataTest {
+
+        @DisplayName("Then should call manager")
+        @Test
+        fun testGetContextData() {
+
+            // When
+            screenContextViewModel.getContextData("context")
+
+            // Then
+            verify(exactly = 1) { contextDataManager.getContextData("context") }
+        }
+    }
+
+    @DisplayName("When addContext with default shouldOverrideExistingContext and context list")
+    @Nested
+    inner class AddContextListTest {
+
+        @DisplayName("Then should call manager")
+        @Test
+        fun testAddContextList() {
+            // Given
+            val contextData = mockk<ContextData>()
+
+            // When
+            screenContextViewModel.addContext(view, listOf(contextData))
+
+            // Then
+            verify(exactly = 1) { contextDataManager.addContext(view, listOf(contextData), false) }
+        }
+    }
+
+    @DisplayName("When addContext with shouldOverrideExistingContext and context list")
+    @Nested
+    inner class AddContextListWithShouldOverrideExistingContextTest {
+
+        @DisplayName("Then should call manager")
+        @Test
+        fun testAddContextListWithShouldOverrideExistingContext() {
+            // Given
+            val contextData = mockk<ContextData>()
+
+            // When
+            screenContextViewModel.addContext(view, listOf(contextData), true)
+
+            // Then
+            verify(exactly = 1) { contextDataManager.addContext(view, listOf(contextData), true) }
+        }
+    }
+
 }

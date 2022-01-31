@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,12 +19,12 @@ package br.com.zup.beagle.android.action
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewParent
-import br.com.zup.beagle.newanalytics.ActionAnalyticsConfig
+import br.com.zup.beagle.android.analytics.ActionAnalyticsConfig
 import br.com.zup.beagle.android.components.form.SimpleForm
-import br.com.zup.beagle.android.components.utils.beagleComponent
 import br.com.zup.beagle.android.logger.BeagleMessageLogs
+import br.com.zup.beagle.android.utils.beagleComponent
 import br.com.zup.beagle.android.widget.RootView
-import br.com.zup.beagle.core.BeagleJson
+import br.com.zup.beagle.android.widget.core.BeagleJson
 
 /**
  * SubmitForm and a specific action of the SimpleForm component when executing it calls SimpleForm's onSubmit attribute.

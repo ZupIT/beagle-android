@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,93 +18,66 @@ package br.com.zup.beagle.android.compiler
 
 import br.com.zup.beagle.compiler.shared.BeagleClass
 
-val FORM_LOCAL_ACTION_HANDLER = BeagleClass(
-    "br.com.zup.beagle.android.action",
-    "FormLocalActionHandler"
-)
 val DEEP_LINK_HANDLER = BeagleClass(
-    "br.com.zup.beagle.android.navigation",
-    "DeepLinkHandler"
-)
-val HTTP_CLIENT_HANDLER = BeagleClass(
-    "br.com.zup.beagle.android.networking",
-    "HttpClient"
+    packageName = "br.com.zup.beagle.android.navigation",
+    className = "DeepLinkHandler"
 )
 val HTTP_CLIENT_FACTORY_HANDLER = BeagleClass(
-    "br.com.zup.beagle.android.networking",
-    "HttpClientFactory"
+    packageName = "br.com.zup.beagle.android.networking",
+    className = "HttpClientFactory"
 )
-val VALIDATOR_HANDLER = BeagleClass(
-    "br.com.zup.beagle.android.components.form.core",
-    "ValidatorHandler"
-)
-val VALIDATOR = BeagleClass(
-    "br.com.zup.beagle.android.components.form.core",
-    "Validator"
+val VIEW_CLIENT = BeagleClass(
+    packageName = "br.com.zup.beagle.android.networking",
+    className = "ViewClient"
 )
 val DESIGN_SYSTEM = BeagleClass(
-    "br.com.zup.beagle.android.setup",
-    "DesignSystem"
-)
-val STORE_HANDLER = BeagleClass(
-    "br.com.zup.beagle.android.store",
-    "StoreHandler"
+    packageName = "br.com.zup.beagle.android.setup",
+    className = "DesignSystem"
 )
 val BEAGLE_CONFIG = BeagleClass(
-    "br.com.zup.beagle.android.setup",
-    "BeagleConfig"
+    packageName = "br.com.zup.beagle.android.setup",
+    className = "BeagleConfig"
 )
 val BEAGLE_SDK = BeagleClass(
-    "br.com.zup.beagle.android.setup",
-    "BeagleSdk"
+    packageName = "br.com.zup.beagle.android.setup",
+    className = "BeagleSdk"
 )
-
 val BEAGLE_ACTIVITY = BeagleClass(
-    "br.com.zup.beagle.android.view",
-    "BeagleActivity"
+    packageName = "br.com.zup.beagle.android.view",
+    className = "BeagleActivity"
 )
-
 val DEFAULT_BEAGLE_ACTIVITY = BeagleClass(
-    "br.com.zup.beagle.android.view",
-    "ServerDrivenActivity"
+    packageName = "br.com.zup.beagle.android.view",
+    className = "ServerDrivenActivity"
 )
-
 val URL_BUILDER_HANDLER = BeagleClass(
-    "br.com.zup.beagle.android.networking.urlbuilder",
-    "UrlBuilder"
-)
-val ANALYTICS = BeagleClass(
-    "br.com.zup.beagle.analytics",
-    "Analytics"
+    packageName = "br.com.zup.beagle.android.networking.urlbuilder",
+    className = "UrlBuilder"
 )
 val ANALYTICS_PROVIDER = BeagleClass(
-    "br.com.zup.beagle.newanalytics",
-    "AnalyticsProvider"
+    packageName = "br.com.zup.beagle.android.analytics",
+    className = "AnalyticsProvider"
 )
 val CONTROLLER_REFERENCE = BeagleClass(
-    "br.com.zup.beagle.android.navigation",
-    "BeagleControllerReference"
+    packageName = "br.com.zup.beagle.android.navigation",
+    className = "BeagleControllerReference"
 )
 val BEAGLE_CUSTOM_ADAPTER = BeagleClass(
-    "br.com.zup.beagle.android.data.serializer.adapter.generic",
-    "TypeAdapterResolver"
+    packageName = "br.com.zup.beagle.android.data.serializer.adapter.generic",
+    className = "TypeAdapterResolver"
 )
-
 val BEAGLE_PARAMETERIZED_TYPE_FACTORY = BeagleClass(
-    "br.com.zup.beagle.android.data.serializer.adapter.generic",
-    "ParameterizedTypeFactory"
+    packageName = "br.com.zup.beagle.android.data.serializer.adapter.generic",
+    className = "ParameterizedTypeFactory"
 )
-
 val BEAGLE_LOGGER = BeagleClass(
-    "br.com.zup.beagle.android.logger",
-    "BeagleLogger"
+    packageName = "br.com.zup.beagle.android.logger",
+    className = "BeagleLogger"
 )
-
 val BEAGLE_IMAGE_DOWNLOADER = BeagleClass(
-    "br.com.zup.beagle.android.imagedownloader",
-    "BeagleImageDownloader"
+    packageName = "br.com.zup.beagle.android.imagedownloader",
+    className = "BeagleImageDownloader"
 )
-
 val ANDROID_ACTION = BeagleClass(
     packageName = "br.com.zup.beagle.android.action",
     className = "Action"

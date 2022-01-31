@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,20 +19,13 @@ package br.com.zup.beagle.android.data.serializer
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.mockdata.TypeAdapterResolverImpl
 import br.com.zup.beagle.android.testutil.withoutWhiteSpaces
-import br.com.zup.beagle.core.ServerDrivenComponent
 import com.squareup.moshi.Moshi
 import io.mockk.every
-import io.mockk.mockk
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.TestInstance
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.Arguments
-import org.junit.jupiter.params.provider.MethodSource
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 abstract class BaseSerializerTest<T>(private val clazz: Class<T>) : BaseTest() {
 
     lateinit var moshi: Moshi
@@ -41,17 +34,11 @@ abstract class BaseSerializerTest<T>(private val clazz: Class<T>) : BaseTest() {
     override fun setUp() {
         super.setUp()
 
-        every { beagleSdk.formLocalActionHandler } returns mockk(relaxed = true)
         every { beagleSdk.registeredWidgets() } returns listOf()
         every { beagleSdk.registeredActions() } returns listOf()
         every { beagleSdk.typeAdapterResolver } returns TypeAdapterResolverImpl()
 
         moshi = BeagleMoshi.createMoshi()
-    }
-
-    @AfterAll // Needed. We are overriding the annotation of the super class.
-    override fun tearDown() {
-        super.tearDown()
     }
 
     fun serialize(anObject: T): String = moshi.adapter(clazz).toJson(anObject)

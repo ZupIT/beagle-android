@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,14 +25,14 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import br.com.zup.beagle.android.context.Bind
-import br.com.zup.beagle.android.context.expressionOrValueOf
+import br.com.zup.beagle.android.context.expressionOrConstant
 import br.com.zup.beagle.android.utils.observeBindChanges
 import br.com.zup.beagle.android.view.BeagleActivity
 import br.com.zup.beagle.android.view.ServerDrivenState
 import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.android.widget.WidgetView
-import br.com.zup.beagle.annotation.RegisterWidget
+import br.com.zup.beagle.android.annotation.RegisterWidget
 
 /**
  * A WebView widget will define a WebView natively using the server driven information received through Beagle.
@@ -47,7 +47,7 @@ data class WebView(
     val url: Bind<String>,
 ) : WidgetView() {
 
-    constructor(url: String) : this(expressionOrValueOf(url))
+    constructor(url: String) : this(expressionOrConstant(url))
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun buildView(rootView: RootView): View {
@@ -85,7 +85,11 @@ data class WebView(
         }
 
         private fun notify(loading: Boolean) {
-            notify(state = ServerDrivenState.Loading(loading))
+            if (loading) {
+                notify(state = ServerDrivenState.Started)
+            } else {
+                notify(state = ServerDrivenState.Finished)
+            }
         }
 
         private fun notify(state: ServerDrivenState) {

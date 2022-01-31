@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,25 +17,22 @@
 package br.com.zup.beagle.android.view.viewmodel
 
 import android.view.View
+import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.testutil.getPrivateField
-import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.mockkStatic
 import io.mockk.verify
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.lang.Exception
 import java.util.LinkedList
-import org.junit.jupiter.api.Assertions.assertEquals
 
-class GenerateIdViewModelTest {
+class GenerateIdViewModelTest : BaseTest() {
 
     private lateinit var viewModel: GenerateIdViewModel
 
     @BeforeEach
-    fun setUp() {
-        MockKAnnotations.init(this)
-
+    fun clear() {
         mockkStatic(View::class)
         every { View.generateViewId() } returns 10
         viewModel = GenerateIdViewModel()
@@ -74,8 +71,10 @@ class GenerateIdViewModelTest {
         // Then
         val views = viewModel.getPrivateField<MutableMap<Int, LocalView>>("views")
         val listGenerated = listOf(10)
-        val expected = LocalView(ids = listGenerated.toMutableList(),
-            temporaryIds = LinkedList(listGenerated), created = true)
+        val expected = LocalView(
+            ids = listGenerated.toMutableList(),
+            temporaryIds = LinkedList(listGenerated), created = true
+        )
         assertEquals(expected, views[1])
     }
 

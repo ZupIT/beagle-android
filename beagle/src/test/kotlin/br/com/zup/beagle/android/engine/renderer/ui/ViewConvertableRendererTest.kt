@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,26 +23,22 @@ import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.engine.renderer.ViewConvertableRenderer
 import br.com.zup.beagle.android.widget.WidgetView
 import io.mockk.every
-import io.mockk.impl.annotations.MockK
-import io.mockk.impl.annotations.RelaxedMockK
-import org.junit.jupiter.api.Test
+import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.Test
 
 class ViewConvertableRendererTest : BaseTest() {
 
-    @RelaxedMockK
-    private lateinit var widget: WidgetView
+    private val widget: WidgetView = mockk(relaxed = true)
 
-    @MockK
-    private lateinit var context: Context
+    private val context: Context = mockk()
 
-    @RelaxedMockK
-    private lateinit var view: View
+    private val view: View = mockk(relaxed = true)
 
     private lateinit var viewConvertableRenderer: ViewConvertableRenderer
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
 

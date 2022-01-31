@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ package br.com.zup.beagle.android.data.serializer.actions
 import br.com.zup.beagle.android.action.RequestActionMethod
 import br.com.zup.beagle.android.action.SendRequest
 import br.com.zup.beagle.android.context.expressionOf
-import br.com.zup.beagle.android.context.valueOf
+import br.com.zup.beagle.android.context.constant
 import br.com.zup.beagle.android.data.serializer.makeActionAlertJson
 import br.com.zup.beagle.android.data.serializer.makeActionAlertObject
 import org.json.JSONObject
@@ -138,9 +138,9 @@ class SendRequestSerializerTest : BaseActionSerializerTest() {
     )
 
     private fun makeObjectSendRequestWithoutExpression() = SendRequest(
-        url = valueOf("http://test.com"),
-        method = valueOf(RequestActionMethod.GET),
-        headers = valueOf(mapOf("test" to "test")),
+        url = constant("http://test.com"),
+        method = constant(RequestActionMethod.GET),
+        headers = constant(mapOf("test" to "test")),
         data = JSONObject()
             .put("a", true)
             .put("b", "a"),

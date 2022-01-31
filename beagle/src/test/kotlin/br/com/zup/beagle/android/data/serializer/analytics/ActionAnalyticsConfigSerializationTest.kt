@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,12 +19,12 @@ package br.com.zup.beagle.android.data.serializer.analytics
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.action.Navigate
+import br.com.zup.beagle.android.analytics.ActionAnalyticsConfig
+import br.com.zup.beagle.android.analytics.ActionAnalyticsProperties
 import br.com.zup.beagle.android.data.serializer.BeagleMoshi
-import br.com.zup.beagle.newanalytics.ActionAnalyticsConfig
-import br.com.zup.beagle.newanalytics.ActionAnalyticsProperties
 import com.squareup.moshi.Moshi
 import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -34,7 +34,7 @@ class ActionAnalyticsConfigSerializationTest : BaseTest() {
 
     private lateinit var moshi: Moshi
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
 
@@ -50,7 +50,8 @@ class ActionAnalyticsConfigSerializationTest : BaseTest() {
         fun testDeserializeJsonActionAnalyticsConfigDisabledReturnFalse() {
             val actionAnalyticsConfigExpected = ActionAnalyticsConfig.Disabled()
 
-            val actionAnalyticsConfigActual = moshi.adapter(ActionAnalyticsConfig::class.java).fromJson("false")
+            val actionAnalyticsConfigActual =
+                moshi.adapter(ActionAnalyticsConfig::class.java).fromJson("false")
 
             Assertions.assertNotNull(actionAnalyticsConfigActual)
             Assertions.assertEquals(
@@ -66,7 +67,8 @@ class ActionAnalyticsConfigSerializationTest : BaseTest() {
         fun testDeserializeJsonActionAnalyticsConfigEnabledWithAnalyticsNullReturnFalse() {
             val actionAnalyticsConfigExpected = ActionAnalyticsConfig.Enabled()
 
-            val actionAnalyticsConfigActual = moshi.adapter(ActionAnalyticsConfig::class.java).fromJson("true")
+            val actionAnalyticsConfigActual =
+                moshi.adapter(ActionAnalyticsConfig::class.java).fromJson("true")
 
             Assertions.assertNotNull(actionAnalyticsConfigActual)
             Assertions.assertEquals(
@@ -117,7 +119,10 @@ class ActionAnalyticsConfigSerializationTest : BaseTest() {
                 (actionAnalyticsConfig.value as ActionAnalyticsProperties).attributes,
                 (actual.value as ActionAnalyticsProperties).attributes
             )
-            Assertions.assertEquals(1, (actual.value as ActionAnalyticsProperties).additionalEntries?.size)
+            Assertions.assertEquals(
+                1,
+                (actual.value as ActionAnalyticsProperties).additionalEntries?.size
+            )
             Assertions.assertEquals(
                 (actionAnalyticsConfig.value as ActionAnalyticsProperties).additionalEntries?.get("attributes"),
                 (actual.value as ActionAnalyticsProperties).additionalEntries?.get("attributes")
@@ -171,7 +176,8 @@ class ActionAnalyticsConfigSerializationTest : BaseTest() {
         fun testSerializeJsonActionAnalyticsConfigDisabledReturnFalse() {
             val actionAnalyticsConfig = ActionAnalyticsConfig.Disabled()
 
-            val json = moshi.adapter(ActionAnalyticsConfig::class.java).toJson(actionAnalyticsConfig)
+            val json =
+                moshi.adapter(ActionAnalyticsConfig::class.java).toJson(actionAnalyticsConfig)
 
             Assertions.assertNotNull(json)
             Assertions.assertEquals("false", json)
@@ -182,7 +188,8 @@ class ActionAnalyticsConfigSerializationTest : BaseTest() {
         fun testSerializeJsonActionAnalyticsConfigEnabledWithAnalyticsNullReturnFalse() {
             val actionAnalyticsConfig = ActionAnalyticsConfig.Enabled()
 
-            val json = moshi.adapter(ActionAnalyticsConfig::class.java).toJson(actionAnalyticsConfig)
+            val json =
+                moshi.adapter(ActionAnalyticsConfig::class.java).toJson(actionAnalyticsConfig)
 
             Assertions.assertNotNull(json)
             Assertions.assertEquals("true", json)
@@ -195,7 +202,8 @@ class ActionAnalyticsConfigSerializationTest : BaseTest() {
                 ActionAnalyticsProperties(attributes = listOf("attributes"))
             )
 
-            val json = moshi.adapter(ActionAnalyticsConfig::class.java).toJson(actionAnalyticsConfig)
+            val json =
+                moshi.adapter(ActionAnalyticsConfig::class.java).toJson(actionAnalyticsConfig)
 
             Assertions.assertNotNull(json)
             Assertions.assertEquals(makeActionAnalyticsPropertiesWithAttributeJson(), json)
@@ -208,7 +216,8 @@ class ActionAnalyticsConfigSerializationTest : BaseTest() {
                 ActionAnalyticsProperties(additionalEntries = mapOf("attributes" to "test"))
             )
 
-            val json = moshi.adapter(ActionAnalyticsConfig::class.java).toJson(actionAnalyticsConfig)
+            val json =
+                moshi.adapter(ActionAnalyticsConfig::class.java).toJson(actionAnalyticsConfig)
 
             Assertions.assertNotNull(json)
             Assertions.assertEquals(makeActionAnalyticsPropertiesWithAdditionalEntriesJson(), json)
@@ -221,14 +230,19 @@ class ActionAnalyticsConfigSerializationTest : BaseTest() {
                 ActionAnalyticsProperties(listOf("attributes"), mapOf("attributes" to "test"))
             )
 
-            val json = moshi.adapter(ActionAnalyticsConfig::class.java).toJson(actionAnalyticsConfig)
+            val json =
+                moshi.adapter(ActionAnalyticsConfig::class.java).toJson(actionAnalyticsConfig)
 
             Assertions.assertNotNull(json)
-            Assertions.assertEquals(makeActionAnalyticsPropertiesWithAttributesAndAdditionalEntriesJson(), json)
+            Assertions.assertEquals(
+                makeActionAnalyticsPropertiesWithAttributesAndAdditionalEntriesJson(),
+                json
+            )
         }
     }
 
-    private fun makeActionAnalyticsPropertiesWithAttributeJson() = """{"attributes":["attributes"]}"""
+    private fun makeActionAnalyticsPropertiesWithAttributeJson() =
+        """{"attributes":["attributes"]}"""
 
     private fun makeActionAnalyticsPropertiesWithAdditionalEntriesJson() =
         """{"additionalEntries":{"attributes":"test"}}"""

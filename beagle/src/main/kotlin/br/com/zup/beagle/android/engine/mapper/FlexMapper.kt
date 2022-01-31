@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,14 +17,16 @@
 package br.com.zup.beagle.android.engine.mapper
 
 import android.view.View
+import br.com.zup.beagle.android.components.utils.EdgeValueHelper
+import br.com.zup.beagle.android.components.utils.UnitValueConstant
 import br.com.zup.beagle.android.utils.dp
 import br.com.zup.beagle.android.utils.internalObserveBindChanges
 import br.com.zup.beagle.android.widget.RootView
-import br.com.zup.beagle.core.Style
-import br.com.zup.beagle.widget.core.EdgeValue
-import br.com.zup.beagle.widget.core.Size
-import br.com.zup.beagle.widget.core.UnitType
-import br.com.zup.beagle.widget.core.UnitValue
+import br.com.zup.beagle.android.widget.core.EdgeValue
+import br.com.zup.beagle.android.widget.core.Size
+import br.com.zup.beagle.android.widget.core.Style
+import br.com.zup.beagle.android.widget.core.UnitType
+import br.com.zup.beagle.android.widget.core.UnitValue
 import com.facebook.yoga.YogaAlign
 import com.facebook.yoga.YogaDisplay
 import com.facebook.yoga.YogaEdge
@@ -52,7 +54,7 @@ internal class FlexMapper {
 
         display = YogaDisplay.FLEX
         positionType = makeYogaPositionType(style.positionType) ?: YogaPositionType.RELATIVE
-        applyAttributes(style, this)
+        setAspectRatio(style.size?.aspectRatio, this)
     }
 
     fun observeBindChangesFlex(
@@ -64,133 +66,301 @@ internal class FlexMapper {
 
         if (style.display != null) {
             internalObserveBindChanges(rootView, view, style.display) {
-                yogaNode.display = makeYogaDisplay(it) ?: YogaDisplay.FLEX
-                view.requestLayout()
+                if (it != null) {
+                    yogaNode.display = makeYogaDisplay(it) ?: YogaDisplay.FLEX
+                    view.requestLayout()
+                }
+            }
+        }
+
+        observeSize(style.size, rootView, view, yogaNode)
+
+        observeUnitValue(rootView, view, style.flex?.basis) { value: Double, unitType: UnitType ->
+            applyNodeBasis(value, unitType, yogaNode)
+        }
+
+        observeEdgeValue(rootView, view, style.margin) { yogaEdge: EdgeValueHelper ->
+            applyNodeMargin(yogaEdge, yogaNode)
+            view.requestLayout()
+        }
+
+        observeEdgeValue(rootView, view, style.padding) { yogaEdge: EdgeValueHelper ->
+            applyNodePadding(yogaEdge, yogaNode)
+            view.requestLayout()
+        }
+
+        observeEdgeValue(rootView, view, style.position) { yogaEdge: EdgeValueHelper ->
+            applyNodePosition(yogaEdge, yogaNode)
+            view.requestLayout()
+        }
+    }
+
+    private fun observeSize(
+        size: Size?,
+        rootView: RootView,
+        view: View,
+        yogaNode: YogaNode
+    ) {
+        size?.let { size ->
+            observeUnitValue(rootView, view, size.width) { value: Double, unitType: UnitType ->
+                applyNodeWidth(value, unitType, yogaNode)
+            }
+
+            observeUnitValue(rootView, view, size.height) { value: Double, unitType: UnitType ->
+                applyNodeHeight(value, unitType, yogaNode)
+            }
+
+            observeUnitValue(rootView, view, size.maxWidth) { value: Double, unitType: UnitType ->
+                applyNodeMaxWidth(value, unitType, yogaNode)
+            }
+
+            observeUnitValue(rootView, view, size.maxHeight) { value: Double, unitType: UnitType ->
+                applyNodeMaxHeight(value, unitType, yogaNode)
+            }
+
+            observeUnitValue(rootView, view, size.minWidth) { value: Double, unitType: UnitType ->
+                applyNodeMinWidth(value, unitType, yogaNode)
+            }
+
+            observeUnitValue(rootView, view, size.minHeight) { value: Double, unitType: UnitType ->
+                applyNodeMinHeight(value, unitType, yogaNode)
             }
         }
     }
 
-    private fun applyAttributes(style: Style, yogaNode: YogaNode) {
-        setWidth(style.size, yogaNode)
-        setHeight(style.size, yogaNode)
-        setMaxWidth(style.size, yogaNode)
-        setMaxHeight(style.size, yogaNode)
-        setMinWidth(style.size, yogaNode)
-        setMinHeight(style.size, yogaNode)
-        setBasis(style.flex?.basis, yogaNode)
-        setAspectRatio(style.size?.aspectRatio, yogaNode)
-        setMargin(style.margin, yogaNode)
-        setPadding(style.padding, yogaNode)
-        setPosition(style.position, yogaNode)
-    }
-
-    private fun setWidth(size: Size?, yogaNode: YogaNode) {
-        size?.width?.let { width ->
-            if (width.type == UnitType.REAL) {
-                yogaNode.setWidth(width.value.dp().toFloat())
-            } else if (width.type == UnitType.PERCENT) {
-                yogaNode.setWidthPercent(width.value.toFloat())
+    private fun observeUnitValue(
+        rootView: RootView,
+        view: View,
+        unitValue: UnitValue?,
+        finish: (value: Double, unitType: UnitType) -> Unit
+    ) {
+        if (unitValue != null) {
+            internalObserveBindChanges(rootView, view, unitValue.value) {
+                if (it != null) {
+                    finish(it, unitValue.type)
+                    view.requestLayout()
+                }
             }
         }
     }
 
-    private fun setHeight(size: Size?, yogaNode: YogaNode) {
-        size?.height?.let { height ->
-            if (height.type == UnitType.REAL) {
-                yogaNode.setHeight(height.value.dp().toFloat())
-            } else if (height.type == UnitType.PERCENT) {
-                yogaNode.setHeightPercent(height.value.toFloat())
+    private fun observeEdgeValue(
+        rootView: RootView,
+        view: View,
+        edgeValue: EdgeValue?,
+        finish: (yogaEdge: EdgeValueHelper) -> Unit
+    ) {
+        if (edgeValue != null) {
+            val edgeValueHelper = EdgeValueHelper()
+            if (edgeValue.top != null) {
+                internalObserveBindChanges(rootView, view, edgeValue.top.value) {
+                    edgeValueHelper.top = UnitValueConstant(type = edgeValue.top.type, value = it)
+                    finish(edgeValueHelper)
+                }
+            }
+
+            if (edgeValue.all != null) {
+                internalObserveBindChanges(rootView, view, edgeValue.all.value) {
+                    edgeValueHelper.all = UnitValueConstant(type = edgeValue.all.type, value = it)
+                    finish(edgeValueHelper)
+                }
+            }
+
+            if (edgeValue.bottom != null) {
+                internalObserveBindChanges(rootView, view, edgeValue.bottom.value) {
+                    edgeValueHelper.bottom = UnitValueConstant(type = edgeValue.bottom.type, value = it)
+                    finish(edgeValueHelper)
+                }
+            }
+
+            if (edgeValue.horizontal != null) {
+                internalObserveBindChanges(rootView, view, edgeValue.horizontal.value) {
+                    edgeValueHelper.horizontal = UnitValueConstant(type = edgeValue.horizontal.type, value = it)
+                    finish(edgeValueHelper)
+                }
+            }
+
+            if (edgeValue.left != null) {
+                internalObserveBindChanges(rootView, view, edgeValue.left.value) {
+                    edgeValueHelper.left = UnitValueConstant(type = edgeValue.left.type, value = it)
+                    finish(edgeValueHelper)
+                }
+            }
+
+            if (edgeValue.right != null) {
+                internalObserveBindChanges(rootView, view, edgeValue.right.value) {
+                    edgeValueHelper.right = UnitValueConstant(type = edgeValue.right.type, value = it)
+                    finish(edgeValueHelper)
+                }
+            }
+
+            if (edgeValue.vertical != null) {
+                internalObserveBindChanges(rootView, view, edgeValue.vertical.value) {
+                    edgeValueHelper.vertical = UnitValueConstant(type = edgeValue.vertical.type, value = it)
+                    finish(edgeValueHelper)
+                }
             }
         }
     }
 
-    private fun setMaxWidth(size: Size?, yogaNode: YogaNode) {
-        size?.maxWidth?.let { maxWidth ->
-            if (maxWidth.type == UnitType.REAL) {
-                yogaNode.setMaxWidth(maxWidth.value.dp().toFloat())
-            } else if (maxWidth.type == UnitType.PERCENT) {
-                yogaNode.setMaxWidthPercent(maxWidth.value.toFloat())
+    private fun applyNodeWidth(
+        value: Double?,
+        type: UnitType,
+        yogaNode: YogaNode
+    ) {
+        value?.let { v ->
+            if (type == UnitType.REAL) {
+                yogaNode.setWidth(v.dp().toFloat())
+            } else if (type == UnitType.PERCENT) {
+                yogaNode.setWidthPercent(v.toFloat())
             }
         }
     }
 
-    private fun setMaxHeight(size: Size?, yogaNode: YogaNode) {
-        size?.maxHeight?.let { maxHeight ->
-            if (maxHeight.type == UnitType.REAL) {
-                yogaNode.setMaxHeight(maxHeight.value.dp().toFloat())
-            } else if (maxHeight.type == UnitType.PERCENT) {
-                yogaNode.setMaxHeightPercent(maxHeight.value.toFloat())
+    private fun applyNodeHeight(
+        value: Double?,
+        type: UnitType,
+        yogaNode: YogaNode
+    ) {
+        value?.let { v ->
+            if (type == UnitType.REAL) {
+                yogaNode.setHeight(v.dp().toFloat())
+            } else if (type == UnitType.PERCENT) {
+                yogaNode.setHeightPercent(v.toFloat())
             }
         }
     }
 
-    private fun setMinWidth(size: Size?, yogaNode: YogaNode) {
-        size?.minWidth?.let { minWidth ->
-            if (minWidth.type == UnitType.REAL) {
-                yogaNode.setMinWidth(minWidth.value.dp().toFloat())
-            } else if (minWidth.type == UnitType.PERCENT) {
-                yogaNode.setMinWidthPercent(minWidth.value.toFloat())
+    private fun applyNodeMaxHeight(
+        value: Double?,
+        type: UnitType,
+        yogaNode: YogaNode
+    ) {
+        value?.let { v ->
+            if (type == UnitType.REAL) {
+                yogaNode.setMaxHeight(v.dp().toFloat())
+            } else if (type == UnitType.PERCENT) {
+                yogaNode.setMaxHeightPercent(v.toFloat())
             }
         }
     }
 
-    private fun setMinHeight(size: Size?, yogaNode: YogaNode) {
-        size?.minHeight?.let { minHeight ->
-            if (minHeight.type == UnitType.REAL) {
-                yogaNode.setMinHeight(minHeight.value.dp().toFloat())
-            } else if (minHeight.type == UnitType.PERCENT) {
-                yogaNode.setMinHeightPercent(minHeight.value.toFloat())
+    private fun applyNodeMaxWidth(
+        value: Double?,
+        type: UnitType,
+        yogaNode: YogaNode
+    ) {
+        value?.let { v ->
+            if (type == UnitType.REAL) {
+                yogaNode.setMaxWidth(v.dp().toFloat())
+            } else if (type == UnitType.PERCENT) {
+                yogaNode.setMaxWidthPercent(v.toFloat())
+            }
+        }
+    }
+
+    private fun applyNodeMinWidth(
+        value: Double?,
+        type: UnitType,
+        yogaNode: YogaNode
+    ) {
+        value?.let { v ->
+            if (type == UnitType.REAL) {
+                yogaNode.setMinWidth(v.dp().toFloat())
+            } else if (type == UnitType.PERCENT) {
+                yogaNode.setMinWidthPercent(v.toFloat())
+            }
+        }
+    }
+
+    private fun applyNodeMinHeight(
+        value: Double?,
+        type: UnitType,
+        yogaNode: YogaNode
+    ) {
+        value?.let { v ->
+            if (type == UnitType.REAL) {
+                yogaNode.setMinHeight(v.dp().toFloat())
+            } else if (type == UnitType.PERCENT) {
+                yogaNode.setMinHeightPercent(v.toFloat())
+            }
+        }
+    }
+
+    private fun applyNodeMargin(
+        edgeValue: EdgeValueHelper,
+        yogaNode: YogaNode
+    ) {
+        applyEdgeValue(edgeValue) { yogaEdge, unitValue ->
+            unitValue.value?.let { v ->
+                if (unitValue.type == UnitType.REAL) {
+                    yogaNode.setMargin(yogaEdge, v.dp().toFloat())
+                } else if (unitValue.type == UnitType.PERCENT) {
+                    yogaNode.setMarginPercent(yogaEdge, v.toFloat())
+                }
+            }
+        }
+    }
+
+    private fun applyNodePadding(
+        edgeValue: EdgeValueHelper,
+        yogaNode: YogaNode
+    ) {
+        applyEdgeValue(edgeValue) { yogaEdge, unitValue ->
+            unitValue.value?.let { v ->
+                if (unitValue.type == UnitType.REAL) {
+                    yogaNode.setPadding(yogaEdge, v.dp().toFloat())
+                } else if (unitValue.type == UnitType.PERCENT) {
+                    yogaNode.setPaddingPercent(yogaEdge, v.toFloat())
+                }
+            }
+        }
+    }
+
+    private fun applyNodePosition(
+        edgeValue: EdgeValueHelper,
+        yogaNode: YogaNode
+    ) {
+        applyEdgeValue(edgeValue) { yogaEdge, unitValue ->
+            unitValue.value?.let { v ->
+                if (unitValue.type == UnitType.REAL) {
+                    yogaNode.setPosition(yogaEdge, v.dp().toFloat())
+                } else if (unitValue.type == UnitType.PERCENT) {
+                    yogaNode.setPositionPercent(yogaEdge, v.toFloat())
+                }
+            }
+        }
+    }
+
+    private fun applyNodeBasis(
+        value: Double?,
+        type: UnitType,
+        yogaNode: YogaNode
+    ) {
+        value?.let { v ->
+            when (type) {
+                UnitType.REAL -> {
+                    yogaNode.setFlexBasis(v.toFloat())
+                }
+                UnitType.PERCENT -> {
+                    yogaNode.setFlexBasisPercent(v.toFloat())
+                }
+                else -> {
+                    yogaNode.setFlexBasisAuto()
+                }
             }
         }
     }
 
     private fun setAspectRatio(aspectRatio: Double?, yogaNode: YogaNode) {
         aspectRatio?.let {
-            yogaNode.aspectRatio = aspectRatio.toFloat()
-        }
-    }
-
-    private fun setBasis(basis: UnitValue?, yogaNode: YogaNode) {
-        when (basis?.type) {
-            UnitType.REAL -> yogaNode.setFlexBasis(basis.value.toFloat())
-            UnitType.PERCENT -> yogaNode.setFlexBasisPercent(basis.value.toFloat())
-            else -> yogaNode.setFlexBasisAuto()
-        }
-    }
-
-    private fun setMargin(margin: EdgeValue?, yogaNode: YogaNode) {
-        applyEdgeValue(margin) { yogaEdge, unitValue ->
-            if (unitValue.type == UnitType.REAL) {
-                yogaNode.setMargin(yogaEdge, unitValue.value.dp().toFloat())
-            } else if (unitValue.type == UnitType.PERCENT) {
-                yogaNode.setMarginPercent(yogaEdge, unitValue.value.toFloat())
-            }
-        }
-    }
-
-    private fun setPadding(padding: EdgeValue?, yogaNode: YogaNode) {
-        applyEdgeValue(padding) { yogaEdge, unitValue ->
-            if (unitValue.type == UnitType.REAL) {
-                yogaNode.setPadding(yogaEdge, unitValue.value.dp().toFloat())
-            } else if (unitValue.type == UnitType.PERCENT) {
-                yogaNode.setPaddingPercent(yogaEdge, unitValue.value.toFloat())
-            }
-        }
-    }
-
-    private fun setPosition(position: EdgeValue?, yogaNode: YogaNode) {
-        applyEdgeValue(position) { yogaEdge, unitValue ->
-            if (unitValue.type == UnitType.REAL) {
-                yogaNode.setPosition(yogaEdge, unitValue.value.dp().toFloat())
-            } else if (unitValue.type == UnitType.PERCENT) {
-                yogaNode.setPositionPercent(yogaEdge, unitValue.value.toFloat())
-            }
+            yogaNode.aspectRatio = aspectRatio.dp().toFloat()
         }
     }
 
     private fun applyEdgeValue(
-        edgeValue: EdgeValue?,
-        finish: (yogaEdge: YogaEdge, unitValue: UnitValue) -> Unit,
+        edgeValue: EdgeValueHelper?,
+        finish: (yogaEdge: YogaEdge, unitValue: UnitValueConstant) -> Unit,
     ) {
         edgeValue?.top?.let {
             finish(YogaEdge.TOP, it)

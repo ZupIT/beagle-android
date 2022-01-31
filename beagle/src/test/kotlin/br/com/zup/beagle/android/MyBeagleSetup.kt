@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,28 +16,21 @@
 
 package br.com.zup.beagle.android
 
-import br.com.zup.beagle.analytics.Analytics
-import br.com.zup.beagle.newanalytics.AnalyticsProvider
+import br.com.zup.beagle.android.analytics.AnalyticsProvider
 import br.com.zup.beagle.android.action.Action
-import br.com.zup.beagle.android.action.FormLocalActionHandler
-import br.com.zup.beagle.android.components.form.core.ValidatorHandler
 import br.com.zup.beagle.android.data.serializer.adapter.generic.TypeAdapterResolver
 import br.com.zup.beagle.android.imagedownloader.BeagleImageDownloader
 import br.com.zup.beagle.android.logger.BeagleLogger
 import br.com.zup.beagle.android.navigation.BeagleControllerReference
 import br.com.zup.beagle.android.navigation.DeepLinkHandler
-import br.com.zup.beagle.android.networking.HttpClient
 import br.com.zup.beagle.android.networking.HttpClientFactory
+import br.com.zup.beagle.android.networking.ViewClient
 import br.com.zup.beagle.android.networking.urlbuilder.UrlBuilder
 import br.com.zup.beagle.android.operation.Operation
 import br.com.zup.beagle.android.setup.BeagleConfig
 import br.com.zup.beagle.android.setup.BeagleSdk
-import br.com.zup.beagle.android.setup.Cache
 import br.com.zup.beagle.android.setup.DesignSystem
 import br.com.zup.beagle.android.setup.Environment
-import br.com.zup.beagle.android.store.StoreHandler
-import br.com.zup.beagle.android.view.BeagleActivity
-import br.com.zup.beagle.android.view.ServerDrivenActivity
 import br.com.zup.beagle.android.widget.WidgetView
 
 class MyBeagleSetup(override val analyticsProvider: AnalyticsProvider? = null) : BeagleSdk {
@@ -45,38 +38,23 @@ class MyBeagleSetup(override val analyticsProvider: AnalyticsProvider? = null) :
     override val config: BeagleConfig = object : BeagleConfig {
         override val environment: Environment = Environment.DEBUG
         override val baseUrl: String = ""
-        override val cache: Cache = Cache(enabled = false, maxAge = 0)
-
-        override val isLoggingEnabled: Boolean = true
-
     }
-
-    override val formLocalActionHandler: FormLocalActionHandler? = null
 
     override val deepLinkHandler: DeepLinkHandler? = null
 
-    override val validatorHandler: ValidatorHandler? = null
-
-    override val httpClient: HttpClient? = null
-
     override val httpClientFactory: HttpClientFactory? = null
+
+    override val viewClient: ViewClient? = null
 
     override val designSystem: DesignSystem? = null
 
     override val imageDownloader: BeagleImageDownloader? = null
 
-    override val storeHandler: StoreHandler? = null
-
     override val controllerReference: BeagleControllerReference? = null
 
     override val typeAdapterResolver: TypeAdapterResolver? = null
 
-    override val serverDrivenActivity: Class<BeagleActivity> =
-        ServerDrivenActivity::class.java as Class<BeagleActivity>
-
     override val urlBuilder: UrlBuilder? = null
-
-    override val analytics: Analytics? = null
 
     override val logger: BeagleLogger? = null
 

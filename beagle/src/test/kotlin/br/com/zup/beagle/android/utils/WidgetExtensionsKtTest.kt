@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,8 @@
 
 package br.com.zup.beagle.android.utils
 
-import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.Fragment
 import br.com.zup.beagle.android.BaseTest
-import br.com.zup.beagle.android.components.layout.NavigationBar
-import br.com.zup.beagle.android.components.layout.Screen
 import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.context.expressionOf
 import br.com.zup.beagle.android.mockdata.createViewForContext
@@ -28,11 +25,12 @@ import br.com.zup.beagle.android.testutil.RandomData
 import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.view.custom.BeagleFlexView
 import br.com.zup.beagle.android.view.viewmodel.GenerateIdViewModel
+import br.com.zup.beagle.android.view.viewmodel.ListViewIdViewModel
+import br.com.zup.beagle.android.view.viewmodel.OnInitViewModel
 import br.com.zup.beagle.android.view.viewmodel.ScreenContextViewModel
 import br.com.zup.beagle.android.widget.RootView
-import br.com.zup.beagle.core.ServerDrivenComponent
-import br.com.zup.beagle.core.Style
-import br.com.zup.beagle.widget.Widget
+import br.com.zup.beagle.android.widget.Widget
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 import io.mockk.CapturingSlot
 import io.mockk.every
 import io.mockk.mockk
@@ -41,7 +39,7 @@ import io.mockk.mockkStatic
 import io.mockk.slot
 import io.mockk.verifySequence
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -55,15 +53,21 @@ class WidgetExtensionsKtTest : BaseTest() {
     private val view = createViewForContext()
     private val generateIdViewModel: GenerateIdViewModel = mockk(relaxed = true)
     private val contextViewModel: ScreenContextViewModel = mockk(relaxed = true)
-    private val activity: AppCompatActivity = mockk(relaxed = true)
+    private val listViewIdViewModel: ListViewIdViewModel = mockk(relaxed = true)
+    private val onInitViewModel: OnInitViewModel = mockk(relaxed = true)
+    private val fragment: Fragment = mockk(relaxed = true)
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
         mockkObject(ViewFactory)
 
-        prepareViewModelMock(generateIdViewModel)
-        every { anyConstructed<ViewModelProvider>().get(contextViewModel::class.java) } returns contextViewModel
+        prepareViewModelMock(
+            generateIdViewModel,
+            contextViewModel,
+            listViewIdViewModel,
+            onInitViewModel
+        )
     }
 
     @DisplayName("When observeBindChanges")
@@ -76,10 +80,12 @@ class WidgetExtensionsKtTest : BaseTest() {
             // Given
             val value = RandomData.string()
             val bind = expressionOf<String>("Hello @{context}")
-            contextViewModel.addContext(view, ContextData(
-                id = "context",
-                value = value
-            ))
+            contextViewModel.addContext(
+                view, ContextData(
+                    id = "context",
+                    value = value
+                )
+            )
 
             // When Then
             component.observeBindChanges(rootView, view, bind) { evaluated ->
@@ -129,7 +135,7 @@ class WidgetExtensionsKtTest : BaseTest() {
             val screenId = "screenId"
 
             //when
-            widgetComponent.toView(activity = activity, screenIdentifier = screenId)
+            widgetComponent.toView(fragment = fragment, screenIdentifier = screenId)
 
             //then
             assertEquals(screenId, slot.captured.getScreenId())
@@ -143,7 +149,7 @@ class WidgetExtensionsKtTest : BaseTest() {
             val componentId = "componentId"
 
             //when
-            widgetComponent.toView(activity = activity, screenIdentifier = null)
+            widgetComponent.toView(fragment = fragment, screenIdentifier = null)
 
             //then
             assertEquals(componentId, slot.captured.getScreenId())
@@ -155,33 +161,6 @@ class WidgetExtensionsKtTest : BaseTest() {
             every { widgetComponent.toView(capture(slot), any()) } returns mockk()
             every { widgetComponent.id } returns "componentId"
             return slot
-        }
-    }
-
-    @DisplayName("When toComponent")
-    @Nested
-    inner class ToComponent {
-
-        @DisplayName("Then should create screen widget")
-        @Test
-        fun testToComponentShouldCreateScreenWidget() {
-            // Given
-            val navigationBar = mockk<NavigationBar>()
-            val child = mockk<ServerDrivenComponent>()
-            val style = mockk<Style>()
-            val screen = Screen(
-                navigationBar = navigationBar,
-                child = child,
-                style = style
-            )
-
-            // When
-            val actual = screen.toComponent()
-
-            // Then
-            assertEquals(navigationBar, actual.navigationBar)
-            assertEquals(child, actual.child)
-            assertEquals(style, actual.style)
         }
     }
 }

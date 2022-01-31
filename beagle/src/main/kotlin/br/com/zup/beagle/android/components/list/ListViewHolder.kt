@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,14 +28,14 @@ import br.com.zup.beagle.android.context.ContextComponent
 import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.data.serializer.BeagleSerializer
 import br.com.zup.beagle.android.utils.COMPONENT_NO_ID
-import br.com.zup.beagle.android.utils.getContextData
+import br.com.zup.beagle.android.utils.getListContextData
 import br.com.zup.beagle.android.utils.isInitiableComponent
 import br.com.zup.beagle.android.utils.safeGet
 import br.com.zup.beagle.android.utils.toAndroidId
-import br.com.zup.beagle.core.IdentifierComponent
-import br.com.zup.beagle.core.MultiChildComponent
-import br.com.zup.beagle.core.ServerDrivenComponent
-import br.com.zup.beagle.core.SingleChildComponent
+import br.com.zup.beagle.android.widget.core.IdentifierComponent
+import br.com.zup.beagle.android.widget.core.MultiChildComponent
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
+import br.com.zup.beagle.android.widget.core.SingleChildComponent
 import org.json.JSONObject
 import java.util.LinkedList
 
@@ -84,7 +84,7 @@ internal class ListViewHolder(
         if (view.isInitiableComponent()) {
             viewsWithOnInit.add(view)
         }
-        if (view.getContextData() != null) {
+        if (view.getListContextData() != null) {
             viewsWithContext.add(view)
         }
         if (view is ImageView) {
@@ -140,8 +140,8 @@ internal class ListViewHolder(
                 // When this item is not recycled, we simply recover your current adapters
                 saveCreatedAdapterToEachDirectNestedRecycler(listItem)
             }
-            // We inform to each adapters directly nested the suffix
-            updateDirectNestedAdaptersSuffix(listItem)
+            // We inform to each adapters directly nested the suffix and the current recyclerId
+            updateDirectNestedAdaptersInformation(listItem, recyclerId)
         } else {
             // But if that item on the list already has ids created, we retrieve them
             restoreIds(listItem)
@@ -270,10 +270,12 @@ internal class ListViewHolder(
 
     private fun setDefaultContextToEachContextView() {
         viewsWithContext.forEach { view ->
-            val contextInManager = listViewModels.contextViewModel.getContextData(view)
-            val savedContext = contextComponents.firstOrNull { it.id == view.getContextData()?.id }
-            val contextToUseAsDefault = contextInManager ?: savedContext
-            contextToUseAsDefault?.let { contextDefault ->
+            val contextsInManager = listViewModels.contextViewModel.getListContextData(view)
+            val savedContext = contextComponents.firstOrNull { context ->
+                view.getListContextData()?.find { it.id == context.id } != null
+            }
+            val contextsToUseAsDefault = contextsInManager ?: listOf(savedContext)
+            contextsToUseAsDefault.filterNotNull().forEach { contextDefault ->
                 listViewModels.contextViewModel.addContext(
                     view,
                     contextDefault,
@@ -298,9 +300,9 @@ internal class ListViewHolder(
         }
     }
 
-    private fun updateDirectNestedAdaptersSuffix(listItem: ListItem) {
+    private fun updateDirectNestedAdaptersInformation(listItem: ListItem, recyclerId: Int) {
         listItem.directNestedAdapters.forEach {
-            it.setParentSuffix(listItem.itemSuffix)
+            it.setParentAttributes(listItem.itemSuffix, recyclerId)
         }
     }
 

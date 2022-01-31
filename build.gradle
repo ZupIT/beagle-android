@@ -1,7 +1,7 @@
 import br.com.zup.beagle.Dependencies
 
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.0.0'
+        classpath 'com.android.tools.build:gradle:7.0.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.21"
         classpath "com.vanniktech:gradle-maven-publish-plugin:0.15.1"
         classpath "de.mannodermaus.gradle.plugins:android-junit5:1.7.1.1"
@@ -37,7 +37,7 @@ plugins {
     id "io.gitlab.arturbosch.detekt" version "1.17.1"
     id "com.github.ben-manes.versions" version "0.39.0"
     id "br.com.zup.beagle.dependencies"
-    id "org.jetbrains.dokka" version "1.4.32"
+    id "org.jetbrains.dokka" version "1.5.0"
     id "org.sonarqube" version "3.2.0"
     id "jacoco"
 }

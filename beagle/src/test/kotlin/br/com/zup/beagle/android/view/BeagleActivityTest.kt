@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,12 +23,18 @@ import androidx.test.core.app.ActivityScenario
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import br.com.zup.beagle.R
 import br.com.zup.beagle.android.BaseSoLoaderTest
+import br.com.zup.beagle.android.action.NavigationContext
 import br.com.zup.beagle.android.components.Text
 import br.com.zup.beagle.android.components.layout.Screen
+import br.com.zup.beagle.android.context.ContextData
+import br.com.zup.beagle.android.context.constant
 import br.com.zup.beagle.android.data.ComponentRequester
 import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.testutil.CoroutinesTestExtension
 import br.com.zup.beagle.android.testutil.InstantExecutorExtension
+import br.com.zup.beagle.android.view.BeagleFragment.Companion.NAVIGATION_CONTEXT_DATA_ID
+import br.com.zup.beagle.android.view.BeagleFragment.Companion.NAVIGATION_CONTEXT_DATA_KEY
+import br.com.zup.beagle.android.view.BeagleFragment.Companion.NAVIGATION_CONTEXT_KEY
 import br.com.zup.beagle.android.view.viewmodel.AnalyticsViewModel
 import br.com.zup.beagle.android.view.viewmodel.BeagleScreenViewModel
 import io.mockk.Runs
@@ -57,77 +63,76 @@ class BeagleActivityTest : BaseSoLoaderTest() {
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
 
-    private val component by lazy { Text("Test component") }
+    private val component by lazy { Text(constant("Test component")) }
     private val componentRequester: ComponentRequester = mockk()
     private lateinit var beagleViewModel: BeagleScreenViewModel
     private var activity: ServerDrivenActivity? = null
     private val analyticsViewModel = mockk<AnalyticsViewModel>()
     private val screenIdentifierSlot = slot<String>()
+    private val navigationContext = NavigationContext(value = "test")
+    private val navigationContextData = ContextData(id = NAVIGATION_CONTEXT_DATA_ID, value = "test")
+    lateinit var activityScenario: ActivityScenario<ServerDrivenActivity>
 
     @Before
     fun mockBeforeTest() {
         coEvery { componentRequester.fetchComponent(RequestData(url = "/url")) } returns component
-        beagleViewModel = BeagleScreenViewModel(ioDispatcher = TestCoroutineDispatcher(), componentRequester)
+        beagleViewModel =
+            BeagleScreenViewModel(ioDispatcher = TestCoroutineDispatcher(), componentRequester)
         prepareViewModelMock(beagleViewModel)
-        val activityScenario: ActivityScenario<ServerDrivenActivity> = ActivityScenario.launch(ServerDrivenActivity::class.java)
+        activityScenario =
+            ActivityScenario.launch(ServerDrivenActivity::class.java)
         activityScenario.onActivity {
-            activityScenario.moveToState(Lifecycle.State.RESUMED)
+            activityScenario.moveToState(Lifecycle.State.STARTED)
             activity = it
         }
     }
 
     @Test
-    fun `Given a screen request When navigate to Then should call BeagleFragment newInstance with right parameters`() = runBlockingTest {
-        // Given
-        val url = "/url"
-        val screenRequest = RequestData(url = url)
-        prepareViewModelMock(analyticsViewModel)
-        every { analyticsViewModel.createScreenReport(capture(screenIdentifierSlot)) } just Runs
+    fun `Given a request data When navigate to Then should call BeagleFragment newInstance with right parameters`() =
+        runBlockingTest {
+            // Given
+            val url = "/url"
+            val screenRequest = RequestData(url = url)
+            prepareViewModelMock(analyticsViewModel)
+            every { analyticsViewModel.createScreenReport(capture(screenIdentifierSlot)) } just Runs
 
-        //When
-        activity?.navigateTo(screenRequest, null)
+            //When
+            activity?.navigateTo(screenRequest, null, navigationContext)
+            activityScenario.moveToState(Lifecycle.State.RESUMED)
+            val fragment = activity?.supportFragmentManager!!.fragments.first() as BeagleFragment
+            fragment.onDestroyView()
 
-        //Then
-        assertEquals(url, screenIdentifierSlot.captured)
-    }
+            //Then
+            val contextData: ContextData = fragment.savedState.getParcelable(NAVIGATION_CONTEXT_DATA_KEY)!!
+            assertEquals(url, screenIdentifierSlot.captured)
+            assertEquals(navigationContextData, contextData)
+        }
 
 
     @Test
-    fun `Given a screen with id When navigate to Then should call BeagleFragment newInstance with right parameters`() = runBlockingTest {
-        // Given
-        val screenRequest = RequestData(url = "")
-        val screenId = "myScreen"
-        val screen = Screen(id = screenId, child = component)
+    fun `Given a request data id When navigate to Then should call BeagleFragment newInstance with right parameters`() =
+        runBlockingTest {
+            // Given
+            val screenRequest = RequestData(url = "")
+            val screenId = "myScreen"
+            val screen = Screen(child = component).apply { id = screenId }
 
 
-        prepareViewModelMock(analyticsViewModel)
-        every { analyticsViewModel.createScreenReport(capture(screenIdentifierSlot)) } just Runs
+            prepareViewModelMock(analyticsViewModel)
+            every { analyticsViewModel.createScreenReport(capture(screenIdentifierSlot)) } just Runs
 
-        //When
-        activity?.navigateTo(screenRequest, screen)
+            //When
+            activity?.navigateTo(screenRequest, screen, navigationContext)
+            activityScenario.moveToState(Lifecycle.State.RESUMED)
+            val fragment = activity?.supportFragmentManager!!.fragments.first() as BeagleFragment
+            fragment.onDestroyView()
 
-        // THEN
-        assertEquals(screenId, screenIdentifierSlot.captured)
-    }
+            // THEN
+            val contextData: ContextData = fragment.savedState.getParcelable(NAVIGATION_CONTEXT_DATA_KEY)!!
+            assertEquals(screenId, screenIdentifierSlot.captured)
+            assertEquals(navigationContextData, contextData)
+        }
 
-    @Test
-    fun `Given a screen with identifier When navigate to Then should call BeagleFragment newInstance with right parameters`() = runBlockingTest {
-        // Given
-        val screenRequest = RequestData(url = "")
-        val screenIdentifier = "myScreen"
-        val screen = Screen(identifier = screenIdentifier, child = component)
-
-
-        prepareViewModelMock(analyticsViewModel)
-        every { analyticsViewModel.createScreenReport(capture(screenIdentifierSlot)) } just Runs
-
-
-        //When
-        activity?.navigateTo(screenRequest, screen)
-
-        // THEN
-        assertEquals(screenIdentifier, screenIdentifierSlot.captured)
-    }
 
 }
 

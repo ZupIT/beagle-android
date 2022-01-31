@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,14 +18,12 @@ package br.com.zup.beagle.android.action
 
 import android.view.View
 import br.com.zup.beagle.android.context.Bind
-import br.com.zup.beagle.android.context.expressionOrValueOf
-import br.com.zup.beagle.android.context.expressionOrValueOfNullable
 import br.com.zup.beagle.android.utils.evaluateExpression
 import br.com.zup.beagle.android.utils.handleEvent
 import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.widget.RootView
-import br.com.zup.beagle.core.BeagleJson
-import br.com.zup.beagle.newanalytics.ActionAnalyticsConfig
+import br.com.zup.beagle.android.widget.core.BeagleJson
+import br.com.zup.beagle.android.analytics.ActionAnalyticsConfig
 
 /**
  * This action will show dialogues natively, such as an error alert indicating alternative flows, business system
@@ -43,30 +41,12 @@ import br.com.zup.beagle.newanalytics.ActionAnalyticsConfig
 data class Confirm(
     val title: Bind<String>? = null,
     val message: Bind<String>,
-    val onPressOk: Action? = null,
-    val onPressCancel: Action? = null,
+    val onPressOk: List<Action>? = null,
+    val onPressCancel: List<Action>? = null,
     val labelOk: String? = null,
     val labelCancel: String? = null,
     override var analytics: ActionAnalyticsConfig? = null,
 ) : AnalyticsAction {
-
-    constructor(
-        title: String? = null,
-        message: String,
-        onPressOk: Action? = null,
-        onPressCancel: Action? = null,
-        labelOk: String? = null,
-        labelCancel: String? = null,
-        analytics: ActionAnalyticsConfig? = null,
-    ) : this(
-        title = expressionOrValueOfNullable(title),
-        message = expressionOrValueOf(message),
-        onPressOk = onPressOk,
-        onPressCancel = onPressCancel,
-        labelOk = labelOk,
-        labelCancel = labelCancel,
-        analytics = analytics
-    )
 
     override fun execute(rootView: RootView, origin: View) {
         ViewFactory.makeAlertDialogBuilder(rootView.getContext())

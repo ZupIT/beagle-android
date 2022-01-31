@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,23 +24,23 @@ import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.context.ContextComponent
 import br.com.zup.beagle.android.context.ContextData
-import br.com.zup.beagle.android.context.valueOfNullable
-import br.com.zup.beagle.android.engine.renderer.ViewRendererFactory
+import br.com.zup.beagle.android.utils.handleEvent
+import br.com.zup.beagle.android.utils.observeBindChanges
 import br.com.zup.beagle.android.view.ViewFactory
+import br.com.zup.beagle.android.view.custom.BeagleFlexView
 import br.com.zup.beagle.android.view.custom.BeaglePageView
 import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.android.widget.ViewConvertable
-import br.com.zup.beagle.core.BeagleJson
-import br.com.zup.beagle.core.MultiChildComponent
-import br.com.zup.beagle.core.ServerDrivenComponent
-import br.com.zup.beagle.core.Style
-import br.com.zup.beagle.widget.core.Flex
+import br.com.zup.beagle.android.widget.core.BeagleJson
+import br.com.zup.beagle.android.widget.core.MultiChildComponent
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
+import br.com.zup.beagle.android.widget.core.Style
+import br.com.zup.beagle.android.widget.core.Flex
 
 /**
  *  The PageView component is a specialized container to hold pages (views) that will be displayed horizontally.
  *
  * @param children define a List of components (views) that are contained on this PageView. Consider the
- * @param pageIndicator defines in what page the PageView is currently on.
  * @param context define the contextData that be set to pageView.
  * @param onPageChange List of actions that are performed when you are on the selected page.
  * @param currentPage Integer number that identifies that selected.
@@ -48,60 +48,12 @@ import br.com.zup.beagle.widget.core.Flex
 @BeagleJson(name = "pageView")
 data class PageView(
     override val children: List<ServerDrivenComponent>? = null,
-    @Deprecated(message = "This property was deprecated in version 1.1.0 and will be removed in a future version.")
-    val pageIndicator: PageIndicatorComponent? = null,
     override val context: ContextData? = null,
     val onPageChange: List<Action>? = null,
     val currentPage: Bind<Int>? = null,
 ) : ViewConvertable, ContextComponent, MultiChildComponent {
 
-    constructor(
-        children: List<ServerDrivenComponent>? = null,
-        context: ContextData? = null,
-        onPageChange: List<Action>? = null,
-        currentPage: Int,
-    ) : this(children, null, context, onPageChange, valueOfNullable(currentPage))
-
-    @Deprecated(message = "This constructor was deprecated in version 1.1.0 and will be removed in a future version.",
-        replaceWith = ReplaceWith("PageView(children, context, onPageChange=null, currentPage=null)"))
-    constructor(
-        children: List<ServerDrivenComponent>? = null,
-        pageIndicator: PageIndicatorComponent? = null,
-        context: ContextData? = null,
-    ) : this(
-        children,
-        pageIndicator,
-        context,
-        null,
-        null
-    )
-
-    constructor(
-        children: List<ServerDrivenComponent>? = null,
-        context: ContextData? = null,
-        onPageChange: List<Action>? = null,
-        currentPage: Bind<Int>? = null,
-    ) : this(
-        children,
-        null,
-        context,
-        onPageChange,
-        currentPage
-    )
-
-    @Transient
-    private val viewRendererFactory: ViewRendererFactory = ViewRendererFactory()
-
     override fun buildView(rootView: RootView): View {
-        currentPage?.let {
-            return PageViewTwo(
-                children,
-                context,
-                onPageChange,
-                currentPage
-            ).buildView(rootView)
-        }
-
         val style = Style(flex = Flex(grow = 1.0))
         val container = ViewFactory.makeBeagleFlexView(rootView, style)
 
@@ -117,22 +69,13 @@ data class PageView(
             addView(viewPager, style)
         }
 
-        pageIndicator?.let {
-            val pageIndicatorView = viewRendererFactory.make(it).build(rootView)
-            setupPageIndicator(children.size, viewPager, pageIndicator)
-            container.addView(pageIndicatorView)
-        }
+        configPageChangeListener(viewPager, rootView)
+        observerCurrentPage(viewPager, container, rootView)
 
         return container
     }
 
-    private fun setupPageIndicator(
-        pages: Int,
-        viewPager: BeaglePageView,
-        pageIndicator: PageIndicatorComponent?,
-    ) {
-        pageIndicator?.initPageView(viewPager)
-        pageIndicator?.setCount(pages)
+    private fun configPageChangeListener(viewPager: BeaglePageView, rootView: RootView) {
         viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {}
 
@@ -144,9 +87,35 @@ data class PageView(
             }
 
             override fun onPageSelected(position: Int) {
-                pageIndicator?.onItemUpdated(position)
+                executeActions(viewPager, rootView, position)
             }
         })
+    }
+
+    private fun executeActions(viewPager: BeaglePageView, rootView: RootView, position: Int) {
+        onPageChange?.let { listAction ->
+            handleEvent(
+                rootView,
+                viewPager,
+                listAction,
+                ContextData("onPageChange", position),
+                analyticsValue = "onPageChange"
+            )
+        }
+    }
+
+    private fun observerCurrentPage(
+        viewPager: BeaglePageView,
+        container: BeagleFlexView,
+        rootView: RootView
+    ) {
+        currentPage?.let {
+            observeBindChanges(rootView = rootView, view = container, bind = it) { position ->
+                position?.let {
+                    viewPager.swapToPage(position)
+                }
+            }
+        }
     }
 }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,15 +20,13 @@ import android.view.View
 import br.com.zup.beagle.android.view.custom.InternalBeagleFlexView
 import br.com.zup.beagle.android.view.viewmodel.GenerateIdViewModel
 import br.com.zup.beagle.android.view.viewmodel.ListViewIdViewModel
-import br.com.zup.beagle.android.view.viewmodel.OnInitViewModel
 import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.android.widget.WidgetView
-import br.com.zup.beagle.core.IdentifierComponent
-import br.com.zup.beagle.core.MultiChildComponent
-import br.com.zup.beagle.core.ServerDrivenComponent
-import br.com.zup.beagle.core.SingleChildComponent
-import br.com.zup.beagle.ext.setId
-import br.com.zup.beagle.widget.Widget
+import br.com.zup.beagle.android.widget.core.IdentifierComponent
+import br.com.zup.beagle.android.widget.core.MultiChildComponent
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
+import br.com.zup.beagle.android.widget.core.SingleChildComponent
+import br.com.zup.beagle.android.widget.Widget
 
 internal const val COMPONENT_NO_ID = "-1"
 
@@ -36,7 +34,6 @@ internal class GenerateIdManager(
     private val rootView: RootView,
     private val generateIdViewModel: GenerateIdViewModel = rootView.generateViewModelInstance(),
     private val listViewIdViewModel: ListViewIdViewModel = rootView.generateViewModelInstance(),
-    private val onInitViewModel: OnInitViewModel = rootView.generateViewModelInstance(),
 ) {
 
     fun createSingleManagerByRootViewId() {
@@ -46,7 +43,6 @@ internal class GenerateIdManager(
     fun onViewDetachedFromWindow(view: View) {
         generateIdViewModel.setViewCreated(rootView.getParentId())
         listViewIdViewModel.prepareToReuseIds(view)
-        onInitViewModel.markToRerun()
     }
 
     fun manageId(component: ServerDrivenComponent, view: InternalBeagleFlexView) {
@@ -67,7 +63,7 @@ internal class GenerateIdManager(
         } catch (exception: Exception) {
             View.generateViewId()
         }
-        (component as? Widget)?.setId(id.toString())
+        (component as? Widget)?.id = id.toString()
     }
 
     private fun markEachNestedComponentAsNoIdIfNeeded(serverDrivenComponent: ServerDrivenComponent) {
@@ -85,7 +81,7 @@ internal class GenerateIdManager(
 
     private fun setNoIdToComponentWithoutId(component: WidgetView) {
         if (component.id.isNullOrEmpty()) {
-            component.setId(COMPONENT_NO_ID)
+            component.id = COMPONENT_NO_ID
         }
     }
 }

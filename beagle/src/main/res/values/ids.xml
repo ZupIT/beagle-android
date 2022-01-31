@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+  ~ Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 <resources>
     <item name="beagle_toolbar_text" type="id" />
     <item name="beagle_component_tag" type="id" />
+    <item name="beagle_root_view_tag" type="id" />
     <item name="beagle_context_view" type="id" />
     <item name="beagle_default_id" type="id" />
     <item name="beagle_auto_generate_id_enabled" type="id" />

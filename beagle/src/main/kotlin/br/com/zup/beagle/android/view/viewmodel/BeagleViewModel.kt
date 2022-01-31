@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,15 +19,14 @@ package br.com.zup.beagle.android.view.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import br.com.zup.beagle.android.components.layout.ScreenComponent
 import br.com.zup.beagle.android.data.ComponentRequester
 import br.com.zup.beagle.android.exception.BeagleException
 import br.com.zup.beagle.android.logger.BeagleLoggerProxy
 import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.utils.BeagleRetry
 import br.com.zup.beagle.android.utils.CoroutineDispatchers
-import br.com.zup.beagle.core.IdentifierComponent
-import br.com.zup.beagle.core.ServerDrivenComponent
+import br.com.zup.beagle.android.widget.core.IdentifierComponent
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -51,8 +50,13 @@ internal open class BeagleViewModel(
     var fetchComponent: FetchComponentLiveData? = null
 
     fun fetchComponent(requestData: RequestData, screen: ServerDrivenComponent? = null): LiveData<ViewState> {
-        val fetchComponentLiveData = FetchComponentLiveData(requestData, screen, componentRequester,
-            viewModelScope, ioDispatcher)
+        val fetchComponentLiveData = FetchComponentLiveData(
+            requestData,
+            screen,
+            componentRequester,
+            viewModelScope,
+            ioDispatcher,
+        )
         fetchComponent = fetchComponentLiveData
 
         return fetchComponentLiveData
@@ -60,7 +64,7 @@ internal open class BeagleViewModel(
 
     fun fetchForCache(url: String) = viewModelScope.launch(ioDispatcher) {
         try {
-            componentRequester.fetchComponent(RequestData(url = url))
+            componentRequester.prefetchComponent(RequestData(url = url))
         } catch (exception: BeagleException) {
             BeagleLoggerProxy.warning(exception.message)
         }
@@ -89,7 +93,7 @@ internal open class BeagleViewModel(
 
         private fun fetchComponents() {
             job = coroutineScope.launch(ioDispatcher) {
-                val identifier = getComponentIdentifier()
+                val identifier = getIdentifierComponentId()
                 if (requestData.url.isNotEmpty()) {
                     try {
                         setLoading(true)
@@ -128,8 +132,6 @@ internal open class BeagleViewModel(
                 postLiveDataResponse(ViewState.DoCancel)
             }
         }
-
-        private fun getComponentIdentifier() = (screen as? ScreenComponent)?.identifier ?: getIdentifierComponentId()
 
         private fun getIdentifierComponentId() = (screen as? IdentifierComponent)?.id
 

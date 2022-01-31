@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,28 +19,29 @@ package br.com.zup.beagle.android.action
 import android.content.DialogInterface
 import android.view.View
 import androidx.appcompat.app.AlertDialog
-import br.com.zup.beagle.android.extensions.once
+import br.com.zup.beagle.android.context.constant
 import br.com.zup.beagle.android.testutil.RandomData
 import br.com.zup.beagle.android.utils.handleEvent
 import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.widget.RootView
-import io.mockk.MockKAnnotations
 import io.mockk.Runs
+import io.mockk.clearMocks
 import io.mockk.every
-import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.slot
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ConfirmTest {
 
-    @RelaxedMockK
-    private lateinit var rootView: RootView
+    private val rootView: RootView = mockk(relaxed = true)
 
     private val builder = mockk<AlertDialog.Builder>()
     private val dialogBox = mockk<AlertDialog>()
@@ -52,27 +53,41 @@ class ConfirmTest {
     private val listenerCancelSlot = slot<DialogInterface.OnClickListener>()
     private val view: View = mockk()
 
-    @BeforeEach
+    @BeforeAll
     fun setUp() {
-        MockKAnnotations.init(this)
         mockkObject(ViewFactory)
 
         every { ViewFactory.makeAlertDialogBuilder(any()) } returns builder
         every { builder.setTitle(capture(titleSlot)) } returns builder
         every { builder.setMessage(capture(messageSlot)) } returns builder
-        every { builder.setPositiveButton(capture(labelOkSlot), capture(listenerOkSlot)) } returns builder
-        every { builder.setNegativeButton(capture(labelCancelSlot), capture(listenerCancelSlot)) } returns builder
+        every {
+            builder.setPositiveButton(
+                capture(labelOkSlot),
+                capture(listenerOkSlot)
+            )
+        } returns builder
+        every {
+            builder.setNegativeButton(
+                capture(labelCancelSlot),
+                capture(listenerCancelSlot)
+            )
+        } returns builder
         every { builder.show() } returns mockk()
+    }
+
+    @BeforeEach
+    fun clear() {
+        clearMocks(dialogBox)
     }
 
     @Test
     fun `execute should create a ConfirmAction`() {
         // Given
-        val onPressOk: Action = mockk(relaxed = true)
-        val onPressCancel: Action = mockk(relaxed = true)
+        val onPressOk: List<Action> = listOf()
+        val onPressCancel: List<Action> = listOf()
         val action = Confirm(
-            title = RandomData.string(),
-            message = RandomData.string(),
+            title = constant(RandomData.string()),
+            message = constant(RandomData.string()),
             labelOk = RandomData.string(),
             labelCancel = RandomData.string(),
             onPressOk = onPressOk,
@@ -93,8 +108,8 @@ class ConfirmTest {
     fun `execute should create a ConfirmAction with text default`() {
         // Given
         val action = Confirm(
-            title = RandomData.string(),
-            message = RandomData.string()
+            title = constant(RandomData.string()),
+            message = constant(RandomData.string())
         )
         val randomLabelOk = RandomData.string()
         val randomLabelCancel = RandomData.string()
@@ -115,8 +130,8 @@ class ConfirmTest {
     fun `click should dismiss dialog`() {
         // Given
         val action = Confirm(
-            title = RandomData.string(),
-            message = RandomData.string(),
+            title = constant(RandomData.string()),
+            message = constant(RandomData.string()),
             labelOk = RandomData.string()
         )
         every { dialogBox.dismiss() } just Runs
@@ -126,16 +141,16 @@ class ConfirmTest {
         listenerOkSlot.captured.onClick(dialogBox, 0)
 
         // Then
-        verify(exactly = once()) { dialogBox.dismiss() }
+        verify(exactly = 1) { dialogBox.dismiss() }
     }
 
     @Test
     fun `should handle onPressOk when click in button`() {
         // Given
-        val onPressOk: Action = mockk(relaxed = true)
+        val onPressOk: List<Action> = listOf(mockk(relaxed = true))
         val action = Confirm(
-            title = RandomData.string(),
-            message = RandomData.string(),
+            title = constant(RandomData.string()),
+            message = constant(RandomData.string()),
             labelOk = RandomData.string(),
             labelCancel = RandomData.string(),
             onPressOk = onPressOk
@@ -146,16 +161,23 @@ class ConfirmTest {
         listenerOkSlot.captured.onClick(dialogBox, 0)
 
         // Then
-        verify(exactly = once()) { action.handleEvent(rootView, view, onPressOk, analyticsValue = "onPressOk") }
+        verify(exactly = 1) {
+            action.handleEvent(
+                rootView,
+                view,
+                onPressOk,
+                analyticsValue = "onPressOk"
+            )
+        }
     }
 
     @Test
     fun `should handle onPressCancel when click in button`() {
         // Given
-        val onPressCancel: Action = mockk(relaxed = true)
+        val onPressCancel: List<Action> = listOf(mockk(relaxed = true))
         val action = Confirm(
-            title = RandomData.string(),
-            message = RandomData.string(),
+            title = constant(RandomData.string()),
+            message = constant(RandomData.string()),
             labelOk = RandomData.string(),
             labelCancel = RandomData.string(),
             onPressCancel = onPressCancel
@@ -166,6 +188,13 @@ class ConfirmTest {
         listenerCancelSlot.captured.onClick(dialogBox, 0)
 
         // Then
-        verify(exactly = once()) { action.handleEvent(rootView, view, onPressCancel, analyticsValue = "onPressCancel") }
+        verify(exactly = 1) {
+            action.handleEvent(
+                rootView,
+                view,
+                onPressCancel,
+                analyticsValue = "onPressCancel"
+            )
+        }
     }
 }

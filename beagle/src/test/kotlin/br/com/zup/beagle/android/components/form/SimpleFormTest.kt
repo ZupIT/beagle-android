@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,15 +22,16 @@ import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.components.BaseComponentTest
 import br.com.zup.beagle.android.components.TextInput
 import br.com.zup.beagle.android.context.ContextData
-import br.com.zup.beagle.android.extensions.once
+import br.com.zup.beagle.android.context.constant
 import br.com.zup.beagle.android.view.custom.BeagleFlexView
-import br.com.zup.beagle.core.ServerDrivenComponent
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -42,11 +43,12 @@ internal class SimpleFormTest : BaseComponentTest() {
     private val simpleFormAction: Action = mockk()
     private val context: ContextData = mockk()
     private val onSubmit: List<Action> = listOf(simpleFormAction)
-    private val children: List<ServerDrivenComponent> = listOf(TextInput("", error = "ddd"))
+    private val children: List<ServerDrivenComponent> =
+        listOf(TextInput(value = constant(""), error = constant("ddd")))
 
     private lateinit var simpleForm: SimpleForm
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
 
@@ -75,7 +77,7 @@ internal class SimpleFormTest : BaseComponentTest() {
             simpleForm.buildView(rootView)
 
             // Then
-            verify(exactly = once()) { beagleFlexView.addView(children) }
+            verify(exactly = 1) { beagleFlexView.addView(children) }
         }
 
     }
@@ -92,7 +94,7 @@ internal class SimpleFormTest : BaseComponentTest() {
             simpleForm.submit(rootView, view)
 
             // Then
-            verify(exactly = once()) {
+            verify(exactly = 1) {
                 simpleFormAction.execute(rootView, view)
             }
         }
@@ -130,7 +132,7 @@ internal class SimpleFormTest : BaseComponentTest() {
             simpleForm.submit(rootView, view)
 
             // Then
-            verify(exactly = once()) {
+            verify(exactly = 1) {
                 errorAction.execute(rootView, view)
             }
         }
@@ -153,7 +155,7 @@ internal class SimpleFormTest : BaseComponentTest() {
             simpleForm.submit(rootView, view)
 
             // Then
-            verify(exactly = once()) {
+            verify(exactly = 1) {
                 errorAction.execute(rootView, view)
             }
         }

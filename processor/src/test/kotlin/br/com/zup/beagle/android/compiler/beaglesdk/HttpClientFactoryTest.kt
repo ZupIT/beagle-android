@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,7 +59,7 @@ internal class HttpClientFactoryTest : BeagleSdkBaseTest() {
             val kotlinSource = SourceFile.kotlin(
                 FILE_NAME,
                 BEAGLE_CONFIG_IMPORTS + VALID_HTTP_CLIENT_FACTORY +
-                    VALID_SECOND_HTTP_CLIENT + SIMPLE_BEAGLE_CONFIG
+                        VALID_SECOND_HTTP_CLIENT + SIMPLE_BEAGLE_CONFIG
             )
 
             // WHEN
@@ -100,7 +100,7 @@ internal class HttpClientFactoryTest : BeagleSdkBaseTest() {
             val kotlinSource = SourceFile.kotlin(
                 FILE_NAME,
                 BEAGLE_CONFIG_IMPORTS + HTTP_CLIENT_FACTORY_IMPORTS +
-                    VALID_THIRD_HTTP_CLIENT_FACTORY + VALID_SECOND_HTTP_CLIENT + SIMPLE_BEAGLE_CONFIG
+                        VALID_THIRD_HTTP_CLIENT_FACTORY + VALID_SECOND_HTTP_CLIENT + SIMPLE_BEAGLE_CONFIG
             )
 
             // WHEN
@@ -131,7 +131,7 @@ internal class HttpClientFactoryTest : BeagleSdkBaseTest() {
             val kotlinSource = SourceFile.kotlin(
                 FILE_NAME,
                 BEAGLE_CONFIG_IMPORTS + LIST_OF_HTTP_CLIENT_FACTORY +
-                    VALID_SECOND_HTTP_CLIENT + SIMPLE_BEAGLE_CONFIG
+                        VALID_SECOND_HTTP_CLIENT + SIMPLE_BEAGLE_CONFIG
             )
 
             // WHEN
@@ -140,7 +140,11 @@ internal class HttpClientFactoryTest : BeagleSdkBaseTest() {
 
             // THEN
             assertEquals(KotlinCompilation.ExitCode.COMPILATION_ERROR, compilationResult.exitCode)
-            Assertions.assertTrue(compilationResult.messages.contains(MESSAGE_DUPLICATE_HTTP_CLIENT_FACTORY))
+            Assertions.assertTrue(
+                compilationResult.messages.contains(
+                    MESSAGE_DUPLICATE_HTTP_CLIENT_FACTORY
+                )
+            )
         }
 
         @Test
@@ -156,16 +160,21 @@ internal class HttpClientFactoryTest : BeagleSdkBaseTest() {
             } returns listOf(
                 Pair("""httpClientFactory""", "br.com.test.beagle.HttpClientFactoryTestThree()"),
             )
-            val kotlinSource = SourceFile.kotlin(FILE_NAME,
+            val kotlinSource = SourceFile.kotlin(
+                FILE_NAME,
                 BEAGLE_CONFIG_IMPORTS + VALID_HTTP_CLIENT_FACTORY + VALID_THIRD_HTTP_CLIENT_FACTORY +
-                    VALID_SECOND_HTTP_CLIENT + SIMPLE_BEAGLE_CONFIG
+                        VALID_SECOND_HTTP_CLIENT + SIMPLE_BEAGLE_CONFIG
             )
 
             // WHEN
             val compilationResult = compile(kotlinSource, BeagleAnnotationProcessor(), tempPath)
 
             // THEN
-            Assertions.assertTrue(compilationResult.messages.contains(MESSAGE_DUPLICATE_HTTP_CLIENT_FACTORY_REGISTRAR))
+            Assertions.assertTrue(
+                compilationResult.messages.contains(
+                    MESSAGE_DUPLICATE_HTTP_CLIENT_FACTORY_REGISTRAR
+                )
+            )
             assertEquals(KotlinCompilation.ExitCode.COMPILATION_ERROR, compilationResult.exitCode)
         }
 
@@ -174,16 +183,18 @@ internal class HttpClientFactoryTest : BeagleSdkBaseTest() {
     companion object {
         private const val FILE_NAME = "File1.kt"
         private val REGEX_REMOVE_SPACE = "\\s".toRegex()
-        private const val MESSAGE_DUPLICATE_HTTP_CLIENT_FACTORY = "error: HttpClientFactory defined multiple times: " +
-            "1 - br.com.test.beagle.HttpClientFactoryTestTwo " +
-            "2 - br.com.test.beagle.HttpClientFactoryTest. " +
-            "You must remove one implementation from the application."
+        private const val MESSAGE_DUPLICATE_HTTP_CLIENT_FACTORY =
+            "error: HttpClientFactory defined multiple times: "
+                .plus("1 - br.com.test.beagle.HttpClientFactoryTestTwo ")
+                .plus("2 - br.com.test.beagle.HttpClientFactoryTest. ")
+                .plus("You must remove one implementation from the application.")
+
 
         private const val MESSAGE_DUPLICATE_HTTP_CLIENT_FACTORY_REGISTRAR =
-            "error: HttpClientFactory defined multiple times: " +
-                "1 - br.com.test.beagle.HttpClientFactoryTest " +
-                "2 - br.com.test.beagle.HttpClientFactoryTestThree. " +
-                "You must remove one implementation from the application."
+            "error: HttpClientFactory defined multiple times: "
+                .plus("1 - br.com.test.beagle.HttpClientFactoryTest ")
+                .plus("2 - br.com.test.beagle.HttpClientFactoryTestThree. ")
+                .plus("You must remove one implementation from the application.")
     }
 
 }

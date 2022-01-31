@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,22 @@
 
 package br.com.zup.beagle.android.action
 
+import android.os.Parcel
+import android.os.Parcelable
 import android.view.View
+import br.com.zup.beagle.android.analytics.ActionAnalyticsConfig
 import br.com.zup.beagle.android.annotation.ContextDataValue
 import br.com.zup.beagle.android.components.layout.Screen
 import br.com.zup.beagle.android.context.Bind
-import br.com.zup.beagle.android.context.expressionOrValueOf
+import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.context.normalizeContextValue
-import br.com.zup.beagle.android.networking.HttpMethod
+import br.com.zup.beagle.android.networking.HttpAdditionalData
 import br.com.zup.beagle.android.utils.evaluateExpression
 import br.com.zup.beagle.android.view.custom.BeagleNavigator
 import br.com.zup.beagle.android.widget.RootView
-import br.com.zup.beagle.core.BeagleJson
-import br.com.zup.beagle.newanalytics.ActionAnalyticsConfig
+import br.com.zup.beagle.android.widget.core.BeagleJson
+import kotlinx.parcelize.Parceler
+import kotlinx.parcelize.Parcelize
 
 /**
  * Class handles transition actions between screens in the application. Its structure is the following:.
@@ -45,14 +49,6 @@ sealed class Navigate : AnalyticsAction {
         val url: Bind<String>,
         override var analytics: ActionAnalyticsConfig? = null,
     ) : Navigate() {
-
-        constructor(
-            url: String,
-            analytics: ActionAnalyticsConfig? = null,
-        ) : this(
-            url = expressionOrValueOf(url),
-            analytics = analytics
-        )
 
         override fun execute(rootView: RootView, origin: View) {
             evaluateExpression(rootView, origin, url)?.let { url ->
@@ -76,18 +72,6 @@ sealed class Navigate : AnalyticsAction {
         override var analytics: ActionAnalyticsConfig? = null,
     ) : Navigate() {
 
-        constructor(
-            route: String,
-            shouldResetApplication: Boolean = false,
-            data: Map<String, String>? = null,
-            analytics: ActionAnalyticsConfig? = null,
-        ) : this(
-            route = expressionOrValueOf(route),
-            shouldResetApplication = shouldResetApplication,
-            data = data,
-            analytics = analytics
-        )
-
         override fun execute(rootView: RootView, origin: View) {
             evaluateExpression(rootView, origin, route)?.let { route ->
                 BeagleNavigator.openNativeRoute(rootView, route, data, shouldResetApplication)
@@ -97,21 +81,30 @@ sealed class Navigate : AnalyticsAction {
 
     /**
      * This action closes the current view stack.
+     * @param navigationContext is the same thing as a [ContextData], but it has a fixed id called navigationContext.
      */
     @BeagleJson(name = "popStack")
-    class PopStack(override var analytics: ActionAnalyticsConfig? = null) : Navigate() {
+    class PopStack(
+        override var analytics: ActionAnalyticsConfig? = null,
+        val navigationContext: NavigationContext? = null,
+    ) : Navigate() {
         override fun execute(rootView: RootView, origin: View) {
-            BeagleNavigator.popStack(rootView.getContext())
+            BeagleNavigator.popStack(rootView.getContext(), navigationContext)
         }
     }
 
     /**
      * Action that closes the current view.
+     * @param navigationContext is the same thing as a [ContextData], but it has a fixed id called navigationContext.
+     *
      */
     @BeagleJson(name = "popView")
-    class PopView(override var analytics: ActionAnalyticsConfig? = null) : Navigate() {
+    class PopView(
+        override var analytics: ActionAnalyticsConfig? = null,
+        val navigationContext: NavigationContext? = null
+    ) : Navigate() {
         override fun execute(rootView: RootView, origin: View) {
-            BeagleNavigator.popView(rootView.getContext())
+            BeagleNavigator.popView(rootView.getContext(), navigationContext)
         }
     }
 
@@ -119,24 +112,19 @@ sealed class Navigate : AnalyticsAction {
      * It is responsible for returning the stack of screens in the application flow to a specific screen.
      *
      * @param route route of a screen that it's on the pile.
+     * @param navigationContext is the same thing as a [ContextData], but it has a fixed id called navigationContext.
+     *
      */
     @BeagleJson(name = "popToView")
     data class PopToView(
         val route: Bind<String>,
         override var analytics: ActionAnalyticsConfig? = null,
+        val navigationContext: NavigationContext? = null
     ) : Navigate() {
-
-        constructor(
-            route: String,
-            analytics: ActionAnalyticsConfig? = null,
-        ) : this(
-            route = expressionOrValueOf(route),
-            analytics = analytics
-        )
 
         override fun execute(rootView: RootView, origin: View) {
             evaluateExpression(rootView, origin, route)?.let { route ->
-                BeagleNavigator.popToView(rootView.getContext(), route)
+                BeagleNavigator.popToView(rootView.getContext(), route, navigationContext)
             }
         }
     }
@@ -148,11 +136,17 @@ sealed class Navigate : AnalyticsAction {
      *
      * @param route this defines navigation type, it can be a navigation to a remote route in which Beagle will
      * deserialize the content or to a local screen already built.
+     * @param navigationContext is the same thing as a [ContextData], but it has a fixed id called navigationContext.
+     *
      */
     @BeagleJson(name = "pushView")
-    data class PushView(val route: Route, override var analytics: ActionAnalyticsConfig? = null) : Navigate() {
+    data class PushView(
+        val route: Route,
+        override var analytics: ActionAnalyticsConfig? = null,
+        val navigationContext: NavigationContext? = null
+    ) : Navigate() {
         override fun execute(rootView: RootView, origin: View) {
-            BeagleNavigator.pushView(rootView.getContext(), route.getSafe(rootView, origin))
+            BeagleNavigator.pushView(rootView.getContext(), route.getSafe(rootView, origin), navigationContext)
         }
     }
 
@@ -164,15 +158,21 @@ sealed class Navigate : AnalyticsAction {
      * deserialize the content or to a local screen already built.
      * @param controllerId in this field passes the id created in the custom activity for beagle to create the flow,
      * if not the beagle passes default activity.
+     * @param navigationContext is the same thing as a [ContextData], but it has a fixed id called navigationContext.
+     *
      */
     @BeagleJson(name = "pushStack")
     data class PushStack(
         val route: Route,
         val controllerId: String? = null,
         override var analytics: ActionAnalyticsConfig? = null,
+        val navigationContext: NavigationContext? = null
     ) : Navigate() {
         override fun execute(rootView: RootView, origin: View) {
-            BeagleNavigator.pushStack(rootView.getContext(), route.getSafe(rootView, origin), controllerId)
+            BeagleNavigator.pushStack(
+                rootView.getContext(), route.getSafe(rootView, origin),
+                controllerId, navigationContext,
+            )
         }
     }
 
@@ -184,15 +184,19 @@ sealed class Navigate : AnalyticsAction {
      * deserialize the content or to a local screen already built.
      * @param controllerId in this field passes the id created in the custom activity for beagle to create the flow,
      * if not the beagle passes default activity.
+     * @param navigationContext is the same thing as a [ContextData], but it has a fixed id called navigationContext.
+     *
      */
     @BeagleJson(name = "resetApplication")
     data class ResetApplication(
         val route: Route,
         val controllerId: String? = null,
         override var analytics: ActionAnalyticsConfig? = null,
+        val navigationContext: NavigationContext? = null
     ) : Navigate() {
         override fun execute(rootView: RootView, origin: View) {
-            BeagleNavigator.resetApplication(rootView.getContext(), route.getSafe(rootView, origin), controllerId)
+            BeagleNavigator.resetApplication(rootView.getContext(), route.getSafe(rootView, origin),
+                controllerId, navigationContext)
         }
     }
 
@@ -204,15 +208,18 @@ sealed class Navigate : AnalyticsAction {
      * deserialize the content or to a local screen already built.
      * @param controllerId in this field passes the id created in the custom activity for beagle to create the flow,
      * if not the beagle passes default activity.
+     * @param navigationContext is the same thing as a [ContextData], but it has a fixed id called navigationContext.
      */
     @BeagleJson(name = "resetStack")
     data class ResetStack(
         val route: Route,
         val controllerId: String? = null,
         override var analytics: ActionAnalyticsConfig? = null,
+        val navigationContext: NavigationContext? = null
     ) : Navigate() {
         override fun execute(rootView: RootView, origin: View) {
-            BeagleNavigator.resetStack(rootView.getContext(), route.getSafe(rootView, origin), controllerId)
+            BeagleNavigator.resetStack(rootView.getContext(), route.getSafe(rootView, origin),
+                controllerId, navigationContext)
         }
     }
 
@@ -251,20 +258,7 @@ sealed class Route {
         val shouldPrefetch: Boolean? = null,
         val fallback: Screen? = null,
         val httpAdditionalData: HttpAdditionalData? = null,
-    ) : Route() {
-
-        constructor(
-            url: String,
-            shouldPrefetch: Boolean? = null,
-            fallback: Screen? = null,
-            httpAdditionalData: HttpAdditionalData? = null,
-        ) : this(
-            expressionOrValueOf(url),
-            shouldPrefetch,
-            fallback,
-            httpAdditionalData
-        )
-    }
+    ) : Route()
 
     /**
      * Class indicating navigation to a local screen.
@@ -276,16 +270,32 @@ sealed class Route {
     ) : Route()
 }
 
+
 /**
- * HttpAdditionalData is used to do requests.
- * @param method HTTP method.
- * @param headers Header items for the request.
- * @param body Content that will be delivered with the request.
+ * The NavigationContext class is responsible for changing the value of a context inside a navigation of screen.
+ *
+ * @param value Required. New value to be applied in the context.
+ * @param path Specific context point to be changed in the case of arrays and maps <key, value>.
  */
 @BeagleJson
-data class HttpAdditionalData(
-    val method: HttpMethod? = HttpMethod.GET,
-    val headers: Map<String, String>? = hashMapOf(),
+@Parcelize
+data class NavigationContext(
+    val path: String? = null,
     @ContextDataValue
-    val body: Any? = null,
-)
+    val value: Any,
+) : Parcelable {
+
+    private companion object : Parceler<NavigationContext> {
+        override fun NavigationContext.write(parcel: Parcel, flags: Int) {
+            parcel.writeString(path)
+            parcel.writeString(value.toString())
+        }
+
+        override fun create(parcel: Parcel): NavigationContext {
+            val path = parcel.readString()
+            val value = parcel.readString()!!.normalizeContextValue()
+
+            return NavigationContext(path = path, value = value)
+        }
+    }
+}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,16 +17,16 @@
 package br.com.zup.beagle.android.components.layout
 
 import br.com.zup.beagle.android.components.BaseComponentTest
-import br.com.zup.beagle.android.extensions.once
 import br.com.zup.beagle.android.utils.StyleManager
 import br.com.zup.beagle.android.view.ViewFactory
-import br.com.zup.beagle.core.ServerDrivenComponent
-import br.com.zup.beagle.core.Style
-import br.com.zup.beagle.ext.applyStyle
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
+import br.com.zup.beagle.android.widget.core.Style
+import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkConstructor
 import io.mockk.verify
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -38,18 +38,17 @@ private const val STYLE_ID_INTEGER = 123
 @DisplayName("Given a Container")
 class ContainerTest : BaseComponentTest() {
 
-    private val style: Style = mockk(relaxed = true)
+    private val styleLocal: Style = mockk(relaxed = true)
 
     private val containerChildren = listOf<ServerDrivenComponent>(mockk<Container>())
 
     private lateinit var container: Container
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
 
-        every { ViewFactory.makeBeagleFlexView(any(), any(), any()) } returns beagleFlexView
-        every { style.copy(flex = any()) } returns style
+        every { styleLocal.copy(flex = any()) } returns styleLocal
         mockkConstructor(StyleManager::class)
 
         every { anyConstructed<StyleManager>().getContainerStyle(STYLE_ID) } returns STYLE_ID_INTEGER
@@ -57,7 +56,14 @@ class ContainerTest : BaseComponentTest() {
         container = Container(
             children = containerChildren,
             styleId = STYLE_ID,
-        ).applyStyle(style)
+        ).apply {
+            style = styleLocal
+        }
+    }
+
+    @BeforeEach
+    fun clear() {
+        clearMocks(beagleFlexView)
     }
 
     @DisplayName("When build view")
@@ -74,7 +80,7 @@ class ContainerTest : BaseComponentTest() {
             verify {
                 ViewFactory.makeBeagleFlexView(
                     rootView = rootView,
-                    style = style,
+                    style = styleLocal,
                     styleId = STYLE_ID_INTEGER,
                 )
             }
@@ -93,7 +99,7 @@ class ContainerTest : BaseComponentTest() {
             container.buildView(rootView)
 
             // Then
-            verify(exactly = once()) { beagleFlexView.addView(containerChildren) }
+            verify(exactly = 1) { beagleFlexView.addView(containerChildren) }
         }
 
     }

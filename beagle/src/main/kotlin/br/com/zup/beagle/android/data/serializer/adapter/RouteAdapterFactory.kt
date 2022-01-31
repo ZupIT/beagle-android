@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,11 @@
 
 package br.com.zup.beagle.android.data.serializer.adapter
 
-import br.com.zup.beagle.android.action.HttpAdditionalData
 import br.com.zup.beagle.android.action.Route
 import br.com.zup.beagle.android.components.layout.Screen
 import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.data.serializer.BeagleMoshi.moshi
+import br.com.zup.beagle.android.networking.HttpAdditionalData
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.JsonDataException
 import com.squareup.moshi.JsonReader
@@ -30,7 +30,11 @@ import com.squareup.moshi.Types
 import java.lang.reflect.Type
 
 class RouteAdapterFactory : JsonAdapter.Factory {
-    override fun create(type: Type, annotations: MutableSet<out Annotation>, moshi: Moshi): JsonAdapter<Route>? {
+    override fun create(
+        type: Type,
+        annotations: MutableSet<out Annotation>,
+        moshi: Moshi
+    ): JsonAdapter<Route>? {
         val adapter: JsonAdapter<Bind<String>> = getBindAdapter()
         return if (Types.getRawType(type) == Route::class.java) {
             RouteAdapter(adapter)
@@ -46,9 +50,10 @@ private fun getBindAdapter(): JsonAdapter<Bind<String>> {
 }
 
 internal class RouteAdapter(private val adapter: JsonAdapter<Bind<String>>) : JsonAdapter<Route>() {
-    override fun fromJson(reader: JsonReader): Route? {
+    override fun fromJson(reader: JsonReader): Route {
         val jsonValue = reader.readJsonValue()
 
+        @Suppress("UNCHECKED_CAST")
         val value = jsonValue as Map<String, Any>
         return if (value.containsKey(URL)) {
             val url = adapter.fromJsonValue(value[URL] as String)!!
@@ -78,7 +83,8 @@ internal class RouteAdapter(private val adapter: JsonAdapter<Bind<String>>) : Js
                 writer.name(FALLBACK)
                 moshi.adapter(Screen::class.java).toJson(writer, value.fallback)
                 writer.name(HTTP_ADDITIONAL_DATA)
-                moshi.adapter(HttpAdditionalData::class.java).toJson(writer, value.httpAdditionalData)
+                moshi.adapter(HttpAdditionalData::class.java)
+                    .toJson(writer, value.httpAdditionalData)
             }
             is Route.Local -> {
                 writer.name(SCREEN)

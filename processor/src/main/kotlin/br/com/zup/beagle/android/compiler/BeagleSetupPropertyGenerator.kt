@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,11 +21,7 @@ import br.com.zup.beagle.android.compiler.beaglesetupmanage.PropertyImplementati
 import br.com.zup.beagle.android.compiler.beaglesetupmanage.TypeElementImplementationManager
 import br.com.zup.beagle.compiler.shared.implements
 import br.com.zup.beagle.compiler.shared.multipleDefinitionErrorMessage
-import com.squareup.kotlinpoet.ClassName
-import com.squareup.kotlinpoet.KModifier
-import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
-import com.squareup.kotlinpoet.asClassName
 import javax.annotation.processing.ProcessingEnvironment
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.element.TypeElement
@@ -97,30 +93,6 @@ internal class BeagleSetupPropertyGenerator(private val processingEnv: Processin
                     )
                 }
             }
-            typeElement.implements(BEAGLE_ACTIVITY, processingEnv) -> {
-                val element = propertySpecifications?.defaultBeagleActivity
-                if (element == null) {
-                    propertySpecifications?.defaultBeagleActivity = typeElement
-                } else {
-                    logImplementationErrorMessage(
-                        typeElement,
-                        element,
-                        "BeagleActivity"
-                    )
-                }
-            }
-            typeElement.implements(ANALYTICS, processingEnv) -> {
-                val element = propertySpecifications?.analytics
-                if (element == null) {
-                    propertySpecifications?.analytics = typeElement
-                } else {
-                    logImplementationErrorMessage(
-                        typeElement,
-                        element,
-                        "Analytics"
-                    )
-                }
-            }
             typeElement.implements(ANALYTICS_PROVIDER, processingEnv) -> {
                 val element = propertySpecifications?.analyticsProvider
                 if (element == null) {
@@ -151,38 +123,17 @@ internal class BeagleSetupPropertyGenerator(private val processingEnv: Processin
     private fun createListOfPropertySpec(
         propertySpecifications: PropertySpecifications?,
     ): List<PropertySpec> {
-        return PropertyImplementationManager.manage(propertySpecifications).toMutableList().apply {
-            add(implementServerDrivenActivityProperty(propertySpecifications?.defaultBeagleActivity))
-        }
-    }
-
-    private fun implementServerDrivenActivityProperty(typeElement: TypeElement?): PropertySpec {
-        return implementServerDrivenActivityProperty(typeElement.toString())
-    }
-
-    fun implementServerDrivenActivityProperty(activity: String, isFormatted: Boolean = false): PropertySpec {
-        val initializer = if (!isFormatted) "$activity::class.java as Class<BeagleActivity>" else activity
-        return PropertySpec.builder(
-            "serverDrivenActivity",
-            Class::class.asClassName().parameterizedBy(
-                ClassName(BEAGLE_ACTIVITY.packageName, BEAGLE_ACTIVITY.className)
-            ),
-            KModifier.OVERRIDE,
-        ).initializer(initializer).build()
+        return PropertyImplementationManager.manage(propertySpecifications).toMutableList()
     }
 }
 
 internal data class PropertySpecifications(
     var deepLinkHandler: TypeElement? = null,
-    var formLocalActionHandler: TypeElement? = null,
-    var httpClient: TypeElement? = null,
     var httpClientFactory: TypeElement? = null,
     var designSystem: TypeElement? = null,
-    var defaultBeagleActivity: TypeElement? = null,
     var beagleActivities: List<TypeElement>? = null,
     var urlBuilder: TypeElement? = null,
-    var storeHandler: TypeElement? = null,
-    var analytics: TypeElement? = null,
+    var viewClient: TypeElement? = null,
     var analyticsProvider: TypeElement? = null,
     var logger: TypeElement? = null,
     var imageDownloader: TypeElement? = null,

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,13 +18,14 @@ package br.com.zup.beagle.android.components.utils
 
 import android.view.View
 import br.com.zup.beagle.R
+import br.com.zup.beagle.android.annotation.RegisterWidget
 import br.com.zup.beagle.android.data.serializer.createNamespace
 import br.com.zup.beagle.android.setup.BeagleEnvironment
+import br.com.zup.beagle.android.utils.applyStyle
 import br.com.zup.beagle.android.utils.toAndroidId
-import br.com.zup.beagle.annotation.RegisterWidget
-import br.com.zup.beagle.core.BeagleJson
-import br.com.zup.beagle.core.IdentifierComponent
-import br.com.zup.beagle.core.ServerDrivenComponent
+import br.com.zup.beagle.android.widget.core.BeagleJson
+import br.com.zup.beagle.android.widget.core.IdentifierComponent
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 
 class ComponentStylization<T : ServerDrivenComponent>(
     private val accessibilitySetup: AccessibilitySetup = AccessibilitySetup(),
@@ -40,23 +41,23 @@ class ComponentStylization<T : ServerDrivenComponent>(
     }
 
     private fun getComponentType(component: ServerDrivenComponent) =
-        if (isCustomWidget(component)) getWidgetName("custom",component::class.java)
-        else getWidgetName("beagle",component::class.java)
+        if (isCustomWidget(component)) getWidgetName("custom", component::class.java)
+        else getWidgetName("beagle", component::class.java)
 
     private fun isCustomWidget(component: ServerDrivenComponent) =
         BeagleEnvironment.beagleSdk.registeredWidgets().contains(component::class.java)
 
-    private fun getWidgetName(appNameSpace : String, clazz: Class<*>): String {
+    private fun getWidgetName(appNameSpace: String, clazz: Class<*>): String {
         var name = ""
-        clazz.getAnnotation(RegisterWidget::class.java)?.let{
+        clazz.getAnnotation(RegisterWidget::class.java)?.let {
             name = it.name
         }
         if (name.isEmpty()) {
-            clazz.getAnnotation(BeagleJson::class.java)?.let{
+            clazz.getAnnotation(BeagleJson::class.java)?.let {
                 name = it.name
             }
         }
-        if(name.isEmpty()){
+        if (name.isEmpty()) {
             name = clazz.simpleName
         }
         return createNamespace(appNameSpace, clazz, name)

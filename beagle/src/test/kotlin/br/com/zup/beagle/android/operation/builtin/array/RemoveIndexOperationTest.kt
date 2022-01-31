@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,6 +45,21 @@ internal class RemoveIndexOperationTest {
             // THEN
             val expected = OperationType.TypeJsonArray(JSONArray(listOf(2, 3)))
             assertEquals(expected.toString(), result.toString())
+        }
+
+        @Test
+        @DisplayName("Then should not change the original JSONArray")
+        fun shouldNotChangeOriginalArray() {
+            // GIVEN
+            val list = OperationType.TypeJsonArray(JSONArray(listOf(1, 2, 3)))
+            val index = OperationType.TypeNumber(0)
+
+            // WHEN
+            removeIndexOperation.execute(list, index)
+
+            // THEN
+            val expected = OperationType.TypeJsonArray(JSONArray(listOf(1, 2, 3)))
+            assertEquals(expected.toString(), list.toString())
         }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,18 +19,20 @@ package br.com.zup.beagle.android.components
 
 import android.graphics.Color
 import android.view.Gravity
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.widget.TextViewCompat
-import br.com.zup.beagle.android.components.utils.styleManagerFactory
-import br.com.zup.beagle.android.extensions.once
+import br.com.zup.beagle.android.context.constant
 import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.setup.DesignSystem
 import br.com.zup.beagle.android.testutil.RandomData
 import br.com.zup.beagle.android.utils.StyleManager
+import br.com.zup.beagle.android.utils.styleManagerFactory
 import br.com.zup.beagle.android.view.ViewFactory
-import br.com.zup.beagle.widget.core.TextAlignment
+import br.com.zup.beagle.android.widget.core.TextAlignment
 import io.mockk.Runs
+import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
@@ -39,6 +41,7 @@ import io.mockk.mockkStatic
 import io.mockk.slot
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -57,7 +60,7 @@ class BeagleTextViewExtensionsKtTest : BaseComponentTest() {
 
     private lateinit var text: Text
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
 
@@ -78,10 +81,15 @@ class BeagleTextViewExtensionsKtTest : BaseComponentTest() {
         every { designSystem.image(any()) } returns IMAGE_RES
     }
 
+    @BeforeEach
+    fun clear() {
+        clearMocks(textView, answers = false)
+    }
+
     @Test
     fun setTextWidget_with_text_should_call_TextViewCompat_setTextAppearance() {
         // Given
-        val textValue = RandomData.string()
+        val textValue = constant(RandomData.string())
         val style = RandomData.string()
         text = Text(text = textValue, styleId = style, alignment = null)
 
@@ -89,13 +97,13 @@ class BeagleTextViewExtensionsKtTest : BaseComponentTest() {
         text.buildView(rootView)
 
         // Then
-        assertEquals(textValue, textValueSlot.captured)
+        assertEquals(textValue.value, textValueSlot.captured)
     }
 
     @Test
     fun setTextWidget_with_text_should_not_call_TextViewCompat_setTextAppearance_when_style_is_null() {
         // Given
-        val textValue = RandomData.string()
+        val textValue = constant(RandomData.string())
         text = Text(text = textValue, styleId = null, alignment = null)
 
         // When
@@ -108,8 +116,8 @@ class BeagleTextViewExtensionsKtTest : BaseComponentTest() {
     @Test
     fun setTextWidget_with_text_should_set_alignment_when_is_center() {
         // Given
-        val textValue = RandomData.string()
-        text = Text(text = textValue, styleId = null, alignment = TextAlignment.CENTER)
+        val textValue = constant(RandomData.string())
+        text = Text(text = textValue, styleId = null, alignment = constant(TextAlignment.CENTER))
 
         // When
         text.buildView(rootView)
@@ -121,8 +129,8 @@ class BeagleTextViewExtensionsKtTest : BaseComponentTest() {
     @Test
     fun setTextWidget_with_text_should_set_alignment_when_is_right() {
         // Given
-        val textValue = RandomData.string()
-        text = Text(text = textValue, styleId = null, alignment = TextAlignment.RIGHT)
+        val textValue = constant(RandomData.string())
+        text = Text(text = textValue, styleId = null, alignment = constant(TextAlignment.RIGHT))
 
         // When
         text.buildView(rootView)
@@ -134,8 +142,8 @@ class BeagleTextViewExtensionsKtTest : BaseComponentTest() {
     @Test
     fun setTextWidget_with_text_should_set_alignment_when_is_left() {
         // Given
-        val textValue = RandomData.string()
-        text = Text(text = textValue, styleId = null, alignment = TextAlignment.LEFT)
+        val textValue = constant(RandomData.string())
+        text = Text(text = textValue, styleId = null, alignment = constant(TextAlignment.LEFT))
 
         // When
         text.buildView(rootView)
@@ -147,7 +155,7 @@ class BeagleTextViewExtensionsKtTest : BaseComponentTest() {
     @Test
     fun setTextWidget_with_text_should_not_call_TextViewCompat_setTextAppearance_when_designSystem_is_null() {
         // Given
-        val textValue = RandomData.string()
+        val textValue = constant(RandomData.string())
         val styleId = RandomData.string()
 
         every { BeagleEnvironment.beagleSdk.designSystem } returns null
@@ -164,30 +172,30 @@ class BeagleTextViewExtensionsKtTest : BaseComponentTest() {
     @Test
     fun setTextWidget_should_call_setTextColor() {
         // Given
-        val textColor = "#000000"
+        val textColor = constant("#000000")
         val colorInt = 0x000000
-        every { Color.parseColor(textColor) } returns colorInt
+        every { Color.parseColor(textColor.value) } returns colorInt
 
-        text = Text(text = "", textColor = textColor)
+        text = Text(text = constant(""), textColor = textColor)
 
         // When
         text.buildView(rootView)
 
         // Then
-        verify(exactly = once()) { textView.setTextColor(colorInt) }
+        verify(exactly = 1) { textView.setTextColor(colorInt) }
     }
 
     @Test
     fun setTextWidget_should_not_call_setTextColor_when_color_is_null() {
         // Given
         val textColor = null
-        val colorInt = 0x000000
-        text = Text(text = "", textColor = textColor)
+        val colorInt = constant(0x000000)
+        text = Text(text = constant(""), textColor = textColor)
 
         // When
         text.buildView(rootView)
 
         // Then
-        verify(exactly = 0) { textView.setTextColor(colorInt) }
+        verify(exactly = 0) { textView.setTextColor(colorInt.value) }
     }
 }

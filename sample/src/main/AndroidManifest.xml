@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-  ~ Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+  ~ Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -52,16 +52,9 @@
         </activity>
 
         <activity
-            android:name=".activities.NavigationBarActivity"
-            android:theme="@style/AppTheme.NoToolbar" />
-
-        <activity
             android:name="br.com.zup.beagle.android.preview.PreviewActivity"
             android:exported="true"
             android:theme="@style/AppTheme.NoToolbar" />
-
-        <activity android:name=".fragment.list.ListViewActivity" />
-        <activity android:name=".fragment.list.DeprecatedListViewActivity" />
 
     </application>
 </manifest>

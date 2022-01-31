@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,41 +17,36 @@
 package br.com.zup.beagle.android.action
 
 import android.view.View
-import androidx.lifecycle.ViewModelProvider
+import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.logger.BeagleLoggerProxy
 import br.com.zup.beagle.android.testutil.RandomData
 import br.com.zup.beagle.android.utils.evaluateExpression
 import br.com.zup.beagle.android.view.viewmodel.ScreenContextViewModel
-import br.com.zup.beagle.android.widget.ActivityRootView
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
-import io.mockk.mockkConstructor
 import io.mockk.mockkObject
 import io.mockk.mockkStatic
 import io.mockk.slot
 import io.mockk.verify
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.Test
 
-class SetContextTest {
+class SetContextTest : BaseTest() {
 
     private val viewModel = mockk<ScreenContextViewModel>()
     private val view = mockk<View>()
-    private val rootView = mockk<ActivityRootView> {
-        every { activity } returns mockk(relaxed = true)
-        every { getViewModelStoreOwner() } returns activity
-    }
 
-    @BeforeEach
-    fun setUp() {
+    @BeforeAll
+    override fun setUp() {
+        super.setUp()
+
         mockkObject(BeagleLoggerProxy)
         mockkStatic("br.com.zup.beagle.android.utils.ActionExtensionsKt")
 
-        mockkConstructor(ViewModelProvider::class)
-        every { anyConstructed<ViewModelProvider>().get(ScreenContextViewModel::class.java) } returns viewModel
+        prepareViewModelMock(viewModel)
     }
 
     @Test

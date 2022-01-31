@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,14 +17,13 @@
 package br.com.zup.beagle.android.action
 
 import android.view.View
+import br.com.zup.beagle.android.analytics.ActionAnalyticsConfig
 import br.com.zup.beagle.android.context.Bind
-import br.com.zup.beagle.android.context.valueOf
 import br.com.zup.beagle.android.logger.BeagleLoggerProxy
 import br.com.zup.beagle.android.utils.evaluateExpression
 import br.com.zup.beagle.android.utils.handleEvent
 import br.com.zup.beagle.android.widget.RootView
-import br.com.zup.beagle.core.BeagleJson
-import br.com.zup.beagle.newanalytics.ActionAnalyticsConfig
+import br.com.zup.beagle.android.widget.core.BeagleJson
 
 /**
  * Action to resolve condition and call onTrue if return true and onFalse if return is false.
@@ -41,18 +40,6 @@ data class Condition(
     val onFalse: List<Action>? = null,
     override var analytics: ActionAnalyticsConfig? = null,
 ) : AnalyticsAction {
-
-    constructor(
-        condition: Boolean,
-        onTrue: List<Action>? = null,
-        onFalse: List<Action>? = null,
-        analytics: ActionAnalyticsConfig? = null,
-    ) : this(
-        condition = valueOf(condition),
-        onTrue = onTrue,
-        onFalse = onFalse,
-        analytics = analytics
-    )
 
     override fun execute(rootView: RootView, origin: View) {
         val result = runCatching {

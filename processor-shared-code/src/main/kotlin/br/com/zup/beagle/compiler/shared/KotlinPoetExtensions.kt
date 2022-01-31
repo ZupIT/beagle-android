@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,13 +21,19 @@ import javax.lang.model.element.TypeElement
 import javax.lang.model.type.DeclaredType
 
 // Not working with generic types
-fun TypeElement.implements(beagleClass: BeagleClass,
-                           processingEnvironment: ProcessingEnvironment): Boolean {
-
-    return processingEnvironment.typeUtils.isAssignable(this.asType(),
-        processingEnvironment.elementUtils.getTypeElement(beagleClass.toString()).asType())
+fun TypeElement.implements(
+    beagleClass: BeagleClass,
+    processingEnvironment: ProcessingEnvironment
+): Boolean {
+    return try {
+        processingEnvironment.typeUtils.isAssignable(
+            this.asType(),
+            processingEnvironment.elementUtils.getTypeElement(beagleClass.toString()).asType()
+        )
+    } catch (exception: Exception) {
+        false
+    }
 }
-
 
 fun TypeElement.implementsInterface(interfaceName: String): Boolean {
     for (interfaceTypeMirror in this.interfaces) {
@@ -38,4 +44,3 @@ fun TypeElement.implementsInterface(interfaceName: String): Boolean {
     }
     return false
 }
-

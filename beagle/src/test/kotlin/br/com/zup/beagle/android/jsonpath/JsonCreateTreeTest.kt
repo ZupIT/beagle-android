@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -185,7 +185,7 @@ class JsonCreateTreeTest {
         val newValue = RandomData.double()
 
         // When
-        val result = JsonCreateTree().walkingTreeAndFindKey(jsonObject, keys, newValue)
+        JsonCreateTree().walkingTreeAndFindKey(jsonObject, keys, newValue)
 
         // Then
         val actualValue = jsonObject.getJSONObject("b")
@@ -221,7 +221,7 @@ class JsonCreateTreeTest {
         }
 
         // When
-        val result = JsonCreateTree().walkingTreeAndFindKey(jsonObject, keys, newJsonObject)
+        JsonCreateTree().walkingTreeAndFindKey(jsonObject, keys, newJsonObject)
 
         // Then
         val actualValue = jsonObject.getJSONObject("b").getJSONArray("h").getJSONObject(0)

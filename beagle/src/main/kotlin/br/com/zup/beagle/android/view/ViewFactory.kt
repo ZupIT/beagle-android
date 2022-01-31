@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,8 +38,8 @@ import br.com.zup.beagle.android.view.custom.BeaglePageView
 import br.com.zup.beagle.android.view.custom.BeagleTabLayout
 import br.com.zup.beagle.android.view.custom.BeagleView
 import br.com.zup.beagle.android.widget.RootView
-import br.com.zup.beagle.core.CornerRadius
-import br.com.zup.beagle.core.Style
+import br.com.zup.beagle.android.widget.core.CornerRadius
+import br.com.zup.beagle.android.widget.core.Style
 
 internal object ViewFactory {
 
@@ -94,7 +94,7 @@ internal object ViewFactory {
     //we use the context.applicationContext to prevent a crash on android 21
     fun makeWebView(context: Context) = WebView(context.applicationContext)
 
-    fun makeImageView(context: Context, cornerRadius: CornerRadius) = RoundedImageView(context, cornerRadius)
+    fun makeImageView(rootView: RootView, cornerRadius: CornerRadius) = RoundedImageView(rootView, cornerRadius)
 
     fun makeRecyclerView(context: Context) = RecyclerView(context)
 

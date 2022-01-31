@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,13 +23,13 @@ import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.android.widget.WidgetView
-import br.com.zup.beagle.annotation.RegisterWidget
-import br.com.zup.beagle.core.MultiChildComponent
-import br.com.zup.beagle.core.ServerDrivenComponent
-import br.com.zup.beagle.core.Style
-import br.com.zup.beagle.widget.core.Flex
-import br.com.zup.beagle.widget.core.FlexDirection
-import br.com.zup.beagle.widget.core.ScrollAxis
+import br.com.zup.beagle.android.annotation.RegisterWidget
+import br.com.zup.beagle.android.widget.core.MultiChildComponent
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
+import br.com.zup.beagle.android.widget.core.Style
+import br.com.zup.beagle.android.widget.core.Flex
+import br.com.zup.beagle.android.widget.core.FlexDirection
+import br.com.zup.beagle.android.widget.core.ScrollAxis
 
 /**
  * Component is a specialized container that will display its components in a Scroll

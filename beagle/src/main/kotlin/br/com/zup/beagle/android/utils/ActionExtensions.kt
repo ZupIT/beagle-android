@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,29 +47,6 @@ fun Action.handleEvent(
 }
 
 /**
- * Execute a list of actions and create the implicit context with eventName and eventValue (optional).
- * @property rootView from buildView
- * @property origin view that triggered the action
- * @property actions is the list of actions to be executed
- * @property eventName is the name of event to be referenced inside the @property action list
- * @property eventValue is the value that the eventName name has created,
- * this could be a primitive or a object that will be serialized to JSON
- */
-@Deprecated("It was deprecated in version 1.1.0 and will be removed in a future version." +
-    " Use handleEvent without eventName and eventValue or with ContextData for create a implicit context.",
-    ReplaceWith("handleEvent(rootView, origin, actions)"))
-fun Action.handleEvent(
-    rootView: RootView,
-    origin: View,
-    actions: List<Action>,
-    eventName: String,
-    eventValue: Any? = null,
-) {
-    eventValue?.let { handleEvent(rootView, origin, actions, ContextData(eventName, eventValue)) }
-        ?: handleEvent(rootView, origin, actions)
-}
-
-/**
  * Execute an action and create the implicit context with eventName and eventValue (optional).
  * @property rootView from buildView
  * @property origin view that triggered the action
@@ -85,29 +62,6 @@ fun Action.handleEvent(
     analyticsValue: String? = null,
 ) {
     contextActionExecutor.executeActions(rootView, origin, this, listOf(action), context, analyticsValue)
-}
-
-/**
- * Execute an action and create the implicit context with eventName and eventValue (optional).
- * @property rootView from buildView
- * @property origin view that triggered the action
- * @property action is the action to be executed
- * @property eventName is the name of event to be referenced inside the @property action list
- * @property eventValue is the value that the eventName name has created,
- * this could be a primitive or a object that will be serialized to JSON
- */
-@Deprecated("It was deprecated in version 1.1.0 and will be removed in a future version." +
-    " Use handleEvent without eventName and eventValue or with ContextData for create a implicit context.",
-    ReplaceWith("handleEvent(rootView, origin, action)"))
-fun Action.handleEvent(
-    rootView: RootView,
-    origin: View,
-    action: Action,
-    eventName: String,
-    eventValue: Any? = null,
-) {
-    eventValue?.let { handleEvent(rootView, origin, action, ContextData(eventName, eventValue)) }
-        ?: handleEvent(rootView, origin, action)
 }
 
 /**

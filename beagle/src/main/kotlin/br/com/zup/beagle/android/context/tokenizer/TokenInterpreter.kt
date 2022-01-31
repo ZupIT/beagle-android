@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ internal class TokenInterpreter(value: String) {
     private fun readUnescapedString(): String {
         val sb = StringBuilder()
         var specialCharacterFound = false
-        loop@ while (lastChar.toInt() != -1) {
+        loop@ while (lastChar.code != -1) {
             lastChar = reader.read().toChar()
             when (lastChar) {
                 '\uFFFF' -> {

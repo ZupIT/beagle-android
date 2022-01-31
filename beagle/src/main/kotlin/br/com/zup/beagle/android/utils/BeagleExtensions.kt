@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,11 @@
  * limitations under the License.
  */
 
-@file:JvmName("BeagleUtils")
-
 package br.com.zup.beagle.android.utils
 
 import br.com.zup.beagle.android.view.BeagleActivity
 import br.com.zup.beagle.android.view.custom.BeagleNavigator
 
-fun String.toAndroidId(): Int {
-    // Validation required to avoid conflict of View.generateViewId() with a component's numeral id
-    return if (toIntOrNull() != null) {
-        toInt()
-    } else {
-        hashCode()
-    }
-}
 
 internal fun BeagleActivity.configureSupportActionBar() {
     val toolbar = this.getToolbar()

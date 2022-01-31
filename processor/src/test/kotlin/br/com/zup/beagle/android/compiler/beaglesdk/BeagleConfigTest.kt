@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import br.com.zup.beagle.android.compiler.extensions.compile
 import br.com.zup.beagle.android.compiler.mocks.BEAGLE_CONFIG_IMPORTS
 import br.com.zup.beagle.android.compiler.mocks.LIST_OF_BEAGLE_CONFIG
 import br.com.zup.beagle.android.compiler.mocks.SIMPLE_BEAGLE_CONFIG
-import br.com.zup.beagle.android.compiler.mocks.VALID_ANALYTICS
+import br.com.zup.beagle.android.compiler.mocks.VALID_ANALYTICS_PROVIDER
 import br.com.zup.beagle.android.compiler.mocks.VALID_BEAGLE_CONFIG_IN_BEAGLE_SDK
 import br.com.zup.beagle.android.compiler.mocks.VALID_BEAGLE_CONFIG_IN_BEAGLE_SDK_FROM_REGISTRAR
 import br.com.zup.beagle.android.compiler.mocks.VALID_THIRD_BEAGLE_CONFIG
@@ -54,7 +54,8 @@ internal class BeagleConfigTest : BeagleSdkBaseTest() {
         fun testGenerateBeagleConfigCorrect() {
             // GIVEN
             val kotlinSource = SourceFile.kotlin(
-                FILE_NAME, BEAGLE_CONFIG_IMPORTS + SIMPLE_BEAGLE_CONFIG)
+                FILE_NAME, BEAGLE_CONFIG_IMPORTS + SIMPLE_BEAGLE_CONFIG
+            )
 
             // WHEN
             val compilationResult = compile(kotlinSource, BeagleAnnotationProcessor(), tempPath)
@@ -92,7 +93,8 @@ internal class BeagleConfigTest : BeagleSdkBaseTest() {
             )
 
             val kotlinSource = SourceFile.kotlin(
-                FILE_NAME, BEAGLE_CONFIG_IMPORTS + VALID_ANALYTICS + VALID_THIRD_BEAGLE_CONFIG)
+                FILE_NAME, BEAGLE_CONFIG_IMPORTS + VALID_ANALYTICS_PROVIDER + VALID_THIRD_BEAGLE_CONFIG
+            )
 
             // WHEN
             val compilationResult = compile(kotlinSource, BeagleAnnotationProcessor(), tempPath)
@@ -120,15 +122,23 @@ internal class BeagleConfigTest : BeagleSdkBaseTest() {
         fun testDuplicate() {
             // GIVEN
             val kotlinSource = SourceFile.kotlin(
-                FILE_NAME, BEAGLE_CONFIG_IMPORTS + LIST_OF_BEAGLE_CONFIG)
+                FILE_NAME, BEAGLE_CONFIG_IMPORTS + LIST_OF_BEAGLE_CONFIG
+            )
 
             // WHEN
             val compilationResult = compile(kotlinSource, BeagleAnnotationProcessor(), tempPath)
 
 
             // THEN
-            Assertions.assertEquals(KotlinCompilation.ExitCode.COMPILATION_ERROR, compilationResult.exitCode)
-            Assertions.assertTrue(compilationResult.messages.contains(MESSAGE_DUPLICATE_BEAGLE_CONFIG))
+            Assertions.assertEquals(
+                KotlinCompilation.ExitCode.COMPILATION_ERROR,
+                compilationResult.exitCode
+            )
+            Assertions.assertTrue(
+                compilationResult.messages.contains(
+                    MESSAGE_DUPLICATE_BEAGLE_CONFIG
+                )
+            )
         }
 
         @Test
@@ -136,13 +146,17 @@ internal class BeagleConfigTest : BeagleSdkBaseTest() {
         fun testNotHasBeagleConfig() {
             // GIVEN
             val kotlinSource = SourceFile.kotlin(
-                FILE_NAME, BEAGLE_CONFIG_IMPORTS + VALID_ANALYTICS)
+                FILE_NAME, BEAGLE_CONFIG_IMPORTS + VALID_ANALYTICS_PROVIDER
+            )
 
             // WHEN
             val compilationResult = compile(kotlinSource, BeagleAnnotationProcessor(), tempPath)
 
             // THEN
-            Assertions.assertEquals(KotlinCompilation.ExitCode.COMPILATION_ERROR, compilationResult.exitCode)
+            Assertions.assertEquals(
+                KotlinCompilation.ExitCode.COMPILATION_ERROR,
+                compilationResult.exitCode
+            )
             Assertions.assertTrue(compilationResult.messages.contains(MESSAGE_MISSING_BEAGLE_CONFIG))
         }
 
@@ -160,14 +174,22 @@ internal class BeagleConfigTest : BeagleSdkBaseTest() {
                 Pair("""config""", "br.com.test.beagle.BeagleConfigThree()"),
             )
             val kotlinSource = SourceFile.kotlin(
-                FILE_NAME, BEAGLE_CONFIG_IMPORTS + SIMPLE_BEAGLE_CONFIG + VALID_THIRD_BEAGLE_CONFIG)
+                FILE_NAME, BEAGLE_CONFIG_IMPORTS + SIMPLE_BEAGLE_CONFIG + VALID_THIRD_BEAGLE_CONFIG
+            )
 
             // WHEN
             val compilationResult = compile(kotlinSource, BeagleAnnotationProcessor(), tempPath)
 
             // THEN
-            Assertions.assertTrue(compilationResult.messages.contains(MESSAGE_DUPLICATE_BEAGLE_CONFIG_REGISTRAR))
-            Assertions.assertEquals(KotlinCompilation.ExitCode.COMPILATION_ERROR, compilationResult.exitCode)
+            Assertions.assertTrue(
+                compilationResult.messages.contains(
+                    MESSAGE_DUPLICATE_BEAGLE_CONFIG_REGISTRAR
+                )
+            )
+            Assertions.assertEquals(
+                KotlinCompilation.ExitCode.COMPILATION_ERROR,
+                compilationResult.exitCode
+            )
         }
 
     }
@@ -175,17 +197,19 @@ internal class BeagleConfigTest : BeagleSdkBaseTest() {
     companion object {
         private const val FILE_NAME = "File1.kt"
         private val REGEX_REMOVE_SPACE = "\\s".toRegex()
-        private const val MESSAGE_DUPLICATE_BEAGLE_CONFIG = "error: BeagleConfig defined multiple times: " +
-            "1 - br.com.test.beagle.BeagleConfigImpl " +
-            "2 - br.com.test.beagle.BeagleConfigTwo. " +
-            "You must remove one implementation from the application."
+        private const val MESSAGE_DUPLICATE_BEAGLE_CONFIG =
+            "error: BeagleConfig defined multiple times: "
+                .plus("1 - br.com.test.beagle.BeagleConfigImpl ")
+                .plus("2 - br.com.test.beagle.BeagleConfigTwo. ")
+                .plus("You must remove one implementation from the application.")
         private const val MESSAGE_MISSING_BEAGLE_CONFIG =
             "Did you miss to annotate your BeagleConfig class with @BeagleComponent?"
 
-        private const val MESSAGE_DUPLICATE_BEAGLE_CONFIG_REGISTRAR = "error: BeagleConfig defined multiple times: " +
-            "1 - br.com.test.beagle.BeagleConfigImpl " +
-            "2 - br.com.test.beagle.BeagleConfigThree. " +
-            "You must remove one implementation from the application."
+        private const val MESSAGE_DUPLICATE_BEAGLE_CONFIG_REGISTRAR =
+            "error: BeagleConfig defined multiple times: "
+                .plus("1 - br.com.test.beagle.BeagleConfigImpl ")
+                .plus("2 - br.com.test.beagle.BeagleConfigThree. ")
+                .plus("You must remove one implementation from the application.")
     }
 
 }

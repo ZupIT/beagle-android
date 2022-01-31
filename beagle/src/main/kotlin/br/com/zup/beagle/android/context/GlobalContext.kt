@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,6 @@ package br.com.zup.beagle.android.context
 
 typealias GlobalContextObserver = (ContextData) -> Unit
 
-private const val GLOBAL_KEY = "global"
-
 /**
  * A Global Context is a object that can assume as value of any type of variable, like a map defines a subset
  * of key/value or complex JSONs objects that defines object trees.
@@ -29,6 +27,8 @@ private const val GLOBAL_KEY = "global"
  * or an action linked to a component or even programmatically.
  */
 object GlobalContext {
+
+    internal const val GLOBAL_KEY = "global"
 
     private var globalContext = ContextData(id = GLOBAL_KEY, value = "")
     private val globalContextObservers = mutableListOf<GlobalContextObserver>()

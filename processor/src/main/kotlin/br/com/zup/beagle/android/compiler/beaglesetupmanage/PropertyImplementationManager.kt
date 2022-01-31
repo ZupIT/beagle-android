@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,16 @@
 
 package br.com.zup.beagle.android.compiler.beaglesetupmanage
 
-import br.com.zup.beagle.android.compiler.ANALYTICS
 import br.com.zup.beagle.android.compiler.ANALYTICS_PROVIDER
 import br.com.zup.beagle.android.compiler.BEAGLE_CONFIG
 import br.com.zup.beagle.android.compiler.BEAGLE_IMAGE_DOWNLOADER
 import br.com.zup.beagle.android.compiler.BEAGLE_LOGGER
 import br.com.zup.beagle.android.compiler.DEEP_LINK_HANDLER
 import br.com.zup.beagle.android.compiler.DESIGN_SYSTEM
-import br.com.zup.beagle.android.compiler.FORM_LOCAL_ACTION_HANDLER
 import br.com.zup.beagle.android.compiler.HTTP_CLIENT_FACTORY_HANDLER
-import br.com.zup.beagle.android.compiler.HTTP_CLIENT_HANDLER
 import br.com.zup.beagle.android.compiler.PropertySpecifications
-import br.com.zup.beagle.android.compiler.STORE_HANDLER
 import br.com.zup.beagle.android.compiler.URL_BUILDER_HANDLER
+import br.com.zup.beagle.android.compiler.VIEW_CLIENT
 import br.com.zup.beagle.compiler.shared.BeagleClass
 import javax.lang.model.element.TypeElement
 
@@ -37,16 +34,8 @@ internal object PropertyImplementationManager {
     fun manage(propertySpecifications: PropertySpecifications?) =
         listOf(
             propertySpec(
-                propertySpecifications?.formLocalActionHandler,
-                FORM_LOCAL_ACTION_HANDLER,
-            ),
-            propertySpec(
                 propertySpecifications?.deepLinkHandler,
                 DEEP_LINK_HANDLER,
-            ),
-            propertySpec(
-                propertySpecifications?.httpClient,
-                HTTP_CLIENT_HANDLER,
             ),
             propertySpec(
                 propertySpecifications?.httpClientFactory,
@@ -57,16 +46,12 @@ internal object PropertyImplementationManager {
                 DESIGN_SYSTEM,
             ),
             propertySpec(
-                propertySpecifications?.storeHandler,
-                STORE_HANDLER,
+                propertySpecifications?.viewClient,
+                VIEW_CLIENT,
             ),
             propertySpec(
                 propertySpecifications?.urlBuilder,
                 URL_BUILDER_HANDLER,
-            ),
-            propertySpec(
-                propertySpecifications?.analytics,
-                ANALYTICS,
             ),
             propertySpec(
                 propertySpecifications?.analyticsProvider,

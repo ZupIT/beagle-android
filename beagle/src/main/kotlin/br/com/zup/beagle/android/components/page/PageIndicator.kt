@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,13 +17,13 @@
 package br.com.zup.beagle.android.components.page
 
 import br.com.zup.beagle.android.context.Bind
-import br.com.zup.beagle.android.context.valueOf
 import br.com.zup.beagle.android.utils.observeBindChanges
 import br.com.zup.beagle.android.utils.toAndroidColor
 import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.view.custom.BeaglePageIndicatorView
 import br.com.zup.beagle.android.widget.RootView
-import br.com.zup.beagle.core.BeagleJson
+import br.com.zup.beagle.android.widget.ViewConvertable
+import br.com.zup.beagle.android.widget.core.BeagleJson
 
 /**
  *  The PageView component is a specialized container to hold pages (views) that will be displayed horizontally.
@@ -39,47 +39,31 @@ class PageIndicator(
     val unselectedColor: String,
     var numberOfPages: Int? = null,
     var currentPage: Bind<Int>? = null,
-) : PageIndicatorComponent {
-
-    constructor(
-        selectedColor: String,
-        unselectedColor: String,
-        numberOfPages: Int? = null,
-        currentPage: Int,
-    ) : this(selectedColor, unselectedColor, numberOfPages, valueOf(currentPage))
+) : ViewConvertable {
 
     @Transient
     private lateinit var pageIndicator: BeaglePageIndicatorView
 
-    override fun buildView(rootView: RootView) = ViewFactory.makePageIndicator(rootView.getContext()).apply {
-        pageIndicator = this
-        selectedColor.toAndroidColor()?.let {
-            setSelectedColor(it)
-        }
-        unselectedColor.toAndroidColor()?.let {
-            setUnselectedColor(it)
-        }
+    override fun buildView(rootView: RootView) =
+        ViewFactory.makePageIndicator(rootView.getContext()).apply {
+            pageIndicator = this
+            selectedColor.toAndroidColor()?.let {
+                setSelectedColor(it)
+            }
+            unselectedColor.toAndroidColor()?.let {
+                setUnselectedColor(it)
+            }
 
-        numberOfPages?.let {
-            setCount(it)
-        }
-        currentPage?.let {
-            observeBindChanges(rootView, this, it) { position ->
-                position?.let {
-                    onItemUpdated(position)
+            numberOfPages?.let {
+                pageIndicator.setCount(it)
+            }
+
+            currentPage?.let {
+                observeBindChanges(rootView, this, it) { position ->
+                    position?.let { index ->
+                        pageIndicator.setCurrentIndex(index)
+                    }
                 }
             }
         }
-    }
-
-
-    override fun setCount(pages: Int) {
-        pageIndicator.setCount(pages)
-    }
-
-    override fun onItemUpdated(newIndex: Int) {
-        pageIndicator.setCurrentIndex(newIndex)
-    }
-
-    override fun initPageView(pageIndicatorOutput: PageIndicatorOutput) {}
 }

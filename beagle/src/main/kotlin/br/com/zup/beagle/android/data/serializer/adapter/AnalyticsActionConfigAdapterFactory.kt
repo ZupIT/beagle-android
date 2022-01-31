@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,8 @@
 
 package br.com.zup.beagle.android.data.serializer.adapter
 
-import br.com.zup.beagle.newanalytics.ActionAnalyticsConfig
-import br.com.zup.beagle.newanalytics.ActionAnalyticsProperties
+import br.com.zup.beagle.android.analytics.ActionAnalyticsConfig
+import br.com.zup.beagle.android.analytics.ActionAnalyticsProperties
 import br.com.zup.beagle.android.data.serializer.BeagleMoshi.moshi
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.JsonReader
@@ -52,20 +52,27 @@ internal class AnalyticsActionConfigAdapter : JsonAdapter<ActionAnalyticsConfig>
                 ActionAnalyticsConfig.Disabled()
             }
         } else {
+
+            @Suppress("UNCHECKED_CAST")
             val value = jsonValue as? Map<String, Any>? ?: return null
 
             var attributes: List<String>? = null
             var additionalEntries: Map<String, Any>? = null
             if (value.containsKey(ATTRIBUTES)) {
-                attributes = value[ATTRIBUTES] as List<String>?
+                @Suppress("UNCHECKED_CAST")
+                attributes = value[ATTRIBUTES] as? List<String>?
             }
             if (value.containsKey(ADDITIONAL_ENTRIES)) {
-                additionalEntries = value[ADDITIONAL_ENTRIES] as Map<String, Any>?
+                @Suppress("UNCHECKED_CAST")
+                val additionalEntriesProperty = value[ADDITIONAL_ENTRIES] as? Map<String, Any>?
+                additionalEntries = additionalEntriesProperty?.toMap()
             }
-            actionAnalyticsConfig = ActionAnalyticsConfig.Enabled(ActionAnalyticsProperties(
-                attributes,
-                additionalEntries
-            ))
+            actionAnalyticsConfig = ActionAnalyticsConfig.Enabled(
+                ActionAnalyticsProperties(
+                    attributes,
+                    additionalEntries
+                )
+            )
         }
         return actionAnalyticsConfig
     }

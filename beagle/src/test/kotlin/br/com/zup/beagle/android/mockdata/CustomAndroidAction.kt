@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,15 +18,13 @@ package br.com.zup.beagle.android.mockdata
 
 import android.view.View
 import br.com.zup.beagle.android.action.Action
+import br.com.zup.beagle.android.annotation.RegisterAction
 import br.com.zup.beagle.android.widget.RootView
-import br.com.zup.beagle.annotation.RegisterAction
 
 @RegisterAction
 data class CustomAndroidAction(
     val value: String,
     val intValue: Int
 ) : Action {
-    override fun execute(rootView: RootView, origin: View) {
-
-    }
+    override fun execute(rootView: RootView, origin: View) {}
 }

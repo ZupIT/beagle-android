@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import br.com.zup.beagle.android.data.serializer.adapter.BeagleKotlinJsonAdapter
 import br.com.zup.beagle.android.data.serializer.adapter.BindAdapterFactory
 import br.com.zup.beagle.android.data.serializer.adapter.ComponentJsonAdapterFactory
 import br.com.zup.beagle.android.data.serializer.adapter.ContextDataAdapterFactory
+import br.com.zup.beagle.android.data.serializer.adapter.HttpAdditionalDataAdapter
 import br.com.zup.beagle.android.data.serializer.adapter.ImagePathTypeJsonAdapterFactory
 import br.com.zup.beagle.android.data.serializer.adapter.RouteAdapterFactory
 import br.com.zup.beagle.android.data.serializer.adapter.SimpleJsonAdapter
@@ -45,6 +46,7 @@ internal object BeagleMoshi {
         .add(BindAdapterFactory())
         .add(ImagePathTypeJsonAdapterFactory.make())
         .add(ComponentJsonAdapterFactory.make())
+        .add(HttpAdditionalDataAdapter())
         .add(RouteAdapterFactory())
         .add(AnalyticsActionConfigAdapterFactory())
         .add(AndroidActionJsonAdapterFactory.make())

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,18 +18,18 @@ package br.com.zup.beagle.android.networking.urlbuilder
 
 import br.com.zup.beagle.android.testutil.IoUtils
 import org.junit.Assert
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
+import org.junit.jupiter.api.TestInstance
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UrlBuilderDefaultTest {
 
     private lateinit var urlBuilderDefault: UrlBuilderDefault
 
     private lateinit var urlBuilders: List<UrlBuilderData>
 
-    @BeforeEach
+    @BeforeAll
     fun setUp() {
         urlBuilderDefault = UrlBuilderDefault()
 

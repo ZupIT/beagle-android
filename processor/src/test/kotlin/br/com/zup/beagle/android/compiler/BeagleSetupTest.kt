@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,7 +65,6 @@ internal class BeagleSetupTest {
 
     }
 
-
     @DisplayName("When build application with empty annotations")
     @Nested
     inner class InvalidBeagleSetup {
@@ -78,7 +77,7 @@ internal class BeagleSetupTest {
 
             // THEN
             Assertions.assertEquals(KotlinCompilation.ExitCode.OK, compilationResult.exitCode)
-            Assertions.assertEquals(compilationResult.generatedFiles.size, 1)
+            Assertions.assertEquals(compilationResult.generatedFiles.size, 2)
         }
 
     }

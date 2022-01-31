@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ package br.com.zup.beagle.android.components
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.action.AsyncActionStatus
@@ -30,17 +29,15 @@ import br.com.zup.beagle.android.testutil.InstantExecutorExtension
 import br.com.zup.beagle.android.utils.handleEvent
 import br.com.zup.beagle.android.utils.setIsInitiableComponent
 import br.com.zup.beagle.android.view.viewmodel.OnInitViewModel
-import br.com.zup.beagle.android.widget.RootView
 import io.mockk.Runs
+import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
-import io.mockk.mockkConstructor
 import io.mockk.slot
 import io.mockk.spyk
-import io.mockk.unmockkConstructor
 import io.mockk.verify
-import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -49,26 +46,31 @@ import org.junit.jupiter.api.extension.ExtendWith
 
 @DisplayName("Given an OnInitiableComponent")
 @ExtendWith(InstantExecutorExtension::class)
-class OnInitiableComponentTest: BaseTest() {
+class OnInitiableComponentTest : BaseTest() {
 
-    private val onInitViewModel = spyk(OnInitViewModel())
+    private lateinit var onInitViewModel: OnInitViewModel
     private val origin = mockk<View>(relaxed = true)
     private val listenerSlot = slot<View.OnAttachStateChangeListener>()
     private val id = 10
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
-        mockkConstructor(ViewModelProvider::class)
-        every { anyConstructed<ViewModelProvider>().get(OnInitViewModel::class.java) } returns onInitViewModel
 
         every { origin.id } returns id
         every { origin.addOnAttachStateChangeListener(capture(listenerSlot)) } just Runs
     }
 
-    @AfterEach
-    override fun tearDown() {
-        super.tearDown()
+    @BeforeEach
+    fun clear() {
+        clearMocks(
+            rootView,
+            origin,
+            answers = false
+        )
+
+        onInitViewModel = spyk(OnInitViewModel())
+        prepareViewModelMock(onInitViewModel)
     }
 
     @DisplayName("When handleOnInit is called")
@@ -92,7 +94,8 @@ class OnInitiableComponentTest: BaseTest() {
         @Test
         fun handleOnInitCallWithAtLeastOneOnInitAction() {
             // Given
-            val initiableWidget = Container(children = listOf(), onInit = listOf(Navigate.PopView()))
+            val initiableWidget =
+                Container(children = listOf(), onInit = listOf(Navigate.PopView()))
 
             // When
             initiableWidget.handleOnInit(rootView, origin)
@@ -105,7 +108,8 @@ class OnInitiableComponentTest: BaseTest() {
         @Test
         fun checkIfViewIsTaggedAsInitiableComponent() {
             // Given
-            val initiableWidget = Container(children = listOf(), onInit = listOf(Navigate.PopView()))
+            val initiableWidget =
+                Container(children = listOf(), onInit = listOf(Navigate.PopView()))
 
             // When
             initiableWidget.handleOnInit(rootView, origin)
@@ -172,14 +176,20 @@ class OnInitiableComponentTest: BaseTest() {
             every { action.execute(rootView, origin) } just Runs
             val initiableWidget = Container(children = listOf(), onInit = listOf(action))
 
-
             // When
             initiableWidget.handleOnInit(rootView, origin)
             listenerSlot.captured.onViewAttachedToWindow(origin)
             listenerSlot.captured.onViewAttachedToWindow(origin)
 
             // Then
-            verify(exactly = 1) { action.handleEvent(rootView, origin, action, "onInit") }
+            verify(exactly = 1) {
+                action.handleEvent(
+                    rootView,
+                    origin,
+                    action,
+                    analyticsValue = "onInit"
+                )
+            }
         }
 
         @DisplayName("Then should setOnInitFinished true to FINISHED AsyncAction")
@@ -237,7 +247,14 @@ class OnInitiableComponentTest: BaseTest() {
             listenerSlot.captured.onViewAttachedToWindow(origin)
 
             // Then
-            verify(exactly = 2) { action.handleEvent(rootView, origin, action, analyticsValue = "onInit") }
+            verify(exactly = 2) {
+                action.handleEvent(
+                    rootView,
+                    origin,
+                    action,
+                    analyticsValue = "onInit"
+                )
+            }
         }
     }
 }

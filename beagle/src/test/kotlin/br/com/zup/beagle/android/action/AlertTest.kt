@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,28 +19,29 @@ package br.com.zup.beagle.android.action
 import android.content.DialogInterface
 import android.view.View
 import androidx.appcompat.app.AlertDialog
-import br.com.zup.beagle.android.extensions.once
+import br.com.zup.beagle.android.context.constant
 import br.com.zup.beagle.android.testutil.RandomData
 import br.com.zup.beagle.android.utils.handleEvent
 import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.widget.RootView
-import io.mockk.MockKAnnotations
 import io.mockk.Runs
+import io.mockk.clearMocks
 import io.mockk.every
-import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.slot
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class AlertTest {
 
-    @RelaxedMockK
-    private lateinit var rootView: RootView
+    private val rootView: RootView = mockk(relaxed = true)
 
     private val builder = mockk<AlertDialog.Builder>()
     private val dialogBox = mockk<AlertDialog>()
@@ -50,26 +51,33 @@ class AlertTest {
     private val listenerSlot = slot<DialogInterface.OnClickListener>()
     private val view: View = mockk()
 
-    @BeforeEach
+    @BeforeAll
     fun setUp() {
-        MockKAnnotations.init(this)
-
         mockkObject(ViewFactory)
 
         every { ViewFactory.makeAlertDialogBuilder(any()) } returns builder
         every { builder.setTitle(capture(titleSlot)) } returns builder
         every { builder.setMessage(capture(messageSlot)) } returns builder
-        every { builder.setPositiveButton(capture(buttonTextSlot), capture(listenerSlot)) } returns builder
+        every {
+            builder.setPositiveButton(
+                capture(buttonTextSlot),
+                capture(listenerSlot)
+            )
+        } returns builder
         every { builder.show() } returns mockk()
-        every { dialogBox.dismiss() } just Runs
+    }
+
+    @BeforeEach
+    fun clear() {
+        clearMocks(dialogBox)
     }
 
     @Test
     fun `execute should create a AlertAction`() {
         // Given
         val action = Alert(
-            title = RandomData.string(),
-            message = RandomData.string(),
+            title = constant(RandomData.string()),
+            message = constant(RandomData.string()),
             labelOk = RandomData.string()
         )
 
@@ -86,8 +94,8 @@ class AlertTest {
     fun `execute should create a AlertAction with text default`() {
         // Given
         val action = Alert(
-            title = RandomData.string(),
-            message = RandomData.string()
+            title = constant(RandomData.string()),
+            message = constant(RandomData.string())
         )
         val randomLabel = RandomData.string()
         every { rootView.getContext().getString(android.R.string.ok) } returns randomLabel
@@ -105,8 +113,8 @@ class AlertTest {
     fun `click should dismiss dialog`() {
         // Given
         val action = Alert(
-            title = RandomData.string(),
-            message = RandomData.string(),
+            title = constant(RandomData.string()),
+            message = constant(RandomData.string()),
             labelOk = RandomData.string()
         )
         every { dialogBox.dismiss() } just Runs
@@ -116,16 +124,16 @@ class AlertTest {
         listenerSlot.captured.onClick(dialogBox, 0)
 
         // Then
-        verify(exactly = once()) { dialogBox.dismiss() }
+        verify(exactly = 1) { dialogBox.dismiss() }
     }
 
     @Test
     fun `should handle onPressOk when click in button`() {
         // Given
-        val onPressOk: Action = mockk(relaxed = true)
+        val onPressOk: List<Action> = listOf(mockk(relaxed = true))
         val action = Alert(
-            title = RandomData.string(),
-            message = RandomData.string(),
+            title = constant(RandomData.string()),
+            message = constant(RandomData.string()),
             labelOk = RandomData.string(),
             onPressOk = onPressOk
         )
@@ -136,7 +144,14 @@ class AlertTest {
         listenerSlot.captured.onClick(dialogBox, 0)
 
         // Then
-        verify(exactly = once()) { action.handleEvent(rootView, view, onPressOk, "onPressOk") }
+        verify(exactly = 1) {
+            action.handleEvent(
+                rootView,
+                view,
+                onPressOk,
+                analyticsValue = "onPressOk"
+            )
+        }
     }
 
 }

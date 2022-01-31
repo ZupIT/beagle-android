@@ -1,5 +1,5 @@
 #
-# Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+# Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -34,19 +34,19 @@
 -keep class com.facebook.fbjni.**{*;}
 
 # Beagle Serialization / Deserialization
--keep class br.com.zup.beagle.core.BeagleJson
+-keep class br.com.zup.beagle.android.widget.core.BeagleJson
 
--keep @br.com.zup.beagle.annotation.RegisterWidget class *  {
+-keep @br.com.zup.beagle.android.annotation.RegisterWidget class *  {
   <init>(...);
   <fields>;
 }
 
--keep @br.com.zup.beagle.annotation.RegisterAction class *  {
+-keep @br.com.zup.beagle.android.annotation.RegisterAction class *  {
   <init>(...);
   <fields>;
 }
 
--keep @br.com.zup.beagle.core.BeagleJson class *  {
+-keep @br.com.zup.beagle.android.widget.core.BeagleJson class *  {
   <init>(...);
   <fields>;
   **[] values();

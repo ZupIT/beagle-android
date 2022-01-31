@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,9 +24,9 @@ import br.com.zup.beagle.android.context.ContextComponent
 import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.android.widget.WidgetView
-import br.com.zup.beagle.annotation.RegisterWidget
-import br.com.zup.beagle.core.BeagleJson
-import br.com.zup.beagle.widget.core.ListDirection
+import br.com.zup.beagle.android.annotation.RegisterWidget
+import br.com.zup.beagle.android.widget.core.BeagleJson
+import br.com.zup.beagle.android.widget.core.ListDirection
 
 /**
  * @param context define the contextData that be set to component.
@@ -41,12 +41,11 @@ import br.com.zup.beagle.widget.core.ListDirection
  * @param iteratorName is the context identifier of each cell.
  * @param key points to a unique value present in each dataSource item
  * used as a suffix in the component ids within the Widget.
- * @param numColumns Defines how many columns to show.
  * @param spanCount The number of columns or rows in the grid.
  * @param direction define the grid direction.
  */
 @RegisterWidget("gridView")
-data class GridView private constructor(
+data class GridView constructor(
     override val context: ContextData? = null,
     val onInit: List<Action>? = null,
     val dataSource: Bind<List<Any>>,
@@ -56,69 +55,9 @@ data class GridView private constructor(
     val isScrollIndicatorVisible: Boolean = false,
     val iteratorName: String = "item",
     val key: String? = null,
-    val numColumns: Int? = null,
     val spanCount: Int? = null,
     val direction: GridViewDirection? = GridViewDirection.VERTICAL,
 ) : WidgetView(), ContextComponent {
-
-    @Deprecated(message = "It was deprecated in version 1.9 and will be removed in a future version. " +
-        "Use spanCount and direction instead numColumns",
-        replaceWith = ReplaceWith(
-            "GridView(context, onInit, dataSource, templates, onScrollEnd, scrollEndThreshold," +
-                "iteratorName, key, spanCount, direction)"))
-    constructor(
-        context: ContextData? = null,
-        onInit: List<Action>? = null,
-        dataSource: Bind<List<Any>>,
-        templates: List<Template>,
-        onScrollEnd: List<Action>? = null,
-        scrollEndThreshold: Int? = null,
-        isScrollIndicatorVisible: Boolean = false,
-        iteratorName: String = "item",
-        key: String? = null,
-        numColumns: Int,
-    ) : this(
-        context = context,
-        onInit = onInit,
-        dataSource = dataSource,
-        templates = templates,
-        onScrollEnd = onScrollEnd,
-        scrollEndThreshold = scrollEndThreshold,
-        isScrollIndicatorVisible = isScrollIndicatorVisible,
-        iteratorName = iteratorName,
-        key = key,
-        numColumns = numColumns,
-        spanCount = null,
-        direction = GridViewDirection.VERTICAL,
-    )
-
-    constructor(
-        context: ContextData? = null,
-        onInit: List<Action>? = null,
-        dataSource: Bind<List<Any>>,
-        templates: List<Template>,
-        onScrollEnd: List<Action>? = null,
-        scrollEndThreshold: Int? = null,
-        isScrollIndicatorVisible: Boolean = false,
-        iteratorName: String = "item",
-        key: String? = null,
-        spanCount: Int,
-        direction: GridViewDirection
-    ) : this(
-        context = context,
-        onInit = onInit,
-        dataSource = dataSource,
-        templates = templates,
-        onScrollEnd = onScrollEnd,
-        scrollEndThreshold = scrollEndThreshold,
-        isScrollIndicatorVisible = isScrollIndicatorVisible,
-        iteratorName = iteratorName,
-        key = key,
-        numColumns = null,
-        spanCount = spanCount,
-        direction = direction,
-    )
-
 
     override fun buildView(rootView: RootView): View {
         val beagleListView = ListView(
@@ -134,7 +73,7 @@ data class GridView private constructor(
             key = key,
         )
 
-        beagleListView.numColumns = numColumns ?: spanCount ?: 0
+        beagleListView.spanCount = spanCount ?: 0
 
         return beagleListView.buildView(rootView)
     }

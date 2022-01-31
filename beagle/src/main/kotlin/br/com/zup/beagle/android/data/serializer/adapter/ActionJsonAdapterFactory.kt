@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,9 +21,6 @@ import br.com.zup.beagle.android.action.AddChildren
 import br.com.zup.beagle.android.action.Alert
 import br.com.zup.beagle.android.action.Condition
 import br.com.zup.beagle.android.action.Confirm
-import br.com.zup.beagle.android.action.FormLocalAction
-import br.com.zup.beagle.android.action.FormRemoteAction
-import br.com.zup.beagle.android.action.FormValidation
 import br.com.zup.beagle.android.action.Navigate
 import br.com.zup.beagle.android.action.SendRequest
 import br.com.zup.beagle.android.action.SetContext
@@ -32,18 +29,12 @@ import br.com.zup.beagle.android.action.UndefinedAction
 import br.com.zup.beagle.android.data.serializer.PolymorphicJsonAdapterFactory
 import br.com.zup.beagle.android.data.serializer.generateNameSpaceToDefaultAction
 
-@Deprecated(message = "It was deprecated in version 1.0.0 and will be removed in a future version. " +
-    "Use AndroidActionJsonAdapterFactory instead.",
-    replaceWith = ReplaceWith("AndroidActionJsonAdapterFactory"))
 internal object ActionJsonAdapterFactory {
 
     fun make(factory: PolymorphicJsonAdapterFactory<Action>): PolymorphicJsonAdapterFactory<Action> {
         return factory
             .withDefaultValue(UndefinedAction())
             .withSubtype(UndefinedAction::class.java, createNamespaceFor<UndefinedAction>("undefinedAction"))
-            .withSubtype(FormRemoteAction::class.java, createNamespaceFor<FormRemoteAction>("formRemoteAction"))
-            .withSubtype(FormLocalAction::class.java, createNamespaceFor<FormLocalAction>("formLocalAction"))
-            .withSubtype(FormValidation::class.java, createNamespaceFor<FormValidation>("formValidation"))
             .withSubtype(Alert::class.java, createNamespaceFor<Alert>("alert"))
             .withSubtype(Confirm::class.java, createNamespaceFor<Confirm>("confirm"))
             .withSubtype(Navigate.OpenExternalURL::class.java,

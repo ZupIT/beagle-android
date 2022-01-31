@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import br.com.zup.beagle.android.context.tokenizer.ExpressionToken
 import br.com.zup.beagle.android.context.tokenizer.TokenParser
 import br.com.zup.beagle.android.utils.BeagleRegex
 import br.com.zup.beagle.android.utils.getExpressions
-import br.com.zup.beagle.core.BeagleJson
+import br.com.zup.beagle.android.widget.core.BeagleJson
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 import kotlin.reflect.javaType
@@ -49,11 +49,11 @@ sealed class Bind<T> {
 
 }
 
-internal inline fun <reified T : Any> expressionOrValueOf(text: String): Bind<T> =
-    if (text.hasExpression()) expressionOf(text) else valueOf(text) as Bind<T>
+internal inline fun <reified T : Any> expressionOrConstant(text: String): Bind<T> =
+    if (text.hasExpression()) expressionOf(text) else constant(text) as Bind<T>
 
 internal fun expressionOrValueOfNullable(text: String?): Bind<String>? =
-    if (text?.hasExpression() == true) expressionOf(text) else valueOfNullable(text)
+    if (text?.hasExpression() == true) expressionOf(text) else constantOfNullable(text)
 
 inline fun <reified T> expressionOf(expressionText: String): Bind.Expression<T> {
     val tokenParser = TokenParser()
@@ -65,7 +65,7 @@ inline fun <reified T> expressionOf(expressionText: String): Bind.Expression<T> 
     @OptIn(ExperimentalStdlibApi::class)
     var javaType: Type = typeOf<T>().javaType
 
-    /*
+/*
     *  Moshi always returns Java Class Types when use the function typeOf the type
     *  is some cases is kotlin Types. As most of the time this object is created by moshi
     *  need to keep equal the moshi,
@@ -78,7 +78,8 @@ inline fun <reified T> expressionOf(expressionText: String): Bind.Expression<T> 
     return Bind.Expression(expressionTokens, expressionText, javaType)
 }
 
-inline fun <reified T : Any> valueOf(value: T) = Bind.Value(value)
-inline fun <reified T : Any> valueOfNullable(value: T?): Bind<T>? = value?.let { valueOf(it) }
+inline fun <reified T : Any> constant(value: T) = Bind.Value(value)
+
+inline fun <reified T : Any> constantOfNullable(value: T?): Bind<T>? = value?.let { constant(it) }
 
 internal fun Any.hasExpression() = this.toString().contains(BeagleRegex.EXPRESSION_REGEX)

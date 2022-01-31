@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,14 +17,12 @@
 package br.com.zup.beagle.android.view.viewmodel
 
 import android.view.View
-import br.com.zup.beagle.android.exception.BeagleException
+import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.testutil.getPrivateField
 import br.com.zup.beagle.android.utils.toAndroidId
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
-import io.mockk.unmockkStatic
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -34,10 +32,10 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.util.LinkedList
 
-class ListViewIdViewModelTest {
+class ListViewIdViewModelTest : BaseTest() {
 
-    private val listViewIdViewModel = ListViewIdViewModel()
-    private val internalIdsByListId = listViewIdViewModel.getPrivateField<MutableMap<Int, LocalListView>>("internalIdsByListId")
+    private lateinit var listViewIdViewModel: ListViewIdViewModel
+    private lateinit var internalIdsByListId: MutableMap<Int, LocalListView>
     private val linkedListId = LinkedList<Int>().apply {
         add(20)
         add(30)
@@ -46,14 +44,12 @@ class ListViewIdViewModelTest {
     private val generatedViewId = 100
 
     @BeforeEach
-    fun setUp() {
+    fun clear() {
         mockkStatic(View::class)
         every { View.generateViewId() } returns generatedViewId
-    }
-
-    @AfterEach
-    fun tearDown() {
-        unmockkStatic(View::class)
+        listViewIdViewModel = ListViewIdViewModel()
+        internalIdsByListId =
+            listViewIdViewModel.getPrivateField("internalIdsByListId")
     }
 
     @Test
@@ -104,7 +100,10 @@ class ListViewIdViewModelTest {
 
         // Then
         assertTrue { recyclerView?.reused ?: false }
-        assertEquals(recyclerView?.idsByAdapterPosition, recyclerView?.temporaryIdsByAdapterPosition)
+        assertEquals(
+            recyclerView?.idsByAdapterPosition,
+            recyclerView?.temporaryIdsByAdapterPosition
+        )
     }
 
     @Test
@@ -120,7 +119,10 @@ class ListViewIdViewModelTest {
 
         // Then
         assertTrue { recyclerView?.reused ?: false }
-        assertEquals(recyclerView?.idsByAdapterPosition, recyclerView?.temporaryIdsByAdapterPosition)
+        assertEquals(
+            recyclerView?.idsByAdapterPosition,
+            recyclerView?.temporaryIdsByAdapterPosition
+        )
     }
 
     @Test
@@ -191,7 +193,8 @@ class ListViewIdViewModelTest {
         val generatedId = "$componentId:$itemSuffix".toAndroidId()
 
         // When
-        val resultId = listViewIdViewModel.getViewId(recyclerViewId, position, componentId, itemSuffix)
+        val resultId =
+            listViewIdViewModel.getViewId(recyclerViewId, position, componentId, itemSuffix)
 
         // Then
         assertEquals(generatedId, resultId)
@@ -211,7 +214,10 @@ class ListViewIdViewModelTest {
 
         // Then
         assertTrue { recyclerView?.reused ?: false }
-        assertEquals(recyclerView?.idsByAdapterPosition, recyclerView?.temporaryIdsByAdapterPosition)
+        assertEquals(
+            recyclerView?.idsByAdapterPosition,
+            recyclerView?.temporaryIdsByAdapterPosition
+        )
     }
 
     @Test

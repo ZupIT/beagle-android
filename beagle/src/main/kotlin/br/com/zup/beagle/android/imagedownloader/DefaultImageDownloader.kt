@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ package br.com.zup.beagle.android.imagedownloader
 import android.graphics.Bitmap
 import android.widget.ImageView
 import androidx.lifecycle.lifecycleScope
-import br.com.zup.beagle.android.cache.imagecomponent.ImageDownloader
+import br.com.zup.beagle.android.imagedownloader.cache.ImageDownloader
 import br.com.zup.beagle.android.data.formatUrl
 import br.com.zup.beagle.android.logger.BeagleMessageLogs
 import br.com.zup.beagle.android.utils.CoroutineDispatchers

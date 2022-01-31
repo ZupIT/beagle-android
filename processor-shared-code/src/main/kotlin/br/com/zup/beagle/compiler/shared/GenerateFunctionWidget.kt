@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 package br.com.zup.beagle.compiler.shared
 
-import br.com.zup.beagle.annotation.RegisterWidget
+import br.com.zup.beagle.android.annotation.RegisterWidget
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
@@ -70,8 +70,6 @@ class GenerateFunctionWidget(
 
     private fun isValidInheritance(typeElement: TypeElement): Boolean {
         return typeElement.implements(WIDGET_VIEW, processingEnv)
-            || typeElement.implements(BEAGLE_INPUT_WIDGET, processingEnv)
-            || typeElement.implements(BEAGLE_PAGE_INDICATOR, processingEnv)
     }
 
     companion object {

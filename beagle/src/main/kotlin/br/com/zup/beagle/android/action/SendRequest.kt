@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,17 +20,15 @@ import android.view.View
 import br.com.zup.beagle.android.annotation.ContextDataValue
 import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.context.ContextData
-import br.com.zup.beagle.android.context.expressionOrValueOf
 import br.com.zup.beagle.android.context.normalizeContextValue
-import br.com.zup.beagle.android.context.valueOf
 import br.com.zup.beagle.android.utils.evaluateExpression
 import br.com.zup.beagle.android.utils.generateViewModelInstance
 import br.com.zup.beagle.android.utils.handleEvent
 import br.com.zup.beagle.android.view.viewmodel.ActionRequestViewModel
 import br.com.zup.beagle.android.view.viewmodel.FetchViewState
 import br.com.zup.beagle.android.widget.RootView
-import br.com.zup.beagle.core.BeagleJson
-import br.com.zup.beagle.newanalytics.ActionAnalyticsConfig
+import br.com.zup.beagle.android.widget.core.BeagleJson
+import br.com.zup.beagle.android.analytics.ActionAnalyticsConfig
 
 /**
  * Enum with HTTP methods.
@@ -92,26 +90,6 @@ data class SendRequest(
     val onFinish: List<Action>? = null,
     override var analytics: ActionAnalyticsConfig? = null,
 ) : AnalyticsAction, AsyncAction by AsyncActionImpl() {
-
-    constructor(
-        url: String,
-        method: RequestActionMethod = RequestActionMethod.GET,
-        headers: Map<String, String>? = null,
-        data: Any? = null,
-        onSuccess: List<Action>? = null,
-        onError: List<Action>? = null,
-        onFinish: List<Action>? = null,
-        analytics: ActionAnalyticsConfig? = null,
-    ) : this(
-        expressionOrValueOf(url),
-        valueOf(method),
-        headers?.let { valueOf(it) },
-        data,
-        onSuccess,
-        onError,
-        onFinish,
-        analytics
-    )
 
     override fun execute(rootView: RootView, origin: View) {
         val viewModel = rootView.generateViewModelInstance<ActionRequestViewModel>()

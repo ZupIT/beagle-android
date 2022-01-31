@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,23 +20,25 @@ import androidx.lifecycle.Observer
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.testutil.CoroutinesTestExtension
 import br.com.zup.beagle.android.testutil.InstantExecutorExtension
-import io.mockk.*
-import io.mockk.impl.annotations.MockK
+import io.mockk.Runs
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExperimentalCoroutinesApi
 @ExtendWith(InstantExecutorExtension::class, CoroutinesTestExtension::class)
-class BeagleScreenViewModelTest: BaseTest() {
+class BeagleScreenViewModelTest : BaseTest() {
 
-    @MockK
-    private lateinit var observer: Observer<Boolean>
+    private val observer: Observer<Boolean> = mockk()
 
     private lateinit var beagleScreenViewModel: BeagleScreenViewModel
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,9 @@
 
 package br.com.zup.beagle.android.data.serializer.actions
 
-import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.action.SubmitForm
-import br.com.zup.beagle.android.data.serializer.BaseSerializerTest
-import br.com.zup.beagle.newanalytics.ActionAnalyticsConfig
-import br.com.zup.beagle.newanalytics.ActionAnalyticsProperties
+import br.com.zup.beagle.android.analytics.ActionAnalyticsConfig
+import br.com.zup.beagle.android.analytics.ActionAnalyticsProperties
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested

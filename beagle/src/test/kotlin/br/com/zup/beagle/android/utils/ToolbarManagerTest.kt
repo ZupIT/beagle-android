@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,11 +27,9 @@ import androidx.core.content.res.ResourcesCompat
 import br.com.zup.beagle.R
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.action.Action
-import br.com.zup.beagle.android.components.ImagePath
 import br.com.zup.beagle.android.components.layout.NavigationBar
 import br.com.zup.beagle.android.components.layout.NavigationBarItem
-import br.com.zup.beagle.android.components.layout.ScreenComponent
-import br.com.zup.beagle.android.extensions.once
+import br.com.zup.beagle.android.components.layout.Screen
 import br.com.zup.beagle.android.setup.DesignSystem
 import br.com.zup.beagle.android.testutil.RandomData
 import br.com.zup.beagle.android.utils.ToolbarManager
@@ -39,6 +37,7 @@ import br.com.zup.beagle.android.utils.ToolbarTextManager
 import br.com.zup.beagle.android.view.BeagleActivity
 import br.com.zup.beagle.android.view.custom.BeagleFlexView
 import io.mockk.Runs
+import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
@@ -46,11 +45,10 @@ import io.mockk.mockkStatic
 import io.mockk.runs
 import io.mockk.slot
 import io.mockk.spyk
-import io.mockk.unmockkAll
 import io.mockk.verify
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -60,8 +58,8 @@ import org.junit.jupiter.api.Test
 internal class ToolbarManagerTest : BaseTest() {
 
     private var toolbarTextManagerMock = mockk<ToolbarTextManager>()
-    private var screenComponent = mockk<ScreenComponent>()
-    private var action = mockk<Action>()
+    private var screenComponent = mockk<Screen>()
+    private var onPress = mockk<List<Action>>()
     private var designSystemMock = mockk<DesignSystem>()
     private var navigationIcon = mockk<Drawable>()
     private var typedArray = mockk<TypedArray>()
@@ -84,11 +82,10 @@ internal class ToolbarManagerTest : BaseTest() {
     private val textViewMock = mockk<TextView>()
     val title = RandomData.string()
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
         mockkStatic(ResourcesCompat::class)
-        every { rootView.getContext() } returns context
         every { context.resources } returns resources
         every {
             context.obtainStyledAttributes(styleInt, R.styleable.BeagleToolbarStyle)
@@ -107,15 +104,25 @@ internal class ToolbarManagerTest : BaseTest() {
         } returns false
         every { typedArray.recycle() } just Runs
 
-        toolbarManager = ToolbarManager(toolbarTextManager = toolbarTextManagerMock)
-
         every { toolbar.setNavigationOnClickListener(capture(listenerSlot)) } returns Unit
     }
 
-    @AfterEach
-    override fun tearDown() {
-        super.tearDown()
-        unmockkAll()
+    @BeforeEach
+    fun clear() {
+        clearMocks(
+            menu,
+            toolbar,
+            toolbarTextManagerMock,
+            typedArray,
+            context,
+            rootView,
+            answers = false
+        )
+        toolbarManager = ToolbarManager(toolbarTextManager = toolbarTextManagerMock)
+        every { rootView.getContext() } returns context
+        every {
+            context.obtainStyledAttributes(styleInt, R.styleable.BeagleToolbarStyle)
+        } returns typedArray
     }
 
     @Test
@@ -149,7 +156,12 @@ internal class ToolbarManagerTest : BaseTest() {
 
         // Then
         verify(exactly = 1) { toolbarManagerSpy["setupNavigationIcon"](context, toolbar) }
-        verify(exactly = 1) { toolbarManagerSpy["getDrawableFromAttribute"](context, homeAsUpIndicatorAttr) }
+        verify(exactly = 1) {
+            toolbarManagerSpy["getDrawableFromAttribute"](
+                context,
+                homeAsUpIndicatorAttr
+            )
+        }
     }
 
     @Test
@@ -169,13 +181,13 @@ internal class ToolbarManagerTest : BaseTest() {
         toolbarManager.configureToolbar(rootView, navigationBar, beagleFlexView, screenComponent)
 
         // Then
-        verify(exactly = once()) { toolbar.removeView(textView) }
-        verify(atLeast = once()) { toolbar.navigationIcon = navigationIcon }
-        verify(atLeast = once()) { toolbar.title = title }
-        verify(atLeast = once()) { toolbar.setTitleTextAppearance(context, titleTextAppearance) }
-        verify(atLeast = once()) { toolbar.setBackgroundColor(backgroundColorInt) }
-        verify(atLeast = once()) { typedArray.recycle() }
-        verify(atLeast = once()) { toolbar.visibility = View.VISIBLE }
+        verify(exactly = 1) { toolbar.removeView(textView) }
+        verify(atLeast = 1) { toolbar.navigationIcon = navigationIcon }
+        verify(atLeast = 1) { toolbar.title = title }
+        verify(atLeast = 1) { toolbar.setTitleTextAppearance(context, titleTextAppearance) }
+        verify(atLeast = 1) { toolbar.setBackgroundColor(backgroundColorInt) }
+        verify(atLeast = 1) { typedArray.recycle() }
+        verify(atLeast = 1) { toolbar.visibility = View.VISIBLE }
     }
 
     @Test
@@ -194,7 +206,7 @@ internal class ToolbarManagerTest : BaseTest() {
         toolbarManager.configureToolbar(rootView, navigationBar, beagleFlexView, screenComponent)
 
         // Then
-        verify(atLeast = once()) { toolbar.navigationIcon = null }
+        verify(atLeast = 1) { toolbar.navigationIcon = null }
     }
 
     @Test
@@ -205,7 +217,7 @@ internal class ToolbarManagerTest : BaseTest() {
         every { context.getToolbar() } returns toolbar
         every { toolbar.menu } returns menu
         val navigationBarItems = listOf(
-            NavigationBarItem(text = "Stub", action = action)
+            NavigationBarItem(text = "Stub", onPress = onPress)
         )
         every { navigationBar.navigationBarItems } returns navigationBarItems
         val menuItem = spyk<MenuItem>()
@@ -217,7 +229,7 @@ internal class ToolbarManagerTest : BaseTest() {
 
         // THEN
         assertEquals(View.VISIBLE, toolbar.visibility)
-        verify(exactly = once()) { menu.clear() }
+        verify(exactly = 1) { menu.clear() }
         verify(exactly = navigationBarItems.size) { menu.add(Menu.NONE, 0, Menu.NONE, "Stub") }
         verify(exactly = navigationBarItems.size) { menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER) }
     }
@@ -231,7 +243,7 @@ internal class ToolbarManagerTest : BaseTest() {
         every { context.getToolbar() } returns toolbar
         every { toolbar.menu } returns menu
         val navigationBarItems = listOf(
-            NavigationBarItem(text = "Stub", image = ImagePath.Local("image"), action = action)
+            NavigationBarItem(text = "Stub", image = "image", onPress = onPress)
         )
         every { navigationBar.navigationBarItems } returns navigationBarItems
         val menuItem = spyk<MenuItem>()
@@ -244,8 +256,8 @@ internal class ToolbarManagerTest : BaseTest() {
         toolbarManager.configureToolbar(rootView, navigationBar, beagleFlexView, screenComponent)
 
         // THEN
-        verify(exactly = once()) { menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS) }
-        verify(exactly = once()) { menuItem.icon = icon }
+        verify(exactly = 1) { menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS) }
+        verify(exactly = 1) { menuItem.icon = icon }
     }
 
     @DisplayName("When configure a toolbar")
@@ -262,7 +274,12 @@ internal class ToolbarManagerTest : BaseTest() {
             every { designSystemMock.toolbarStyle(style) } returns styleInt
             every { navigationBar.styleId } returns style
             every { context.getToolbar() } returns toolbar
-            every { typedArray.getBoolean(R.styleable.BeagleToolbarStyle_centerTitle, false) } returns true
+            every {
+                typedArray.getBoolean(
+                    R.styleable.BeagleToolbarStyle_centerTitle,
+                    false
+                )
+            } returns true
             every {
                 typedArray.getResourceId(R.styleable.BeagleToolbarStyle_titleTextAppearance, 0)
             } returns textAppearanceMock
@@ -273,10 +290,15 @@ internal class ToolbarManagerTest : BaseTest() {
             every { toolbarTextManagerMock.centerTitle(toolbar, textViewMock) } just runs
 
             // WHEN
-            toolbarManager.configureToolbar(rootView, navigationBar, beagleFlexView, screenComponent)
+            toolbarManager.configureToolbar(
+                rootView,
+                navigationBar,
+                beagleFlexView,
+                screenComponent
+            )
 
             // THEN
-            verify(exactly = once()) {
+            verify(exactly = 1) {
                 toolbarTextManagerMock.generateTitle(context, navigationBar, textAppearanceMock)
                 toolbar.addView(textViewMock)
                 toolbarTextManagerMock.centerTitle(toolbar, textViewMock)
@@ -287,11 +309,16 @@ internal class ToolbarManagerTest : BaseTest() {
         @DisplayName("Then you should check if the title and the style have been applied")
         fun shouldToolbarWithTitleAndStyleWhenCallConfigureToolbarThenTheToolbarMustHaveATitleAndStyle() {
             // GIVEN
-            toolbar = mockk()
+            toolbar = mockk(relaxed = true)
             val beagleActivityMock = mockk<BeagleActivity>(relaxed = true)
             every { (rootView.getContext() as BeagleActivity) } returns beagleActivityMock
             val slotStyle = slot<Int>()
-            every { beagleActivityMock.obtainStyledAttributes(capture(slotStyle),R.styleable.BeagleToolbarStyle) } returns mockk(relaxed = true)
+            every {
+                beagleActivityMock.obtainStyledAttributes(
+                    capture(slotStyle),
+                    R.styleable.BeagleToolbarStyle
+                )
+            } returns mockk(relaxed = true)
             every { toolbar.title } returns title
             every { beagleActivityMock.getToolbar() } returns toolbar
             every { navigationBar.styleId } returns style
@@ -302,15 +329,20 @@ internal class ToolbarManagerTest : BaseTest() {
             every { toolbar.navigationIcon = null } just runs
             every { toolbar.findViewById<TextView>(any()) } returns textView
             every { toolbar.removeView(textView) } just runs
-            every { toolbar.title  = title } just runs
-            every { toolbar.setTitleTextAppearance(beagleActivityMock, styleInt)  } just runs
+            every { toolbar.title = title } just runs
+            every { toolbar.setTitleTextAppearance(beagleActivityMock, styleInt) } just runs
             every { navigationBar.title } returns title
             every {
                 typedArray.getResourceId(R.styleable.BeagleToolbarStyle_titleTextAppearance, 0)
             } returns textAppearanceMock
 
             // WHEN
-            toolbarManager.configureToolbar(rootView, navigationBar, beagleFlexView, screenComponent)
+            toolbarManager.configureToolbar(
+                rootView,
+                navigationBar,
+                beagleFlexView,
+                screenComponent
+            )
 
             // THEN
             assertEquals(title, toolbar.title.toString())
@@ -321,7 +353,7 @@ internal class ToolbarManagerTest : BaseTest() {
         @DisplayName("Then you should check if the title has been applied")
         fun shouldToolbarWithTitleWhenCallConfigureToolbarThenTheToolbarMustHaveATitle() {
             // GIVEN
-            toolbar = mockk()
+            toolbar = mockk(relaxed = true)
             val beagleActivityMock = mockk<BeagleActivity>(relaxed = true)
             every { (rootView.getContext() as BeagleActivity) } returns beagleActivityMock
             every { toolbar.title } returns title
@@ -331,11 +363,16 @@ internal class ToolbarManagerTest : BaseTest() {
             every { toolbar.navigationIcon = null } just runs
             every { toolbar.findViewById<TextView>(any()) } returns textView
             every { toolbar.removeView(textView) } just runs
-            every { toolbar.title  = title } just runs
+            every { toolbar.title = title } just runs
             every { navigationBar.title } returns title
 
             // WHEN
-            toolbarManager.configureToolbar(rootView, navigationBar, beagleFlexView, screenComponent)
+            toolbarManager.configureToolbar(
+                rootView,
+                navigationBar,
+                beagleFlexView,
+                screenComponent
+            )
 
             // THEN
             assertEquals(title, toolbar.title.toString())

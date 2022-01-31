@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import br.com.zup.beagle.android.exception.BeagleApiException
 import br.com.zup.beagle.android.utils.CoroutineDispatchers
 import br.com.zup.beagle.android.view.mapper.toRequestData
 import br.com.zup.beagle.android.view.mapper.toResponse
-import br.com.zup.beagle.core.BeagleJson
+import br.com.zup.beagle.android.widget.core.BeagleJson
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -62,14 +62,14 @@ private class FetchActionLiveData(
 
     override fun onActive() {
         if (value == null) {
-            fetchData()
+            fetchAction()
         }
     }
 
-    private fun fetchData() {
+    private fun fetchAction() {
         coroutineScope.launch(ioDispatcher) {
             try {
-                val response = actionRequester.fetchData(sendRequest.toRequestData())
+                val response = actionRequester.fetchAction(sendRequest.toRequestData())
                 postValue(FetchViewState.Success(response.toResponse()))
             } catch (exception: BeagleApiException) {
                 postValue(FetchViewState.Error(exception.responseData.toResponse()))

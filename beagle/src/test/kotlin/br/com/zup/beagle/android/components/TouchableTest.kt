@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,31 +17,24 @@
 package br.com.zup.beagle.android.components
 
 import android.view.View
-import br.com.zup.beagle.analytics.Analytics
-import br.com.zup.beagle.analytics.ClickEvent
 import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.action.Navigate
 import br.com.zup.beagle.android.data.PreFetchHelper
-import br.com.zup.beagle.android.extensions.once
 import br.com.zup.beagle.android.utils.handleEvent
-import io.mockk.CapturingSlot
 import io.mockk.Runs
 import io.mockk.every
-import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkConstructor
 import io.mockk.mockkStatic
 import io.mockk.slot
 import io.mockk.verify
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
-class TouchableViewRenderer : BaseComponentTest() {
-
-    @RelaxedMockK
-    private lateinit var analytics: Analytics
+class TouchableTest : BaseComponentTest() {
 
     private val onClickListenerSlot = slot<View.OnClickListener>()
 
@@ -49,37 +42,53 @@ class TouchableViewRenderer : BaseComponentTest() {
 
     private lateinit var touchable: Touchable
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
 
         mockkStatic("br.com.zup.beagle.android.utils.WidgetExtensionsKt")
-        mockkConstructor(PreFetchHelper::class)
 
-        every { beagleSdk.analytics } returns analytics
         every { view.context } returns mockk()
         every { view.setOnClickListener(capture(onClickListenerSlot)) } just Runs
-        every { anyConstructed<PreFetchHelper>().handlePreFetch(any(), any<List<Action>>()) } just Runs
+    }
 
-        touchable = Touchable(actions, mockk(relaxed = true))
+    @BeforeEach
+    fun clear() {
+        mockkConstructor(PreFetchHelper::class)
+        every {
+            anyConstructed<PreFetchHelper>().handlePreFetch(
+                any(),
+                any<List<Action>>()
+            )
+        } just Runs
     }
 
     @Test
     fun build_should_make_child_view() {
+        // Given
+        touchable = Touchable(actions, mockk(relaxed = true))
         val actual = touchable.buildView(rootView)
 
         // Then
-        verify(exactly = once()) { anyConstructed<PreFetchHelper>().handlePreFetch(rootView, actions) }
+        verify(exactly = 1) {
+            anyConstructed<PreFetchHelper>().handlePreFetch(
+                rootView,
+                actions
+            )
+        }
         assertEquals(view, actual)
     }
 
     @Test
     fun build_should_call_onClickListener() {
-        // Given When
+        // Given
+        touchable = Touchable(actions, mockk(relaxed = true))
+
+        // When
         callBuildAndClick()
 
         // Then
-        verify(exactly = once()) {
+        verify(exactly = 1) {
             touchable.handleEvent(rootView, view, actions, analyticsValue = "onPress")
         }
     }
@@ -87,42 +96,5 @@ class TouchableViewRenderer : BaseComponentTest() {
     private fun callBuildAndClick() {
         touchable.buildView(rootView)
         onClickListenerSlot.captured.onClick(view)
-    }
-
-    @Test
-    fun should_call_analytics_when_button_clicked_and_click_event_presented() {
-        // GIVEN
-        val category = "category"
-        val action = "action"
-        val value = "value"
-        val clickAnalyticsEvent = ClickEvent(
-            category,
-            action,
-            value
-        )
-        touchable = touchable.copy(clickAnalyticsEvent = clickAnalyticsEvent)
-        val onClickListenerSlot = CapturingSlot<View.OnClickListener>()
-
-        // When
-        val buttonView = touchable.buildView(rootView)
-        verify { buttonView.setOnClickListener(capture(onClickListenerSlot)) }
-        onClickListenerSlot.captured.onClick(view)
-
-        // Then
-        verify { analytics.trackEventOnClick(eq(clickAnalyticsEvent)) }
-    }
-
-    @Test
-    fun should_not_call_analytics_when_click_event_not_presented() {
-        // GIVEN
-        val onClickListenerSlot = CapturingSlot<View.OnClickListener>()
-
-        // When
-        val buttonView = touchable.buildView(rootView)
-        verify { buttonView.setOnClickListener(capture(onClickListenerSlot)) }
-        onClickListenerSlot.captured.onClick(view)
-
-        // Then
-        verify(exactly = 0) { analytics.trackEventOnClick(any()) }
     }
 }

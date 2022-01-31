@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,7 +61,7 @@ internal class ContextDataManipulator(
 
         return try {
             val keys = createKeysFromPath(context.id, path)
-            val lastKey = keys.pollLast()
+            val lastKey = keys.pollLast() ?: ""
             val lastValue = jsonPathFinder.find(keys, context.value)
             if (removePathAtKey(lastKey, lastValue)) {
                 ContextSetResult.Succeed(context)
@@ -89,14 +89,14 @@ internal class ContextDataManipulator(
         }
     }
 
-     fun get(contextData: ContextData, path: String): Any? {
-         return try {
-             val keys = createKeysFromPath(contextData.id, path)
-             jsonPathFinder.find(keys, contextData.value)
-         } catch (ex: Exception) {
-             BeagleMessageLogs.errorWhileTryingToAccessContext(ex)
-             null
-         }
+    fun get(contextData: ContextData, path: String): Any? {
+        return try {
+            val keys = createKeysFromPath(contextData.id, path)
+            jsonPathFinder.find(keys, contextData.value)
+        } catch (ex: Exception) {
+            BeagleMessageLogs.errorWhileTryingToAccessContext(ex)
+            null
+        }
     }
 
     private fun createKeysFromPath(contextId: String, path: String): LinkedList<String> {

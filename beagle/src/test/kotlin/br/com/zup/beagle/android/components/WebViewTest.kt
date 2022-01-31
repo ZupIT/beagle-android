@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 
 package br.com.zup.beagle.android.components
 
-import br.com.zup.beagle.android.extensions.once
 import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.setup.Environment
 import br.com.zup.beagle.android.view.BeagleActivity
@@ -31,10 +30,8 @@ import io.mockk.mockkClass
 import io.mockk.slot
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotNull
-import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 
 private const val MOCKED_URL = "http://mocked.com"
@@ -47,7 +44,7 @@ class WebViewTest : BaseComponentTest() {
 
     private lateinit var webViewComponent: WebView
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
 
@@ -78,7 +75,7 @@ class WebViewTest : BaseComponentTest() {
         webViewClient.onPageStarted(null, null, null)
 
         // Then
-        assertTrue((stateSlot.captured as ServerDrivenState.Loading).loading)
+        assertEquals(ServerDrivenState.Started, stateSlot.captured)
     }
 
     @Test
@@ -91,8 +88,8 @@ class WebViewTest : BaseComponentTest() {
         webViewClient.onPageFinished(webView, null)
 
         // Then
-        assertFalse((stateSlot.captured as ServerDrivenState.Loading).loading)
-        verify(exactly = once()) { webView.requestLayout() }
+        assertEquals(ServerDrivenState.Finished, stateSlot.captured)
+        verify(exactly = 1) { webView.requestLayout() }
     }
 
     @Test
@@ -106,7 +103,7 @@ class WebViewTest : BaseComponentTest() {
         (stateSlot.captured as ServerDrivenState.WebViewError).retry.invoke()
 
         // Then
-        verify(exactly = once()) { webView.reload() }
+        verify(exactly = 1) { webView.reload() }
     }
 
     private fun createMockedWebViewClient(stateSlot: CapturingSlot<ServerDrivenState>): WebView.BeagleWebViewClient {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package br.com.zup.beagle.android.data.serializer.adapter
 
 import br.com.zup.beagle.android.annotation.ContextDataValue
 import br.com.zup.beagle.android.utils.readValue
-import br.com.zup.beagle.core.BeagleJson
+import br.com.zup.beagle.android.widget.core.BeagleJson
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.JsonReader
 import com.squareup.moshi.JsonWriter

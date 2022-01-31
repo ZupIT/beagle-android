@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,11 +22,12 @@ import br.com.zup.beagle.android.components.BaseComponentTest
 import br.com.zup.beagle.android.components.Button
 import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.view.custom.BeagleFlexView
-import br.com.zup.beagle.core.ServerDrivenComponent
-import br.com.zup.beagle.core.Style
-import br.com.zup.beagle.widget.core.FlexDirection
-import br.com.zup.beagle.widget.core.ScrollAxis
+import br.com.zup.beagle.android.widget.core.FlexDirection
+import br.com.zup.beagle.android.widget.core.ScrollAxis
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
+import br.com.zup.beagle.android.widget.core.Style
 import io.mockk.Runs
+import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
@@ -34,6 +35,7 @@ import io.mockk.slot
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -53,7 +55,7 @@ class ScrollViewTest : BaseComponentTest() {
 
     private lateinit var scrollViewComponent: ScrollView
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
 
@@ -66,6 +68,12 @@ class ScrollViewTest : BaseComponentTest() {
         every { ViewFactory.makeHorizontalScrollView(any()) } returns horizontalScrollView
     }
 
+    @BeforeEach
+    fun clear() {
+        clearMocks(beagleFlexView, answers = false)
+        style.clear()
+    }
+
     @DisplayName("When buildView is called")
     @Nested
     inner class BuildView {
@@ -75,8 +83,10 @@ class ScrollViewTest : BaseComponentTest() {
         fun testVerticalScrollView() {
             // Given
             every { scrollView.isVerticalScrollBarEnabled = capture(scrollBarEnabled) } just Runs
-            scrollViewComponent = ScrollView(children = components, scrollDirection = ScrollAxis.VERTICAL,
-                scrollBarEnabled = true)
+            scrollViewComponent = ScrollView(
+                children = components, scrollDirection = ScrollAxis.VERTICAL,
+                scrollBarEnabled = true
+            )
 
             // When
             val view = scrollViewComponent.buildView(rootView)
@@ -102,8 +112,10 @@ class ScrollViewTest : BaseComponentTest() {
             every {
                 horizontalScrollView.isHorizontalScrollBarEnabled = capture(scrollBarEnabled)
             } just Runs
-            scrollViewComponent = ScrollView(children = components, scrollDirection = ScrollAxis.HORIZONTAL,
-                scrollBarEnabled = false)
+            scrollViewComponent = ScrollView(
+                children = components, scrollDirection = ScrollAxis.HORIZONTAL,
+                scrollBarEnabled = false
+            )
 
             // When
             scrollViewComponent.buildView(rootView)

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,26 +18,27 @@ package br.com.zup.beagle.android.components.utils
 
 import android.util.DisplayMetrics
 import br.com.zup.beagle.android.setup.BeagleEnvironment
-import br.com.zup.beagle.core.CornerRadius
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.unmockkObject
 import org.junit.Assert.assertEquals
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DisplayName("Given a CornerRadiusHelper")
 class CornerRadiusHelperTest {
 
-    @BeforeEach
+    @BeforeAll
     fun setUp() {
         mockkObject(BeagleEnvironment)
         every { BeagleEnvironment.application } returns mockk() {
-            every { resources } returns mockk() {
+            every { resources } returns mockk {
                 every { displayMetrics } returns DisplayMetrics().apply {
                     density = 1f
                 }
@@ -45,7 +46,7 @@ class CornerRadiusHelperTest {
         }
     }
 
-    @AfterEach
+    @AfterAll
     fun tearDown() {
         unmockkObject(BeagleEnvironment)
     }
@@ -58,7 +59,7 @@ class CornerRadiusHelperTest {
         @DisplayName("Then should set zeros when CornerRadius is empty")
         fun testEmptyCornerRadius() {
             // Given
-            val cornerRadius = CornerRadius()
+            val cornerRadius = CornerRadiusHelper()
 
             // When
             val result = cornerRadius.getFloatArray()
@@ -73,7 +74,7 @@ class CornerRadiusHelperTest {
         @DisplayName("Then should set the radius value to every array position")
         fun testRadius() {
             // Given
-            val cornerRadius = CornerRadius(radius = 10.0)
+            val cornerRadius = CornerRadiusHelper(radius = 10.0)
 
             // When
             val result = cornerRadius.getFloatArray()
@@ -88,7 +89,7 @@ class CornerRadiusHelperTest {
         @DisplayName("Then should set the radius value to positions 0 and 1")
         fun testTopLeftRadius() {
             // Given
-            val cornerRadius = CornerRadius(topLeft = 10.0)
+            val cornerRadius = CornerRadiusHelper(topLeft = 10.0)
 
             // When
             val result = cornerRadius.getFloatArray()
@@ -106,7 +107,7 @@ class CornerRadiusHelperTest {
         @DisplayName("Then should set the radius value to positions 2 and 3")
         fun testTopRightRadius() {
             // Given
-            val cornerRadius = CornerRadius(topRight = 10.0)
+            val cornerRadius = CornerRadiusHelper(topRight = 10.0)
 
             // When
             val result = cornerRadius.getFloatArray()
@@ -124,7 +125,7 @@ class CornerRadiusHelperTest {
         @DisplayName("Then should set the radius value to positions 4 and 5")
         fun testBottomRightRadius() {
             // Given
-            val cornerRadius = CornerRadius(bottomRight = 10.0)
+            val cornerRadius = CornerRadiusHelper(bottomRight = 10.0)
 
             // When
             val result = cornerRadius.getFloatArray()
@@ -142,7 +143,7 @@ class CornerRadiusHelperTest {
         @DisplayName("Then should set the radius value to positions 6 and 7")
         fun testBottomLeftRadius() {
             // Given
-            val cornerRadius = CornerRadius(bottomLeft = 10.0)
+            val cornerRadius = CornerRadiusHelper(bottomLeft = 10.0)
 
             // When
             val result = cornerRadius.getFloatArray()
@@ -160,7 +161,7 @@ class CornerRadiusHelperTest {
         @DisplayName("Then should set the radius to all position and the corners to 6 and 7 indices")
         fun testRadiusAndOtherRadius() {
             // Given
-            val cornerRadius = CornerRadius(radius = 10.0, bottomLeft = 20.0)
+            val cornerRadius = CornerRadiusHelper(radius = 10.0, bottomLeft = 20.0)
 
             // When
             val result = cornerRadius.getFloatArray()

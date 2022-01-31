@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import br.com.zup.beagle.android.action.Navigate
 import br.com.zup.beagle.android.action.Route
 import br.com.zup.beagle.android.components.Text
 import br.com.zup.beagle.android.components.layout.Screen
-import br.com.zup.beagle.android.context.Bind
+import br.com.zup.beagle.android.context.constant
 import br.com.zup.beagle.android.context.expressionOf
 import br.com.zup.beagle.android.logger.BeagleMessageLogs
 import br.com.zup.beagle.android.testutil.RandomData
@@ -30,12 +30,11 @@ import io.mockk.Runs
 import io.mockk.called
 import io.mockk.coEvery
 import io.mockk.every
-import io.mockk.impl.annotations.MockK
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.verify
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -44,7 +43,7 @@ import org.junit.jupiter.api.Test
 class PreFetchHelperTest : BaseTest() {
 
     private val helper = PreFetchHelper()
-    private val route = Route.Remote(RandomData.string(), shouldPrefetch = true)
+    private val route = Route.Remote(constant(RandomData.string()), shouldPrefetch = true)
     private val cachedTypes =
         listOf(
             Navigate.PushStack(route),
@@ -53,10 +52,9 @@ class PreFetchHelperTest : BaseTest() {
             Navigate.ResetStack(route)
         )
 
-    @MockK
-    private lateinit var beagleViewModel: BeagleViewModel
+    private val beagleViewModel: BeagleViewModel = mockk()
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
 
@@ -87,7 +85,7 @@ class PreFetchHelperTest : BaseTest() {
         @Test
         fun testFetchForCacheWithLocal() {
             // Given
-            val route = Route.Local(Screen(child = Text("")))
+            val route = Route.Local(Screen(child = Text(constant(""))))
             val navigate = Navigate.PushView(route)
 
             // When
@@ -101,7 +99,7 @@ class PreFetchHelperTest : BaseTest() {
         @Test
         fun testFetchForCacheWithShouldPrefetchNull() {
             // Given
-            val route = Route.Remote("/url")
+            val route = Route.Remote(constant("/url"))
             val navigate = Navigate.PushView(route)
 
             // When
@@ -115,7 +113,7 @@ class PreFetchHelperTest : BaseTest() {
         @Test
         fun testFetchForCacheWithShouldPrefetchFalse() {
             // Given
-            val route = Route.Remote("/url", shouldPrefetch = false)
+            val route = Route.Remote(constant("/url"), shouldPrefetch = false)
             val navigate = Navigate.PushView(route)
 
             // When

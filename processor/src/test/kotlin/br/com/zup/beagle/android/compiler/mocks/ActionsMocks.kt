@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package br.com.zup.beagle.android.compiler.mocks
 
 const val INVALID_ACTION =
     """
-        import br.com.zup.beagle.annotation.RegisterAction
+        import br.com.zup.beagle.android.annotation.RegisterAction
 
         @RegisterAction
         class InvalidAction { }
@@ -26,7 +26,7 @@ const val INVALID_ACTION =
 
 const val INVALID_ACTION_WITH_INHERITANCE =
     """
-        import br.com.zup.beagle.annotation.RegisterAction
+        import br.com.zup.beagle.android.annotation.RegisterAction
         import br.com.zup.beagle.android.operation.Operation
 
         @RegisterAction
@@ -35,7 +35,7 @@ const val INVALID_ACTION_WITH_INHERITANCE =
 
 const val VALID_ACTION =
     """ 
-        import br.com.zup.beagle.annotation.RegisterAction
+        import br.com.zup.beagle.android.annotation.RegisterAction
         import br.com.zup.beagle.android.action.Action
 
         @RegisterAction

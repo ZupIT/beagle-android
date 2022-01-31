@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,16 +23,18 @@ import br.com.zup.beagle.android.action.SendRequest
 import br.com.zup.beagle.android.components.layout.Container
 import br.com.zup.beagle.android.components.utils.Template
 import br.com.zup.beagle.android.context.ContextData
+import br.com.zup.beagle.android.context.constant
 import br.com.zup.beagle.android.context.expressionOf
 import br.com.zup.beagle.android.testutil.InstantExecutorExtension
 import br.com.zup.beagle.android.view.ViewFactory
+import br.com.zup.beagle.android.view.viewmodel.OnInitViewModel
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.slot
 import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -50,25 +52,52 @@ class GridViewTest : BaseComponentTest() {
     private val beagleRecyclerView: BeagleRecyclerView = mockk(relaxed = true)
     private val layoutManagerSlot = slot<RecyclerView.LayoutManager>()
 
+    private val onInitViewModel: OnInitViewModel = mockk(relaxed = true, relaxUnitFun = true)
+
     private val context = ContextData(
         id = "context",
         value = listOf(Cell(10, "Item 1"), Cell(20, "Item 2"), Cell(30, "Item 3"))
     )
-    private val onInit = listOf(SendRequest("http://www.init.com"))
+    private val onInit = listOf(SendRequest(constant("http://www.init.com")))
     private val dataSource = expressionOf<List<Any>>("@{context}")
-    private val templates by lazy { listOf(Template(view = Container(children = listOf(Text(expressionOf("@{item.name}")))))) }
+
+    private val templates by lazy {
+        listOf(
+            Template(
+                view = Container(
+                    children = listOf(
+                        Text(
+                            expressionOf("@{item.name}")
+                        )
+                    )
+                )
+            )
+        )
+    }
+
     private val onScrollEnd = listOf(mockk<Action>(relaxed = true))
     private val iteratorName = "list"
     private val key = "id"
-    private val numColumns = 3
+    private val spanCount = 3
 
     private lateinit var gridView: GridView
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
 
-        gridView = GridView(context, onInit, dataSource, templates, onScrollEnd, iteratorName = iteratorName, key = key, numColumns = numColumns)
+        prepareViewModelMock(onInitViewModel)
+
+        gridView = GridView(
+            context,
+            onInit,
+            dataSource,
+            templates,
+            onScrollEnd,
+            iteratorName = iteratorName,
+            key = key,
+            spanCount = spanCount,
+        )
 
         every { ViewFactory.makeBeagleRecyclerView(rootView.getContext()) } returns beagleRecyclerView
         every { beagleRecyclerView.layoutManager = capture(layoutManagerSlot) } just Runs
@@ -87,7 +116,10 @@ class GridViewTest : BaseComponentTest() {
 
             // Then
             Assertions.assertTrue(layoutManagerSlot.captured is GridLayoutManager)
-            Assertions.assertEquals((layoutManagerSlot.captured as GridLayoutManager).spanCount, numColumns)
+            Assertions.assertEquals(
+                (layoutManagerSlot.captured as GridLayoutManager).spanCount,
+                spanCount
+            )
         }
     }
 

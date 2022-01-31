@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ import br.com.zup.beagle.android.context.expressionOf
 import br.com.zup.beagle.android.logger.BeagleLoggerProxy
 import br.com.zup.beagle.android.utils.evaluateExpression
 import br.com.zup.beagle.android.utils.handleEvent
-import br.com.zup.beagle.core.ServerDrivenComponent
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
@@ -30,7 +29,7 @@ import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.mockkStatic
 import io.mockk.verify
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 
 class ConditionTest : BaseTest() {
@@ -39,7 +38,7 @@ class ConditionTest : BaseTest() {
     private val onFalse: Action = mockk(relaxed = true)
     private val onTrue: Action = mockk(relaxed = true)
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
         mockkObject(BeagleLoggerProxy)
@@ -55,7 +54,14 @@ class ConditionTest : BaseTest() {
             onTrue = listOf(onTrue)
         )
         every { condition.evaluateExpression(rootView, view, condition.condition) } returns true
-        every { condition.handleEvent(rootView, view, listOf(onTrue), analyticsValue = "onTrue") } just Runs
+        every {
+            condition.handleEvent(
+                rootView,
+                view,
+                listOf(onTrue),
+                analyticsValue = "onTrue"
+            )
+        } just Runs
 
         // When
         condition.execute(rootView, view)
@@ -75,13 +81,27 @@ class ConditionTest : BaseTest() {
             onTrue = listOf(onTrue)
         )
         every { condition.evaluateExpression(rootView, view, condition.condition) } returns false
-        every { condition.handleEvent(rootView, view, listOf(onFalse), analyticsValue = "onFalse") } just Runs
+        every {
+            condition.handleEvent(
+                rootView,
+                view,
+                listOf(onFalse),
+                analyticsValue = "onFalse"
+            )
+        } just Runs
 
         // When
         condition.execute(rootView, view)
 
         // Then
-        verify { condition.handleEvent(rootView, view, listOf(onFalse), analyticsValue = "onFalse") }
+        verify {
+            condition.handleEvent(
+                rootView,
+                view,
+                listOf(onFalse),
+                analyticsValue = "onFalse"
+            )
+        }
     }
 
     @Test
@@ -94,14 +114,28 @@ class ConditionTest : BaseTest() {
             onTrue = listOf(onTrue)
         )
         every { condition.evaluateExpression(rootView, view, condition.condition) } throws result
-        every { condition.handleEvent(rootView, view, listOf(onFalse), analyticsValue = "onFalse") } just Runs
+        every {
+            condition.handleEvent(
+                rootView,
+                view,
+                listOf(onFalse),
+                analyticsValue = "onFalse"
+            )
+        } just Runs
         every { BeagleLoggerProxy.warning(any()) } just Runs
 
         // When
         condition.execute(rootView, view)
 
         // Then
-        verify { condition.handleEvent(rootView, view, listOf(onFalse), analyticsValue = "onFalse") }
+        verify {
+            condition.handleEvent(
+                rootView,
+                view,
+                listOf(onFalse),
+                analyticsValue = "onFalse"
+            )
+        }
         BeagleLoggerProxy.warning("Conditional action. Expected boolean or null. Received: ${condition.condition.value}")
     }
 
@@ -114,12 +148,26 @@ class ConditionTest : BaseTest() {
             onTrue = listOf(onTrue)
         )
         every { condition.evaluateExpression(rootView, view, condition.condition) } returns null
-        every { condition.handleEvent(rootView, view, listOf(onFalse), analyticsValue = "onFalse") } just Runs
+        every {
+            condition.handleEvent(
+                rootView,
+                view,
+                listOf(onFalse),
+                analyticsValue = "onFalse"
+            )
+        } just Runs
 
         // When
         condition.execute(rootView, view)
 
         // Then
-        verify { condition.handleEvent(rootView, view, listOf(onFalse), analyticsValue = "onFalse") }
+        verify {
+            condition.handleEvent(
+                rootView,
+                view,
+                listOf(onFalse),
+                analyticsValue = "onFalse"
+            )
+        }
     }
 }

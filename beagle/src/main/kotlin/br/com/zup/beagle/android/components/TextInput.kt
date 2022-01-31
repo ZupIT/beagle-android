@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,23 +22,21 @@ import android.view.View
 import android.widget.EditText
 import androidx.core.widget.doOnTextChanged
 import br.com.zup.beagle.android.action.Action
-import br.com.zup.beagle.android.components.form.InputWidget
-import br.com.zup.beagle.android.components.utils.beagleComponent
-import br.com.zup.beagle.android.components.utils.styleManagerFactory
+import br.com.zup.beagle.android.annotation.RegisterWidget
 import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.context.ContextData
-import br.com.zup.beagle.android.context.expressionOrValueOfNullable
-import br.com.zup.beagle.android.context.valueOfNullable
+import br.com.zup.beagle.android.utils.beagleComponent
 import br.com.zup.beagle.android.utils.handleEvent
 import br.com.zup.beagle.android.utils.observeBindChanges
+import br.com.zup.beagle.android.utils.styleManagerFactory
 import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.widget.RootView
-import br.com.zup.beagle.annotation.RegisterWidget
-import br.com.zup.beagle.widget.core.TextInputType
-import br.com.zup.beagle.widget.core.TextInputType.DATE
-import br.com.zup.beagle.widget.core.TextInputType.EMAIL
-import br.com.zup.beagle.widget.core.TextInputType.NUMBER
-import br.com.zup.beagle.widget.core.TextInputType.PASSWORD
+import br.com.zup.beagle.android.widget.WidgetView
+import br.com.zup.beagle.android.widget.core.TextInputType
+import br.com.zup.beagle.android.widget.core.TextInputType.DATE
+import br.com.zup.beagle.android.widget.core.TextInputType.EMAIL
+import br.com.zup.beagle.android.widget.core.TextInputType.NUMBER
+import br.com.zup.beagle.android.widget.core.TextInputType.PASSWORD
 
 private const val VALUE_KEY = "value"
 
@@ -50,11 +48,9 @@ private const val VALUE_KEY = "value"
  * Text Input component.
  * @param placeholder The Placeholder is a text that is displayed when nothing has been entered in the editable
  * text field.
- * @param disabled Enables or disables the field.
  * @param readOnly Check if the Input will be editable or read only.
  * @param type This attribute identifies the type of text that we will receive in the editable text area.
  * On Android and iOS, this field also assigns the type of keyboard that will be displayed to the us.
- * @param hidden Enables the component to be visible or not.
  * @param error is a text that should be rendered, below the text input. It tells the user about the error.
  * This text is visible only if showError is true
  * @param showError controls weather to make the error of the input visible or not.
@@ -70,14 +66,8 @@ private const val VALUE_KEY = "value"
 data class TextInput(
     val value: Bind<String>? = null,
     val placeholder: Bind<String>? = null,
-    @Deprecated("It was deprecated in version 1.7.0 and will be removed in a future version." +
-        " Use field enabled to control is enabled or not in this layout.")
-    val disabled: Bind<Boolean>? = null,
     val readOnly: Bind<Boolean>? = null,
     val type: Bind<TextInputType>? = null,
-    @Deprecated("It was deprecated in version 1.6.0 and will be removed in a future version." +
-        " Use field display to control visibility.")
-    val hidden: Bind<Boolean>? = null,
     val error: Bind<String>? = null,
     val showError: Bind<Boolean>? = null,
     val styleId: String? = null,
@@ -85,94 +75,7 @@ data class TextInput(
     val onFocus: List<Action>? = null,
     val onBlur: List<Action>? = null,
     val enabled: Bind<Boolean>? = null,
-) : InputWidget() {
-
-    constructor(
-        value: String? = null,
-        placeholder: String? = null,
-        readOnly: Boolean? = null,
-        type: TextInputType? = null,
-        error: String? = null,
-        showError: Boolean? = null,
-        styleId: String? = null,
-        onChange: List<Action>? = null,
-        onFocus: List<Action>? = null,
-        onBlur: List<Action>? = null,
-        enabled: Boolean? = null,
-    ) : this(
-        expressionOrValueOfNullable(value),
-        expressionOrValueOfNullable(placeholder),
-        valueOfNullable(null),
-        valueOfNullable(readOnly),
-        valueOfNullable(type),
-        null,
-        expressionOrValueOfNullable(error),
-        valueOfNullable(showError),
-        styleId,
-        onChange,
-        onFocus,
-        onBlur,
-        valueOfNullable(enabled)
-    )
-
-    @Deprecated("It was deprecated in version 1.6.0 and will be removed in a future version." +
-        " Use field display to control visibility.")
-    constructor(
-        value: String? = null,
-        placeholder: String? = null,
-        disabled: Boolean? = null,
-        readOnly: Boolean? = null,
-        type: TextInputType? = null,
-        hidden: Boolean? = null,
-        error: String? = null,
-        showError: Boolean? = null,
-        styleId: String? = null,
-        onChange: List<Action>? = null,
-        onFocus: List<Action>? = null,
-        onBlur: List<Action>? = null,
-    ) : this(
-        expressionOrValueOfNullable(value),
-        expressionOrValueOfNullable(placeholder),
-        valueOfNullable(disabled),
-        valueOfNullable(readOnly),
-        valueOfNullable(type),
-        valueOfNullable(hidden),
-        expressionOrValueOfNullable(error),
-        valueOfNullable(showError),
-        styleId,
-        onChange,
-        onFocus,
-        onBlur
-    )
-
-    @Deprecated("It was deprecated in version 1.7.0 and will be removed in a future version." +
-        " Use field enabled to control layout.")
-    constructor(
-        value: String? = null,
-        placeholder: String? = null,
-        disabled: Boolean?,
-        readOnly: Boolean? = null,
-        type: TextInputType? = null,
-        error: String? = null,
-        showError: Boolean? = null,
-        styleId: String? = null,
-        onChange: List<Action>? = null,
-        onFocus: List<Action>? = null,
-        onBlur: List<Action>? = null,
-    ) : this(
-        expressionOrValueOfNullable(value),
-        expressionOrValueOfNullable(placeholder),
-        valueOfNullable(disabled),
-        valueOfNullable(readOnly),
-        valueOfNullable(type),
-        null,
-        expressionOrValueOfNullable(error),
-        valueOfNullable(showError),
-        styleId,
-        onChange,
-        onFocus,
-        onBlur
-    )
+) : WidgetView() {
 
     @Transient
     private lateinit var textInputView: EditText
@@ -197,18 +100,14 @@ data class TextInput(
 
     private fun createEditText(rootView: RootView): EditText {
         return if (styleId.isNullOrEmpty()) ViewFactory.makeInputText(rootView.getContext())
-        else ViewFactory.makeInputText(rootView.getContext(), styleManagerFactory.getInputTextStyle(styleId))
-    }
-
-    override fun getValue(): Any = textInputView.text.toString()
-
-    override fun onErrorMessage(message: String) {
-        textInputView.error = message
+        else ViewFactory.makeInputText(
+            rootView.getContext(),
+            styleManagerFactory.getInputTextStyle(styleId)
+        )
     }
 
     private fun EditText.setUpOnTextChange(rootView: RootView) {
         textWatcher = doOnTextChanged { newText, _, _, _ ->
-            notifyChanges()
             onChange?.let {
                 this@TextInput.handleEvent(
                     rootView,
@@ -263,24 +162,44 @@ data class TextInput(
     private fun EditText.setData(textInput: TextInput, rootView: RootView) {
         isFocusable = true
         isFocusableInTouchMode = true
-        textInput.placeholder?.let { bind -> observeBindChanges(rootView, this, bind) { it?.let { hint = it } } }
-        textInput.value?.let { bind ->
-            observeBindChanges(rootView, this, bind) { it?.let { setValue(it, rootView) } }
+        textInput.placeholder?.let { bind ->
+            observeBindChanges(
+                rootView,
+                this,
+                bind
+            ) { it?.let { hint = it } }
         }
-        textInput.readOnly?.let { bind -> observeBindChanges(rootView, this, bind) { setEnabledConfig(it) } }
-        textInput.disabled?.let { bind -> observeBindChanges(rootView, this, bind) { setEnabledConfig(it) } }
+        textInput.value?.let { bind ->
+            observeBindChanges(
+                rootView,
+                this,
+                bind
+            ) { it?.let { setValue(it, rootView) } }
+        }
+        textInput.readOnly?.let { bind ->
+            observeBindChanges(
+                rootView,
+                this,
+                bind
+            ) { setEnabledConfig(it?.not()) }
+        }
         textInput.enabled?.let { bind ->
-            observeBindChanges(rootView, this, bind) { bindField ->
-                bindField?.let { this.isEnabled = it }
+            observeBindChanges(
+                rootView,
+                this,
+                bind
+            ) {
+                setEnabledConfig(it)
             }
         }
 
-        textInput.hidden?.let { bind ->
-            observeBindChanges(rootView, this, bind) {
-                it?.let { visibility = if (it) View.INVISIBLE else View.VISIBLE }
-            }
+        textInput.type?.let { bind ->
+            observeBindChanges(
+                rootView,
+                this,
+                bind
+            ) { it?.let { setInputType(it) } }
         }
-        textInput.type?.let { bind -> observeBindChanges(rootView, this, bind) { it?.let { setInputType(it) } } }
 
         observeBindError(textInput, rootView, this)
     }
@@ -309,7 +228,7 @@ data class TextInput(
     }
 
     private fun EditText.setEnabledConfig(isEnabled: Boolean?) {
-        isEnabled?.let { this.isEnabled = !it }
+        isEnabled?.let { this.isEnabled = it }
     }
 
     private fun EditText.setValue(text: String, rootView: RootView) {
@@ -324,7 +243,8 @@ data class TextInput(
         when (textInputType) {
             DATE -> setRawInputType(InputType.TYPE_CLASS_DATETIME)
             EMAIL -> setRawInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS)
-            PASSWORD -> inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+            PASSWORD -> inputType =
+                InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
             NUMBER -> setRawInputType(InputType.TYPE_CLASS_NUMBER)
             else -> setRawInputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES)
         }

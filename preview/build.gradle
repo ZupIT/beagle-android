@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,6 +65,7 @@ android {
 dependencies {
     implementation Dependencies.AndroidxLibraries.appcompat
     implementation Dependencies.GeneralLibraries.webSocket
+    implementation Dependencies.GeneralLibraries.slf4jSimple
 
     implementation project(Dependencies.Modules.core)
 
@@ -80,7 +81,7 @@ dependencies {
     testImplementation Dependencies.TestLibraries.testExt
     testImplementation Dependencies.TestLibraries.testCore
     testImplementation Dependencies.TestLibraries.testRules
-    testImplementation Dependencies.GeneralLibraries.yoga
+
 }
 
 apply from: "$rootDir/maven-publish.gradle"

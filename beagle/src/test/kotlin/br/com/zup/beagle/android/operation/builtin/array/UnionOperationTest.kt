@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,16 +35,27 @@ internal class UnionOperationTest {
 
         @Test
         @DisplayName("Then the resulting array should contain the two arrays concatenated")
-        fun concatArrays(){
+        fun concatArrays() {
             //GIVEN
             val listOne = OperationType.TypeJsonArray(JSONArray(listOf("One", "Two", "Three")))
-            val listtwo = OperationType.TypeJsonArray(JSONArray(listOf("Four", "Five", "Six")))
+            val listTwo = OperationType.TypeJsonArray(JSONArray(listOf("Four", "Five", "Six")))
 
             //WHEN
-            val result = unionOperation.execute(listOne, listtwo)
+            val result = unionOperation.execute(listOne, listTwo)
 
             //THEN
-            val expected = OperationType.TypeJsonArray(JSONArray(listOf("One", "Two", "Three", "Four", "Five", "Six")))
+            val expected = OperationType.TypeJsonArray(
+                JSONArray(
+                    listOf(
+                        "One",
+                        "Two",
+                        "Three",
+                        "Four",
+                        "Five",
+                        "Six"
+                    )
+                )
+            )
             assertEquals(expected.toString(), result.toString())
         }
     }
@@ -55,13 +66,13 @@ internal class UnionOperationTest {
 
         @Test
         @DisplayName("Then the resulting array should contain the two arrays concatenated")
-        fun concatEmptyArrayToNonEmptyArray(){
+        fun concatEmptyArrayToNonEmptyArray() {
             //GIVEN
             val listOne = OperationType.TypeJsonArray(JSONArray(listOf("One", "Two", "Three")))
-            val listtwo = OperationType.TypeJsonArray(JSONArray(listOf<String>()))
+            val listTwo = OperationType.TypeJsonArray(JSONArray(listOf<String>()))
 
             //WHEN
-            val result = unionOperation.execute(listOne, listtwo)
+            val result = unionOperation.execute(listOne, listTwo)
 
             //THEN
             val expected = OperationType.TypeJsonArray(JSONArray(listOf("One", "Two", "Three")))
@@ -70,13 +81,13 @@ internal class UnionOperationTest {
 
         @Test
         @DisplayName("Then the resulting array should contain the two arrays concatenated")
-        fun concatNonEmptyArrayToEmptyArray(){
+        fun concatNonEmptyArrayToEmptyArray() {
             //GIVEN
             val listOne = OperationType.TypeJsonArray(JSONArray(listOf<String>()))
-            val listtwo = OperationType.TypeJsonArray(JSONArray(listOf("Four", "Five", "Six")))
+            val listTwo = OperationType.TypeJsonArray(JSONArray(listOf("Four", "Five", "Six")))
 
             //WHEN
-            val result = unionOperation.execute(listOne, listtwo)
+            val result = unionOperation.execute(listOne, listTwo)
 
             //THEN
             val expected = OperationType.TypeJsonArray(JSONArray(listOf("Four", "Five", "Six")))
@@ -90,13 +101,13 @@ internal class UnionOperationTest {
 
         @Test
         @DisplayName("Then the resulting array should be an empty array")
-        fun concatArrays(){
+        fun concatArrays() {
             //GIVEN
             val listOne = OperationType.TypeJsonArray(JSONArray(listOf<String>()))
-            val listtwo = OperationType.TypeJsonArray(JSONArray(listOf<String>()))
+            val listTwo = OperationType.TypeJsonArray(JSONArray(listOf<String>()))
 
             //WHEN
-            val result = unionOperation.execute(listOne, listtwo)
+            val result = unionOperation.execute(listOne, listTwo)
 
             //THEN
             assertTrue((result.value as JSONArray).length() == 0)

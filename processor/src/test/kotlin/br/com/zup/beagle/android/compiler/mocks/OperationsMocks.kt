@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package br.com.zup.beagle.android.compiler.mocks
 
 const val VALID_OPERATION =
     """
-        import br.com.zup.beagle.annotation.RegisterOperation
+        import br.com.zup.beagle.android.annotation.RegisterOperation
         import br.com.zup.beagle.android.operation.Operation
         
         @RegisterOperation("OperationTestName")
@@ -101,7 +101,7 @@ const val INTERNAL_LIST_OPERATION_WITH_REGISTRAR_GENERATED_EXPECTED: String =
 
 const val INVALID_OPERATION =
     """
-        import br.com.zup.beagle.annotation.RegisterOperation
+        import br.com.zup.beagle.android.annotation.RegisterOperation
 
         @RegisterOperation("test")
         class InvalidOperation { }
@@ -109,7 +109,7 @@ const val INVALID_OPERATION =
 
 const val INVALID_OPERATION_TWO =
     """
-        import br.com.zup.beagle.annotation.RegisterOperation
+        import br.com.zup.beagle.android.annotation.RegisterOperation
 
         @RegisterOperation("test")
         class InvalidOperationTwo { }
@@ -117,7 +117,7 @@ const val INVALID_OPERATION_TWO =
 
 const val INVALID_OPERATION_WITH_INHERITANCE =
     """
-        import br.com.zup.beagle.annotation.RegisterOperation
+        import br.com.zup.beagle.android.annotation.RegisterOperation
 
         @RegisterOperation("testTwo")
         class InvalidOperation : WidgetView { }

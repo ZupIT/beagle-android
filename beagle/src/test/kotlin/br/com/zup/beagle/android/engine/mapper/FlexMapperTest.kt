@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,25 +17,26 @@
 package br.com.zup.beagle.android.engine.mapper
 
 import android.view.View
-import br.com.zup.beagle.android.context.valueOf
-import br.com.zup.beagle.android.extensions.once
+import br.com.zup.beagle.android.components.utils.EdgeValueHelper
+import br.com.zup.beagle.android.components.utils.UnitValueConstant
+import br.com.zup.beagle.android.context.constant
 import br.com.zup.beagle.android.utils.Observer
 import br.com.zup.beagle.android.utils.dp
 import br.com.zup.beagle.android.utils.internalObserveBindChanges
 import br.com.zup.beagle.android.widget.RootView
-import br.com.zup.beagle.core.Display
-import br.com.zup.beagle.core.Style
-import br.com.zup.beagle.widget.core.AlignContent
-import br.com.zup.beagle.widget.core.AlignItems
-import br.com.zup.beagle.widget.core.AlignSelf
-import br.com.zup.beagle.widget.core.EdgeValue
-import br.com.zup.beagle.widget.core.Flex
-import br.com.zup.beagle.widget.core.FlexDirection
-import br.com.zup.beagle.widget.core.FlexWrap
-import br.com.zup.beagle.widget.core.JustifyContent
-import br.com.zup.beagle.widget.core.Size
-import br.com.zup.beagle.widget.core.UnitType
-import br.com.zup.beagle.widget.core.UnitValue
+import br.com.zup.beagle.android.widget.core.AlignContent
+import br.com.zup.beagle.android.widget.core.AlignItems
+import br.com.zup.beagle.android.widget.core.AlignSelf
+import br.com.zup.beagle.android.widget.core.Display
+import br.com.zup.beagle.android.widget.core.EdgeValue
+import br.com.zup.beagle.android.widget.core.Flex
+import br.com.zup.beagle.android.widget.core.FlexDirection
+import br.com.zup.beagle.android.widget.core.FlexWrap
+import br.com.zup.beagle.android.widget.core.JustifyContent
+import br.com.zup.beagle.android.widget.core.Size
+import br.com.zup.beagle.android.widget.core.Style
+import br.com.zup.beagle.android.widget.core.UnitType
+import br.com.zup.beagle.android.widget.core.UnitValue
 import com.facebook.yoga.YogaAlign
 import com.facebook.yoga.YogaDisplay
 import com.facebook.yoga.YogaEdge
@@ -46,6 +47,7 @@ import com.facebook.yoga.YogaNodeFactory
 import com.facebook.yoga.YogaWrap
 import io.mockk.MockKAnnotations
 import io.mockk.Runs
+import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
@@ -54,26 +56,28 @@ import io.mockk.slot
 import io.mockk.unmockkAll
 import io.mockk.verify
 import io.mockk.verifyOrder
-import io.mockk.verifySequence
+import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 
 private const val HUNDRED_UNIT_VALUE = 100.0
 private const val ONE_UNIT_VALUE = 1.0
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class FlexMapperTest {
 
     private val yogaNodeMock: YogaNode = mockk(relaxed = true, relaxUnitFun = true)
     private val rootViewMock: RootView = mockk()
     private val viewMock: View = mockk(relaxUnitFun = true, relaxed = true)
 
-    private val observeSlot = slot<Observer<Display?>>()
+    private val observeSlot = slot<Observer<Any?>>()
 
     private lateinit var flexMapper: FlexMapper
 
-    @BeforeEach
+    @BeforeAll
     fun setUp() {
         MockKAnnotations.init(this)
 
@@ -98,7 +102,18 @@ class FlexMapperTest {
         every { YogaNodeFactory.create() } returns yogaNodeMock
     }
 
-    @AfterEach
+    @BeforeEach
+    fun clear() {
+        clearMocks(
+            yogaNodeMock,
+            rootViewMock,
+            viewMock,
+            answers = false
+        )
+        observeSlot.clear()
+    }
+
+    @AfterAll
     fun tearDown() {
         unmockkAll()
     }
@@ -114,7 +129,7 @@ class FlexMapperTest {
         val yogaNode = flexMapper.makeYogaNode(Style(flex = flex))
 
         // Then
-        verify(exactly = once()) { yogaNode.flexDirection = YogaFlexDirection.COLUMN }
+        verify(exactly = 1) { yogaNode.flexDirection = YogaFlexDirection.COLUMN }
     }
 
     @Test
@@ -128,7 +143,7 @@ class FlexMapperTest {
         val yogaNode = flexMapper.makeYogaNode(Style(flex = flex))
 
         // Then
-        verify(exactly = once()) { yogaNode.wrap = YogaWrap.WRAP }
+        verify(exactly = 1) { yogaNode.wrap = YogaWrap.WRAP }
     }
 
     @Test
@@ -142,7 +157,7 @@ class FlexMapperTest {
         val yogaNode = flexMapper.makeYogaNode(Style(flex = flex))
 
         // Then
-        verify(exactly = once()) { yogaNode.justifyContent = YogaJustify.SPACE_BETWEEN }
+        verify(exactly = 1) { yogaNode.justifyContent = YogaJustify.SPACE_BETWEEN }
     }
 
     @Test
@@ -156,7 +171,7 @@ class FlexMapperTest {
         val yogaNode = flexMapper.makeYogaNode(Style(flex = flex))
 
         // Then
-        verify(exactly = once()) { yogaNode.alignItems = YogaAlign.FLEX_START }
+        verify(exactly = 1) { yogaNode.alignItems = YogaAlign.FLEX_START }
     }
 
     @Test
@@ -170,7 +185,7 @@ class FlexMapperTest {
         val yogaNode = flexMapper.makeYogaNode(Style(flex = flex))
 
         // Then
-        verify(exactly = once()) { yogaNode.alignSelf = YogaAlign.FLEX_START }
+        verify(exactly = 1) { yogaNode.alignSelf = YogaAlign.FLEX_START }
     }
 
     @Test
@@ -184,7 +199,7 @@ class FlexMapperTest {
         val yogaNode = flexMapper.makeYogaNode(Style(flex = flex))
 
         // Then
-        verify(exactly = once()) { yogaNode.alignContent = YogaAlign.FLEX_START }
+        verify(exactly = 1) { yogaNode.alignContent = YogaAlign.FLEX_START }
     }
 
     @Test
@@ -198,7 +213,7 @@ class FlexMapperTest {
         val yogaNode = flexMapper.makeYogaNode(Style(flex = flex))
 
         //Then
-        verify(exactly = once()) { yogaNode.flex = ONE_UNIT_VALUE.toFloat() }
+        verify(exactly = 1) { yogaNode.flex = ONE_UNIT_VALUE.toFloat() }
     }
 
     @Test
@@ -212,7 +227,7 @@ class FlexMapperTest {
         val yogaNode = flexMapper.makeYogaNode(Style(flex = flex))
 
         // Then
-        verify(exactly = once()) { yogaNode.flexGrow = ONE_UNIT_VALUE.toFloat() }
+        verify(exactly = 1) { yogaNode.flexGrow = ONE_UNIT_VALUE.toFloat() }
     }
 
     @Test
@@ -226,14 +241,14 @@ class FlexMapperTest {
         val yogaNode = flexMapper.makeYogaNode(Style(flex = flex))
 
         // Then
-        verify(exactly = once()) { yogaNode.flexShrink = ONE_UNIT_VALUE.toFloat() }
+        verify(exactly = 1) { yogaNode.flexShrink = ONE_UNIT_VALUE.toFloat() }
     }
 
     @Test
     fun `GIVEN display NONE WHEN call observe bind changes THEN it should set in yoga node correct display`() {
         // Given
         val style = Style(
-            display = valueOf(Display.NONE)
+            display = constant(Display.NONE)
         )
 
         // When
@@ -251,7 +266,7 @@ class FlexMapperTest {
     fun `GIVEN display FLEX WHEN call observe bind changes THEN it should set in yoga node correct display`() {
         // Given
         val style = Style(
-            display = valueOf(Display.FLEX)
+            display = constant(Display.FLEX)
         )
 
         // When
@@ -283,210 +298,230 @@ class FlexMapperTest {
     fun makeYogaNode_should_set_width_as_100_0() {
         // Given
         val style = Style(
-            size = Size(width = UnitValue(HUNDRED_UNIT_VALUE, UnitType.REAL))
+            size = Size(width = UnitValue(constant(HUNDRED_UNIT_VALUE), UnitType.REAL))
         )
 
         // When
-        val yogaNode = flexMapper.makeYogaNode(style)
+        flexMapper.observeBindChangesFlex(style, rootViewMock, viewMock, yogaNodeMock)
+        observeSlot.captured.invoke(HUNDRED_UNIT_VALUE)
 
         // Then
-        verify(exactly = once()) { yogaNode.setWidth(HUNDRED_UNIT_VALUE.toFloat()) }
+        verify(exactly = 1) { yogaNodeMock.setWidth(HUNDRED_UNIT_VALUE.toFloat()) }
     }
 
     @Test
     fun makeYogaNode_should_set_widthPercent_as_100_0() {
         // Given
         val style = Style(
-            size = Size(width = UnitValue(HUNDRED_UNIT_VALUE, UnitType.PERCENT))
+            size = Size(width = UnitValue(constant(HUNDRED_UNIT_VALUE), UnitType.PERCENT))
         )
 
         // When
-        val yogaNode = flexMapper.makeYogaNode(style)
+        flexMapper.observeBindChangesFlex(style, rootViewMock, viewMock, yogaNodeMock)
+        observeSlot.captured.invoke(HUNDRED_UNIT_VALUE)
 
         // Then
-        verify(exactly = once()) { yogaNode.setWidthPercent(HUNDRED_UNIT_VALUE.toFloat()) }
+        verify(exactly = 1) { yogaNodeMock.setWidthPercent(HUNDRED_UNIT_VALUE.toFloat()) }
     }
 
     @Test
     fun makeYogaNode_should_set_height_as_100_0() {
         // Given
         val style = Style(
-            size = Size(height = UnitValue(HUNDRED_UNIT_VALUE, UnitType.REAL))
+            size = Size(height = UnitValue(constant(HUNDRED_UNIT_VALUE), UnitType.REAL))
         )
 
         // When
-        val yogaNode = flexMapper.makeYogaNode(style)
+        flexMapper.observeBindChangesFlex(style, rootViewMock, viewMock, yogaNodeMock)
+        observeSlot.captured.invoke(HUNDRED_UNIT_VALUE)
+
 
         // Then
-        verify(exactly = once()) { yogaNode.setHeight(HUNDRED_UNIT_VALUE.toFloat()) }
+        verify(exactly = 1) { yogaNodeMock.setHeight(HUNDRED_UNIT_VALUE.toFloat()) }
     }
 
     @Test
     fun makeYogaNode_should_set_heightPercent_as_100_0() {
         // Given
         val style = Style(
-            size = Size(height = UnitValue(HUNDRED_UNIT_VALUE, UnitType.PERCENT))
+            size = Size(height = UnitValue(constant(HUNDRED_UNIT_VALUE), UnitType.PERCENT))
         )
 
         // When
-        val yogaNode = flexMapper.makeYogaNode(style)
+        flexMapper.observeBindChangesFlex(style, rootViewMock, viewMock, yogaNodeMock)
+        observeSlot.captured.invoke(HUNDRED_UNIT_VALUE)
+
 
         // Then
-        verify(exactly = once()) { yogaNode.setHeightPercent(HUNDRED_UNIT_VALUE.toFloat()) }
+        verify(exactly = 1) { yogaNodeMock.setHeightPercent(HUNDRED_UNIT_VALUE.toFloat()) }
     }
 
     @Test
     fun makeYogaNode_should_set_maxWidth_as_100_0() {
         // Given
         val style = Style(
-            size = Size(maxWidth = UnitValue(HUNDRED_UNIT_VALUE, UnitType.REAL))
+            size = Size(maxWidth = UnitValue(constant(HUNDRED_UNIT_VALUE), UnitType.REAL))
         )
 
         // When
-        val yogaNode = flexMapper.makeYogaNode(style)
+        flexMapper.observeBindChangesFlex(style, rootViewMock, viewMock, yogaNodeMock)
+        observeSlot.captured.invoke(HUNDRED_UNIT_VALUE)
+
 
         // Then
-        verify(exactly = once()) { yogaNode.setMaxWidth(HUNDRED_UNIT_VALUE.toFloat()) }
+        verify(exactly = 1) { yogaNodeMock.setMaxWidth(HUNDRED_UNIT_VALUE.toFloat()) }
     }
 
     @Test
     fun makeYogaNode_should_set_maxWidthPercent_as_100_0() {
         // Given
         val style = Style(
-            size = Size(maxWidth = UnitValue(HUNDRED_UNIT_VALUE, UnitType.PERCENT))
+            size = Size(maxWidth = UnitValue(constant(HUNDRED_UNIT_VALUE), UnitType.PERCENT))
         )
 
         // When
-        val yogaNode = flexMapper.makeYogaNode(style)
+        flexMapper.observeBindChangesFlex(style, rootViewMock, viewMock, yogaNodeMock)
+        observeSlot.captured.invoke(HUNDRED_UNIT_VALUE)
+
 
         // Then
-        verify(exactly = once()) { yogaNode.setMaxWidthPercent(HUNDRED_UNIT_VALUE.toFloat()) }
+        verify(exactly = 1) { yogaNodeMock.setMaxWidthPercent(HUNDRED_UNIT_VALUE.toFloat()) }
     }
 
     @Test
     fun makeYogaNode_should_set_maxHeight_as_100_0() {
         // Given
         val style = Style(
-            size = Size(maxHeight = UnitValue(HUNDRED_UNIT_VALUE, UnitType.REAL))
+            size = Size(maxHeight = UnitValue(constant(HUNDRED_UNIT_VALUE), UnitType.REAL))
         )
 
         // When
-        val yogaNode = flexMapper.makeYogaNode(style)
+        flexMapper.observeBindChangesFlex(style, rootViewMock, viewMock, yogaNodeMock)
+        observeSlot.captured.invoke(HUNDRED_UNIT_VALUE)
+
 
         // Then
-        verify(exactly = once()) { yogaNode.setMaxHeight(HUNDRED_UNIT_VALUE.toFloat()) }
+        verify(exactly = 1) { yogaNodeMock.setMaxHeight(HUNDRED_UNIT_VALUE.toFloat()) }
     }
 
     @Test
     fun makeYogaNode_should_set_maxHeightPercent_as_100_0() {
         // Given
         val style = Style(
-            size = Size(maxHeight = UnitValue(HUNDRED_UNIT_VALUE, UnitType.PERCENT))
+            size = Size(maxHeight = UnitValue(constant(HUNDRED_UNIT_VALUE), UnitType.PERCENT))
         )
 
         // When
-        val yogaNode = flexMapper.makeYogaNode(style)
+        flexMapper.observeBindChangesFlex(style, rootViewMock, viewMock, yogaNodeMock)
+        observeSlot.captured.invoke(HUNDRED_UNIT_VALUE)
 
         // Then
-        verify(exactly = once()) { yogaNode.setMaxHeightPercent(HUNDRED_UNIT_VALUE.toFloat()) }
+        verify(exactly = 1) { yogaNodeMock.setMaxHeightPercent(HUNDRED_UNIT_VALUE.toFloat()) }
     }
 
     @Test
     fun makeYogaNode_should_set_minWidth_as_100_0() {
         // Given
         val style = Style(
-            size = Size(minWidth = UnitValue(HUNDRED_UNIT_VALUE, UnitType.REAL))
+            size = Size(minWidth = UnitValue(constant(HUNDRED_UNIT_VALUE), UnitType.REAL))
         )
 
         // When
-        val yogaNode = flexMapper.makeYogaNode(style)
+        flexMapper.observeBindChangesFlex(style, rootViewMock, viewMock, yogaNodeMock)
+        observeSlot.captured.invoke(HUNDRED_UNIT_VALUE)
 
         // Then
-        verify(exactly = once()) { yogaNode.setMinWidth(HUNDRED_UNIT_VALUE.toFloat()) }
+        verify(exactly = 1) { yogaNodeMock.setMinWidth(HUNDRED_UNIT_VALUE.toFloat()) }
     }
 
     @Test
     fun makeYogaNode_should_set_minWidthPercent_as_100_0() {
         // Given
         val style = Style(
-            size = Size(minWidth = UnitValue(HUNDRED_UNIT_VALUE, UnitType.PERCENT))
+            size = Size(minWidth = UnitValue(constant(HUNDRED_UNIT_VALUE), UnitType.PERCENT))
         )
 
         // When
-        val yogaNode = flexMapper.makeYogaNode(style)
+        flexMapper.observeBindChangesFlex(style, rootViewMock, viewMock, yogaNodeMock)
+        observeSlot.captured.invoke(HUNDRED_UNIT_VALUE)
 
         // Then
-        verify(exactly = once()) { yogaNode.setMinWidthPercent(HUNDRED_UNIT_VALUE.toFloat()) }
+        verify(exactly = 1) { yogaNodeMock.setMinWidthPercent(HUNDRED_UNIT_VALUE.toFloat()) }
     }
 
     @Test
     fun makeYogaNode_should_set_minHeight_as_100_0() {
         // Given
         val style = Style(
-            size = Size(minHeight = UnitValue(HUNDRED_UNIT_VALUE, UnitType.REAL))
+            size = Size(minHeight = UnitValue(constant(HUNDRED_UNIT_VALUE), UnitType.REAL))
         )
 
         // When
-        val yogaNode = flexMapper.makeYogaNode(style)
+        flexMapper.observeBindChangesFlex(style, rootViewMock, viewMock, yogaNodeMock)
+        observeSlot.captured.invoke(HUNDRED_UNIT_VALUE)
 
         // Then
-        verify(exactly = once()) { yogaNode.setMinHeight(HUNDRED_UNIT_VALUE.toFloat()) }
+        verify(exactly = 1) { yogaNodeMock.setMinHeight(HUNDRED_UNIT_VALUE.toFloat()) }
     }
 
     @Test
     fun makeYogaNode_should_set_minHeightPercent_as_100_0() {
         // Given
         val style = Style(
-            size = Size(minHeight = UnitValue(HUNDRED_UNIT_VALUE, UnitType.PERCENT))
+            size = Size(minHeight = UnitValue(constant(HUNDRED_UNIT_VALUE), UnitType.PERCENT))
         )
 
         // When
-        val yogaNode = flexMapper.makeYogaNode(style)
+        flexMapper.observeBindChangesFlex(style, rootViewMock, viewMock, yogaNodeMock)
+        observeSlot.captured.invoke(HUNDRED_UNIT_VALUE)
 
         // Then
-        verify(exactly = once()) { yogaNode.setMinHeightPercent(HUNDRED_UNIT_VALUE.toFloat()) }
+        verify(exactly = 1) { yogaNodeMock.setMinHeightPercent(HUNDRED_UNIT_VALUE.toFloat()) }
     }
 
     @Test
     fun makeYogaNode_should_set_basis_as_1() {
         // Given
         val flex = Flex(
-            basis = UnitValue(ONE_UNIT_VALUE, UnitType.REAL)
+            basis = UnitValue(constant(ONE_UNIT_VALUE), UnitType.REAL)
         )
 
         // When
-        val yogaNode = flexMapper.makeYogaNode(Style(flex = flex))
+        flexMapper.observeBindChangesFlex(Style(flex = flex), rootViewMock, viewMock, yogaNodeMock)
+        observeSlot.captured.invoke(ONE_UNIT_VALUE)
 
         // Then
-        verify(exactly = once()) { yogaNode.setFlexBasis(ONE_UNIT_VALUE.toFloat()) }
+        verify(exactly = 1) { yogaNodeMock.setFlexBasis(ONE_UNIT_VALUE.toFloat()) }
     }
 
     @Test
     fun makeYogaNode_should_set_basisPercent_as_1() {
         // Given
         val flex = Flex(
-            basis = UnitValue(ONE_UNIT_VALUE, UnitType.PERCENT)
+            basis = UnitValue(constant(ONE_UNIT_VALUE), UnitType.PERCENT)
         )
 
         // When
-        val yogaNode = flexMapper.makeYogaNode(Style(flex = flex))
+        flexMapper.observeBindChangesFlex(Style(flex = flex), rootViewMock, viewMock, yogaNodeMock)
+        observeSlot.captured.invoke(ONE_UNIT_VALUE)
 
         // Then
-        verify(exactly = once()) { yogaNode.setFlexBasisPercent(ONE_UNIT_VALUE.toFloat()) }
+        verify(exactly = 1) { yogaNodeMock.setFlexBasisPercent(ONE_UNIT_VALUE.toFloat()) }
     }
 
     @Test
     fun makeYogaNode_should_set_basisAuto() {
         // Given
         val flex = Flex(
-            basis = UnitValue(ONE_UNIT_VALUE, UnitType.AUTO)
+            basis = UnitValue(constant(ONE_UNIT_VALUE), UnitType.AUTO)
         )
 
         // When
-        val yogaNode = flexMapper.makeYogaNode(Style(flex = flex))
+        flexMapper.observeBindChangesFlex(Style(flex = flex), rootViewMock, viewMock, yogaNodeMock)
+        observeSlot.captured.invoke(ONE_UNIT_VALUE)
 
         // Then
-        verify(exactly = once()) { yogaNode.setFlexBasisAuto() }
+        verify(exactly = 1) { yogaNodeMock.setFlexBasisAuto() }
     }
 
     @Test
@@ -500,202 +535,238 @@ class FlexMapperTest {
         val yogaNode = flexMapper.makeYogaNode(style)
 
         // Then
-        verify(exactly = once()) { yogaNode.aspectRatio = ONE_UNIT_VALUE.toFloat() }
+        verify(exactly = 1) { yogaNode.aspectRatio = ONE_UNIT_VALUE.toFloat() }
     }
 
     @Test
     fun makeYogaNode_should_set_margin_as_TOP_and_1() {
         // Given
         val style = Style(
-            margin = EdgeValue(top = UnitValue(ONE_UNIT_VALUE, UnitType.REAL))
+            margin = EdgeValue(top = UnitValue(constant(ONE_UNIT_VALUE), UnitType.REAL))
         )
 
         // When
-        val yogaNode = flexMapper.makeYogaNode(style)
+        flexMapper.observeBindChangesFlex(style, rootViewMock, viewMock, yogaNodeMock)
+        observeSlot.captured.invoke(ONE_UNIT_VALUE)
+
 
         // Then
-        verify(exactly = once()) { yogaNode.setMargin(YogaEdge.TOP, ONE_UNIT_VALUE.toFloat()) }
+        verify(exactly = 1) { yogaNodeMock.setMargin(YogaEdge.TOP, ONE_UNIT_VALUE.toFloat()) }
     }
 
     @Test
     fun makeYogaNode_should_set_margin_as_LEFT_and_1() {
         // Given
         val style = Style(
-            margin = EdgeValue(left = UnitValue(ONE_UNIT_VALUE, UnitType.REAL))
+            margin = EdgeValue(left = UnitValue(constant(ONE_UNIT_VALUE), UnitType.REAL))
         )
 
         // When
-        val yogaNode = flexMapper.makeYogaNode(style)
+        flexMapper.observeBindChangesFlex(style, rootViewMock, viewMock, yogaNodeMock)
+        observeSlot.captured.invoke(ONE_UNIT_VALUE)
+
 
         // Then
-        verify(exactly = once()) { yogaNode.setMargin(YogaEdge.LEFT, ONE_UNIT_VALUE.toFloat()) }
+        verify(exactly = 1) { yogaNodeMock.setMargin(YogaEdge.LEFT, ONE_UNIT_VALUE.toFloat()) }
     }
 
     @Test
     fun makeYogaNode_should_set_margin_as_RIGHT_and_1() {
         // Given
         val style = Style(
-            margin = EdgeValue(right = UnitValue(ONE_UNIT_VALUE, UnitType.REAL))
+            margin = EdgeValue(right = UnitValue(constant(ONE_UNIT_VALUE), UnitType.REAL))
         )
 
         // When
-        val yogaNode = flexMapper.makeYogaNode(style)
-
+        flexMapper.observeBindChangesFlex(style, rootViewMock, viewMock, yogaNodeMock)
+        observeSlot.captured.invoke(ONE_UNIT_VALUE)
         // Then
-        verify(exactly = once()) { yogaNode.setMargin(YogaEdge.RIGHT, ONE_UNIT_VALUE.toFloat()) }
+        verify(exactly = 1) { yogaNodeMock.setMargin(YogaEdge.RIGHT, ONE_UNIT_VALUE.toFloat()) }
     }
 
     @Test
     fun makeYogaNode_should_set_margin_as_BOTTOM_and_1() {
         // Given
         val style = Style(
-            margin = EdgeValue(bottom = UnitValue(ONE_UNIT_VALUE, UnitType.REAL))
+            margin = EdgeValue(bottom = UnitValue(constant(ONE_UNIT_VALUE), UnitType.REAL))
         )
 
         // When
-        val yogaNode = flexMapper.makeYogaNode(style)
+        flexMapper.observeBindChangesFlex(style, rootViewMock, viewMock, yogaNodeMock)
+        observeSlot.captured.invoke(ONE_UNIT_VALUE)
 
         // Then
-        verify(exactly = once()) { yogaNode.setMargin(YogaEdge.BOTTOM, ONE_UNIT_VALUE.toFloat()) }
+        verify(exactly = 1) { yogaNodeMock.setMargin(YogaEdge.BOTTOM, ONE_UNIT_VALUE.toFloat()) }
     }
 
     @Test
     fun makeYogaNode_should_set_margin_as_START_and_1() {
         // Given
         val style = Style(
-            margin = EdgeValue(left = UnitValue(ONE_UNIT_VALUE, UnitType.REAL))
+            margin = EdgeValue(left = UnitValue(constant(ONE_UNIT_VALUE), UnitType.REAL))
         )
 
         // When
-        val yogaNode = flexMapper.makeYogaNode(style)
+        flexMapper.observeBindChangesFlex(style, rootViewMock, viewMock, yogaNodeMock)
+        observeSlot.captured.invoke(ONE_UNIT_VALUE)
 
         // Then
-        verify(exactly = once()) { yogaNode.setMargin(YogaEdge.LEFT, ONE_UNIT_VALUE.toFloat()) }
+        verify(exactly = 1) { yogaNodeMock.setMargin(YogaEdge.LEFT, ONE_UNIT_VALUE.toFloat()) }
     }
 
     @Test
     fun makeYogaNode_should_set_margin_as_END_and_1() {
         // Given
         val style = Style(
-            margin = EdgeValue(right = UnitValue(ONE_UNIT_VALUE, UnitType.REAL))
+            margin = EdgeValue(right = UnitValue(constant(ONE_UNIT_VALUE), UnitType.REAL))
         )
 
         // When
-        val yogaNode = flexMapper.makeYogaNode(style)
+        flexMapper.observeBindChangesFlex(style, rootViewMock, viewMock, yogaNodeMock)
+        observeSlot.captured.invoke(ONE_UNIT_VALUE)
 
         // Then
-        verify(exactly = once()) { yogaNode.setMargin(YogaEdge.RIGHT, ONE_UNIT_VALUE.toFloat()) }
+        verify(exactly = 1) { yogaNodeMock.setMargin(YogaEdge.RIGHT, ONE_UNIT_VALUE.toFloat()) }
     }
 
     @Test
     fun makeYogaNode_should_set_margin_as_ALL_and_1() {
         // Given
         val style = Style(
-            margin = EdgeValue(all = UnitValue(ONE_UNIT_VALUE, UnitType.REAL))
+            margin = EdgeValue(all = UnitValue(constant(ONE_UNIT_VALUE), UnitType.REAL))
         )
 
         // When
-        val yogaNode = flexMapper.makeYogaNode(style)
+        flexMapper.observeBindChangesFlex(style, rootViewMock, viewMock, yogaNodeMock)
+        observeSlot.captured.invoke(ONE_UNIT_VALUE)
+
 
         // Then
-        verify(exactly = once()) { yogaNode.setMargin(YogaEdge.ALL, ONE_UNIT_VALUE.toFloat()) }
+        verify(exactly = 1) { yogaNodeMock.setMargin(YogaEdge.ALL, ONE_UNIT_VALUE.toFloat()) }
     }
 
     @Test
     fun makeYogaNode_should_set_margin_as_VERTICAL_and_1() {
         // Given
         val style = Style(
-            margin = EdgeValue(vertical = UnitValue(ONE_UNIT_VALUE, UnitType.REAL))
+            margin = EdgeValue(vertical = UnitValue(constant(ONE_UNIT_VALUE), UnitType.REAL))
         )
 
         // When
-        val yogaNode = flexMapper.makeYogaNode(style)
+        flexMapper.observeBindChangesFlex(style, rootViewMock, viewMock, yogaNodeMock)
+        observeSlot.captured.invoke(ONE_UNIT_VALUE)
 
         // Then
-        verify(exactly = once()) { yogaNode.setMargin(YogaEdge.VERTICAL, ONE_UNIT_VALUE.toFloat()) }
+        verify(exactly = 1) { yogaNodeMock.setMargin(YogaEdge.VERTICAL, ONE_UNIT_VALUE.toFloat()) }
     }
 
     @Test
     fun makeYogaNode_should_set_margin_as_HORIZONTAL_and_1() {
         // Given
         val style = Style(
-            margin = EdgeValue(horizontal = UnitValue(ONE_UNIT_VALUE, UnitType.REAL))
+            margin = EdgeValue(horizontal = UnitValue(constant(ONE_UNIT_VALUE), UnitType.REAL))
         )
 
         // When
-        val yogaNode = flexMapper.makeYogaNode(style)
+        flexMapper.observeBindChangesFlex(style, rootViewMock, viewMock, yogaNodeMock)
+        observeSlot.captured.invoke(ONE_UNIT_VALUE)
 
         // Then
-        verify(exactly = once()) { yogaNode.setMargin(YogaEdge.HORIZONTAL, ONE_UNIT_VALUE.toFloat()) }
+        verify(exactly = 1) {
+            yogaNodeMock.setMargin(
+                YogaEdge.HORIZONTAL,
+                ONE_UNIT_VALUE.toFloat()
+            )
+        }
     }
 
     @Test
     fun makeYogaNode_should_set_marginPercent_as_TOP_and_1() {
         // Given
         val style = Style(
-            margin = EdgeValue(top = UnitValue(ONE_UNIT_VALUE, UnitType.PERCENT))
+            margin = EdgeValue(top = UnitValue(constant(ONE_UNIT_VALUE), UnitType.PERCENT))
         )
 
         // When
-        val yogaNode = flexMapper.makeYogaNode(style)
+        flexMapper.observeBindChangesFlex(style, rootViewMock, viewMock, yogaNodeMock)
+        observeSlot.captured.invoke(ONE_UNIT_VALUE)
 
         // Then
-        verify(exactly = once()) { yogaNode.setMarginPercent(YogaEdge.TOP, ONE_UNIT_VALUE.toFloat()) }
+        verify(exactly = 1) {
+            yogaNodeMock.setMarginPercent(
+                YogaEdge.TOP,
+                ONE_UNIT_VALUE.toFloat()
+            )
+        }
     }
 
     @Test
     fun makeYogaNode_should_set_padding_as_TOP_and_1() {
         // Given
         val style = Style(
-            padding = EdgeValue(top = UnitValue(ONE_UNIT_VALUE, UnitType.REAL))
+            padding = EdgeValue(top = UnitValue(constant(ONE_UNIT_VALUE), UnitType.REAL))
         )
 
         // When
-        val yogaNode = flexMapper.makeYogaNode(style)
+        flexMapper.observeBindChangesFlex(style, rootViewMock, viewMock, yogaNodeMock)
+        observeSlot.captured.invoke(ONE_UNIT_VALUE)
 
         // Then
-        verify(exactly = once()) { yogaNode.setPadding(YogaEdge.TOP, ONE_UNIT_VALUE.toFloat()) }
+        verify(exactly = 1) { yogaNodeMock.setPadding(YogaEdge.TOP, ONE_UNIT_VALUE.toFloat()) }
     }
 
     @Test
     fun makeYogaNode_should_set_paddingPercent_as_TOP_and_1() {
         // Given
         val style = Style(
-            padding = EdgeValue(top = UnitValue(ONE_UNIT_VALUE, UnitType.PERCENT))
+            padding = EdgeValue(top = UnitValue(constant(ONE_UNIT_VALUE), UnitType.PERCENT))
         )
 
         // When
-        val yogaNode = flexMapper.makeYogaNode(style)
+        flexMapper.observeBindChangesFlex(style, rootViewMock, viewMock, yogaNodeMock)
+        observeSlot.captured.invoke(ONE_UNIT_VALUE)
 
         // Then
-        verify(exactly = once()) { yogaNode.setPaddingPercent(YogaEdge.TOP, ONE_UNIT_VALUE.toFloat()) }
+        verify(exactly = 1) {
+            yogaNodeMock.setPaddingPercent(
+                YogaEdge.TOP,
+                ONE_UNIT_VALUE.toFloat()
+            )
+        }
     }
 
     @Test
     fun makeYogaNode_should_set_position_as_TOP_and_1() {
         // Given
         val style = Style(
-            position = EdgeValue(top = UnitValue(ONE_UNIT_VALUE, UnitType.REAL))
+            position = EdgeValue(top = UnitValue(constant(ONE_UNIT_VALUE), UnitType.REAL))
         )
 
         // When
-        val yogaNode = flexMapper.makeYogaNode(style)
+        flexMapper.observeBindChangesFlex(style, rootViewMock, viewMock, yogaNodeMock)
+        observeSlot.captured.invoke(ONE_UNIT_VALUE)
 
         // Then
-        verify(exactly = once()) { yogaNode.setPosition(YogaEdge.TOP, ONE_UNIT_VALUE.toFloat()) }
+        verify(exactly = 1) { yogaNodeMock.setPosition(YogaEdge.TOP, ONE_UNIT_VALUE.toFloat()) }
     }
 
     @Test
     fun makeYogaNode_should_set_positionPercent_as_TOP_and_1() {
         // Given
         val style = Style(
-            position = EdgeValue(top = UnitValue(ONE_UNIT_VALUE, UnitType.PERCENT))
+            position = EdgeValue(top = UnitValue(constant(ONE_UNIT_VALUE), UnitType.PERCENT))
         )
 
         // When
-        val yogaNode = flexMapper.makeYogaNode(style)
+        flexMapper.observeBindChangesFlex(style, rootViewMock, viewMock, yogaNodeMock)
+        observeSlot.captured.invoke(ONE_UNIT_VALUE)
 
         // Then
-        verify(exactly = once()) { yogaNode.setPositionPercent(YogaEdge.TOP, ONE_UNIT_VALUE.toFloat()) }
+        verify(exactly = 1) {
+            yogaNodeMock.setPositionPercent(
+                YogaEdge.TOP,
+                ONE_UNIT_VALUE.toFloat()
+            )
+        }
     }
 }

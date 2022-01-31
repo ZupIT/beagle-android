@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,22 +21,24 @@ import io.mockk.every
 import io.mockk.mockkStatic
 import io.mockk.slot
 import io.mockk.unmockkAll
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 
-class StringExtensionsKtTest{
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+class StringExtensionsKtTest {
 
     private val colorSlot = slot<String>()
 
-    @BeforeEach
+    @BeforeAll
     fun setUp() {
         mockkStatic(Color::class)
         every { Color.parseColor(capture(colorSlot)) } returns 0
     }
 
-    @AfterEach
+    @AfterAll
     fun tearDown() {
         unmockkAll()
     }

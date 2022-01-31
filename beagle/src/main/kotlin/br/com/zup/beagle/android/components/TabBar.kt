@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,10 +23,8 @@ import android.widget.FrameLayout
 import androidx.core.content.ContextCompat
 import br.com.zup.beagle.R
 import br.com.zup.beagle.android.action.Action
-import br.com.zup.beagle.android.components.utils.styleManagerFactory
 import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.context.ContextData
-import br.com.zup.beagle.android.context.valueOf
 import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.utils.dp
 import br.com.zup.beagle.android.utils.handleEvent
@@ -35,9 +33,10 @@ import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.view.custom.BeagleFlexView
 import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.android.widget.WidgetView
-import br.com.zup.beagle.annotation.RegisterWidget
-import br.com.zup.beagle.core.Style
-import br.com.zup.beagle.widget.core.Flex
+import br.com.zup.beagle.android.annotation.RegisterWidget
+import br.com.zup.beagle.android.utils.styleManagerFactory
+import br.com.zup.beagle.android.widget.core.Style
+import br.com.zup.beagle.android.widget.core.Flex
 import com.google.android.material.tabs.TabLayout
 
 private val TAB_BAR_HEIGHT = 48.dp()
@@ -59,13 +58,6 @@ data class TabBar(
     val currentTab: Bind<Int>? = null,
     val onTabSelection: List<Action>? = null,
 ) : WidgetView() {
-
-    constructor(
-        items: List<TabBarItem>,
-        styleId: String? = null,
-        currentTab: Int = 0,
-        onTabSelection: List<Action>? = null,
-    ) : this(items, styleId, valueOf(currentTab), onTabSelection)
 
     override fun buildView(rootView: RootView): View {
         val containerFlex = Style(flex = Flex(grow = 1.0))

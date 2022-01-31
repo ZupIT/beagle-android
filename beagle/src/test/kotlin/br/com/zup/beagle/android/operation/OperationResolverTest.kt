@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,17 +26,17 @@ import io.mockk.verify
 import org.json.JSONArray
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.Test
 
 @DisplayName("Given an OperationResolver object")
 internal class OperationResolverTest : BaseTest() {
 
     private lateinit var operationResolver: OperationResolver
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
         operationResolver = OperationResolver()
@@ -129,7 +129,11 @@ internal class OperationResolverTest : BaseTest() {
         @Test
         fun shouldExecuteOperation() {
             assertNotNull(
-                operationResolver.execute("union", JSONArray(listOf(1)), JSONArray(listOf(1, 2, 3, 4)))
+                operationResolver.execute(
+                    "union",
+                    JSONArray(listOf(1)),
+                    JSONArray(listOf(1, 2, 3, 4))
+                )
             )
         }
     }

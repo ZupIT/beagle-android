@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,6 @@
 
 package br.com.zup.beagle.android.data.serializer.components
 
-import br.com.zup.beagle.android.components.form.FormInput
-import br.com.zup.beagle.android.components.page.PageView
 import br.com.zup.beagle.android.widget.UndefinedWidget
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.DisplayName
@@ -45,33 +43,6 @@ class UndefinedComponentSerializerTest : BaseServerDrivenComponentSerializerTest
             Assertions.assertTrue(deserializedComponent is UndefinedWidget)
         }
 
-        @DisplayName("Then should return correct object with UndefinedWidget of type InputWidget")
-        @Test
-        fun testUndefinedComponentDeserializationWithInputWidget() {
-            // Given
-            val json = makeUndefinedComponentOfTypeInputWidgetJson()
-
-            // When
-            val deserializedComponent = deserialize(json) as FormInput
-
-            // Then
-            Assertions.assertNotNull(deserializedComponent)
-            Assertions.assertTrue(deserializedComponent.child is UndefinedWidget)
-        }
-
-        @DisplayName("Then should return correct object with UndefinedWidget of type PageIndicator")
-        @Test
-        fun testUndefinedComponentDeserializationWithPageIndicator() {
-            // Given
-            val json = makeUndefinedComponentOfTypePageIndicatorComponentJson()
-
-            // When
-            val deserializedComponent = deserialize(json) as PageView
-
-            // Then
-            Assertions.assertNotNull(deserializedComponent)
-            Assertions.assertTrue(deserializedComponent.pageIndicator is UndefinedWidget)
-        }
     }
 
     @DisplayName("When try to serialize object")
@@ -84,24 +55,6 @@ class UndefinedComponentSerializerTest : BaseServerDrivenComponentSerializerTest
             testSerializeObject(
                 makeUndefinedWidgetJson(),
                 makeObjectUndefinedComponent()
-            )
-        }
-
-        @DisplayName("Then should return correct json with UndefinedWidget of type InputWidget")
-        @Test
-        fun testUndefinedComponentSerializationWithInputWidget() {
-            testSerializeObject(
-                makeUndefinedComponentOfTypeInputWidgetJson(),
-                makeObjectUndefinedComponentOfTypeInputWidget()
-            )
-        }
-
-        @DisplayName("Then should return correct json with UndefinedWidget of type PageIndicator")
-        @Test
-        fun testUndefinedComponentSerializationWithPageIndicator() {
-            testSerializeObject(
-                makeUndefinedComponentOfTypePageIndicatorComponentJson(),
-                makeObjectUndefinedComponentOfTypePageIndicatorComponent()
             )
         }
     }
@@ -118,35 +71,6 @@ class UndefinedComponentSerializerTest : BaseServerDrivenComponentSerializerTest
     }
 """
 
-    private fun makeUndefinedComponentOfTypeInputWidgetJson() = """
-    {
-        "_beagleComponent_":"beagle:forminput",
-        "name":"name",
-        "child":{
-            "_beagleComponent_":"beagle:undefinedwidget"
-        }
-    }
-"""
-
-    private fun makeUndefinedComponentOfTypePageIndicatorComponentJson() = """
-    {
-        "_beagleComponent_":"beagle:pageview",
-        "children":[],
-        "pageIndicator":{
-            "_beagleComponent_":"beagle:undefinedwidget"
-        }
-    }
-"""
-
     private fun makeObjectUndefinedComponent() = UndefinedWidget()
 
-    private fun makeObjectUndefinedComponentOfTypeInputWidget() = FormInput(
-        name = "name",
-        child = UndefinedWidget()
-    )
-
-    private fun makeObjectUndefinedComponentOfTypePageIndicatorComponent() = PageView(
-        children = listOf(),
-        pageIndicator = UndefinedWidget()
-    )
 }

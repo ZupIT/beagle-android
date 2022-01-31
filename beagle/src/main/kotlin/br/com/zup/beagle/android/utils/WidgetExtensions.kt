@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,18 +17,16 @@
 package br.com.zup.beagle.android.utils
 
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import br.com.zup.beagle.R
 import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.view.ViewFactory
-import br.com.zup.beagle.android.widget.ActivityRootView
 import br.com.zup.beagle.android.widget.FragmentRootView
 import br.com.zup.beagle.android.widget.RootView
-import br.com.zup.beagle.core.IdentifierComponent
-import br.com.zup.beagle.core.ServerDrivenComponent
+import br.com.zup.beagle.android.widget.core.IdentifierComponent
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 
 /**
  * Execute a list of actions and create an implicit context with eventName and eventValue.
@@ -57,29 +55,6 @@ fun ServerDrivenComponent.handleEvent(
 }
 
 /**
- * Execute a list of actions and create an implicit context with eventName and eventValue.
- * @property rootView from buildView
- * @property origin view that triggered the action
- * @property actions is the list of actions to be executed
- * @property eventName is the name of event to be referenced inside the @property action list
- * @property eventValue is the value that the eventName name has created,
- * this could be a primitive or a object that will be serialized to JSON
- */
-@Deprecated("It was deprecated in version 1.1.0 and will be removed in a future version." +
-    " Use handleEvent without eventName and eventValue or with ContextData for create a implicit context.",
-    ReplaceWith("handleEvent(rootView, origin, actions)"))
-fun ServerDrivenComponent.handleEvent(
-    rootView: RootView,
-    origin: View,
-    actions: List<Action>,
-    eventName: String,
-    eventValue: Any? = null,
-) {
-    eventValue?.let { handleEvent(rootView, origin, actions, ContextData(eventName, eventValue)) }
-        ?: handleEvent(rootView, origin, actions)
-}
-
-/**
  * Execute an action and create the implicit context with eventName and eventValue (optional).
  * @property rootView from buildView
  * @property origin view that triggered the action
@@ -102,29 +77,6 @@ fun ServerDrivenComponent.handleEvent(
         context,
         analyticsValue
     )
-}
-
-/**
- * Execute an action and create the implicit context with eventName and eventValue (optional).
- * @property rootView from buildView
- * @property origin view that triggered the action
- * @property action is the action to be executed
- * @property eventName is the name of event to be referenced inside the @property action list
- * @property eventValue is the value that the eventName name has created,
- * this could be a primitive or a object that will be serialized to JSON
- */
-@Deprecated("It was deprecated in version 1.1.0 and will be removed in a future version." +
-    " Use handleEvent without eventName and eventValue or with ContextData for create a implicit context.",
-    ReplaceWith("handleEvent(rootView, origin, action)"))
-fun ServerDrivenComponent.handleEvent(
-    rootView: RootView,
-    origin: View,
-    action: Action,
-    eventName: String,
-    eventValue: Any? = null,
-) {
-    eventValue?.let { handleEvent(rootView, origin, action, ContextData(eventName, eventValue)) }
-        ?: handleEvent(rootView, origin, action)
 }
 
 /**
@@ -153,44 +105,7 @@ internal fun <T> internalObserveBindChanges(
     bind.observe(rootView, view, observes)
 }
 
-/**
- * Transform your Component to a view.
- * @property activity <p>is the reference for your activity.
- * Make sure to use this method if you are inside a Activity because of the lifecycle</p>
- */
-@Deprecated(
-    "It was deprecated in version 1.10.0 and will be removed in a future version." +
-            " Use the load view with screenJson.",
-    ReplaceWith(
-        "viewGroup.loadView(activity, screenJson, screenId)"
-    )
-)
-fun ServerDrivenComponent.toView(
-    activity: AppCompatActivity,
-    idView: Int = R.id.beagle_default_id,
-    screenIdentifier: String? = null,
-): View =
-    this.toView(
-        ActivityRootView(
-            activity,
-            idView,
-            this.getServerDrivenIdentifier(screenIdentifier)
-        )
-    )
-
-/**
- * Transform your Component to a view.
- * @property fragment <p>is the reference for your fragment.
- * Make sure to use this method if you are inside a Fragment because of the lifecycle</p>
- */
-@Deprecated(
-    "It was deprecated in version 1.10.0 and will be removed in a future version." +
-            " Use the load view with screenJson.",
-    ReplaceWith(
-        "viewGroup.loadView(fragment, screenJson, screenId)"
-    )
-)
-fun ServerDrivenComponent.toView(
+internal fun ServerDrivenComponent.toView(
     fragment: Fragment,
     idView: Int = R.id.beagle_default_id,
     screenIdentifier: String? = null,

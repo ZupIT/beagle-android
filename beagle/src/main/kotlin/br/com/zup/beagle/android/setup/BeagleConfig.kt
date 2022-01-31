@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,29 +33,6 @@ enum class Environment {
 }
 
 /**
- * Object responsible for managing the cache of Beagle requests.
- *
- * @param enabled Enables or disables memory and disk caching.
- * @param maxAge Time in seconds that memory cache will live.
- * @param memoryMaximumCapacity Memory LRU cache size. It represents number of screens that will be in memory.
- * @param size Memory LRU cache size.
- */
-data class Cache(
-    val enabled: Boolean,
-    val maxAge: Long,
-    @Deprecated("It was deprecated in version 1.2.2 and will be removed in a future version." +
-        " Use size instead.",
-        replaceWith = ReplaceWith("size"))
-    val memoryMaximumCapacity: Int = 0,
-    val size: Int = 0,
-) {
-    @Deprecated("It was deprecated in version 1.2.2 and will be removed in a future version.",
-        replaceWith = ReplaceWith("Cache(enabled, maxAge, size=your_cache_size)"))
-    constructor(enabled: Boolean, maxAge: Long, memoryMaximumCapacity: Int) :
-        this(enabled, maxAge, memoryMaximumCapacity, 0)
-}
-
-/**
  * Interface that provides initial beagle configuration attributes.
  */
 interface BeagleConfig {
@@ -68,17 +45,4 @@ interface BeagleConfig {
      * Informs the base URL used in Beagle in the application.
      */
     val baseUrl: String
-
-    /**
-     * Object responsible for managing the cache of Beagle requests.
-     */
-    val cache: Cache
-
-    /**
-     * Attribute that enables or disables all logs that Beagle generates.
-     */
-
-    @Deprecated("It was deprecated in version 1.7.0 and will be removed in a future version." +
-        " If you don't want to use logger, just pass null in BeagleLogger or configure it in your application")
-    val isLoggingEnabled: Boolean
 }

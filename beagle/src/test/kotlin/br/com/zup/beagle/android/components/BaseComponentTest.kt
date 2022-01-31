@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,24 +22,24 @@ import br.com.zup.beagle.android.engine.renderer.ViewRenderer
 import br.com.zup.beagle.android.engine.renderer.ViewRendererFactory
 import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.view.custom.BeagleFlexView
-import br.com.zup.beagle.core.ServerDrivenComponent
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkConstructor
 import io.mockk.mockkObject
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.BeforeAll
 
 abstract class BaseComponentTest : BaseTest() {
 
-    internal val viewRender: ViewRenderer<ServerDrivenComponent> = mockk()
+    private val viewRender: ViewRenderer<ServerDrivenComponent> = mockk()
 
     internal val beagleFlexView: BeagleFlexView = mockk(relaxed = true)
 
-    protected val view = mockk<View>()
+    protected val view = mockk<View>(relaxed = true)
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
 
@@ -49,6 +49,7 @@ abstract class BaseComponentTest : BaseTest() {
         every { anyConstructed<ViewRendererFactory>().make(any()) } returns viewRender
         every { ViewFactory.makeBeagleFlexView(any()) } returns beagleFlexView
         every { ViewFactory.makeBeagleFlexView(any(), any()) } returns beagleFlexView
+        every { ViewFactory.makeBeagleFlexView(any(), any(), any()) } returns beagleFlexView
         every { viewRender.build(any()) } returns view
         every { view.setTag(any(), any()) } just Runs
     }

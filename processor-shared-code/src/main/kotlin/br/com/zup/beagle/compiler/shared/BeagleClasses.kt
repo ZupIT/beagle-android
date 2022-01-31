@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,16 +22,6 @@ val ANDROID_OPERATION = BeagleClass(
 )
 
 val WIDGET_VIEW = BeagleClass(
-    "br.com.zup.beagle.android.widget",
-    "WidgetView"
-)
-
-val BEAGLE_INPUT_WIDGET = BeagleClass(
-    "br.com.zup.beagle.android.components.form",
-    "InputWidget"
-)
-
-val BEAGLE_PAGE_INDICATOR = BeagleClass(
-    "br.com.zup.beagle.android.components.page",
-    "PageIndicatorComponent"
+    packageName = "br.com.zup.beagle.android.widget",
+    className = "WidgetView"
 )

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,7 +56,8 @@ internal class BeagleImageDownloaderTest : BeagleSdkBaseTest() {
         fun testGenerateImageDownloaderCorrect() {
             // GIVEN
             val kotlinSource = SourceFile.kotlin(
-                FILE_NAME, BEAGLE_CONFIG_IMPORTS + VALID_IMAGE_DOWNLOAD + SIMPLE_BEAGLE_CONFIG)
+                FILE_NAME, BEAGLE_CONFIG_IMPORTS + VALID_IMAGE_DOWNLOAD + SIMPLE_BEAGLE_CONFIG
+            )
 
             // WHEN
             val compilationResult = compile(kotlinSource, BeagleAnnotationProcessor(), tempPath)
@@ -96,7 +97,7 @@ internal class BeagleImageDownloaderTest : BeagleSdkBaseTest() {
             val kotlinSource = SourceFile.kotlin(
                 FILE_NAME,
                 BEAGLE_CONFIG_IMPORTS + IMAGE_DOWNLOAD_IMPORT +
-                    VALID_THIRD_IMAGE_DOWNLOAD + SIMPLE_BEAGLE_CONFIG
+                        VALID_THIRD_IMAGE_DOWNLOAD + SIMPLE_BEAGLE_CONFIG
             )
 
             // WHEN
@@ -116,7 +117,6 @@ internal class BeagleImageDownloaderTest : BeagleSdkBaseTest() {
         }
     }
 
-
     @DisplayName("When register image downloader")
     @Nested
     inner class InvalidImageDownloader {
@@ -126,7 +126,8 @@ internal class BeagleImageDownloaderTest : BeagleSdkBaseTest() {
         fun testDuplicate() {
             // GIVEN
             val kotlinSource = SourceFile.kotlin(
-                FILE_NAME, BEAGLE_CONFIG_IMPORTS + LIST_OF_IMAGE_DOWNLOAD + SIMPLE_BEAGLE_CONFIG)
+                FILE_NAME, BEAGLE_CONFIG_IMPORTS + LIST_OF_IMAGE_DOWNLOAD + SIMPLE_BEAGLE_CONFIG
+            )
 
             // WHEN
             val compilationResult = compile(kotlinSource, BeagleAnnotationProcessor(), tempPath)
@@ -134,7 +135,11 @@ internal class BeagleImageDownloaderTest : BeagleSdkBaseTest() {
 
             // THEN
             assertEquals(KotlinCompilation.ExitCode.COMPILATION_ERROR, compilationResult.exitCode)
-            Assertions.assertTrue(compilationResult.messages.contains(MESSAGE_DUPLICATE_IMAGE_DOWNLOADER))
+            Assertions.assertTrue(
+                compilationResult.messages.contains(
+                    MESSAGE_DUPLICATE_IMAGE_DOWNLOADER
+                )
+            )
         }
 
         @Test
@@ -153,14 +158,18 @@ internal class BeagleImageDownloaderTest : BeagleSdkBaseTest() {
             val kotlinSource = SourceFile.kotlin(
                 FILE_NAME,
                 BEAGLE_CONFIG_IMPORTS + VALID_IMAGE_DOWNLOAD +
-                    VALID_THIRD_IMAGE_DOWNLOAD + SIMPLE_BEAGLE_CONFIG
+                        VALID_THIRD_IMAGE_DOWNLOAD + SIMPLE_BEAGLE_CONFIG
             )
 
             // WHEN
             val compilationResult = compile(kotlinSource, BeagleAnnotationProcessor(), tempPath)
 
             // THEN
-            Assertions.assertTrue(compilationResult.messages.contains(MESSAGE_DUPLICATE_IMAGE_DOWNLOADER_REGISTRAR))
+            Assertions.assertTrue(
+                compilationResult.messages.contains(
+                    MESSAGE_DUPLICATE_IMAGE_DOWNLOADER_REGISTRAR
+                )
+            )
             assertEquals(KotlinCompilation.ExitCode.COMPILATION_ERROR, compilationResult.exitCode)
         }
 
@@ -170,16 +179,16 @@ internal class BeagleImageDownloaderTest : BeagleSdkBaseTest() {
         private const val FILE_NAME = "File1.kt"
         private val REGEX_REMOVE_SPACE = "\\s".toRegex()
         private const val MESSAGE_DUPLICATE_IMAGE_DOWNLOADER =
-            "error: BeagleImageDownloader defined multiple times: " +
-                "1 - br.com.test.beagle.ImageDownloaderTestTwo " +
-                "2 - br.com.test.beagle.ImageDownloaderTest. " +
-                "You must remove one implementation from the application."
+            "error: BeagleImageDownloader defined multiple times: "
+                .plus("1 - br.com.test.beagle.ImageDownloaderTestTwo ")
+                .plus("2 - br.com.test.beagle.ImageDownloaderTest. ")
+                .plus("You must remove one implementation from the application.")
 
         private const val MESSAGE_DUPLICATE_IMAGE_DOWNLOADER_REGISTRAR =
-            "error: BeagleImageDownloader defined multiple times: " +
-                "1 - br.com.test.beagle.ImageDownloaderTest " +
-                "2 - br.com.test.beagle.ImageDownloaderTestThree. " +
-                "You must remove one implementation from the application."
+            "error: BeagleImageDownloader defined multiple times: "
+                .plus("1 - br.com.test.beagle.ImageDownloaderTest ")
+                .plus("2 - br.com.test.beagle.ImageDownloaderTestThree. ")
+                .plus("You must remove one implementation from the application.")
     }
 
 }

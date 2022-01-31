@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,31 +17,25 @@
 package br.com.zup.beagle.android.imagedownloader
 
 import android.widget.ImageView
-import br.com.zup.beagle.android.extensions.once
-import br.com.zup.beagle.android.setup.BeagleEnvironment
-import br.com.zup.beagle.android.widget.RootView
-import io.mockk.every
+import br.com.zup.beagle.android.BaseTest
 import io.mockk.mockk
-import io.mockk.mockkObject
 import io.mockk.verify
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 
-internal class DefaultImageDownloaderTest {
+internal class DefaultImageDownloaderTest : BaseTest() {
 
     private lateinit var defaultImageDownloader: DefaultImageDownloader
     private val imageView: ImageView = mockk(relaxed = true)
-    private val rootView: RootView = mockk(relaxed = true)
 
-    @BeforeEach
-    fun setUp() {
-        mockkObject(BeagleEnvironment)
-        every { BeagleEnvironment.beagleSdk } returns mockk(relaxed = true)
+    @BeforeAll
+    override fun setUp() {
+        super.setUp()
         defaultImageDownloader = DefaultImageDownloader()
     }
 
     @Test
-    fun `GIVEN url WHEN download image THEN call post image`()  {
+    fun `GIVEN url WHEN download image THEN call post image`() {
         // Given
         val url = "https://vitafelice.com.br/wp-content/uploads/2019/01/beagle.jpg"
 
@@ -49,6 +43,6 @@ internal class DefaultImageDownloaderTest {
         defaultImageDownloader.download(url, imageView, rootView)
 
         // Then
-        verify(exactly = once()) { imageView.post(any()) }
+        verify(exactly = 1) { imageView.post(any()) }
     }
 }

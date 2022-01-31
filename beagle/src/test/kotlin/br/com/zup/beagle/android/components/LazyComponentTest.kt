@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,14 +23,13 @@ import android.widget.LinearLayout
 import androidx.core.view.get
 import androidx.viewbinding.ViewBindings
 import br.com.zup.beagle.R
-import br.com.zup.beagle.android.extensions.once
 import br.com.zup.beagle.android.testutil.RandomData
 import br.com.zup.beagle.android.utils.BeagleRetry
 import br.com.zup.beagle.android.view.ServerDrivenState
 import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.view.custom.BeagleView
 import br.com.zup.beagle.android.view.custom.OnServerStateChanged
-import br.com.zup.beagle.core.ServerDrivenComponent
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
@@ -40,7 +39,7 @@ import io.mockk.slot
 import io.mockk.verify
 import io.mockk.verifyOrder
 import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -59,7 +58,7 @@ class LazyComponentTest : BaseComponentTest() {
 
     private lateinit var lazyComponent: LazyComponent
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
 
@@ -105,7 +104,7 @@ class LazyComponentTest : BaseComponentTest() {
             lazyComponent.buildView(rootView)
 
             // Then
-            verify(exactly = once()) {
+            verify(exactly = 1) {
                 beagleView.addServerDrivenComponent(initialState)
                 beagleView.updateView(URL, initialStateView)
 
@@ -125,7 +124,7 @@ class LazyComponentTest : BaseComponentTest() {
             slot.captured.invoke(ServerDrivenState.Error(mockk(), mockk()))
 
             // Then
-            verify(exactly = once()) {
+            verify(exactly = 1) {
                 beagleView.addView(any())
             }
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +34,11 @@ internal class OnInitViewModel : ViewModel() {
         } ?: run {
             onInitStatusByViewId[onInitiableViewId] = OnInitStatus(onInitCalled = onInitCalled)
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        markToRerun()
     }
 
     fun setOnInitFinished(onInitiableViewId: Int, onInitFinished: Boolean) {

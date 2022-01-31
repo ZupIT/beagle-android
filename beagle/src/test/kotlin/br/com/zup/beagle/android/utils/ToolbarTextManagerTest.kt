@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,7 +45,8 @@ class ToolbarTextManagerTest {
         every { navigationBarMock.title } returns "title"
 
         // WHEN
-        val generatedTextView = toolbarTextManager.generateTitle(application, navigationBarMock, textAppearanceMock)
+        val generatedTextView =
+            toolbarTextManager.generateTitle(application, navigationBarMock, textAppearanceMock)
 
         // THEN
         Assertions.assertEquals(generatedTextView.id, R.id.beagle_toolbar_text)
@@ -57,7 +58,12 @@ class ToolbarTextManagerTest {
         every { navigationBarMock.title } returns "title"
 
         // WHEN
-        val generatedTextView = toolbarTextManager.generateTitle(application, navigationBarMock, textAppearanceMock, R.id.beagle_toolbar_text)
+        val generatedTextView = toolbarTextManager.generateTitle(
+            application,
+            navigationBarMock,
+            textAppearanceMock,
+            R.id.beagle_toolbar_text
+        )
 
         // THEN
         Assertions.assertEquals(generatedTextView.gravity, Gravity.CENTER)
@@ -71,7 +77,12 @@ class ToolbarTextManagerTest {
         every { navigationBarMock.title } returns "title"
 
         // WHEN
-        val generatedTextView = toolbarTextManager.generateTitle(application, navigationBarMock, textAppearanceMock, R.id.beagle_toolbar_text)
+        val generatedTextView = toolbarTextManager.generateTitle(
+            application,
+            navigationBarMock,
+            textAppearanceMock,
+            R.id.beagle_toolbar_text
+        )
 
         // THEN
         Assertions.assertEquals(generatedTextView.text, "title")

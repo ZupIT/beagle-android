@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,10 @@
 package br.com.zup.beagle.android.view.viewmodel
 
 import androidx.lifecycle.Observer
+import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.action.SendRequestInternal
 import br.com.zup.beagle.android.data.ActionRequester
 import br.com.zup.beagle.android.exception.BeagleApiException
-import br.com.zup.beagle.android.extensions.once
 import br.com.zup.beagle.android.networking.ResponseData
 import br.com.zup.beagle.android.testutil.CoroutinesTestExtension
 import br.com.zup.beagle.android.testutil.InstantExecutorExtension
@@ -33,17 +33,15 @@ import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkStatic
-import io.mockk.unmockkAll
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExperimentalCoroutinesApi
 @ExtendWith(InstantExecutorExtension::class, CoroutinesTestExtension::class)
-class ActionRequestViewModelTest {
+class ActionRequestViewModelTest : BaseTest() {
 
     private val actionRequester: ActionRequester = mockk()
 
@@ -53,8 +51,10 @@ class ActionRequestViewModelTest {
 
     private lateinit var viewModel: ActionRequestViewModel
 
-    @BeforeEach
-    fun setUp() {
+    @BeforeAll
+    override fun setUp() {
+        super.setUp()
+
         MockKAnnotations.init(this)
 
         mockkStatic("br.com.zup.beagle.android.view.mapper.SendRequestActionMapperKt")
@@ -64,11 +64,6 @@ class ActionRequestViewModelTest {
         every { observer.onChanged(any()) } just Runs
     }
 
-    @AfterEach
-    fun tearDown() {
-        unmockkAll()
-    }
-
     @Test
     fun `should emit success when fetch data`() {
         // Given
@@ -76,13 +71,13 @@ class ActionRequestViewModelTest {
         val responseMapped: Response = mockk()
         every { action.toRequestData() } returns mockk()
         every { response.toResponse() } returns responseMapped
-        coEvery { actionRequester.fetchData(any()) } returns response
+        coEvery { actionRequester.fetchAction(any()) } returns response
 
         // When
         viewModel.fetch(action).observeForever(observer)
 
         // Then
-        verify(exactly = once()) {
+        verify(exactly = 1) {
             observer.onChanged(FetchViewState.Success(responseMapped))
         }
     }
@@ -95,14 +90,14 @@ class ActionRequestViewModelTest {
         val responseMapped: Response = mockk()
         every { action.toRequestData() } returns mockk()
         every { responseData.toResponse() } returns responseMapped
-        every { error.responseData } returns  responseData
-        coEvery { actionRequester.fetchData(any()) } throws error
+        every { error.responseData } returns responseData
+        coEvery { actionRequester.fetchAction(any()) } throws error
 
         // When
         viewModel.fetch(action).observeForever(observer)
 
         // Then
-        verify(exactly = once()) {
+        verify(exactly = 1) {
             observer.onChanged(FetchViewState.Error(responseMapped))
         }
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
@@ -33,7 +32,7 @@ import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
 import br.com.zup.beagle.R
 import br.com.zup.beagle.android.components.layout.NavigationBar
 import br.com.zup.beagle.android.components.layout.NavigationBarItem
-import br.com.zup.beagle.android.components.layout.ScreenComponent
+import br.com.zup.beagle.android.components.layout.Screen
 import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.setup.DesignSystem
 import br.com.zup.beagle.android.view.BeagleActivity
@@ -59,12 +58,17 @@ internal class ToolbarManager(private val toolbarTextManager: ToolbarTextManager
                     navigationContentDescription = backButtonAccessibilityLabel
                 }
                 navigationBar.backButtonAccessibility?.isHeader?.let { isHeader ->
-                    ViewCompat.setAccessibilityDelegate(this, object : AccessibilityDelegateCompat() {
-                        override fun onInitializeAccessibilityNodeInfo(host: View, info: AccessibilityNodeInfoCompat) {
-                            super.onInitializeAccessibilityNodeInfo(host, info)
-                            info.isHeading = isHeader
-                        }
-                    })
+                    ViewCompat.setAccessibilityDelegate(
+                        this,
+                        object : AccessibilityDelegateCompat() {
+                            override fun onInitializeAccessibilityNodeInfo(
+                                host: View,
+                                info: AccessibilityNodeInfoCompat
+                            ) {
+                                super.onInitializeAccessibilityNodeInfo(host, info)
+                                info.isHeading = isHeader
+                            }
+                        })
                 }
 
                 setNavigationOnClickListener {
@@ -73,22 +77,6 @@ internal class ToolbarManager(private val toolbarTextManager: ToolbarTextManager
 
                 setupNavigationIcon(context, this)
 
-            }
-        }
-    }
-
-    fun configureToolbar(
-        rootView: RootView,
-        navigationBar: NavigationBar,
-        container: BeagleFlexView,
-        screenComponent: ScreenComponent,
-    ) {
-        (rootView.getContext() as BeagleActivity).getToolbar().apply {
-            visibility = View.VISIBLE
-            menu.clear()
-            setAttributeToolbar(rootView.getContext(), this, navigationBar)
-            navigationBar.navigationBarItems?.let { items ->
-                configToolbarItems(rootView, this, items, container, screenComponent)
             }
         }
     }
@@ -179,8 +167,24 @@ internal class ToolbarManager(private val toolbarTextManager: ToolbarTextManager
     }
 
     private fun removePreviousToolbarTitle(toolbar: Toolbar) {
-        val centeredTitle = toolbar.findViewById<TextView>(R.id.beagle_toolbar_text)
+        val centeredTitle = toolbar.findViewById<View>(R.id.beagle_toolbar_text)
         toolbar.removeView(centeredTitle)
+    }
+
+    fun configureToolbar(
+        rootView: RootView,
+        navigationBar: NavigationBar,
+        container: BeagleFlexView,
+        screen: Screen,
+    ) {
+        (rootView.getContext() as BeagleActivity).getToolbar().apply {
+            visibility = View.VISIBLE
+            menu.clear()
+            setAttributeToolbar(rootView.getContext(), this, navigationBar)
+            navigationBar.navigationBarItems?.let { items ->
+                configToolbarItems(rootView, this, items, container, screen)
+            }
+        }
     }
 
     private fun configToolbarItems(
@@ -188,25 +192,28 @@ internal class ToolbarManager(private val toolbarTextManager: ToolbarTextManager
         toolbar: Toolbar,
         items: List<NavigationBarItem>,
         container: BeagleFlexView,
-        screenComponent: ScreenComponent,
+        screen: Screen,
     ) {
         val designSystem = BeagleEnvironment.beagleSdk.designSystem
         for (i in items.indices) {
-            toolbar.menu.add(Menu.NONE, items[i].id?.toAndroidId() ?: i, Menu.NONE, items[i].text).apply {
-                setOnMenuItemClickListener {
-                    val action = items[i].action
-                    action.handleEvent(rootView, toolbar, action)
-                    return@setOnMenuItemClickListener true
-                }
+            toolbar.menu.add(Menu.NONE, i, Menu.NONE, items[i].text)
+                .apply {
+                    setOnMenuItemClickListener {
+                        val onPressEventList = items[i].onPress
+                        onPressEventList.forEach { action ->
+                            action.handleEvent(rootView, toolbar, action)
+                        }
+                        return@setOnMenuItemClickListener true
+                    }
 
-                setContentDescription(items, i)
+                    setContentDescription(items, i)
 
-                if (items[i].image == null) {
-                    setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
-                } else {
-                    configMenuItem(designSystem, items, i, rootView, container, screenComponent)
+                    if (items[i].image == null) {
+                        setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+                    } else {
+                        configMenuItem(designSystem, items, i, rootView, container, screen)
+                    }
                 }
-            }
         }
     }
 
@@ -228,13 +235,13 @@ internal class ToolbarManager(private val toolbarTextManager: ToolbarTextManager
         i: Int,
         rootView: RootView,
         container: BeagleFlexView,
-        screenComponent: ScreenComponent,
+        screen: Screen,
     ) {
         design?.let { designSystem ->
             items[i].image?.let { image ->
                 setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
 
-                screenComponent.observeBindChanges(rootView, container, image.mobileId) { mobileId ->
+                screen.observeBindChanges(rootView, container, image) { mobileId ->
                     mobileId?.let {
                         icon = designSystem.image(it)?.let { iconRes ->
                             ResourcesCompat.getDrawable(
@@ -245,8 +252,6 @@ internal class ToolbarManager(private val toolbarTextManager: ToolbarTextManager
                         }
                     }
                 }
-
-
             }
         }
     }
@@ -258,7 +263,8 @@ internal class ToolbarManager(private val toolbarTextManager: ToolbarTextManager
 
     private fun setupNavigationIcon(context: Context, toolbar: Toolbar) {
         if (toolbar.navigationIcon == null) {
-            toolbar.navigationIcon = getDrawableFromAttribute(context, androidx.appcompat.R.attr.homeAsUpIndicator)
+            toolbar.navigationIcon =
+                getDrawableFromAttribute(context, androidx.appcompat.R.attr.homeAsUpIndicator)
         }
     }
 }

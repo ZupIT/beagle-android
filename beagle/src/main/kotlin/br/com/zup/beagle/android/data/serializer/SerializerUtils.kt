@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,8 @@
 
 package br.com.zup.beagle.android.data.serializer
 
-import br.com.zup.beagle.annotation.RegisterAction
-import br.com.zup.beagle.annotation.RegisterWidget
-import java.util.Locale
+import br.com.zup.beagle.android.annotation.RegisterAction
+import br.com.zup.beagle.android.annotation.RegisterWidget
 
 private const val BEAGLE_NAMESPACE = "beagle"
 
@@ -59,5 +58,5 @@ internal fun generateNameSpaceToWidget(appNameSpace: String, clazz: Class<*>): S
 internal fun createNamespace(appNameSpace: String, clazz: Class<*>, name: String): String {
     val typeName = if (name.isEmpty()) clazz.simpleName else name
 
-    return "$appNameSpace:${typeName.toLowerCase(Locale.getDefault())}"
+    return "$appNameSpace:${typeName.lowercase()}"
 }

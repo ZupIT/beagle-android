@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 package br.com.zup.beagle.android.engine.mapper
 
 import android.widget.ImageView
-import br.com.zup.beagle.widget.core.ImageContentMode
+import br.com.zup.beagle.android.widget.core.ImageContentMode
 
 class ViewMapper {
 

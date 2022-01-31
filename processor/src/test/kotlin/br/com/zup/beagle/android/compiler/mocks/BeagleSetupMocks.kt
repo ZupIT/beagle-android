@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,33 +24,26 @@ const val COMPLETE_BEAGLE_CUSTOM_CLASS =
         import br.com.zup.beagle.android.setup.BeagleConfig
         import br.com.zup.beagle.android.annotation.RegisterController
         import br.com.zup.beagle.android.view.BeagleActivity
-        import br.com.zup.beagle.analytics.Analytics
-        import br.com.zup.beagle.newanalytics.AnalyticsProvider
-        import br.com.zup.beagle.annotation.RegisterAction
+        import br.com.zup.beagle.android.annotation.RegisterAction
         import br.com.zup.beagle.android.action.Action
+        import br.com.zup.beagle.android.analytics.AnalyticsProvider
         import br.com.zup.beagle.android.annotation.RegisterBeagleAdapter
         import br.com.zup.beagle.android.data.serializer.adapter.generic.BeagleTypeAdapter
-        import br.com.zup.beagle.android.annotation.RegisterValidator
-        import br.com.zup.beagle.android.components.form.core.Validator
         import br.com.zup.beagle.android.navigation.DeepLinkHandler
         import br.com.zup.beagle.android.setup.DesignSystem
-        import br.com.zup.beagle.android.action.FormLocalActionHandler
-        import br.com.zup.beagle.android.networking.HttpClient
         import br.com.zup.beagle.android.networking.HttpClientFactory
+        import br.com.zup.beagle.android.networking.ViewClient
         import br.com.zup.beagle.android.imagedownloader.BeagleImageDownloader
         import br.com.zup.beagle.android.logger.BeagleLogger
-        import br.com.zup.beagle.annotation.RegisterOperation
+        import br.com.zup.beagle.android.networking.HttpClient
+        import br.com.zup.beagle.android.annotation.RegisterOperation
         import br.com.zup.beagle.android.operation.Operation
-        import br.com.zup.beagle.android.store.StoreHandler
         import br.com.zup.beagle.android.networking.urlbuilder.UrlBuilder
-        import br.com.zup.beagle.annotation.RegisterWidget
+        import br.com.zup.beagle.android.annotation.RegisterWidget
         import br.com.zup.beagle.android.widget.WidgetView
         
         @BeagleComponent
         class BeagleConfigImpl: BeagleConfig { }
-        
-        @BeagleComponent
-        class AnalyticsTest: Analytics { }
         
         @BeagleComponent
         class AnalyticsProviderTest: AnalyticsProvider { }
@@ -69,27 +62,16 @@ const val COMPLETE_BEAGLE_CUSTOM_CLASS =
             override fun fromJson(json: String): Person = object: Person {}
         
             override fun toJson(type: Person): String  = ""
-        }
-        
-        @RegisterValidator("text-is-not-blank")
-        class TextNotBlankValidator : Validator<String, String> {
-            override fun isValid(input: String, widget: String): Boolean {
-                return !input.isBlank()
-            }
-        }
+        } 
         
         @BeagleComponent
         class DeepLinkHandlerTest: DeepLinkHandler { }
         
         @BeagleComponent
-        class DesignSystemTest: DesignSystem { }
+        class DesignSystemTest: DesignSystem { }       
         
-        @BeagleComponent
-        class FormLocalActionHandlerTest: FormLocalActionHandler { }
-        
-        @BeagleComponent
         class HttpClientTest: HttpClient { }
-        
+              
         @BeagleComponent
         class HttpClientFactoryTest: HttpClientFactory {
          override fun create(): HttpClient {
@@ -107,7 +89,7 @@ const val COMPLETE_BEAGLE_CUSTOM_CLASS =
         class OperationTest: Operation { }
         
         @BeagleComponent
-        class StoreHandlerTest: StoreHandler { }
+        class ViewClientTest : ViewClient { }
         
         @BeagleComponent
         class UrlBuilderTest: UrlBuilder { }
@@ -121,27 +103,23 @@ const val BEAGLE_SETUP_COMPLETE =
         @file:Suppress("OverridingDeprecatedMember", "DEPRECATION", "UNCHECKED_CAST")
 
         package br.com.test.beagle
-        
-        import br.com.zup.beagle.analytics.Analytics
+
         import br.com.zup.beagle.android.`data`.serializer.adapter.generic.TypeAdapterResolver
         import br.com.zup.beagle.android.action.Action
-        import br.com.zup.beagle.android.action.FormLocalActionHandler
-        import br.com.zup.beagle.android.components.form.core.ValidatorHandler
+        import br.com.zup.beagle.android.analytics.AnalyticsProvider
         import br.com.zup.beagle.android.imagedownloader.BeagleImageDownloader
         import br.com.zup.beagle.android.logger.BeagleLogger
         import br.com.zup.beagle.android.navigation.BeagleControllerReference
         import br.com.zup.beagle.android.navigation.DeepLinkHandler
-        import br.com.zup.beagle.android.networking.HttpClient
         import br.com.zup.beagle.android.networking.HttpClientFactory
+        import br.com.zup.beagle.android.networking.ViewClient
         import br.com.zup.beagle.android.networking.urlbuilder.UrlBuilder
         import br.com.zup.beagle.android.operation.Operation
         import br.com.zup.beagle.android.setup.BeagleConfig
         import br.com.zup.beagle.android.setup.BeagleSdk
         import br.com.zup.beagle.android.setup.DesignSystem
-        import br.com.zup.beagle.android.store.StoreHandler
-        import br.com.zup.beagle.android.view.BeagleActivity
         import br.com.zup.beagle.android.widget.WidgetView
-        import br.com.zup.beagle.newanalytics.AnalyticsProvider
+       
         import java.lang.Class
         import kotlin.String
         import kotlin.Suppress
@@ -149,22 +127,16 @@ const val BEAGLE_SETUP_COMPLETE =
         import kotlin.collections.Map
         
         public final class BeagleSetup : BeagleSdk {
-          public override val formLocalActionHandler: FormLocalActionHandler =
-              br.com.test.beagle.FormLocalActionHandlerTest()
         
           public override val deepLinkHandler: DeepLinkHandler = br.com.test.beagle.DeepLinkHandlerTest()
-        
-          public override val httpClient: HttpClient = br.com.test.beagle.HttpClientTest()
           
           public override val httpClientFactory: HttpClientFactory = br.com.test.beagle.HttpClientFactoryTest()
         
           public override val designSystem: DesignSystem = br.com.test.beagle.DesignSystemTest()
         
-          public override val storeHandler: StoreHandler = br.com.test.beagle.StoreHandlerTest()
+          public override val viewClient: ViewClient = br.com.test.beagle.ViewClientTest()
         
           public override val urlBuilder: UrlBuilder = br.com.test.beagle.UrlBuilderTest()
-        
-          public override val analytics: Analytics = br.com.test.beagle.AnalyticsTest()
 
           public override val analyticsProvider: AnalyticsProvider = br.com.test.beagle.AnalyticsProviderTest()
 
@@ -174,17 +146,12 @@ const val BEAGLE_SETUP_COMPLETE =
               br.com.test.beagle.ImageDownloaderTest()
               
           public override val config: BeagleConfig = br.com.test.beagle.BeagleConfigImpl()
-        
-          public override val serverDrivenActivity: Class<BeagleActivity> =
-              br.com.zup.beagle.android.view.ServerDrivenActivity::class.java as Class<BeagleActivity>
               
           public override val controllerReference: BeagleControllerReference =
               RegisteredControllers()
         
           public override val typeAdapterResolver: TypeAdapterResolver = RegisteredCustomTypeAdapter
-        
-          public override val validatorHandler: ValidatorHandler = RegisteredCustomValidator
-        
+  
           public override fun registeredWidgets(): List<Class<WidgetView>> =
               RegisteredWidgets.registeredWidgets()
         

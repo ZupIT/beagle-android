@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,16 +20,20 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import androidx.activity.result.ActivityResultLauncher
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import br.com.zup.beagle.android.BaseTest
+import br.com.zup.beagle.android.action.NavigationContext
 import br.com.zup.beagle.android.action.Route
 import br.com.zup.beagle.android.components.Text
 import br.com.zup.beagle.android.components.layout.Screen
+import br.com.zup.beagle.android.context.ContextData
+import br.com.zup.beagle.android.context.constant
 import br.com.zup.beagle.android.data.formatUrl
-import br.com.zup.beagle.android.extensions.once
 import br.com.zup.beagle.android.logger.BeagleLoggerProxy
 import br.com.zup.beagle.android.navigation.DeepLinkHandler
 import br.com.zup.beagle.android.networking.RequestData
@@ -37,65 +41,87 @@ import br.com.zup.beagle.android.networking.urlbuilder.UrlBuilder
 import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.testutil.RandomData
 import br.com.zup.beagle.android.view.custom.BeagleNavigator
-import io.mockk.MockKAnnotations
 import io.mockk.Runs
+import io.mockk.clearMocks
 import io.mockk.every
-import io.mockk.impl.annotations.MockK
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkConstructor
 import io.mockk.mockkObject
 import io.mockk.mockkStatic
+import io.mockk.runs
 import io.mockk.slot
 import io.mockk.verify
-import io.mockk.verifyOrder
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
-private val route = Route.Remote(RandomData.httpUrl())
+private val route = Route.Remote(constant(RandomData.httpUrl()))
 private val url = RandomData.httpUrl()
 
 @DisplayName("Given a BeagleNavigator")
 class BeagleNavigatorTest : BaseTest() {
 
-    @MockK
-    private lateinit var context: BeagleActivity
+    private val context: BeagleActivity = mockk()
 
-    @MockK
-    private lateinit var fragmentTransaction: FragmentTransaction
+    private val fragmentTransaction: FragmentTransaction = mockk()
 
-    @MockK(relaxed = true, relaxUnitFun = true)
-    private lateinit var intent: Intent
+    private val supportFragmentManager = mockk<FragmentManager>()
+    private val fragment: BeagleFragment = mockk(relaxed = true)
 
-    @MockK
-    private lateinit var deepLinkHandler: DeepLinkHandler
+    private val intent: Intent = mockk(relaxed = true, relaxUnitFun = true)
 
-    @BeforeEach
+    private val deepLinkHandler: DeepLinkHandler = mockk()
+
+    private val navigationContext = NavigationContext(value = "")
+
+    @BeforeAll
     override fun setUp() {
         super.setUp()
         mockkStatic("android.net.Uri")
 
-        every { beagleSdk.config.baseUrl } returns RandomData.httpUrl()
-        every { beagleSdk.logger } returns null
-        every { beagleSdk.config.isLoggingEnabled } returns true
-        every { beagleSdk.controllerReference } returns mockk(relaxed = true)
-
         mockkObject(BeagleFragment.Companion)
         mockkObject(BeagleActivity.Companion)
         mockkObject(BeagleLoggerProxy)
+    }
+
+    @BeforeEach
+    fun clear() {
+
+        clearMocks(
+            context,
+            rootView,
+            deepLinkHandler,
+            fragmentTransaction,
+            intent,
+            supportFragmentManager,
+            fragment,
+            BeagleLoggerProxy,
+            BeagleFragment.Companion,
+            BeagleActivity.Companion,
+            BeagleEnvironment,
+            answers = false
+        )
+
+        mockBeagleEnvironment()
+
+        mockkStatic("android.net.Uri")
+
         mockkConstructor(Intent::class)
 
         every { anyConstructed<Intent>().putExtras(any<Bundle>()) } returns intent
         every { anyConstructed<Intent>().addFlags(any()) } returns intent
-        every { BeagleActivity.bundleOf(any<ScreenRequest>()) } returns mockk()
+        every { BeagleActivity.bundleOf(any<RequestData>()) } returns mockk()
         every { BeagleActivity.bundleOf(any<Screen>()) } returns mockk()
+        every { BeagleActivity.bundleOf(any<NavigationContext>()) } returns mockk()
+        every { BeagleActivity.bundleOf(any<RequestData>(), any<NavigationContext>()) } returns mockk()
+        every { context.setResult(any(), any()) } just runs
 
-        val supportFragmentManager = mockk<FragmentManager>()
         every { context.supportFragmentManager } returns supportFragmentManager
-        every { supportFragmentManager.fragments } returns mutableListOf<Fragment>()
+        every { supportFragmentManager.fragments } returns mutableListOf<Fragment>(fragment)
         every { supportFragmentManager.beginTransaction() } returns fragmentTransaction
         every {
             fragmentTransaction.setCustomAnimations(any(), any(), any(), any())
@@ -122,8 +148,8 @@ class BeagleNavigatorTest : BaseTest() {
             BeagleNavigator.openExternalURL(context, url)
 
             // Then
-            verify(exactly = once()) { Uri.parse(url) }
-            verify(exactly = once()) { context.startActivity(any()) }
+            verify(exactly = 1) { Uri.parse(url) }
+            verify(exactly = 1) { context.startActivity(any()) }
         }
 
         @DisplayName("Then should catch when url is invalid")
@@ -140,7 +166,7 @@ class BeagleNavigatorTest : BaseTest() {
             BeagleNavigator.openExternalURL(context, url)
 
             // Then
-            verify(exactly = once()) { BeagleLoggerProxy.error(any()) }
+            verify(exactly = 1) { BeagleLoggerProxy.error(any()) }
         }
     }
 
@@ -161,7 +187,7 @@ class BeagleNavigatorTest : BaseTest() {
             BeagleNavigator.openNativeRoute(rootView, url, map, false)
 
             // Then
-            verify(exactly = once()) { rootView.getContext().startActivity(intent) }
+            verify(exactly = 1) { rootView.getContext().startActivity(intent) }
         }
     }
 
@@ -175,10 +201,13 @@ class BeagleNavigatorTest : BaseTest() {
             every { context.finish() } just Runs
 
             // When
-            BeagleNavigator.popStack(context)
+            BeagleNavigator.popStack(context, navigationContext)
 
             // Then
-            verify(exactly = once()) { context.finish() }
+            verify(exactly = 1) {
+                context.setResult(Activity.RESULT_OK, any())
+                context.finish()
+            }
         }
     }
 
@@ -190,12 +219,34 @@ class BeagleNavigatorTest : BaseTest() {
         fun testPopViewShouldCallActivityOnBackPressed() {
             // Given
             every { context.onBackPressed() } just Runs
+            every { supportFragmentManager.backStackEntryCount } returns 2
 
             // When
-            BeagleNavigator.popView(context)
+            BeagleNavigator.popView(context, navigationContext)
 
             // Then
-            verify(exactly = once()) { context.onBackPressed() }
+            verify(exactly = 1) {
+                context.onBackPressed()
+                fragment.updateNavigationContext(navigationContext)
+            }
+        }
+
+
+        @DisplayName("Then should call set result onBackPressed")
+        @Test
+        fun testPopViewShouldCallSetResultOnBackPressed() {
+            // Given
+            every { context.onBackPressed() } just Runs
+            every { supportFragmentManager.backStackEntryCount } returns 1
+
+            // When
+            BeagleNavigator.popView(context, navigationContext)
+
+            // Then
+            verify(exactly = 1) {
+                context.setResult(Activity.RESULT_OK, any())
+                context.onBackPressed()
+            }
         }
 
         @Test
@@ -212,7 +263,7 @@ class BeagleNavigatorTest : BaseTest() {
             BeagleNavigator.popView(context)
 
             // Then
-            verify(exactly = once()) { dialogFragment.dismiss() }
+            verify(exactly = 1) { dialogFragment.dismiss() }
         }
     }
 
@@ -223,16 +274,16 @@ class BeagleNavigatorTest : BaseTest() {
         @Test
         fun testPushViewShouldCallBeagleActivityNavigateTo() {
             // Given
-            val url = (route.url.value as String).formatUrl()
+            val url = route.url.value as String
 
             val requestData = RequestData(url = url)
-            every { context.navigateTo(requestData, null) } just Runs
+            every { context.navigateTo(requestData, null, navigationContext) } just Runs
 
             // When
-            BeagleNavigator.pushView(context, route)
+            BeagleNavigator.pushView(context, route, navigationContext)
 
             // Then
-            verify(exactly = once()) { context.navigateTo(requestData, null) }
+            verify(exactly = 1) { context.navigateTo(requestData, null, navigationContext) }
         }
 
         @DisplayName("Then should start BeagleActivity")
@@ -240,14 +291,14 @@ class BeagleNavigatorTest : BaseTest() {
         fun testPushViewShouldStartBeagleActivity() {
             // Given
             val context = mockk<Activity>()
-            val route = Route.Local(Screen(child = Text("stub")))
+            val route = Route.Local(Screen(child = Text(constant("stub"))))
             every { context.startActivity(any()) } just Runs
 
             // When
-            BeagleNavigator.pushView(context, route)
+            BeagleNavigator.pushView(context, route, navigationContext)
 
             // Then
-            verify(exactly = once()) { context.startActivity(any()) }
+            verify(exactly = 1) { context.startActivity(any()) }
         }
     }
 
@@ -264,10 +315,10 @@ class BeagleNavigatorTest : BaseTest() {
             every { anyConstructed<Intent>().addFlags(capture(flagSlot)) } returns intent
 
             // When
-            BeagleNavigator.resetApplication(context, route, null)
+            BeagleNavigator.resetApplication(context, route, null, navigationContext)
 
             // Then
-            verify(exactly = once()) { context.startActivity(any()) }
+            verify(exactly = 1) { context.startActivity(any()) }
             assertEquals(
                 flagSlot.captured,
                 (Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -278,20 +329,44 @@ class BeagleNavigatorTest : BaseTest() {
     @DisplayName("When ResetStack")
     @Nested
     inner class ResetStack {
-        @DisplayName("Then should start start BeagleActivity and clear stack")
+
+        @DisplayName("Then should start next activity and clear stack")
         @Test
-        fun testResetStackShouldStartBeagleActivityAndClearStack() {
+        fun testResetStackShouldLaunchActivityAndClearStack() {
             // Given
+            val nextActivity: ActivityResultLauncher<Intent> = mockk(relaxed = true)
+
+            every { context.finish() } just Runs
+            every { context.nextActivity } returns nextActivity
+
+            // When
+            BeagleNavigator.resetStack(context, route, null, navigationContext)
+
+            // Then
+            verify(exactly = 1) {
+                context.finish()
+                nextActivity.launch(any())
+            }
+        }
+
+        @DisplayName("Then should start activity and clear stack")
+        @Test
+        fun testResetStackShouldStartActivityAndClearStack() {
+            // Given
+            val context = mockk<AppCompatActivity>()
             every { context.finish() } just Runs
             every { context.startActivity(any()) } just Runs
 
             // When
-            BeagleNavigator.resetStack(context, route, null)
+            BeagleNavigator.resetStack(context, route, null, navigationContext)
 
             // Then
-            verify(exactly = once()) { BeagleNavigator.popStack(context) }
-            verify(exactly = once()) { context.startActivity(any()) }
+            verify(exactly = 1) {
+                context.finish()
+                context.startActivity(any())
+            }
         }
+
     }
 
     @DisplayName("When PopToView")
@@ -307,14 +382,17 @@ class BeagleNavigatorTest : BaseTest() {
             // Given
             commonMock()
             val backStackEntry: FragmentManager.BackStackEntry = mockk(relaxed = true)
-            every { context.supportFragmentManager.getBackStackEntryAt(0) } returns backStackEntry
+            every { supportFragmentManager.getBackStackEntryAt(0) } returns backStackEntry
             every { backStackEntry.name } returns relativePath
+
             // When
-            BeagleNavigator.popToView(context, relativePath)
+            BeagleNavigator.popToView(context, relativePath, navigationContext)
 
             // Then
-            val supportFragmentManager = context.supportFragmentManager
-            verify(exactly = once()) { supportFragmentManager.popBackStack(relativePath, 0) }
+            verify(exactly = 1) {
+                supportFragmentManager.popBackStackImmediate(relativePath, 0)
+                fragment.updateNavigationContext(navigationContext)
+            }
         }
 
         @DisplayName("Then should formatted the route and call popToBackStack with the name on backStack ")
@@ -324,18 +402,17 @@ class BeagleNavigatorTest : BaseTest() {
             commonMock()
             val fullPath = baseUrl + relativePath
             val backStackEntry: FragmentManager.BackStackEntry = mockk(relaxed = true)
-            every { context.supportFragmentManager.getBackStackEntryAt(0) } returns backStackEntry
+            every { supportFragmentManager.getBackStackEntryAt(0) } returns backStackEntry
             every { backStackEntry.name } returns fullPath
 
             // When
-            BeagleNavigator.popToView(context, relativePath)
+            BeagleNavigator.popToView(context, relativePath, navigationContext)
 
             // Then
-            val supportFragmentManager = context.supportFragmentManager
-            verifyOrder {
+            verify {
                 urlBuilder.format(baseUrl, relativePath)
                 urlBuilder.format(baseUrl, fullPath)
-                supportFragmentManager.popBackStack(fullPath, 0)
+                supportFragmentManager.popBackStackImmediate(fullPath, 0)
             }
         }
 
@@ -345,18 +422,17 @@ class BeagleNavigatorTest : BaseTest() {
             // Given
             commonMock()
             val backStackEntry: FragmentManager.BackStackEntry = mockk(relaxed = true)
-            every { context.supportFragmentManager.getBackStackEntryAt(0) } returns backStackEntry
+            every { supportFragmentManager.getBackStackEntryAt(0) } returns backStackEntry
             every { backStackEntry.name } returns relativePath
 
             // When
-            BeagleNavigator.popToView(context, relativePath)
+            BeagleNavigator.popToView(context, relativePath, navigationContext)
 
             // Then
-            val supportFragmentManager = context.supportFragmentManager
-            verifyOrder {
+            verify {
                 urlBuilder.format(baseUrl, relativePath)
                 urlBuilder.format(baseUrl, relativePath)
-                supportFragmentManager.popBackStack(relativePath, 0)
+                supportFragmentManager.popBackStackImmediate(relativePath, 0)
             }
         }
 
@@ -367,18 +443,17 @@ class BeagleNavigatorTest : BaseTest() {
             commonMock()
             val fullPath = baseUrl + relativePath
             val backStackEntry: FragmentManager.BackStackEntry = mockk(relaxed = true)
-            every { context.supportFragmentManager.getBackStackEntryAt(0) } returns backStackEntry
+            every { supportFragmentManager.getBackStackEntryAt(0) } returns backStackEntry
             every { backStackEntry.name } returns relativePath
 
             // When
-            BeagleNavigator.popToView(context, fullPath)
+            BeagleNavigator.popToView(context, fullPath, navigationContext)
 
             // Then
-            val supportFragmentManager = context.supportFragmentManager
-            verifyOrder {
+            verify {
                 urlBuilder.format(baseUrl, fullPath)
                 urlBuilder.format(baseUrl, relativePath)
-                supportFragmentManager.popBackStack(relativePath, 0)
+                supportFragmentManager.popBackStackImmediate(relativePath, 0)
             }
         }
 
@@ -389,26 +464,25 @@ class BeagleNavigatorTest : BaseTest() {
             commonMock()
             val fullPath = baseUrl + relativePath
             val backStackEntry: FragmentManager.BackStackEntry = mockk(relaxed = true)
-            every { context.supportFragmentManager.getBackStackEntryAt(0) } returns backStackEntry
+            every { supportFragmentManager.getBackStackEntryAt(0) } returns backStackEntry
             every { backStackEntry.name } returns fullPath
 
             // When
-            BeagleNavigator.popToView(context, fullPath)
+            BeagleNavigator.popToView(context, fullPath, navigationContext)
 
             // Then
-            val supportFragmentManager = context.supportFragmentManager
-            verifyOrder {
+            verify {
                 urlBuilder.format(baseUrl, fullPath)
                 urlBuilder.format(baseUrl, fullPath)
-                supportFragmentManager.popBackStack(fullPath, 0)
+                supportFragmentManager.popBackStackImmediate(fullPath, 0)
             }
         }
 
         private fun commonMock() {
             every { beagleSdk.config.baseUrl } returns baseUrl
             every { beagleSdk.urlBuilder } returns urlBuilder
-            every { context.supportFragmentManager.popBackStack(any<String>(), any()) } just Runs
-            every { context.supportFragmentManager.backStackEntryCount } returns 1
+            every { supportFragmentManager.popBackStackImmediate(any<String>(), any()) } returns true
+            every { supportFragmentManager.backStackEntryCount } returns 1
         }
     }
 
@@ -423,10 +497,27 @@ class BeagleNavigatorTest : BaseTest() {
             every { context.startActivity(any()) } just Runs
 
             // When
-            BeagleNavigator.pushStack(context, route, null)
+            BeagleNavigator.pushStack(context, route, null, navigationContext)
 
             // Then
-            verify(exactly = once()) { context.startActivity(any()) }
+            verify(exactly = 1) { context.startActivity(any()) }
+        }
+
+        @DisplayName("Then should start next activity with launch")
+        @Test
+        fun testPushStackShouldStarLaunch() {
+            // Given
+            val nextActivity: ActivityResultLauncher<Intent> = mockk(relaxed = true)
+
+            every { context.nextActivity } returns nextActivity
+
+            // When
+            BeagleNavigator.pushStack(context, route, null, navigationContext)
+
+            // Then
+            verify(exactly = 1) {
+                nextActivity.launch(any())
+            }
         }
     }
 }

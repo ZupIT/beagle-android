@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,10 +20,10 @@ import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.networking.ResponseData
 import org.json.JSONArray
 import org.json.JSONObject
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 
-class SendRequestActionMapperTest : BaseTest(){
+class SendRequestActionMapperTest : BaseTest() {
 
     @Test
     fun `GIVEN response data is an valid json WHEN toResponse is called THEN it should return an object of type JSONObject`() {

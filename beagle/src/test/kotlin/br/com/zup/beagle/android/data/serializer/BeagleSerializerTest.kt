@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,21 +21,20 @@ import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.action.Navigate
 import br.com.zup.beagle.android.action.Route
 import br.com.zup.beagle.android.components.Button
+import br.com.zup.beagle.android.context.constant
 import br.com.zup.beagle.android.exception.BeagleException
 import br.com.zup.beagle.android.logger.BeagleMessageLogs
 import br.com.zup.beagle.android.testutil.RandomData
-import br.com.zup.beagle.core.ServerDrivenComponent
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import io.mockk.Runs
 import io.mockk.every
-import io.mockk.impl.annotations.MockK
 import io.mockk.just
+import io.mockk.mockk
 import io.mockk.mockkObject
-import io.mockk.unmockkObject
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -45,18 +44,15 @@ import java.io.IOException
 @DisplayName("Given a BeagleSerializer")
 class BeagleSerializerTest : BaseTest() {
 
-    @MockK
-    private lateinit var moshi: Moshi
+    private val moshi: Moshi = mockk()
 
-    @MockK
-    private lateinit var jsonAdapter: JsonAdapter<ServerDrivenComponent>
+    private val jsonAdapter: JsonAdapter<ServerDrivenComponent> = mockk()
 
-    @MockK
-    private lateinit var actionJsonAdapter: JsonAdapter<Action>
+    private val actionJsonAdapter: JsonAdapter<Action> = mockk()
 
     private lateinit var beagleSerializer: BeagleSerializer
 
-    @BeforeEach
+    @BeforeAll
     override fun setUp() {
         super.setUp()
         beagleSerializer = BeagleSerializer(BeagleMoshi)
@@ -70,13 +66,6 @@ class BeagleSerializerTest : BaseTest() {
         every { moshi.adapter(Action::class.java) } returns actionJsonAdapter
     }
 
-    @AfterEach
-    override fun tearDown() {
-        super.tearDown()
-        unmockkObject(BeagleMessageLogs)
-        unmockkObject(BeagleMoshi)
-    }
-
     @DisplayName("When try to serialize json")
     @Nested
     inner class SerializeTest {
@@ -86,7 +75,7 @@ class BeagleSerializerTest : BaseTest() {
         fun testSerializeObject() {
             // Given
             val json = "{}"
-            val button = Button(RandomData.string())
+            val button = Button(constant(RandomData.string()))
             every { jsonAdapter.toJson(button) } returns json
 
             // When
@@ -100,7 +89,7 @@ class BeagleSerializerTest : BaseTest() {
         @Test
         fun testSerializeObjectException() {
             // Given
-            val button = Button(RandomData.string())
+            val button = Button(constant(RandomData.string()))
             every { jsonAdapter.toJson(button) } returns null
 
             // Then
@@ -112,7 +101,7 @@ class BeagleSerializerTest : BaseTest() {
         fun testSerializeObjectWhenToJsonThrowsException() {
             // Given
             val exception = IOException()
-            val button = Button(RandomData.string())
+            val button = Button(constant(RandomData.string()))
             every { jsonAdapter.toJson(any()) } throws exception
 
             // Then
@@ -129,7 +118,7 @@ class BeagleSerializerTest : BaseTest() {
         fun testDeserializeJson() {
             // Given
             val json = "{}"
-            val button = Button(RandomData.string())
+            val button = Button(constant(RandomData.string()))
             every { jsonAdapter.fromJson(json) } returns button
 
             // When
@@ -166,7 +155,7 @@ class BeagleSerializerTest : BaseTest() {
         fun testDeserializeActionJson() {
             // Given
             val json = "{}"
-            val navigate = Navigate.PushView(Route.Remote(""))
+            val navigate = Navigate.PushView(Route.Remote(constant("")))
             every { actionJsonAdapter.fromJson(json) } returns navigate
 
             // When

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,30 +16,34 @@
 
 package br.com.zup.beagle.android.data
 
-import br.com.zup.beagle.android.action.Action
-import br.com.zup.beagle.android.data.serializer.BeagleSerializer
 import br.com.zup.beagle.android.exception.BeagleApiException
-import br.com.zup.beagle.android.exception.BeagleException
+import br.com.zup.beagle.android.networking.HttpClient
 import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.networking.ResponseData
+import br.com.zup.beagle.android.setup.BeagleEnvironment
+import br.com.zup.beagle.android.utils.doRequest
+import kotlinx.coroutines.suspendCancellableCoroutine
+import java.lang.Exception
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 internal class ActionRequester(
-    private val beagleApi: BeagleApi = BeagleApi(),
-    private val serializer: BeagleSerializer = BeagleSerializer()
+    private val httpClient: HttpClient? = BeagleEnvironment.beagleSdk.httpClientFactory?.create(),
 ) {
 
-    @Throws(BeagleException::class)
-    suspend fun fetchAction(url: String): Action {
-        val jsonResponse = String(beagleApi.fetchData(url.toRequestData()).data)
-        return deserializeAction(jsonResponse)
-    }
-
     @Throws(BeagleApiException::class)
-    suspend fun fetchData(requestData: RequestData): ResponseData {
-        return beagleApi.fetchData(requestData)
-    }
-
-    private fun deserializeAction(response: String): Action {
-        return serializer.deserializeAction(response)
+    suspend fun fetchAction(requestData: RequestData): ResponseData = suspendCancellableCoroutine { cont ->
+        try {
+            val call = requestData.doRequest(httpClient, onSuccess = { response ->
+                cont.resume(response)
+            }, onError = { response ->
+                cont.resumeWithException(BeagleApiException(response, requestData))
+            })
+            cont.invokeOnCancellation {
+                call.cancel()
+            }
+        } catch (e: Exception) {
+            cont.resumeWithException(e)
+        }
     }
 }

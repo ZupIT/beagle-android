@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ internal class JsonPathFinder {
     tailrec fun find(nextKeys: LinkedList<String>, value: Any?): Any? {
         if (nextKeys.isEmpty()) return value
 
-        val currentKey = nextKeys.poll()
+        val currentKey = nextKeys.poll() ?: ""
 
         val childValue = if (currentKey.endsWith("]")) {
             if (value is JSONArray) {

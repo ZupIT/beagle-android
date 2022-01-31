@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
+ * Copyright 2020, 2022 ZUP IT SERVICOS EM TECNOLOGIA E INOVACAO SA
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,15 @@
 package br.com.zup.beagle.android.components.utils
 
 import br.com.zup.beagle.android.utils.dp
-import br.com.zup.beagle.core.CornerRadius
+internal data class CornerRadiusHelper(
+    var radius: Double? = null,
+    var topLeft: Double? = null,
+    var topRight: Double? = null,
+    var bottomLeft: Double? = null,
+    var bottomRight: Double? = null,
+)
 
-internal fun CornerRadius.getFloatArray(): FloatArray {
+internal fun CornerRadiusHelper.getFloatArray(): FloatArray {
     val radius = radius?.dp()?.toFloat() ?: 0f
     val topLeft = topLeft?.dp()?.toFloat() ?: radius
     val topRight = topRight?.dp()?.toFloat() ?: radius
