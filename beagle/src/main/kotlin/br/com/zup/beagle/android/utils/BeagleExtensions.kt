@@ -16,8 +16,12 @@
 
 package br.com.zup.beagle.android.utils
 
+import br.com.zup.beagle.android.components.layout.Container
+import br.com.zup.beagle.android.components.layout.Screen
 import br.com.zup.beagle.android.view.BeagleActivity
 import br.com.zup.beagle.android.view.custom.BeagleNavigator
+import br.com.zup.beagle.android.widget.Widget
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 
 
 internal fun BeagleActivity.configureSupportActionBar() {
@@ -29,4 +33,9 @@ internal fun BeagleActivity.configureSupportActionBar() {
     toolbar.setNavigationOnClickListener {
         BeagleNavigator.popView(this)
     }
+}
+
+fun getRootId(screen: ServerDrivenComponent): String {
+    val widgetComponent = screen as Widget
+    return widgetComponent.id.toString()
 }

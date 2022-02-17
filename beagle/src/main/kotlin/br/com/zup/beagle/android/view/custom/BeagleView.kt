@@ -22,6 +22,7 @@ import br.com.zup.beagle.android.data.formatUrl
 import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.utils.BeagleRetry
 import br.com.zup.beagle.android.utils.generateViewModelInstance
+import br.com.zup.beagle.android.utils.getRootId
 import br.com.zup.beagle.android.view.ServerDrivenState
 import br.com.zup.beagle.android.view.viewmodel.AnalyticsViewModel
 import br.com.zup.beagle.android.view.viewmodel.BeagleViewModel
@@ -98,7 +99,7 @@ internal class BeagleView(
         }
         screenIdentifier?.let {
             rootView.generateViewModelInstance<AnalyticsViewModel>().createScreenReport(
-                screenIdentifier
+                screenIdentifier, getRootId(component)
             )
         }
     }

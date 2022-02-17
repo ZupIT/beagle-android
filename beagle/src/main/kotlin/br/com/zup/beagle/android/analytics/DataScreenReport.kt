@@ -18,9 +18,13 @@ package br.com.zup.beagle.android.analytics
 
 internal data class DataScreenReport(
     val screenIdentifier: String,
+    val rootId: String? = null
 ) : DataReport() {
     override fun report(analyticsConfig: AnalyticsConfig): AnalyticsRecord? {
         if (shouldReportScreen(analyticsConfig)) {
+            if (rootId != null && rootId != "null") {
+                return ScreenReportFactory.generateScreenAnalyticsRecord(screenIdentifier, timestamp, rootId)
+            }
             return ScreenReportFactory.generateScreenAnalyticsRecord(screenIdentifier, timestamp)
         }
         return null

@@ -29,4 +29,15 @@ internal object ScreenReportFactory {
         timestamp = timestamp,
         screen = screenIdentifier
     )
+
+    fun generateScreenAnalyticsRecord(
+        screenIdentifier: String,
+        timestamp: Long,
+        rootId: String
+    ) = AnalyticsRecord(
+        type = TYPE_ANALYTICS,
+        timestamp = timestamp,
+        screen = screenIdentifier,
+        rootId = rootId
+    )
 }
