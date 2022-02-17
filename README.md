@@ -53,7 +53,7 @@ Beagle's documentation discusses components, APIs, and topics that are specific 
 
 If you want to contribute to this module, access our [**Contributing Guide**][contribute] to learn about our development process, how to propose bug fixes and improvements, and how to build and test your changes to Beagle.
 
-[contribute]: https://github.com/ZupIT/beagle-ios/blob/main/CONTRIBUTING.md
+[contribute]: https://github.com/ZupIT/beagle-android/blob/main/CONTRIBUTING.md
 
 ### **Developer Certificate of Origin - DCO**
 
