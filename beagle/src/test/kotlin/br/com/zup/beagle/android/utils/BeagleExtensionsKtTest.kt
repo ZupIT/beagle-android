@@ -20,9 +20,8 @@ import br.com.zup.beagle.android.components.layout.Container
 import br.com.zup.beagle.android.widget.Widget
 import io.mockk.every
 import io.mockk.mockk
-import org.junit.jupiter.api.Test
-
 import org.junit.Assert.assertEquals
+import org.junit.jupiter.api.Test
 
 class BeagleExtensionsKtTest {
 

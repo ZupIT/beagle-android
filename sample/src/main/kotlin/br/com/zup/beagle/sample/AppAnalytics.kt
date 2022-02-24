@@ -23,8 +23,8 @@ import br.com.zup.beagle.android.analytics.AnalyticsRecord
 import br.com.zup.beagle.android.annotation.BeagleComponent
 
 @BeagleComponent
-class SampleAnalytics2: AnalyticsProvider {
-    override fun getConfig(): AnalyticsConfig = object: AnalyticsConfig{
+class AppAnalytics : AnalyticsProvider {
+    override fun getConfig(): AnalyticsConfig = object : AnalyticsConfig {
         override var actions: Map<String, List<String>>? = hashMapOf(
             "beagle:alert" to listOf("message", "title")
         )

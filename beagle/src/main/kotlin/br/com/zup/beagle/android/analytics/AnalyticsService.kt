@@ -55,8 +55,8 @@ internal object AnalyticsService {
     }
 
     private fun reportData(
-        dataReport: DataReport, 
-        analyticsProvider: AnalyticsProvider, 
+        dataReport: DataReport,
+        analyticsProvider: AnalyticsProvider,
         analyticsConfig: AnalyticsConfig
     ) {
         val report = dataReport.report(analyticsConfig)
