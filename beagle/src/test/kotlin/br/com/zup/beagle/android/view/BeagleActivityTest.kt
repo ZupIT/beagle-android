@@ -72,6 +72,7 @@ class BeagleActivityTest : BaseSoLoaderTest() {
     private val navigationContext = NavigationContext(value = "test")
     private val navigationContextData = ContextData(id = NAVIGATION_CONTEXT_DATA_ID, value = "test")
     lateinit var activityScenario: ActivityScenario<ServerDrivenActivity>
+    private val rootIdSlot = slot<String>()
 
     @Before
     fun mockBeforeTest() {
@@ -94,7 +95,7 @@ class BeagleActivityTest : BaseSoLoaderTest() {
             val url = "/url"
             val screenRequest = RequestData(url = url)
             prepareViewModelMock(analyticsViewModel)
-            every { analyticsViewModel.createScreenReport(capture(screenIdentifierSlot)) } just Runs
+            every { analyticsViewModel.createScreenReport(capture(screenIdentifierSlot),capture(rootIdSlot)) } just Runs
 
             //When
             activity?.navigateTo(screenRequest, null, navigationContext)
@@ -119,7 +120,7 @@ class BeagleActivityTest : BaseSoLoaderTest() {
 
 
             prepareViewModelMock(analyticsViewModel)
-            every { analyticsViewModel.createScreenReport(capture(screenIdentifierSlot)) } just Runs
+            every { analyticsViewModel.createScreenReport(capture(screenIdentifierSlot), capture(rootIdSlot)) } just Runs
 
             //When
             activity?.navigateTo(screenRequest, screen, navigationContext)

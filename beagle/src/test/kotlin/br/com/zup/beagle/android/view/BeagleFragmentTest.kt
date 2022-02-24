@@ -19,7 +19,9 @@ package br.com.zup.beagle.android.view
 import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.fragment.app.testing.withFragment
 import androidx.lifecycle.Lifecycle
+import androidx.test.core.app.ActivityScenario
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import br.com.zup.beagle.R
 import br.com.zup.beagle.android.BaseSoLoaderTest
 import br.com.zup.beagle.android.action.NavigationContext
 import br.com.zup.beagle.android.context.ContextData
@@ -43,6 +45,7 @@ class BeagleFragmentTest : BaseSoLoaderTest() {
 
     private val analyticsViewModel = mockk<AnalyticsViewModel>()
     private val screenIdentifierSlot = slot<String>()
+    private val rootIdSlot = slot<String>()
     private val json = """{
                 "_beagleComponent_" : "beagle:screenComponent",
                 "child" : {
@@ -50,14 +53,28 @@ class BeagleFragmentTest : BaseSoLoaderTest() {
                 "text" : "hello"
             }
             }"""
+    private val jsonWithIdentifier = """{
+                "_beagleComponent_" : "beagle:screenComponent",
+                "id": "This is an identifier",
+                "child" : {
+                "_beagleComponent_" : "beagle:text",
+                "text" : "hello"
+            }
+            }"""
     private val url = "/url"
+    private var activity: ServerDrivenActivity? = null
     private val navigationContext = NavigationContext(value = "test")
     private val navigationContextData = ContextData(id = BeagleFragment.NAVIGATION_CONTEXT_DATA_ID, value = "testtwo")
 
     @Before
     fun mockBeforeTest() {
         prepareViewModelMock(analyticsViewModel)
-        every { analyticsViewModel.createScreenReport(capture(screenIdentifierSlot)) } just Runs
+        every { analyticsViewModel.createScreenReport(capture(screenIdentifierSlot), capture(rootIdSlot)) } just Runs
+        val activityScenario: ActivityScenario<ServerDrivenActivity> = ActivityScenario.launch(ServerDrivenActivity::class.java)
+        activityScenario.onActivity {
+            activityScenario.moveToState(Lifecycle.State.RESUMED)
+            activity = it
+        }
     }
 
     @Test
@@ -101,5 +118,18 @@ class BeagleFragmentTest : BaseSoLoaderTest() {
         }
 
         assertEquals(false, screenIdentifierSlot.isCaptured)
+    }
+
+    @Test
+    fun `Given a Tree with identifier screen analytics should be called with root Id as identifier`() {
+        //When
+
+        val scenario =
+            launchFragmentInContainer<BeagleFragment>(BeagleFragment.newBundle(jsonWithIdentifier, "This is an identifier", navigationContext))
+
+        scenario.moveToState(Lifecycle.State.RESUMED)
+
+        //then
+        assertEquals("This is an identifier", rootIdSlot.captured)
     }
 }

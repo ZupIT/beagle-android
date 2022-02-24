@@ -36,12 +36,13 @@ class ScreenReportFactoryTest : BaseTest() {
             val timestamp = System.currentTimeMillis()
 
             //WHEN
-            val result = ScreenReportFactory.generateScreenAnalyticsRecord("screenId", timestamp)
+            val result = ScreenReportFactory.generateScreenAnalyticsRecord("screenId", timestamp, "rootId")
 
             //THEN
             assertEquals("android", result.platform)
             assertEquals("screen", result.type)
             assertEquals("screenId", result.screen)
+            assertEquals("rootId", result.rootId)
             assertEquals(null, result.additionalEntries)
             assertEquals(null, result.attributes)
             assertEquals(null, result.component)

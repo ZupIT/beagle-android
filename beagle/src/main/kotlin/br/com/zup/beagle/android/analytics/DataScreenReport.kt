@@ -22,10 +22,7 @@ internal data class DataScreenReport(
 ) : DataReport() {
     override fun report(analyticsConfig: AnalyticsConfig): AnalyticsRecord? {
         if (shouldReportScreen(analyticsConfig)) {
-            if (rootId != null && rootId != "null") {
-                return ScreenReportFactory.generateScreenAnalyticsRecord(screenIdentifier, timestamp, rootId)
-            }
-            return ScreenReportFactory.generateScreenAnalyticsRecord(screenIdentifier, timestamp)
+            return ScreenReportFactory.generateScreenAnalyticsRecord(screenIdentifier, timestamp, rootId)
         }
         return null
     }
