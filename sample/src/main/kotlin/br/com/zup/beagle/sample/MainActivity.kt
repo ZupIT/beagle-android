@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity() {
     private fun renderScreen() {
         binding.fragmentContent.loadView(
             this,
-            RequestData("/fallback-screen")
+            RequestData("https://usebeagle.io/start/welcome")
         )
     }
 }
