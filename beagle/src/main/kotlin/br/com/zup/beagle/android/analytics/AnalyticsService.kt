@@ -46,17 +46,17 @@ internal object AnalyticsService {
         }
     }
 
-    fun createScreenRecord(screenIdentifier: String) {
+    fun createScreenRecord(screenIdentifier: String, rootId: String? = null) {
         val analyticsProvider: AnalyticsProvider? = BeagleEnvironment.beagleSdk.analyticsProvider
         analyticsProvider?.getConfig()?.let {
-            val dataScreenReport = DataScreenReport(screenIdentifier)
+            val dataScreenReport = DataScreenReport(screenIdentifier, rootId)
             reportData(dataScreenReport, analyticsProvider, it)
         }
     }
 
     private fun reportData(
-        dataReport: DataReport, 
-        analyticsProvider: AnalyticsProvider, 
+        dataReport: DataReport,
+        analyticsProvider: AnalyticsProvider,
         analyticsConfig: AnalyticsConfig
     ) {
         val report = dataReport.report(analyticsConfig)

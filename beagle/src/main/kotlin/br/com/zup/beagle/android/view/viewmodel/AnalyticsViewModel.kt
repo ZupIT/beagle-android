@@ -19,8 +19,8 @@ package br.com.zup.beagle.android.view.viewmodel
 import android.view.View
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import br.com.zup.beagle.android.analytics.AnalyticsService
 import br.com.zup.beagle.android.action.AnalyticsAction
+import br.com.zup.beagle.android.analytics.AnalyticsService
 import br.com.zup.beagle.android.widget.RootView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -43,9 +43,9 @@ internal class AnalyticsViewModel : ViewModel() {
         }
     }
 
-    fun createScreenReport(screenIdentifier: String) {
+    fun createScreenReport(screenIdentifier: String, rootId: String? = null) {
         viewModelScope.launch(Dispatchers.Default) {
-            AnalyticsService.createScreenRecord(screenIdentifier)
+            AnalyticsService.createScreenRecord(screenIdentifier, rootId)
         }
     }
 }

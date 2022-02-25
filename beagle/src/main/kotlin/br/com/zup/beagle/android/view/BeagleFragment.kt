@@ -29,6 +29,7 @@ import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.context.normalize
 import br.com.zup.beagle.android.data.serializer.BeagleSerializer
 import br.com.zup.beagle.android.utils.applyBackgroundFromWindowBackgroundTheme
+import br.com.zup.beagle.android.utils.getRootId
 import br.com.zup.beagle.android.utils.toView
 import br.com.zup.beagle.android.view.viewmodel.AnalyticsViewModel
 import br.com.zup.beagle.android.view.viewmodel.BeagleScreenViewModel
@@ -77,7 +78,7 @@ internal class BeagleFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         screenViewModel.onScreenLoadFinished()
         screenIdentifier?.let { screenIdentifier ->
-            analyticsViewModel.createScreenReport(screenIdentifier)
+            analyticsViewModel.createScreenReport(screenIdentifier, getRootId(screen))
         }
 
         val navigationContext = arguments?.getParcelable<NavigationContext>(NAVIGATION_CONTEXT_KEY)
