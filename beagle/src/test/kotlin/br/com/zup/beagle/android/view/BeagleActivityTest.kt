@@ -34,7 +34,6 @@ import br.com.zup.beagle.android.testutil.CoroutinesTestExtension
 import br.com.zup.beagle.android.testutil.InstantExecutorExtension
 import br.com.zup.beagle.android.view.BeagleFragment.Companion.NAVIGATION_CONTEXT_DATA_ID
 import br.com.zup.beagle.android.view.BeagleFragment.Companion.NAVIGATION_CONTEXT_DATA_KEY
-import br.com.zup.beagle.android.view.BeagleFragment.Companion.NAVIGATION_CONTEXT_KEY
 import br.com.zup.beagle.android.view.viewmodel.AnalyticsViewModel
 import br.com.zup.beagle.android.view.viewmodel.BeagleScreenViewModel
 import io.mockk.Runs
@@ -72,6 +71,7 @@ class BeagleActivityTest : BaseSoLoaderTest() {
     private val navigationContext = NavigationContext(value = "test")
     private val navigationContextData = ContextData(id = NAVIGATION_CONTEXT_DATA_ID, value = "test")
     lateinit var activityScenario: ActivityScenario<ServerDrivenActivity>
+    private val rootIdSlot = slot<String>()
 
     @Before
     fun mockBeforeTest() {
@@ -94,7 +94,7 @@ class BeagleActivityTest : BaseSoLoaderTest() {
             val url = "/url"
             val screenRequest = RequestData(url = url)
             prepareViewModelMock(analyticsViewModel)
-            every { analyticsViewModel.createScreenReport(capture(screenIdentifierSlot)) } just Runs
+            every { analyticsViewModel.createScreenReport(capture(screenIdentifierSlot), capture(rootIdSlot)) } just Runs
 
             //When
             activity?.navigateTo(screenRequest, null, navigationContext)
@@ -119,7 +119,7 @@ class BeagleActivityTest : BaseSoLoaderTest() {
 
 
             prepareViewModelMock(analyticsViewModel)
-            every { analyticsViewModel.createScreenReport(capture(screenIdentifierSlot)) } just Runs
+            every { analyticsViewModel.createScreenReport(capture(screenIdentifierSlot), capture(rootIdSlot)) } just Runs
 
             //When
             activity?.navigateTo(screenRequest, screen, navigationContext)

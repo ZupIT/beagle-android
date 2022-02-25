@@ -49,6 +49,7 @@ internal class DataScreenReportTest : BaseTest() {
             mockkObject(ScreenReportFactory)
             val dataScreenReport = DataScreenReport(screenIdentifier = SCREEN_IDENTIFIER)
             val timestamp = dataScreenReport.timestamp
+            val rootId = dataScreenReport.rootId
 
             //WHEN
             dataScreenReport.report(analyticsConfig)
@@ -57,7 +58,8 @@ internal class DataScreenReportTest : BaseTest() {
             verify(exactly = 1) {
                 ScreenReportFactory.generateScreenAnalyticsRecord(
                     SCREEN_IDENTIFIER,
-                    timestamp
+                    timestamp,
+                    rootId
                 )
             }
 
@@ -85,7 +87,7 @@ internal class DataScreenReportTest : BaseTest() {
             val result = dataScreenReport.report(analyticsConfig)
 
             //THEN
-            verify(exactly = 0) { ScreenReportFactory.generateScreenAnalyticsRecord(any(), any()) }
+            verify(exactly = 0) { ScreenReportFactory.generateScreenAnalyticsRecord(any(), any(), any()) }
             assertEquals(null, result)
 
         }

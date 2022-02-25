@@ -64,6 +64,7 @@ internal class BeagleViewTest : BaseTest() {
     private val analyticsViewModel = mockk<AnalyticsViewModel>()
 
     private val screenIdentifierSlot = slot<String>()
+    private val rootIdSlot = slot<String>()
 
     private val mutableLiveData = MutableLiveData<ViewState>()
     private lateinit var url: String
@@ -80,7 +81,7 @@ internal class BeagleViewTest : BaseTest() {
         BeagleSdk.setInTestMode()
         MyBeagleSetup().init(application)
         prepareViewModelMock(analyticsViewModel)
-        every { analyticsViewModel.createScreenReport(capture(screenIdentifierSlot)) } just Runs
+        every { analyticsViewModel.createScreenReport(capture(screenIdentifierSlot), capture(rootIdSlot)) } just Runs
         every { viewModel.fetchComponent(any(), any()) } returns mutableLiveData
         val activityScenario: ActivityScenario<ServerDrivenActivity> =
             ActivityScenario.launch(ServerDrivenActivity::class.java)

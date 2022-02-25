@@ -27,7 +27,8 @@ package br.com.zup.beagle.android.analytics
  * @param event is a String that contains the name of the event that caused the action
  * @param additionalEntries is a Map that contains additionalEntries provided by the ActionAnalyticsConfig
  * @param timestamp is a Long that have the timestamp when the action was called.
- * @param screen is a String that contains the screen url/id
+ * @param screen is a String that contains the screen url
+ * @param rootId is a String that contains the screen id
  */
 data class AnalyticsRecord(
     val type: String,
@@ -39,4 +40,5 @@ data class AnalyticsRecord(
     val additionalEntries: Map<String, Any>? = null,
     val timestamp: Long,
     val screen: String,
+    val rootId: String? = null
 )
