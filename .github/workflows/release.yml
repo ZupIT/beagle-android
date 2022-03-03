@@ -24,11 +24,6 @@ jobs:
                 parse-json: true
             - name: Install Fastlane
               run: bundle install
-            - name: Setup JDK (11)
-              uses: actions/setup-java@v2
-              with:
-                distribution: 'adopt'
-                java-version: '11'
             - name: Deploy new version
               env:
                 REPO_TOKEN: ${{ env.BEAGLE_CORE_GITHUB_GITHUB_TOKEN }}
