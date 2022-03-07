@@ -37,7 +37,7 @@ import javax.lang.model.SourceVersion
 import javax.lang.model.element.TypeElement
 
 @AutoService(Processor::class)
-@SupportedSourceVersion(SourceVersion.RELEASE_11)
+@SupportedSourceVersion(SourceVersion.RELEASE_8)
 @IncrementalAnnotationProcessor(IncrementalAnnotationProcessorType.ISOLATING)
 @SupportedOptions(
     KAPT_BEAGLE_MODULE_NAME_OPTION_NAME,

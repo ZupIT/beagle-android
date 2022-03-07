@@ -263,9 +263,9 @@ class ContextDataManagerTest : BaseTest() {
             contextDataManager.addContext(viewContext, contextData)
 
             // Then
-            val bindingsWithoutContextData: MutableSet<Binding<*>> = contextDataManager.getPrivateField("bindingsWithoutContextData")
+            val bindingsWithoutContextData: MutableCollection<Binding<*>> = contextDataManager.getPrivateField("bindingsWithoutContextData")
 
-            assertEquals(emptySet<Binding<*>>(), bindingsWithoutContextData)
+            assertEquals(emptyList<Binding<*>>(), bindingsWithoutContextData)
         }
     }
 
@@ -324,7 +324,7 @@ class ContextDataManagerTest : BaseTest() {
             val viewWithBind = createViewForContext(viewContext)
             val bind = expressionOf<Boolean>("@{$CONTEXT_ID}")
             val observer = mockk<Observer<Boolean?>>(relaxed = true)
-            val bindingsWithoutContextData: MutableSet<Binding<*>> = contextDataManager.getPrivateField("bindingsWithoutContextData")
+            val bindingsWithoutContextData: MutableCollection<Binding<*>> = contextDataManager.getPrivateField("bindingsWithoutContextData")
 
             // When
             contextDataManager.addBinding(viewWithBind, bind, observer)
@@ -333,7 +333,7 @@ class ContextDataManagerTest : BaseTest() {
             // Then
             assertTrue { viewBinding.isEmpty() }
             assertEquals(bindingsWithoutContextData,
-                setOf(Binding(
+                listOf(Binding(
                     observer = observer,
                     bind = bind
                 )))

@@ -21,11 +21,11 @@ jobs:
             beagle/core/*
             beagle/docs/aws
           parse-json: true
-      - name: Setup JDK (11)
+      - name: Setup JDK (8)
         uses: actions/setup-java@v2
         with:
           distribution: 'adopt'
-          java-version: '11'
+          java-version: '8'
 
       - name: Cache gradle dependencies
         uses: actions/cache@v2

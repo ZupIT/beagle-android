@@ -48,7 +48,7 @@ internal class ContextDataManager(
      * When trying to add [Binding] and the context does not exist in the tree
      * to link then this [Binding] is saved in this list
      */
-    private val bindingsWithoutContextData = mutableSetOf<Binding<*>>()
+    private val bindingsWithoutContextData = mutableListOf<Binding<*>>()
 
     private val globalContextObserver: GlobalContextObserver = {
         updateGlobalContext(it)
@@ -310,14 +310,17 @@ internal class ContextDataManager(
      */
     fun tryLinkContextInBindWithoutContext(originView: View) {
         val contextStack = originView.getAllParentContextWithGlobal()
-        val iterator = bindingsWithoutContextData.iterator()
-
-        iterator.forEach {
+        val removeIndexes = mutableSetOf<Int>()
+        bindingsWithoutContextData.forEachIndexed { index, it ->
             val bindingTokens = it.bind.filterBindingTokens()
             val result = tryNotifyBindingTokens(bindingTokens, contextStack, it)
             if (result) {
-                iterator.remove()
+                removeIndexes.add(index)
             }
+        }
+        val itRemove = removeIndexes.iterator()
+        itRemove.forEach {
+            bindingsWithoutContextData.removeAt(it)
         }
 
     }

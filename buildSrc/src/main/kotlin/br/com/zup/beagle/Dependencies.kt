@@ -87,7 +87,7 @@ class Dependencies : Plugin<Project> {
         const val archCoreTesting = "2.1.0"
         const val testRules = "1.4.0"
         const val testCore = "1.4.0"
-        const val robolectric = "4.6.1"
+        const val robolectric = "4.3"
         const val fragmentTest = "1.3.6"
 
         const val incap = "0.3"
