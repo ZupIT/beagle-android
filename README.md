@@ -49,43 +49,15 @@ Beagle's documentation discusses components, APIs, and topics that are specific 
 [b-docs]: https://docs.usebeagle.io/
 
 
-## **Contributing Guide**
+## **Contributing**
 
-If you want to contribute to this module, access our [**Contributing Guide**][contribute] to learn about our development process, how to propose bug fixes and improvements, and how to build and test your changes to Beagle.
+We are very happy you are interested in helping us and there are plenty ways you can do so.
+
+- [**Open an Issue:**](https://github.com/ZupIT/beagle/issues/new/choose) Recommend improvements, changes and report bugs
+
+- **Open a Pull Request:** If you feel like you can even make changes to our source code and suggest them, just check out our [**contributing guide**][contribute] to learn about the development process, how to suggest bugfixes and improvements.
 
 [contribute]: https://github.com/ZupIT/beagle-android/blob/main/CONTRIBUTING.md
-
-### **Developer Certificate of Origin - DCO**
-
- This is a security layer for the project and for the developers. It is mandatory.
- 
- Follow one of these two methods to add DCO to your commits:
- 
-**1. Command line**
- Follow the steps: 
- **Step 1:** Configure your local git environment adding the same name and e-mail configured at your GitHub account. It helps to sign commits manually during reviews and suggestions.
-
- ```
-git config --global user.name “Name”
-git config --global user.email “email@domain.com.br”
-```
-
-**Step 2:** Add the Signed-off-by line with the `'-s'` flag in the git commit command:
-
-```
-$ git commit -s -m "This is my commit message"
-```
-
-**2. GitHub website**
-You can also manually sign your commits during GitHub reviews and suggestions, follow the steps below: 
-
-**Step 1:** When the commit changes box opens, manually type or paste your signature in the comment box, see the example:
-
-```
-Signed-off-by: Name < e-mail address >
-```
-
-For this method, your name and e-mail must be the same registered to your GitHub account.
 
 ## **Code of Conduct**
 
