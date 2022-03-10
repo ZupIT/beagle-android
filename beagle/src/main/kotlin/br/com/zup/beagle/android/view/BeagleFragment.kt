@@ -27,7 +27,8 @@ import br.com.zup.beagle.android.action.NavigationContext
 import br.com.zup.beagle.android.action.SetContextInternal
 import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.context.normalize
-import br.com.zup.beagle.android.data.serializer.BeagleSerializer
+import br.com.zup.beagle.android.data.serializer.BeagleJsonSerializerFactory
+import br.com.zup.beagle.android.data.serializer.BeagleJsonSerializer
 import br.com.zup.beagle.android.utils.applyBackgroundFromWindowBackgroundTheme
 import br.com.zup.beagle.android.utils.getRootId
 import br.com.zup.beagle.android.utils.toView
@@ -195,7 +196,7 @@ internal class BeagleFragment : Fragment() {
             return bundle
         }
 
-        private val beagleSerializer: BeagleSerializer = BeagleSerializer()
+        private val beagleSerializer: BeagleJsonSerializer = BeagleJsonSerializerFactory.serializer
         private const val JSON_SCREEN_KEY = "JSON_SCREEN_KEY"
         private const val SCREEN_IDENTIFIER_KEY = "SCREEN_IDENTIFIER_KEY"
         internal const val NAVIGATION_CONTEXT_KEY = "NAVIGATION_CONTEXT_KEY"

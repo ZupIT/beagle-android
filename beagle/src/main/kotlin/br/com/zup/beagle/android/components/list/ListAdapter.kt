@@ -28,7 +28,7 @@ import br.com.zup.beagle.android.context.AsyncActionData
 import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.context.normalizeContextValue
-import br.com.zup.beagle.android.data.serializer.BeagleSerializer
+import br.com.zup.beagle.android.data.serializer.BeagleJsonSerializerFactory
 import br.com.zup.beagle.android.utils.setIsAutoGenerateIdEnabled
 import br.com.zup.beagle.android.utils.toAndroidId
 import br.com.zup.beagle.android.view.ViewFactory
@@ -52,7 +52,7 @@ internal class ListAdapter(
     private var parentListViewId: Int? = null
 
     // Serializer to provide new template instances
-    private val serializer = BeagleSerializer()
+    private val serializer = BeagleJsonSerializerFactory.serializer
 
     // Items captured by ListView
     private var listItems: List<Any> = mutableListOf()

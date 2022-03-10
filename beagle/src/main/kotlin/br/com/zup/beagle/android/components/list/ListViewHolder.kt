@@ -26,7 +26,7 @@ import androidx.recyclerview.widget.RecyclerView
 import br.com.zup.beagle.android.action.AsyncActionStatus
 import br.com.zup.beagle.android.context.ContextComponent
 import br.com.zup.beagle.android.context.ContextData
-import br.com.zup.beagle.android.data.serializer.BeagleSerializer
+import br.com.zup.beagle.android.data.serializer.BeagleJsonSerializer
 import br.com.zup.beagle.android.utils.COMPONENT_NO_ID
 import br.com.zup.beagle.android.utils.getListContextData
 import br.com.zup.beagle.android.utils.isInitiableComponent
@@ -37,12 +37,12 @@ import br.com.zup.beagle.android.widget.core.MultiChildComponent
 import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 import br.com.zup.beagle.android.widget.core.SingleChildComponent
 import org.json.JSONObject
-import java.util.LinkedList
+import java.util.*
 
 internal class ListViewHolder(
     itemView: View,
     private val template: ServerDrivenComponent,
-    private val serializer: BeagleSerializer,
+    private val serializer: BeagleJsonSerializer,
     private val listViewModels: ListViewModels,
     private val jsonTemplate: String,
     private val iteratorName: String
