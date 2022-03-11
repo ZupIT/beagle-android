@@ -37,7 +37,7 @@ import br.com.zup.beagle.android.widget.core.MultiChildComponent
 import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 import br.com.zup.beagle.android.widget.core.SingleChildComponent
 import org.json.JSONObject
-import java.util.*
+import java.util.LinkedList
 
 internal class ListViewHolder(
     itemView: View,
