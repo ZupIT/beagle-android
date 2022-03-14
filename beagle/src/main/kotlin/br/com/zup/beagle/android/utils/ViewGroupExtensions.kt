@@ -21,7 +21,7 @@ package br.com.zup.beagle.android.utils
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import br.com.zup.beagle.android.data.serializer.BeagleSerializer
+import br.com.zup.beagle.android.data.serializer.BeagleJsonSerializerFactory
 import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.view.custom.OnServerStateChanged
@@ -30,7 +30,7 @@ import br.com.zup.beagle.android.widget.ActivityRootView
 import br.com.zup.beagle.android.widget.FragmentRootView
 import br.com.zup.beagle.android.widget.RootView
 
-internal var beagleSerializerFactory = BeagleSerializer()
+internal var beagleSerializerFactory = BeagleJsonSerializerFactory.serializer
 
 /**
  * Load a ServerDrivenComponent into this ViewGroup

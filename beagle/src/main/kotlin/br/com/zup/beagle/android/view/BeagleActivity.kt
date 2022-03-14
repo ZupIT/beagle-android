@@ -34,7 +34,8 @@ import androidx.lifecycle.ViewModelProvider
 import br.com.zup.beagle.R
 import br.com.zup.beagle.android.action.NavigationContext
 import br.com.zup.beagle.android.components.layout.Screen
-import br.com.zup.beagle.android.data.serializer.BeagleSerializer
+import br.com.zup.beagle.android.data.serializer.BeagleJsonSerializerFactory
+import br.com.zup.beagle.android.data.serializer.BeagleJsonSerializer
 import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.utils.BeagleRetry
 import br.com.zup.beagle.android.view.viewmodel.BeagleScreenViewModel
@@ -248,7 +249,7 @@ abstract class BeagleActivity : AppCompatActivity() {
     }
 
     companion object {
-        private val beagleSerializer: BeagleSerializer = BeagleSerializer()
+        private val beagleSerializer: BeagleJsonSerializer = BeagleJsonSerializerFactory.serializer
         internal const val FIRST_SCREEN_REQUEST_KEY = "FIRST_SCREEN_REQUEST_KEY"
         internal const val FIRST_SCREEN_KEY = "FIRST_SCREEN_KEY"
         internal const val NAVIGATION_CONTEXT_KEY = "NAVIGATION_CONTEXT_KEY"

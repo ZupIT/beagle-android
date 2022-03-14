@@ -16,8 +16,9 @@
 
 package br.com.zup.beagle.android.data
 
-import br.com.zup.beagle.android.data.serializer.BeagleSerializer
 import br.com.zup.beagle.android.exception.BeagleException
+import br.com.zup.beagle.android.data.serializer.BeagleJsonSerializerFactory
+import br.com.zup.beagle.android.data.serializer.BeagleJsonSerializer
 import br.com.zup.beagle.android.networking.OnError
 import br.com.zup.beagle.android.networking.OnSuccess
 import br.com.zup.beagle.android.networking.RequestCall
@@ -34,7 +35,7 @@ import kotlin.coroutines.resumeWithException
 
 internal class ComponentRequester(
     private val viewClient: ViewClient = BeagleEnvironment.beagleSdk.viewClient ?: ViewClientDefault.instance,
-    private val serializer: BeagleSerializer = BeagleSerializer(),
+    private val serializer: BeagleJsonSerializer = BeagleJsonSerializerFactory.serializer,
 ) {
 
     @Throws(BeagleException::class)
