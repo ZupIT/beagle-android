@@ -17,6 +17,7 @@
 package br.com.zup.beagle.sample
 
 import android.content.Intent
+import android.os.Bundle
 import br.com.zup.beagle.android.annotation.BeagleComponent
 import br.com.zup.beagle.android.navigation.DeepLinkHandler
 import br.com.zup.beagle.android.widget.RootView
@@ -26,5 +27,13 @@ class AppDeepLinkHandler : DeepLinkHandler {
     override fun getDeepLinkIntent(rootView: RootView,
                                    path: String,
                                    data: Map<String, String>?,
-                                   shouldResetApplication: Boolean): Intent = Intent(path)
+                                   shouldResetApplication: Boolean): Intent {
+        val intent = Intent(path)
+        val bundle = Bundle()
+        data?.forEach {
+            bundle.putSerializable(it.key, it.value)
+        }
+        intent.putExtras(bundle)
+        return intent
+    }
 }
