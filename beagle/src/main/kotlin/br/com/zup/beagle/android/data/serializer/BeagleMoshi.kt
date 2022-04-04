@@ -30,6 +30,7 @@ import br.com.zup.beagle.android.data.serializer.adapter.SimpleJsonAdapter
 import br.com.zup.beagle.android.data.serializer.adapter.SimpleJsonArrayAdapter
 import br.com.zup.beagle.android.data.serializer.adapter.defaults.CharSequenceAdapter
 import br.com.zup.beagle.android.data.serializer.adapter.defaults.MoshiArrayListJsonAdapter
+import br.com.zup.beagle.android.data.serializer.adapter.defaults.MoshiMapJsonAdapter
 import br.com.zup.beagle.android.data.serializer.adapter.defaults.PairAdapterFactory
 import br.com.zup.beagle.android.data.serializer.adapter.generic.BeagleGenericAdapterFactory
 import br.com.zup.beagle.android.setup.BeagleEnvironment
@@ -52,6 +53,7 @@ internal object BeagleMoshi {
         .add(AndroidActionJsonAdapterFactory.make())
         .add(ContextDataAdapterFactory())
         .add(MoshiArrayListJsonAdapter.FACTORY)
+        .add(MoshiMapJsonAdapter.FACTORY)
         .add(CharSequenceAdapter())
         .add(PairAdapterFactory)
         .apply {
