@@ -155,7 +155,6 @@ internal class BeagleFragment : Fragment() {
             value = navigationContext.value,
             path = navigationContext.path,
         ))
-        contextViewModel.linkBindingToContextAndEvaluateThem(requireView())
         contextViewModel.tryLinkContextInBindWithoutContext(requireView())
     }
 
