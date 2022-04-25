@@ -75,7 +75,7 @@ class ContextDataManipulatorTest : BaseTest() {
     }
 
     @Test
-    fun `set should ignore contextId and replace context value when path is empty`() {
+    fun `set should allow contextId key in path and correctly update context value`() {
         // Given
         val context = ContextData(
             id = CONTEXT_ID,
@@ -89,7 +89,7 @@ class ContextDataManipulatorTest : BaseTest() {
 
         // Then
         val newValue = (result as ContextSetResult.Succeed).newContext.value.toString()
-        assertEquals("{\"a\":false}", newValue)
+        assertEquals("{\"$CONTEXT_ID\":{\"a\":false}}", newValue)
     }
 
     @Test
