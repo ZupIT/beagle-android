@@ -43,7 +43,7 @@ internal class ContextDataManipulator(
             ContextSetResult.Succeed(context.copy(value = value))
         } else {
             try {
-                val keys = createKeysFromPath(context.id, path)
+                val keys = JsonPathUtils.splitKeys(path)
                 val newContext = updateContextDataWithTree(context, keys)
                 jsonCreateTree.walkingTreeAndFindKey(newContext.value, keys, value)
                 ContextSetResult.Succeed(newContext)
