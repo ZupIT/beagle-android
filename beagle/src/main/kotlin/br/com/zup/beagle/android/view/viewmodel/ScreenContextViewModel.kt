@@ -18,7 +18,6 @@ package br.com.zup.beagle.android.view.viewmodel
 
 import android.view.View
 import androidx.lifecycle.ViewModel
-import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.action.SetContextInternal
 import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.context.ContextData
@@ -68,12 +67,12 @@ internal class ScreenContextViewModel(
         contextDataManager.linkBindingToContextAndEvaluateThem(view)
     }
 
-    fun addImplicitContext(contextData: ContextData, sender: Any, actions: List<Action>) {
-        implicitContextManager.addImplicitContext(contextData, sender, actions)
+    fun addImplicitContext(contextData: ContextData, sender: Any, originView: View) {
+        implicitContextManager.addImplicitContext(contextData, sender, originView)
     }
 
-    fun evaluateExpressionForImplicitContext(originView: View, bindCaller: Action, bind: Bind.Expression<*>): Any? {
-        val implicitContexts = implicitContextManager.getImplicitContextForBind(bindCaller)
+    fun evaluateExpressionForImplicitContext(originView: View, bind: Bind.Expression<*>): Any? {
+        val implicitContexts = implicitContextManager.getImplicitContextForView(originView)
         val contexts = contextDataManager.getContextsFromBind(originView, bind).toMutableList()
         contexts += implicitContexts
         return contextDataEvaluation.evaluateBindExpression(contexts, bind)

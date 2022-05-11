@@ -87,7 +87,7 @@ private fun <T> evaluateExpression(
     val viewModel = rootView.generateViewModelInstance<ScreenContextViewModel>()
     return if (caller != null) {
         @Suppress("UNCHECKED_CAST")
-        viewModel.evaluateExpressionForImplicitContext(view, caller, bind) as? T?
+        viewModel.evaluateExpressionForImplicitContext(view, bind) as? T?
     } else {
         observes?.let {
             viewModel.addBindingToContext(view, bind, it)

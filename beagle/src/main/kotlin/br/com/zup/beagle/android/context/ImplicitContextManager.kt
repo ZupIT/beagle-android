@@ -16,12 +16,12 @@
 
 package br.com.zup.beagle.android.context
 
-import br.com.zup.beagle.android.action.Action
+import android.view.View
 
 private data class ImplicitContext(
     val sender: Any,
     val context: ContextData,
-    val caller: List<Action>
+    val caller: Any
 )
 
 internal class ImplicitContextManager {
@@ -29,20 +29,20 @@ internal class ImplicitContextManager {
     private val implicitContextData = mutableListOf<ImplicitContext>()
 
     // Sender is who created the implicit context
-    fun addImplicitContext(contextData: ContextData, sender: Any, actions: List<Action>) {
-        implicitContextData.removeAll { it.sender == sender }
+    fun addImplicitContext(contextData: ContextData, sender: Any, originView: Any) {
+        implicitContextData.removeAll { it.sender == sender  ||
+            it.caller === originView && contextData.id == it.context.id }
         implicitContextData += ImplicitContext(
             sender = sender,
             context = contextData,
-            caller = actions
+            caller = originView
         )
     }
 
     // BindCaller is who owns the Bind Attribute
-    fun getImplicitContextForBind(bindCaller: Action): List<ContextData> {
+    fun getImplicitContextForView(origin: View): List<ContextData> {
         val contexts = mutableListOf<ContextData>()
-
-        findMoreContexts(bindCaller, contexts)
+        findMoreContexts(origin, contexts)
 
         return contexts
     }
@@ -52,11 +52,8 @@ internal class ImplicitContextManager {
         contexts: MutableList<ContextData>
     ) {
         implicitContextData.forEach { implicitContext ->
-            implicitContext.caller.forEach {
-                if (toCompare === it) {
-                    contexts += implicitContext.context
-                    findMoreContexts(implicitContext.sender, contexts)
-                }
+            if (implicitContext.caller === toCompare) {
+                contexts += implicitContext.context
             }
         }
     }

@@ -18,7 +18,6 @@ package br.com.zup.beagle.android.context
 
 import android.view.View
 import br.com.zup.beagle.android.BaseTest
-import br.com.zup.beagle.android.action.Action
 import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -26,18 +25,17 @@ import org.junit.jupiter.api.Test
 
 class ImplicitContextManagerTest : BaseTest() {
 
-    private val action = mockk<Action>()
-    private val anotherAction = mockk<Action>()
     private val contextData = mockk<ContextData>()
     private val sender = mockk<View>()
+    private val originView = mockk<View>()
     private val implicitContextManager = ImplicitContextManager()
 
     @Test
     fun addImplicitContext_should_not_add_context_for_repeated_senders() {
         // When
-        implicitContextManager.addImplicitContext(contextData, sender, listOf(action))
-        implicitContextManager.addImplicitContext(contextData, sender, listOf(action))
-        val contexts = implicitContextManager.getImplicitContextForBind(action)
+        implicitContextManager.addImplicitContext(contextData, sender, originView)
+        implicitContextManager.addImplicitContext(contextData, sender, originView)
+        val contexts = implicitContextManager.getImplicitContextForView(originView)
 
         // Then
         assertEquals(contextData, contexts[0])
@@ -47,24 +45,13 @@ class ImplicitContextManagerTest : BaseTest() {
     @Test
     fun getImplicitContextForBind_should_returns_contexts_if_same_action_reference() {
         // Given
-        implicitContextManager.addImplicitContext(contextData, sender, listOf(action))
+        implicitContextManager.addImplicitContext(contextData, sender, originView)
 
         // When
-        val contexts = implicitContextManager.getImplicitContextForBind(action)
+        val contexts = implicitContextManager.getImplicitContextForView(originView)
 
         // Then
         assertEquals(contextData, contexts[0])
     }
 
-    @Test
-    fun getImplicitContextForBind_should_be_empty_if_actions_are_different() {
-        // Given
-        implicitContextManager.addImplicitContext(contextData, sender, listOf(action))
-
-        // When
-        val contexts = implicitContextManager.getImplicitContextForBind(anotherAction)
-
-        // Then
-        assertTrue(contexts.isEmpty())
-    }
 }
