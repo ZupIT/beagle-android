@@ -38,20 +38,20 @@ internal object ContextActionExecutor {
         analyticsValue: String? = null,
     ) {
         if (context != null) {
-            createImplicitContextForActions(rootView, sender, context, actions)
+            createImplicitContextForView(rootView, sender, context, origin)
         }
 
         executeActions(rootView, origin, actions, analyticsValue)
     }
 
-    private fun createImplicitContextForActions(
+    private fun createImplicitContextForView(
         rootView: RootView,
         sender: Any,
         context: ContextData,
-        actions: List<Action>,
+        origin: View,
     ) {
         val viewModel = rootView.generateViewModelInstance<ScreenContextViewModel>()
-        viewModel.addImplicitContext(context.normalize(), sender, actions)
+        viewModel.addImplicitContext(context.normalize(), sender, origin)
     }
 
     private fun executeActions(

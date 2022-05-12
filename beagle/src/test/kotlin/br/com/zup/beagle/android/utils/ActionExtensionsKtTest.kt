@@ -569,7 +569,7 @@ class ActionExtensionsKtTest : BaseTest() {
         )
 
         // When
-        val actualValue = secondAction.evaluateExpression(rootView, bindView, bind)
+        val actualValue = secondAction.evaluateExpression(rootView, contextView, bind)
 
         // Then
         val expected = "Hello $explicitContextValue and $implicitContextValue"
@@ -600,7 +600,7 @@ class ActionExtensionsKtTest : BaseTest() {
         )
 
         // When
-        val actualValue = secondAction.evaluateExpression(rootView, bindView, bind)
+        val actualValue = secondAction.evaluateExpression(rootView, contextView, bind)
 
         // Then
         val expected = "Hello $explicitContextValue and $implicitContextValue"
@@ -617,7 +617,7 @@ class ActionExtensionsKtTest : BaseTest() {
         action.handleEvent(rootView, contextView, secondAction, context)
 
         // When
-        val actualValue = secondAction.evaluateExpression(rootView, bindView, bind)
+        val actualValue = secondAction.evaluateExpression(rootView, contextView, bind)
 
         // Then
         assertEquals(implicitContextValue, actualValue)
@@ -634,7 +634,7 @@ class ActionExtensionsKtTest : BaseTest() {
         action.handleEvent(rootView, contextView, secondAction, context)
 
         // When
-        val actualValue = secondAction.evaluateExpression(rootView, bindView, bind)
+        val actualValue = secondAction.evaluateExpression(rootView, contextView, bind)
 
         // Then
         assertEquals(implicitContextValue, actualValue)

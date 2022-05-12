@@ -153,28 +153,27 @@ class ScreenContextViewModelTest : BaseTest() {
         // Given
         val context = mockk<ContextData>()
         val sender = mockk<View>()
-        val actions = mockk<List<Action>>()
+        val originView = mockk<View>()
 
         // When
-        screenContextViewModel.addImplicitContext(context, sender, actions)
+        screenContextViewModel.addImplicitContext(context, sender, originView)
 
         // Then
-        verify(exactly = 1) { implicitContextManager.addImplicitContext(context, sender, actions) }
+        verify(exactly = 1) { implicitContextManager.addImplicitContext(context, sender, originView) }
     }
 
     @Test
     fun `GIVEN ScreenContextViewModel WHEN evaluateExpressionForImplicitContext THEN should use both context and evaluate`() {
         // Given
         val originView = mockk<View>()
-        val bindCaller = mockk<Action>()
         val bind = mockk<Bind.Expression<String>>()
         val implicitContexts = listOf<ContextData>()
         val contexts = listOf<ContextData>()
-        every { implicitContextManager.getImplicitContextForBind(bindCaller) } returns implicitContexts
+        every { implicitContextManager.getImplicitContextForView(originView) } returns implicitContexts
         every { contextDataManager.getContextsFromBind(originView, bind) } returns contexts
 
         // When
-        screenContextViewModel.evaluateExpressionForImplicitContext(originView, bindCaller, bind)
+        screenContextViewModel.evaluateExpressionForImplicitContext(originView, bind)
 
         // Then
         verify(exactly = 1) { contextDataEvaluation.evaluateBindExpression(contexts, bind) }

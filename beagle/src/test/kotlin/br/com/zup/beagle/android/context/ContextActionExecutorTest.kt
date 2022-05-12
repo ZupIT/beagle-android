@@ -91,7 +91,7 @@ class ContextActionExecutorTest : BaseAsyncActionTest() {
 
         // Then
         verifySequence {
-            viewModel.addImplicitContext(contextDataSlot.captured, sender, listOf(action))
+            viewModel.addImplicitContext(contextDataSlot.captured, sender, view)
             action.execute(rootView, view)
         }
     }
