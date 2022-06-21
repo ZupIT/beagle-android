@@ -27,6 +27,7 @@ import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.context.normalizeContextValue
 import br.com.zup.beagle.android.networking.HttpAdditionalData
 import br.com.zup.beagle.android.utils.evaluateExpression
+import br.com.zup.beagle.android.utils.getWithExpression
 import br.com.zup.beagle.android.view.custom.BeagleNavigator
 import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.android.widget.core.BeagleJson
@@ -89,7 +90,9 @@ sealed class Navigate : AnalyticsAction {
         val navigationContext: NavigationContext? = null,
     ) : Navigate() {
         override fun execute(rootView: RootView, origin: View) {
-            BeagleNavigator.popStack(rootView.getContext(), navigationContext)
+            BeagleNavigator.popStack(rootView.getContext(), navigationContext?.getWithExpression { value ->
+                evaluateExpression(rootView, origin, value)
+            })
         }
     }
 
@@ -101,10 +104,12 @@ sealed class Navigate : AnalyticsAction {
     @BeagleJson(name = "popView")
     class PopView(
         override var analytics: ActionAnalyticsConfig? = null,
-        val navigationContext: NavigationContext? = null
+        val navigationContext: NavigationContext? = null,
     ) : Navigate() {
         override fun execute(rootView: RootView, origin: View) {
-            BeagleNavigator.popView(rootView.getContext(), navigationContext)
+            BeagleNavigator.popView(rootView.getContext(), navigationContext?.getWithExpression { value ->
+                evaluateExpression(rootView, origin, value)
+            })
         }
     }
 
@@ -119,12 +124,14 @@ sealed class Navigate : AnalyticsAction {
     data class PopToView(
         val route: Bind<String>,
         override var analytics: ActionAnalyticsConfig? = null,
-        val navigationContext: NavigationContext? = null
+        val navigationContext: NavigationContext? = null,
     ) : Navigate() {
 
         override fun execute(rootView: RootView, origin: View) {
             evaluateExpression(rootView, origin, route)?.let { route ->
-                BeagleNavigator.popToView(rootView.getContext(), route, navigationContext)
+                BeagleNavigator.popToView(rootView.getContext(), route, navigationContext?.getWithExpression { value ->
+                    evaluateExpression(rootView, origin, value)
+                })
             }
         }
     }
@@ -143,10 +150,13 @@ sealed class Navigate : AnalyticsAction {
     data class PushView(
         val route: Route,
         override var analytics: ActionAnalyticsConfig? = null,
-        val navigationContext: NavigationContext? = null
+        val navigationContext: NavigationContext? = null,
     ) : Navigate() {
         override fun execute(rootView: RootView, origin: View) {
-            BeagleNavigator.pushView(rootView.getContext(), route.getSafe(rootView, origin), navigationContext)
+            BeagleNavigator.pushView(rootView.getContext(), route.getSafe(rootView, origin),
+                navigationContext?.getWithExpression { value ->
+                    evaluateExpression(rootView, origin, value)
+                })
         }
     }
 
@@ -166,12 +176,14 @@ sealed class Navigate : AnalyticsAction {
         val route: Route,
         val controllerId: String? = null,
         override var analytics: ActionAnalyticsConfig? = null,
-        val navigationContext: NavigationContext? = null
+        val navigationContext: NavigationContext? = null,
     ) : Navigate() {
         override fun execute(rootView: RootView, origin: View) {
             BeagleNavigator.pushStack(
                 rootView.getContext(), route.getSafe(rootView, origin),
-                controllerId, navigationContext,
+                controllerId, navigationContext?.getWithExpression { value ->
+                evaluateExpression(rootView, origin, value)
+            },
             )
         }
     }
@@ -192,11 +204,13 @@ sealed class Navigate : AnalyticsAction {
         val route: Route,
         val controllerId: String? = null,
         override var analytics: ActionAnalyticsConfig? = null,
-        val navigationContext: NavigationContext? = null
+        val navigationContext: NavigationContext? = null,
     ) : Navigate() {
         override fun execute(rootView: RootView, origin: View) {
             BeagleNavigator.resetApplication(rootView.getContext(), route.getSafe(rootView, origin),
-                controllerId, navigationContext)
+                controllerId, navigationContext?.getWithExpression { value ->
+                evaluateExpression(rootView, origin, value)
+            })
         }
     }
 
@@ -215,11 +229,13 @@ sealed class Navigate : AnalyticsAction {
         val route: Route,
         val controllerId: String? = null,
         override var analytics: ActionAnalyticsConfig? = null,
-        val navigationContext: NavigationContext? = null
+        val navigationContext: NavigationContext? = null,
     ) : Navigate() {
         override fun execute(rootView: RootView, origin: View) {
             BeagleNavigator.resetStack(rootView.getContext(), route.getSafe(rootView, origin),
-                controllerId, navigationContext)
+                controllerId, navigationContext?.getWithExpression { value ->
+                evaluateExpression(rootView, origin, value)
+            })
         }
     }
 
