@@ -25,6 +25,7 @@ import br.com.zup.beagle.android.data.serializer.BeagleJsonSerializerFactory
 import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.view.custom.OnServerStateChanged
+import br.com.zup.beagle.android.view.viewmodel.AnalyticsViewModel
 import br.com.zup.beagle.android.view.viewmodel.ScreenContextViewModel
 import br.com.zup.beagle.android.widget.ActivityRootView
 import br.com.zup.beagle.android.widget.FragmentRootView
@@ -183,4 +184,10 @@ internal fun ViewGroup.loadView(
     }
     removeAllViews()
     addView(view)
+
+    if (rootView.getScreenId().isNotEmpty()) {
+        rootView.generateViewModelInstance<AnalyticsViewModel>().createScreenReport(
+            rootView.getScreenId(), getRootId(component)
+        )
+    }
 }
