@@ -25,14 +25,17 @@ import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.view.custom.BeagleView
 import br.com.zup.beagle.android.view.custom.OnServerStateChanged
+import br.com.zup.beagle.android.view.viewmodel.AnalyticsViewModel
 import br.com.zup.beagle.android.view.viewmodel.GenerateIdViewModel
 import br.com.zup.beagle.android.view.viewmodel.ListViewIdViewModel
 import br.com.zup.beagle.android.view.viewmodel.OnInitViewModel
 import br.com.zup.beagle.android.widget.ActivityRootView
 import br.com.zup.beagle.android.widget.FragmentRootView
-import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
+import br.com.zup.beagle.android.widget.Widget
+import io.mockk.Runs
 import io.mockk.clearMocks
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.verifySequence
@@ -46,6 +49,8 @@ private val REQUEST_DATA_FAKE = RequestData(
     url = "",
 )
 
+private const val SCREEN_ID = "screen_id"
+
 @DisplayName("Given a View Group")
 internal class ViewGroupExtensionsKtTest : BaseTest() {
 
@@ -53,10 +58,11 @@ internal class ViewGroupExtensionsKtTest : BaseTest() {
     private val beagleView: BeagleView = mockk(relaxed = true, relaxUnitFun = true)
     private val activityMock: AppCompatActivity = mockk(relaxed = true, relaxUnitFun = true)
     private val serializerFactory: BeagleSerializer = mockk(relaxed = true)
-    private val component: ServerDrivenComponent = mockk(relaxed = true)
+    private val component: Widget = mockk(relaxed = true)
     private val generateIdViewModel: GenerateIdViewModel = mockk(relaxed = true)
     private val listViewIdViewModel: ListViewIdViewModel = mockk(relaxed = true)
     private val onInitViewModel: OnInitViewModel = mockk(relaxed = true)
+    private val analyticsViewModel = mockk<AnalyticsViewModel>()
 
     @BeforeAll
     override fun setUp() {
@@ -66,12 +72,15 @@ internal class ViewGroupExtensionsKtTest : BaseTest() {
         prepareViewModelMock(
             generateIdViewModel,
             listViewIdViewModel,
-            onInitViewModel
+            onInitViewModel,
+            analyticsViewModel
         )
 
         beagleSerializerFactory = serializerFactory
+        every { component.id } returns SCREEN_ID
         every { ViewFactory.makeBeagleView(any()) } returns beagleView
         every { serializerFactory.deserializeComponent(any()) } returns component
+        every { analyticsViewModel.createScreenReport(any(), any()) } just Runs
     }
 
     @BeforeEach
@@ -192,7 +201,7 @@ internal class ViewGroupExtensionsKtTest : BaseTest() {
                 """.trimIndent()
 
             // When
-            viewGroup.loadView(activityMock, screenJson)
+            viewGroup.loadView(activityMock, screenJson, SCREEN_ID)
 
             // Then
             verifySequence {
@@ -203,6 +212,7 @@ internal class ViewGroupExtensionsKtTest : BaseTest() {
                 beagleView.listenerOnViewDetachedFromWindow = any()
                 viewGroup.removeAllViews()
                 viewGroup.addView(beagleView)
+                analyticsViewModel.createScreenReport("screen_id", any())
             }
         }
     }
