@@ -54,7 +54,7 @@ data class PullToRefresh constructor(
 
     private fun buildChildView(rootView: RootView) =
         ViewFactory.makeBeagleFlexView(rootView).apply {
-            addView(child, false)
+            addView(child)
         }
 
     private fun observeRefreshState(rootView: RootView, view: SwipeRefreshLayout) {
