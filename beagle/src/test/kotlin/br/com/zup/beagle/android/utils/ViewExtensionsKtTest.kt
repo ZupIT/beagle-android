@@ -38,6 +38,7 @@ import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.view.custom.BeagleView
 import br.com.zup.beagle.android.view.custom.OnLoadCompleted
 import br.com.zup.beagle.android.view.custom.OnServerStateChanged
+import br.com.zup.beagle.android.view.viewmodel.AnalyticsViewModel
 import br.com.zup.beagle.android.view.viewmodel.GenerateIdViewModel
 import br.com.zup.beagle.android.view.viewmodel.ListViewIdViewModel
 import br.com.zup.beagle.android.view.viewmodel.OnInitViewModel
@@ -45,7 +46,7 @@ import br.com.zup.beagle.android.view.viewmodel.ScreenContextViewModel
 import br.com.zup.beagle.android.widget.ActivityRootView
 import br.com.zup.beagle.android.widget.FragmentRootView
 import br.com.zup.beagle.android.widget.RootView
-import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
+import br.com.zup.beagle.android.widget.Widget
 import br.com.zup.beagle.android.widget.core.Style
 import br.com.zup.beagle.android.widget.core.StyleComponent
 import io.mockk.CapturingSlot
@@ -70,6 +71,7 @@ import org.junit.jupiter.api.Test
 
 private val URL = RandomData.httpUrl()
 private val requestData = RequestData(URL)
+private const val SCREEN_ID = "screenId"
 
 @DisplayName("Given a View")
 class ViewExtensionsKtTest : BaseTest() {
@@ -105,6 +107,8 @@ class ViewExtensionsKtTest : BaseTest() {
 
     private val viewSlot = slot<View>()
 
+    private val analyticsViewModel = mockk<AnalyticsViewModel>()
+
     @BeforeAll
     override fun setUp() {
         super.setUp()
@@ -119,7 +123,8 @@ class ViewExtensionsKtTest : BaseTest() {
             contextViewModel,
             generateIdViewModel,
             listViewIdViewModel,
-            onInitViewModel
+            onInitViewModel,
+            analyticsViewModel
         )
 
         every { ViewFactory.makeBeagleView(any()) } returns beagleView
@@ -132,6 +137,7 @@ class ViewExtensionsKtTest : BaseTest() {
         every { TextViewCompat.setTextAppearance(any(), any()) } just Runs
         every { imageView.scaleType = any() } just Runs
         every { imageView.setImageResource(any()) } just Runs
+        every { analyticsViewModel.createScreenReport(any(), any()) } just Runs
     }
 
     @BeforeEach
@@ -509,7 +515,7 @@ class ViewExtensionsKtTest : BaseTest() {
             }
             }"""
 
-        private val component: ServerDrivenComponent = mockk(relaxed = true)
+        private val component: Widget = mockk(relaxed = true)
         private val serializerFactory: BeagleSerializer = mockk(relaxed = true)
 
         @DisplayName("Then should create the rootView with right parameters")
@@ -517,10 +523,11 @@ class ViewExtensionsKtTest : BaseTest() {
         fun testRenderScreenWithActivity() {
             // Given
             beagleSerializerFactory = serializerFactory
+            every { component.id } returns SCREEN_ID
             every { serializerFactory.deserializeComponent(any()) } returns component
 
             // When
-            viewGroup.loadView(activity, json, "screenId")
+            viewGroup.loadView(activity, json, SCREEN_ID)
 
             // Then
             verifySequence {
@@ -539,10 +546,11 @@ class ViewExtensionsKtTest : BaseTest() {
         fun testRenderScreenWithFragment() {
             // Given
             beagleSerializerFactory = serializerFactory
+            every { component.id } returns SCREEN_ID
             every { serializerFactory.deserializeComponent(any()) } returns component
 
             // When
-            viewGroup.loadView(fragment, json, "screenId")
+            viewGroup.loadView(fragment, json, SCREEN_ID)
 
             // Then
             verifySequence {
