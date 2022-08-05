@@ -154,7 +154,7 @@ class PullToRefreshTest : BaseComponentTest() {
 
             // Then
             verify(exactly = 1) {
-                beagleFlexView.addView(child, false)
+                beagleFlexView.addView(child)
             }
         }
     }
