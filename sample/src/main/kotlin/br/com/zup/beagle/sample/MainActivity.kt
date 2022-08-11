@@ -53,7 +53,8 @@ class MainActivity : AppCompatActivity() {
         when (itemSelected) {
             R.id.remote_server -> startActivity(
                 newServerDrivenIntent<ServerDrivenActivity>(
-                    RequestData(SAMPLE_ENDPOINT)
+                    requestData = RequestData(SAMPLE_ENDPOINT),
+                    beagleSdk = BeagleSetup()
                 )
             )
         }
@@ -62,7 +63,138 @@ class MainActivity : AppCompatActivity() {
     private fun renderScreen() {
         binding.fragmentContent.loadView(
             this,
-            RequestData("https://usebeagle.io/start/welcome")
+            config = BeagleSetup(),
+            screenJson = """{
+  "_beagleComponent_": "beagle:screenComponent",
+  "title": "Movies",
+  "child": {
+    "_beagleComponent_": "beagle:container",
+    "context": {
+      "id": "movies",
+      "value": []
+    },
+    "onInit": [
+      {
+        "_beagleAction_": "beagle:sendRequest",
+        "url": "https://gist.githubusercontent.com/Tiagoperes/4579284bbace403f35c897dbc54a5d30/raw/2e1d5fa908bd678f837cdb4b69cb48eac9633148/films1.json",
+        "onSuccess": [
+          {
+            "_beagleAction_": "beagle:setContext",
+            "contextId": "movies",
+            "value": "@{onSuccess.data}"
+          }
+        ]
+      }
+    ],
+    "children": [
+      {
+        "_beagleComponent_": "beagle:pullToRefresh",
+        "context": {
+          "id": "isRefreshing",
+          "value": false
+        },
+        "onPull": [
+          {
+            "_beagleAction_": "beagle:setContext",
+            "contextId": "isRefreshing",
+            "value": true
+          },
+          {
+            "_beagleAction_": "beagle:sendRequest",
+            "url": "https://gist.githubusercontent.com/Tiagoperes/4579284bbace403f35c897dbc54a5d30/raw/2e1d5fa908bd678f837cdb4b69cb48eac9633148/films2.json",
+            "onSuccess": [
+              {
+                "_beagleAction_": "beagle:setContext",
+                "contextId": "movies",
+                "value": "@{onSuccess.data}"
+              }
+            ],
+            "onError": [
+              {
+                "_beagleAction_": "beagle:alert",
+                "title": "Error",
+                "message": "Error while sending request."
+              }
+            ],
+            "onFinish": [
+              {
+                "_beagleAction_": "beagle:setContext",
+                "contextId": "isRefreshing",
+                "value": false
+              }
+            ]
+          }
+        ],
+        "isRefreshing": "@{isRefreshing}",
+        "color": "#0000FF",
+        "child": {
+          "_beagleComponent_": "beagle:listView",
+          "style": {
+            "size": {
+              "height": {
+                "value": 100,
+                "type": "PERCENT"
+              }
+            }
+          },
+          "dataSource": "@{movies}",
+          "templates": [
+            {
+              "view": {
+                "_beagleComponent_": "beagle:container",
+                "style": {
+                  "margin": {
+                    "all": {
+                      "type": "REAL",
+                      "value": 10
+                    }
+                  }
+                },
+                "children": [
+                  {
+                    "_beagleComponent_": "beagle:text",
+                    "text": "@{item.Title} - @{item.Year}",
+                    "textColor": "#FF0000"
+                  },
+                  {
+                    "_beagleComponent_": "beagle:text",
+                    "text": "@{item.Genre}"
+                  },
+                  {
+                    "_beagleComponent_": "beagle:text",
+                    "text": "@{item.Rating}"
+                  },
+                  {
+                    "_beagleComponent_": "beagle:text",
+                    "text": "@{item.Plot}"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "_beagleComponent_": "beagle:container",
+        "style": {
+          "backgroundColor": "#EEEEEE",
+          "size": {
+            "height": {
+              "type": "PERCENT",
+              "value": 30
+            }
+          }
+        },
+        "children": [
+          {
+            "_beagleComponent_": "beagle:text",
+            "text": "My Static content"
+          }
+        ]
+      }
+    ]
+  }
+}"""
         )
     }
 }

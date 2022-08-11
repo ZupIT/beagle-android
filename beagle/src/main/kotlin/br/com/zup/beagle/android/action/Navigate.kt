@@ -153,7 +153,7 @@ sealed class Navigate : AnalyticsAction {
         val navigationContext: NavigationContext? = null,
     ) : Navigate() {
         override fun execute(rootView: RootView, origin: View) {
-            BeagleNavigator.pushView(rootView.getContext(), route.getSafe(rootView, origin),
+            BeagleNavigator.pushView(rootView, route.getSafe(rootView, origin),
                 navigationContext?.getWithExpression { value ->
                     evaluateExpression(rootView, origin, value)
                 })

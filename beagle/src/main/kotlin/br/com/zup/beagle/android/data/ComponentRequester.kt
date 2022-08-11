@@ -19,6 +19,7 @@ package br.com.zup.beagle.android.data
 import br.com.zup.beagle.android.exception.BeagleException
 import br.com.zup.beagle.android.data.serializer.BeagleJsonSerializerFactory
 import br.com.zup.beagle.android.data.serializer.BeagleJsonSerializer
+import br.com.zup.beagle.android.data.serializer.BeagleMoshi
 import br.com.zup.beagle.android.networking.OnError
 import br.com.zup.beagle.android.networking.OnSuccess
 import br.com.zup.beagle.android.networking.RequestCall
@@ -26,6 +27,7 @@ import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.networking.ResponseData
 import br.com.zup.beagle.android.networking.ViewClient
 import br.com.zup.beagle.android.networking.ViewClientDefault
+import br.com.zup.beagle.android.setup.BeagleConfigurator
 import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -34,8 +36,14 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
 internal class ComponentRequester(
-    private val viewClient: ViewClient = BeagleEnvironment.beagleSdk.viewClient ?: ViewClientDefault.instance,
-    private val serializer: BeagleJsonSerializer = BeagleJsonSerializerFactory.serializer,
+    private val beagleConfigurator: BeagleConfigurator? = null,
+    private val viewClient: ViewClient =
+        beagleConfigurator?.beagleSdk?.viewClient ?: BeagleEnvironment.beagleSdk.viewClient ?:
+        beagleConfigurator?.beagleSdk?.httpClientFactory?.let {
+            ViewClientDefault(it.create())
+        }
+        ?: ViewClientDefault.instance,
+    private val serializer: BeagleJsonSerializer = BeagleJsonSerializerFactory.create(moshi = beagleConfigurator?.moshi ?: BeagleMoshi.moshi),
 ) {
 
     @Throws(BeagleException::class)

@@ -16,6 +16,7 @@
 
 package br.com.zup.beagle.android.data.serializer
 
+import android.annotation.SuppressLint
 import androidx.annotation.VisibleForTesting
 import br.com.zup.beagle.android.data.serializer.adapter.AnalyticsActionConfigAdapterFactory
 import br.com.zup.beagle.android.data.serializer.adapter.AndroidActionJsonAdapterFactory
@@ -33,7 +34,10 @@ import br.com.zup.beagle.android.data.serializer.adapter.defaults.MoshiArrayList
 import br.com.zup.beagle.android.data.serializer.adapter.defaults.MoshiMapJsonAdapter
 import br.com.zup.beagle.android.data.serializer.adapter.defaults.PairAdapterFactory
 import br.com.zup.beagle.android.data.serializer.adapter.generic.BeagleGenericAdapterFactory
+import br.com.zup.beagle.android.data.serializer.adapter.generic.TypeAdapterResolver
 import br.com.zup.beagle.android.setup.BeagleEnvironment
+import br.com.zup.beagle.android.setup.BeagleSdk
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 import com.squareup.moshi.Moshi
 
 internal object BeagleMoshi {
@@ -42,8 +46,18 @@ internal object BeagleMoshi {
         createMoshi()
     }
 
+    @SuppressLint("CheckResult")
+    fun moshiFactory(config: BeagleSdk): Moshi {
+        val moshi = createMoshi(config.typeAdapterResolver)
+        moshi.adapter(ServerDrivenComponent::class.java)
+        return moshi
+    }
+
     @VisibleForTesting
-    fun createMoshi(): Moshi = Moshi.Builder()
+    fun createMoshi(
+        typeAdapterResolver: TypeAdapterResolver? =
+            BeagleEnvironment.beagleSdk.typeAdapterResolver,
+    ): Moshi = Moshi.Builder()
         .add(BindAdapterFactory())
         .add(ImagePathTypeJsonAdapterFactory.make())
         .add(ComponentJsonAdapterFactory.make())
@@ -57,7 +71,7 @@ internal object BeagleMoshi {
         .add(CharSequenceAdapter())
         .add(PairAdapterFactory)
         .apply {
-            BeagleEnvironment.beagleSdk.typeAdapterResolver?.let {
+            typeAdapterResolver?.let {
                 add(BeagleGenericAdapterFactory(it))
             }
         }

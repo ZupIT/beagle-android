@@ -21,6 +21,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelStoreOwner
+import br.com.zup.beagle.android.data.serializer.BeagleMoshi
+import br.com.zup.beagle.android.setup.BeagleConfigurator
+import br.com.zup.beagle.android.setup.BeagleEnvironment
 
 /**
  * Interface RootView holder the reference of activity or fragment.
@@ -50,6 +53,11 @@ interface RootView {
      * Returns the screen url or screen id of Screen that encapsulates all the content rendered by server-driven.
      */
     fun getScreenId(): String
+
+    /**
+     * Returns the Beagle config that should be used for this server-driven flow.
+     */
+    fun getConfig(): BeagleConfigurator
 }
 
 /**
@@ -61,7 +69,11 @@ interface RootView {
 class FragmentRootView(
     val fragment: Fragment,
     private val parentId: Int,
-    private val screenId : String
+    private val screenId : String,
+    private val config: BeagleConfigurator = BeagleConfigurator(
+        moshi = BeagleMoshi.moshi,
+        beagleSdk = BeagleEnvironment.beagleSdk,
+        application = BeagleEnvironment.application)
 ) : RootView {
 
     override fun getContext(): Context = fragment.requireContext()
@@ -73,6 +85,8 @@ class FragmentRootView(
     override fun getParentId(): Int = parentId
 
     override fun getScreenId(): String = screenId
+
+    override fun getConfig(): BeagleConfigurator = config
 }
 
 /**
@@ -84,7 +98,11 @@ class FragmentRootView(
 class ActivityRootView(
     val activity: AppCompatActivity,
     private val parentId: Int,
-    private val screenId : String
+    private val screenId: String,
+    private val config: BeagleConfigurator = BeagleConfigurator(
+        moshi = BeagleMoshi.moshi,
+        beagleSdk = BeagleEnvironment.beagleSdk,
+        application = BeagleEnvironment.application),
 ) : RootView {
 
     override fun getContext(): Context = activity
@@ -96,5 +114,7 @@ class ActivityRootView(
     override fun getParentId(): Int = parentId
 
     override fun getScreenId(): String = screenId
+
+    override fun getConfig(): BeagleConfigurator = config
 }
 

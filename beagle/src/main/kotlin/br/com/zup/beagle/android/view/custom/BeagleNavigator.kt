@@ -66,22 +66,22 @@ internal object BeagleNavigator {
         }
     }
 
-    fun pushView(context: Context, route: Route, navigationContext: NavigationContext?) {
-        if (context is BeagleActivity) {
+    fun pushView(rootView: RootView, route: Route, navigationContext: NavigationContext?) {
+        if (rootView.getContext() is BeagleActivity) {
             when (route) {
-                is Route.Remote -> context.navigateTo(
+                is Route.Remote -> (rootView.getContext() as BeagleActivity).navigateTo(
                     createRequestData(route),
                     route.fallback,
                     navigationContext
                 )
-                is Route.Local -> context.navigateTo(
+                is Route.Local -> (rootView.getContext() as BeagleActivity).navigateTo(
                     RequestData(url = ""),
                     route.screen,
                     navigationContext
                 )
             }
         } else {
-            context.startActivity(generateIntent(context, route, null, navigationContext))
+            rootView.getContext().startActivity(generateIntent(rootView.getContext(), route, null, navigationContext))
         }
     }
 
