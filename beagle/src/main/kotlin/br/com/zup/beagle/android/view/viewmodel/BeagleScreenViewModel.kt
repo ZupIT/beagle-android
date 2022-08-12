@@ -17,14 +17,37 @@
 package br.com.zup.beagle.android.view.viewmodel
 
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import br.com.zup.beagle.android.data.ComponentRequester
+import br.com.zup.beagle.android.data.serializer.BeagleJsonSerializerFactory
+import br.com.zup.beagle.android.networking.ViewClientDefault
+import br.com.zup.beagle.android.setup.BeagleConfigurator
+import br.com.zup.beagle.android.setup.getSerializer
+import br.com.zup.beagle.android.setup.getViewClient
 import br.com.zup.beagle.android.utils.CoroutineDispatchers
 import kotlinx.coroutines.CoroutineDispatcher
 
 internal class BeagleScreenViewModel(
+    beagleConfigurator: BeagleConfigurator? = null,
     ioDispatcher: CoroutineDispatcher = CoroutineDispatchers.IO,
-    componentRequester: ComponentRequester = ComponentRequester()
+    componentRequester: ComponentRequester = ComponentRequester(
+        viewClient = beagleConfigurator?.getViewClient() ?: ViewClientDefault.instance,
+        serializer = beagleConfigurator?.getSerializer() ?: BeagleJsonSerializerFactory.serializer)
 ) : BeagleViewModel(ioDispatcher = ioDispatcher, componentRequester = componentRequester) {
+
+    companion object {
+        fun provideFactory(
+            beagleConfigurator: BeagleConfigurator?,
+        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return BeagleScreenViewModel(
+                    beagleConfigurator = beagleConfigurator
+                ) as T
+            }
+        }
+    }
 
     val screenLoadFinished = MutableLiveData<Boolean>()
 

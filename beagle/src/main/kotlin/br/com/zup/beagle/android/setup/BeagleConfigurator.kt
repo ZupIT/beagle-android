@@ -20,6 +20,8 @@ import android.app.Application
 import br.com.zup.beagle.android.data.serializer.BeagleJsonSerializer
 import br.com.zup.beagle.android.data.serializer.BeagleJsonSerializerFactory
 import br.com.zup.beagle.android.data.serializer.BeagleMoshi
+import br.com.zup.beagle.android.data.serializer.BeagleSerializer
+import br.com.zup.beagle.android.networking.ViewClientDefault
 import com.squareup.moshi.Moshi
 
 class BeagleConfigurator(
@@ -38,3 +40,11 @@ class BeagleConfigurator(
                 moshi = moshi, application = application)
     }
 }
+
+internal fun BeagleConfigurator.getViewClient() =
+    this.beagleSdk.viewClient ?: BeagleEnvironment.beagleSdk.viewClient ?:
+    this.beagleSdk.httpClientFactory?.let {
+        ViewClientDefault(it.create())
+    }
+
+internal fun BeagleConfigurator.getSerializer(): BeagleJsonSerializer = BeagleJsonSerializerFactory.create(moshi = this.moshi)

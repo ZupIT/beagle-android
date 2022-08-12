@@ -21,10 +21,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import br.com.zup.beagle.android.data.ComponentRequester
+import br.com.zup.beagle.android.data.serializer.BeagleJsonSerializerFactory
 import br.com.zup.beagle.android.exception.BeagleException
 import br.com.zup.beagle.android.logger.BeagleLoggerProxy
 import br.com.zup.beagle.android.networking.RequestData
+import br.com.zup.beagle.android.networking.ViewClientDefault
 import br.com.zup.beagle.android.setup.BeagleConfigurator
+import br.com.zup.beagle.android.setup.getSerializer
+import br.com.zup.beagle.android.setup.getViewClient
 import br.com.zup.beagle.android.utils.BeagleRetry
 import br.com.zup.beagle.android.utils.CoroutineDispatchers
 import br.com.zup.beagle.android.widget.core.IdentifierComponent
@@ -47,7 +51,9 @@ sealed class ViewState {
 internal open class BeagleViewModel(
     private val beagleConfigurator: BeagleConfigurator? = null,
     private val ioDispatcher: CoroutineDispatcher = CoroutineDispatchers.IO,
-    private val componentRequester: ComponentRequester = ComponentRequester(beagleConfigurator),
+    private val componentRequester: ComponentRequester = ComponentRequester(
+        viewClient = beagleConfigurator?.getViewClient() ?: ViewClientDefault.instance,
+        serializer = beagleConfigurator?.getSerializer() ?: BeagleJsonSerializerFactory.serializer),
 ) : ViewModel() {
 
     var fetchComponent: FetchComponentLiveData? = null

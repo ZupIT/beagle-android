@@ -28,11 +28,9 @@ import br.com.zup.beagle.android.action.SetContextInternal
 import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.context.normalize
 import br.com.zup.beagle.android.data.serializer.BeagleJsonSerializer
-import br.com.zup.beagle.android.data.serializer.BeagleMoshi
 import br.com.zup.beagle.android.data.serializer.BeagleSerializer
 import br.com.zup.beagle.android.data.serializer.BeagleSerializer.Companion.beagleSerializerFactory
 import br.com.zup.beagle.android.setup.BeagleConfigurator
-import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.setup.BeagleSdk
 import br.com.zup.beagle.android.utils.ObjectWrapperForBinder
 import br.com.zup.beagle.android.utils.applyBackgroundFromWindowBackgroundTheme
@@ -52,6 +50,10 @@ internal class BeagleFragment : Fragment() {
         (arguments?.getBinder(BEAGLE_SDK_KEY) as? ObjectWrapperForBinder)?.data as? BeagleSdk
     }
 
+    private val beagleConfigurator: BeagleConfigurator? by lazy {
+        beagleSdk?.let { BeagleConfigurator.factory(it) }
+    }
+
     private val beagleSerializer: BeagleJsonSerializer by lazy {
         beagleSerializerFactory(beagleSdk)
     }
@@ -68,7 +70,7 @@ internal class BeagleFragment : Fragment() {
     }
 
     private val screenViewModel by lazy {
-        ViewModelProvider(requireActivity()).get(
+        ViewModelProvider(requireActivity(), BeagleScreenViewModel.provideFactory(beagleConfigurator)).get(
             BeagleScreenViewModel::class.java
         )
     }

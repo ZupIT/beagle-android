@@ -37,6 +37,7 @@ import br.com.zup.beagle.android.components.layout.Screen
 import br.com.zup.beagle.android.data.serializer.BeagleJsonSerializer
 import br.com.zup.beagle.android.data.serializer.BeagleSerializer
 import br.com.zup.beagle.android.networking.RequestData
+import br.com.zup.beagle.android.setup.BeagleConfigurator
 import br.com.zup.beagle.android.setup.BeagleSdk
 import br.com.zup.beagle.android.utils.BeagleRetry
 import br.com.zup.beagle.android.utils.ObjectWrapperForBinder
@@ -80,7 +81,6 @@ sealed class ServerDrivenState {
 
 abstract class BeagleActivity : AppCompatActivity() {
 
-    private val screenViewModel by lazy { ViewModelProvider(this).get(BeagleScreenViewModel::class.java) }
     private val screenRequest by lazy {
         intent.extras?.getParcelable<RequestData>(
             FIRST_SCREEN_REQUEST_KEY
@@ -90,6 +90,14 @@ abstract class BeagleActivity : AppCompatActivity() {
     private val beagleSdk: BeagleSdk? by lazy {
         (intent.extras?.getBinder(BEAGLE_SDK_KEY) as? ObjectWrapperForBinder)?.data as? BeagleSdk
     }
+
+    private val beagleConfigurator: BeagleConfigurator? by lazy {
+        beagleSdk?.let { BeagleConfigurator.factory(it) }
+    }
+
+    private val screenViewModel by lazy { ViewModelProvider(this, BeagleScreenViewModel.provideFactory(
+        beagleConfigurator
+    )).get(BeagleScreenViewModel::class.java) }
 
     private val beagleSerializer: BeagleJsonSerializer by lazy {
         BeagleSerializer.beagleSerializerFactory(beagleSdk)
@@ -252,6 +260,7 @@ abstract class BeagleActivity : AppCompatActivity() {
                     component,
                     screenName,
                     navigationContext,
+                    beagleSdk
                 )
             )
             .addToBackStack(screenName)
