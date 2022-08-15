@@ -21,11 +21,8 @@ package br.com.zup.beagle.android.utils
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import br.com.zup.beagle.android.data.serializer.BeagleMoshi.createMoshi
-import br.com.zup.beagle.android.data.serializer.BeagleMoshi.moshiFactory
 import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.setup.BeagleConfigurator
-import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.setup.BeagleSdk
 import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.view.custom.OnServerStateChanged
@@ -34,8 +31,6 @@ import br.com.zup.beagle.android.view.viewmodel.ScreenContextViewModel
 import br.com.zup.beagle.android.widget.ActivityRootView
 import br.com.zup.beagle.android.widget.FragmentRootView
 import br.com.zup.beagle.android.widget.RootView
-import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
-import com.squareup.moshi.Moshi
 
 /**
  * Load a ServerDrivenComponent into this ViewGroup

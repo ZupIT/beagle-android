@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
             R.id.remote_server -> startActivity(
                 newServerDrivenIntent<ServerDrivenActivity>(
                     requestData = RequestData(SAMPLE_ENDPOINT),
-                    beagleSdk = BeagleSetup()
+                    beagleSdk = BeagleSetup2()
                 )
             )
         }
@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity() {
     private fun renderScreen() {
         binding.fragmentContent.loadView(
             this,
-            config = BeagleSetup(),
+            config = BeagleSetup2(),
             screenJson = """{
   "_beagleComponent_": "beagle:screenComponent",
   "title": "Movies",
@@ -152,20 +152,20 @@ class MainActivity : AppCompatActivity() {
                 },
                 "children": [
                   {
-                    "_beagleComponent_": "beagle:text",
+                    "_beagleComponent_": "custom:text2",
                     "text": "@{item.Title} - @{item.Year}",
                     "textColor": "#FF0000"
                   },
                   {
-                    "_beagleComponent_": "beagle:text",
+                    "_beagleComponent_": "custom:text2",
                     "text": "@{item.Genre}"
                   },
                   {
-                    "_beagleComponent_": "beagle:text",
+                    "_beagleComponent_": "custom:text2",
                     "text": "@{item.Rating}"
                   },
                   {
-                    "_beagleComponent_": "beagle:text",
+                    "_beagleComponent_": "custom:text2",
                     "text": "@{item.Plot}"
                   }
                 ]
@@ -187,7 +187,7 @@ class MainActivity : AppCompatActivity() {
         },
         "children": [
           {
-            "_beagleComponent_": "beagle:text",
+            "_beagleComponent_": "custom:text2",
             "text": "My Static content"
           }
         ]

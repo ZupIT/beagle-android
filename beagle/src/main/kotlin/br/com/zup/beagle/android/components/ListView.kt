@@ -139,6 +139,7 @@ data class ListView constructor(
 
     private fun setupRecyclerView(orientation: Int) {
         val contextAdapter = ListAdapter(
+            rootView.getConfig().serializer,
             orientation,
             iteratorName,
             key,

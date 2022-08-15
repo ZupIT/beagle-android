@@ -33,14 +33,14 @@ private const val CUSTOM_NAMESPACE = "custom"
 
 internal object ComponentJsonAdapterFactory {
 
-    fun make(): PolymorphicJsonAdapterFactory<ServerDrivenComponent> {
+    fun make(registeredWidgets: List<Class<WidgetView>>): PolymorphicJsonAdapterFactory<ServerDrivenComponent> {
         var factory = PolymorphicJsonAdapterFactory.of(
             ServerDrivenComponent::class.java, BEAGLE_WIDGET_TYPE
         )
 
         factory = registerUIClass(factory)
         factory = registerWidgets(factory, true, InternalWidgetFactory.registeredWidgets())
-        factory = registerWidgets(factory, false, BeagleEnvironment.beagleSdk.registeredWidgets())
+        factory = registerWidgets(factory, false, registeredWidgets)
         factory = registerUndefinedWidget(factory)
 
         return factory

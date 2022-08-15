@@ -37,18 +37,20 @@ import br.com.zup.beagle.android.data.serializer.adapter.generic.BeagleGenericAd
 import br.com.zup.beagle.android.data.serializer.adapter.generic.TypeAdapterResolver
 import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.setup.BeagleSdk
+import br.com.zup.beagle.android.widget.WidgetView
 import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 import com.squareup.moshi.Moshi
 
 internal object BeagleMoshi {
 
     val moshi: Moshi by lazy {
-        createMoshi()
+        createMoshi(registeredWidgets = BeagleEnvironment.beagleSdk.registeredWidgets())
     }
 
     @SuppressLint("CheckResult")
     fun moshiFactory(config: BeagleSdk): Moshi {
-        val moshi = createMoshi(config.typeAdapterResolver)
+        val moshi = createMoshi(config.typeAdapterResolver,
+        registeredWidgets = config.registeredWidgets())
         moshi.adapter(ServerDrivenComponent::class.java)
         return moshi
     }
@@ -57,10 +59,11 @@ internal object BeagleMoshi {
     fun createMoshi(
         typeAdapterResolver: TypeAdapterResolver? =
             BeagleEnvironment.beagleSdk.typeAdapterResolver,
+        registeredWidgets: List<Class<WidgetView>>,
     ): Moshi = Moshi.Builder()
         .add(BindAdapterFactory())
         .add(ImagePathTypeJsonAdapterFactory.make())
-        .add(ComponentJsonAdapterFactory.make())
+        .add(ComponentJsonAdapterFactory.make(registeredWidgets))
         .add(HttpAdditionalDataAdapter())
         .add(RouteAdapterFactory())
         .add(AnalyticsActionConfigAdapterFactory())
