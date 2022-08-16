@@ -127,6 +127,7 @@ internal class BeagleFragment : Fragment() {
                     screen.toView(
                         this@BeagleFragment,
                         screenIdentifier = screenIdentifier,
+                        beagleSdk = beagleSdk
                     ))
             }
         }

@@ -32,18 +32,22 @@ class BeagleConfigurator(
 ) {
     companion object {
         internal fun factory(
-            beagleSdk: BeagleSdk,
-            moshi: Moshi = BeagleMoshi.moshiFactory(beagleSdk),
+            beagleSdk: BeagleSdk?,
+            moshi: Moshi = beagleSdk?.let { BeagleMoshi.moshiFactory(beagleSdk) } ?: BeagleMoshi.moshi,
             application: Application = BeagleEnvironment.application,
         ) =
-            BeagleConfigurator(beagleSdk = beagleSdk,
-                moshi = moshi, application = application)
+            beagleSdk?.let {
+                BeagleConfigurator(beagleSdk = it,
+                    moshi = moshi, application = application)
+            } ?: BeagleConfigurator(
+                moshi = BeagleMoshi.moshi,
+                beagleSdk = BeagleEnvironment.beagleSdk,
+                application = BeagleEnvironment.application)
     }
 }
 
 internal fun BeagleConfigurator.getViewClient() =
-    this.beagleSdk.viewClient ?: BeagleEnvironment.beagleSdk.viewClient ?:
-    this.beagleSdk.httpClientFactory?.let {
+    this.beagleSdk.viewClient ?: BeagleEnvironment.beagleSdk.viewClient ?: this.beagleSdk.httpClientFactory?.let {
         ViewClientDefault(it.create())
     }
 
