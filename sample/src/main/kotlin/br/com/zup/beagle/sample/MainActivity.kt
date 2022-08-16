@@ -55,8 +55,7 @@ class MainActivity : AppCompatActivity() {
         when (itemSelected) {
             R.id.remote_server -> startActivity(
                 newServerDrivenIntent<ServerDrivenActivity>(
-                    requestData = RequestData(SAMPLE_ENDPOINT),
-                    beagleSdk = BeagleSetup2()
+                    requestData = RequestData(SAMPLE_ENDPOINT)
                 )
             )
             R.id.sample_config2 -> startActivity(
