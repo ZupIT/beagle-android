@@ -23,12 +23,12 @@ import br.com.zup.beagle.android.utils.observeBindChanges
 import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.android.widget.WidgetView
 
-data class Text2(
+data class Text3(
     val text: Bind<String>,
 ) : WidgetView() {
     override fun buildView(rootView: RootView): TextView = TextView(rootView.getContext()).also {
-        it.setTextColor(Color.BLUE)
-        observeBindChanges(rootView, it, this@Text2.text) { newText ->
+        it.setTextColor(Color.RED)
+        observeBindChanges(rootView, it, this@Text3.text) { newText ->
             it.text = newText
         }
     }

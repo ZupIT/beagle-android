@@ -24,6 +24,8 @@ import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.utils.loadView
 import br.com.zup.beagle.android.utils.newServerDrivenIntent
 import br.com.zup.beagle.android.view.ServerDrivenActivity
+import br.com.zup.beagle.sample.config.BeagleSetup2
+import br.com.zup.beagle.sample.config.BeagleSetup3
 import br.com.zup.beagle.sample.constants.SAMPLE_ENDPOINT
 import br.com.zup.beagle.sample.databinding.ActivityMainBinding
 
@@ -57,144 +59,25 @@ class MainActivity : AppCompatActivity() {
                     beagleSdk = BeagleSetup2()
                 )
             )
+            R.id.sample_config2 -> startActivity(
+                newServerDrivenIntent<ServerDrivenActivity>(
+                    screenJson = screen2,
+                    beagleSdk = BeagleSetup2()
+                )
+            )
+            R.id.sample_config3 -> startActivity(
+                newServerDrivenIntent<ServerDrivenActivity>(
+                    screenJson = screen3,
+                    beagleSdk = BeagleSetup3()
+                )
+            )
         }
     }
 
     private fun renderScreen() {
         binding.fragmentContent.loadView(
             this,
-            config = BeagleSetup2(),
-            screenJson = """{
-  "_beagleComponent_": "beagle:screenComponent",
-  "title": "Movies",
-  "child": {
-    "_beagleComponent_": "beagle:container",
-    "context": {
-      "id": "movies",
-      "value": []
-    },
-    "onInit": [
-      {
-        "_beagleAction_": "beagle:sendRequest",
-        "url": "https://gist.githubusercontent.com/Tiagoperes/4579284bbace403f35c897dbc54a5d30/raw/2e1d5fa908bd678f837cdb4b69cb48eac9633148/films1.json",
-        "onSuccess": [
-          {
-            "_beagleAction_": "beagle:setContext",
-            "contextId": "movies",
-            "value": "@{onSuccess.data}"
-          }
-        ]
-      }
-    ],
-    "children": [
-      {
-        "_beagleComponent_": "beagle:pullToRefresh",
-        "context": {
-          "id": "isRefreshing",
-          "value": false
-        },
-        "onPull": [
-          {
-            "_beagleAction_": "beagle:setContext",
-            "contextId": "isRefreshing",
-            "value": true
-          },
-          {
-            "_beagleAction_": "beagle:sendRequest",
-            "url": "https://gist.githubusercontent.com/Tiagoperes/4579284bbace403f35c897dbc54a5d30/raw/2e1d5fa908bd678f837cdb4b69cb48eac9633148/films2.json",
-            "onSuccess": [
-              {
-                "_beagleAction_": "beagle:setContext",
-                "contextId": "movies",
-                "value": "@{onSuccess.data}"
-              }
-            ],
-            "onError": [
-              {
-                "_beagleAction_": "beagle:alert",
-                "title": "Error",
-                "message": "Error while sending request."
-              }
-            ],
-            "onFinish": [
-              {
-                "_beagleAction_": "beagle:setContext",
-                "contextId": "isRefreshing",
-                "value": false
-              }
-            ]
-          }
-        ],
-        "isRefreshing": "@{isRefreshing}",
-        "color": "#0000FF",
-        "child": {
-          "_beagleComponent_": "beagle:listView",
-          "style": {
-            "size": {
-              "height": {
-                "value": 100,
-                "type": "PERCENT"
-              }
-            }
-          },
-          "dataSource": "@{movies}",
-          "templates": [
-            {
-              "view": {
-                "_beagleComponent_": "beagle:container",
-                "style": {
-                  "margin": {
-                    "all": {
-                      "type": "REAL",
-                      "value": 10
-                    }
-                  }
-                },
-                "children": [
-                  {
-                    "_beagleComponent_": "custom:text2",
-                    "text": "@{item.Title} - @{item.Year}",
-                    "textColor": "#FF0000"
-                  },
-                  {
-                    "_beagleComponent_": "custom:text2",
-                    "text": "@{item.Genre}"
-                  },
-                  {
-                    "_beagleComponent_": "custom:text2",
-                    "text": "@{item.Rating}"
-                  },
-                  {
-                    "_beagleComponent_": "custom:text2",
-                    "text": "@{item.Plot}"
-                  }
-                ]
-              }
-            }
-          ]
-        }
-      },
-      {
-        "_beagleComponent_": "beagle:container",
-        "style": {
-          "backgroundColor": "#EEEEEE",
-          "size": {
-            "height": {
-              "type": "PERCENT",
-              "value": 30
-            }
-          }
-        },
-        "children": [
-          {
-            "_beagleComponent_": "custom:text2",
-            "text": "My Static content"
-          }
-        ]
-      }
-    ]
-  }
-}"""
+            RequestData("https://usebeagle.io/start/welcome")
         )
     }
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package br.com.zup.beagle.sample
+package br.com.zup.beagle.sample.config
 
 import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.analytics.AnalyticsProvider
@@ -31,12 +31,13 @@ import br.com.zup.beagle.android.setup.BeagleConfig
 import br.com.zup.beagle.android.setup.BeagleSdk
 import br.com.zup.beagle.android.setup.DesignSystem
 import br.com.zup.beagle.android.widget.WidgetView
+import br.com.zup.beagle.sample.AppBeagleConfig
 import br.com.zup.beagle.sample.widgets.ActionExecutor
 import br.com.zup.beagle.sample.widgets.Input
 import br.com.zup.beagle.sample.widgets.MutableText
-import br.com.zup.beagle.sample.widgets.Text2
+import br.com.zup.beagle.sample.widgets.Text3
 
-class BeagleSetup2(
+class BeagleSetup3(
     override val config: BeagleConfig = AppBeagleConfig(),
     override val deepLinkHandler: DeepLinkHandler? = null,
     override val httpClientFactory: HttpClientFactory? = null,
@@ -52,7 +53,7 @@ class BeagleSetup2(
     override fun registeredWidgets(): List<Class<WidgetView>>
         = listOf(
             ActionExecutor::class.java as Class<WidgetView>,
-        Text2::class.java as Class<WidgetView>,
+            Text3::class.java as Class<WidgetView>,
             MutableText::class.java as Class<WidgetView>,
             Input::class.java as Class<WidgetView>,
             )

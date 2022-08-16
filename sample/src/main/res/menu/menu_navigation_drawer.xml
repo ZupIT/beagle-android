@@ -24,6 +24,18 @@
         tools:ignore="HardcodedText" />
 
     <item
+        android:id="@+id/sample_config2"
+        android:icon="@mipmap/ic_launcher"
+        android:title="Sample Config 2"
+        tools:ignore="HardcodedText" />
+
+    <item
+        android:id="@+id/sample_config3"
+        android:icon="@mipmap/ic_launcher"
+        android:title="Sample Config 3"
+        tools:ignore="HardcodedText" />
+
+    <item
         android:id="@+id/preview"
         android:icon="@mipmap/ic_launcher"
         android:title="Preview"
