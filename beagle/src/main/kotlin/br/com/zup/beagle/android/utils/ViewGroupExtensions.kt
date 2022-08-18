@@ -40,19 +40,7 @@ import br.com.zup.beagle.android.widget.RootView
 fun ViewGroup.loadView(
     activity: AppCompatActivity,
     requestData: RequestData,
-) {
-    loadView(
-        viewGroup = this,
-        rootView = ActivityRootView(activity, this.id, requestData.url),
-        requestData = requestData,
-        listener = null,
-    )
-}
-
-fun ViewGroup.loadView(
-    activity: AppCompatActivity,
-    requestData: RequestData,
-    config: BeagleSdk,
+    config: BeagleSdk? = null
 ) {
     loadView(
         viewGroup = this,
@@ -71,25 +59,13 @@ fun ViewGroup.loadView(
 fun ViewGroup.loadView(
     fragment: Fragment,
     requestData: RequestData,
-    config: BeagleSdk,
+    config: BeagleSdk? = null
 ) {
 
     loadView(
         viewGroup = this,
         rootView = FragmentRootView(fragment, this.id, requestData.url, config = BeagleConfigurator
             .factory(beagleSdk = config)),
-        requestData = requestData,
-        listener = null,
-    )
-}
-
-fun ViewGroup.loadView(
-    fragment: Fragment,
-    requestData: RequestData,
-) {
-    loadView(
-        viewGroup = this,
-        rootView = FragmentRootView(fragment, this.id, requestData.url),
         requestData = requestData,
         listener = null,
     )
@@ -105,10 +81,12 @@ fun ViewGroup.loadView(
     activity: AppCompatActivity,
     requestData: RequestData,
     listener: OnServerStateChanged? = null,
+    config: BeagleSdk? = null
 ) {
     loadView(
         this,
-        ActivityRootView(activity, this.id, requestData.url),
+        ActivityRootView(activity, this.id, requestData.url, config = BeagleConfigurator
+            .factory(beagleSdk = config)),
         requestData,
         listener,
     )
@@ -124,10 +102,12 @@ fun ViewGroup.loadView(
     fragment: Fragment,
     requestData: RequestData,
     listener: OnServerStateChanged? = null,
+    config: BeagleSdk? = null
 ) {
     loadView(
         this,
-        FragmentRootView(fragment, this.id, requestData.url),
+        FragmentRootView(fragment, this.id, requestData.url, config = BeagleConfigurator
+            .factory(beagleSdk = config)),
         requestData,
         listener
     )
@@ -188,7 +168,7 @@ fun ViewGroup.loadView(
     screenJson: String,
     screenId: String = "",
     shouldResetContext: Boolean = false,
-    config: BeagleSdk,
+    config: BeagleSdk? = null,
 ) {
     loadView(ActivityRootView(activity, this.id, screenId, config = BeagleConfigurator
         .factory(beagleSdk = config)), screenJson, shouldResetContext)
@@ -208,8 +188,10 @@ fun ViewGroup.loadView(
     screenJson: String,
     screenId: String = "",
     shouldResetContext: Boolean = false,
+    config: BeagleSdk? = null,
 ) {
-    loadView(FragmentRootView(fragment, this.id, screenId), screenJson, shouldResetContext)
+    loadView(FragmentRootView(fragment, this.id, screenId, config = BeagleConfigurator
+        .factory(beagleSdk = config)), screenJson, shouldResetContext)
 }
 
 internal fun ViewGroup.loadView(
