@@ -129,7 +129,7 @@ sealed class Navigate : AnalyticsAction {
 
         override fun execute(rootView: RootView, origin: View) {
             evaluateExpression(rootView, origin, route)?.let { route ->
-                BeagleNavigator.popToView(rootView.getContext(), route, navigationContext?.getWithExpression { value ->
+                BeagleNavigator.popToView(rootView, route, navigationContext?.getWithExpression { value ->
                     evaluateExpression(rootView, origin, value)
                 })
             }

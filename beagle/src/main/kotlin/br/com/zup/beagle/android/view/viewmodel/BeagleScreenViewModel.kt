@@ -23,8 +23,6 @@ import br.com.zup.beagle.android.data.ComponentRequester
 import br.com.zup.beagle.android.data.serializer.BeagleJsonSerializerFactory
 import br.com.zup.beagle.android.networking.ViewClientDefault
 import br.com.zup.beagle.android.setup.BeagleConfigurator
-import br.com.zup.beagle.android.setup.getSerializer
-import br.com.zup.beagle.android.setup.getViewClient
 import br.com.zup.beagle.android.utils.CoroutineDispatchers
 import kotlinx.coroutines.CoroutineDispatcher
 
@@ -32,8 +30,8 @@ internal class BeagleScreenViewModel(
     beagleConfigurator: BeagleConfigurator? = null,
     ioDispatcher: CoroutineDispatcher = CoroutineDispatchers.IO,
     componentRequester: ComponentRequester = ComponentRequester(
-        viewClient = beagleConfigurator?.getViewClient() ?: ViewClientDefault.instance,
-        serializer = beagleConfigurator?.getSerializer() ?: BeagleJsonSerializerFactory.serializer)
+        viewClient = beagleConfigurator?.viewClient ?: ViewClientDefault.instance,
+        serializer = beagleConfigurator?.serializer ?: BeagleJsonSerializerFactory.serializer)
 ) : BeagleViewModel(ioDispatcher = ioDispatcher, componentRequester = componentRequester) {
 
     companion object {

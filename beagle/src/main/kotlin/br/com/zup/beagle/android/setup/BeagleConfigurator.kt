@@ -17,15 +17,17 @@
 package br.com.zup.beagle.android.setup
 
 import android.app.Application
+import br.com.zup.beagle.android.analytics.AnalyticsProvider
 import br.com.zup.beagle.android.data.serializer.BeagleJsonSerializer
 import br.com.zup.beagle.android.data.serializer.BeagleJsonSerializerFactory
 import br.com.zup.beagle.android.data.serializer.BeagleMoshi
-import br.com.zup.beagle.android.data.serializer.BeagleSerializer
+import br.com.zup.beagle.android.networking.HttpClient
+import br.com.zup.beagle.android.networking.ViewClient
 import br.com.zup.beagle.android.networking.ViewClientDefault
 import com.squareup.moshi.Moshi
 
 class BeagleConfigurator(
-    val beagleSdk: BeagleSdk,
+    private val beagleSdk: BeagleSdk,
     val moshi: Moshi,
     val application: Application,
     val serializer: BeagleJsonSerializer = BeagleJsonSerializerFactory.create(moshi),
@@ -44,11 +46,21 @@ class BeagleConfigurator(
                 beagleSdk = BeagleEnvironment.beagleSdk,
                 application = BeagleEnvironment.application)
     }
-}
 
-internal fun BeagleConfigurator.getViewClient() =
-    this.beagleSdk.viewClient ?: BeagleEnvironment.beagleSdk.viewClient ?: this.beagleSdk.httpClientFactory?.let {
-        ViewClientDefault(it.create())
+    internal val httpClient: HttpClient by lazy {
+        (this.beagleSdk.httpClientFactory?.create()
+            ?: BeagleEnvironment.beagleSdk.httpClientFactory?.create()) as HttpClient
     }
 
-internal fun BeagleConfigurator.getSerializer(): BeagleJsonSerializer = BeagleJsonSerializerFactory.create(moshi = this.moshi)
+    internal val viewClient: ViewClient by lazy {
+        this.beagleSdk.viewClient ?: BeagleEnvironment.beagleSdk.viewClient ?: ViewClientDefault(httpClient)
+    }
+
+    internal val analyticsProvider: AnalyticsProvider? by lazy {
+        this.beagleSdk.analyticsProvider
+    }
+
+    internal val baseUrl: String by lazy {
+        this.beagleSdk.config.baseUrl
+    }
+}

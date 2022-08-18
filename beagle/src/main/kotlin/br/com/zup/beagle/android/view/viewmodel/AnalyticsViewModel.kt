@@ -45,7 +45,7 @@ internal class AnalyticsViewModel : ViewModel() {
 
     fun createScreenReport(rootView: RootView, rootId: String? = null) {
         viewModelScope.launch(Dispatchers.Default) {
-            val analyticsProvider = rootView.getConfig().beagleSdk.analyticsProvider
+            val analyticsProvider = rootView.getConfig().analyticsProvider
             analyticsProvider?.let {
                 AnalyticsService.createScreenRecord(rootView.getScreenId(), it, rootId)
             }

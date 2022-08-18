@@ -92,7 +92,10 @@ data class SendRequest(
 ) : AnalyticsAction, AsyncAction by AsyncActionImpl() {
 
     override fun execute(rootView: RootView, origin: View) {
-        val viewModel = rootView.generateViewModelInstance<ActionRequestViewModel>()
+        val viewModel = rootView.generateViewModelInstance<ActionRequestViewModel>(
+            ActionRequestViewModel.provideFactory(
+                rootView.getConfig()
+            ))
         val setContext = toSendRequestInternal(rootView, origin)
         viewModel.fetch(setContext).observe(rootView.getLifecycleOwner(), { state ->
             onActionFinished()

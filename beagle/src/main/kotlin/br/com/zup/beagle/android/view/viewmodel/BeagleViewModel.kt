@@ -27,8 +27,6 @@ import br.com.zup.beagle.android.logger.BeagleLoggerProxy
 import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.networking.ViewClientDefault
 import br.com.zup.beagle.android.setup.BeagleConfigurator
-import br.com.zup.beagle.android.setup.getSerializer
-import br.com.zup.beagle.android.setup.getViewClient
 import br.com.zup.beagle.android.utils.BeagleRetry
 import br.com.zup.beagle.android.utils.CoroutineDispatchers
 import br.com.zup.beagle.android.widget.core.IdentifierComponent
@@ -52,8 +50,8 @@ internal open class BeagleViewModel(
     private val beagleConfigurator: BeagleConfigurator? = null,
     private val ioDispatcher: CoroutineDispatcher = CoroutineDispatchers.IO,
     private val componentRequester: ComponentRequester = ComponentRequester(
-        viewClient = beagleConfigurator?.getViewClient() ?: ViewClientDefault.instance,
-        serializer = beagleConfigurator?.getSerializer() ?: BeagleJsonSerializerFactory.serializer),
+        viewClient = beagleConfigurator?.viewClient ?: ViewClientDefault.instance,
+        serializer = beagleConfigurator?.serializer ?: BeagleJsonSerializerFactory.serializer),
 ) : ViewModel() {
 
     var fetchComponent: FetchComponentLiveData? = null

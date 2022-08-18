@@ -109,14 +109,16 @@ internal object BeagleNavigator {
         }
     }
 
-    fun popToView(context: Context, route: String, navigationContext: NavigationContext?) {
+    fun popToView(rootView: RootView, route: String, navigationContext: NavigationContext?) {
+        val context = rootView.getContext()
         if (context is AppCompatActivity) {
             /**
              * The popBackStackImmediate it's important to update [ContextData] because they get last fragment after pop
              * and function popBackStack will execute in the next event loop cycle because this has a better performance
              * but to this case I need to use this function
              */
-            context.supportFragmentManager.popBackStackImmediate(getFragmentName(route, context), 0)
+            context.supportFragmentManager.popBackStackImmediate(getFragmentName(route, context,
+                rootView.getConfig().baseUrl), 0)
             updateContext(context, navigationContext)
         }
     }
@@ -128,10 +130,9 @@ internal object BeagleNavigator {
         }
     }
 
-    private fun getFragmentName(route: String, context: AppCompatActivity): String {
+    private fun getFragmentName(route: String, context: AppCompatActivity, baseUrl: String): String {
         var fragmentName = route
         val urlBuilder = UrlBuilderFactory().make()
-        val baseUrl = BeagleEnvironment.beagleSdk.config.baseUrl
         val routeFormatted = urlBuilder.format(baseUrl, route)
         for (index in 0 until context.supportFragmentManager.backStackEntryCount) {
             val backStackEntryName = context.supportFragmentManager.getBackStackEntryAt(index).name
