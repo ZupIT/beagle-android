@@ -60,13 +60,13 @@ class MainActivity : AppCompatActivity() {
             )
             R.id.sample_config2 -> startActivity(
                 newServerDrivenIntent<ServerDrivenActivity>(
-                    screenJson = screen2,
+                    screenJson = SCREEN2,
                     beagleSdk = BeagleSetup2()
                 )
             )
             R.id.sample_config3 -> startActivity(
                 newServerDrivenIntent<ServerDrivenActivity>(
-                    screenJson = screen3,
+                    screenJson = SCREEN3,
                     beagleSdk = BeagleSetup3()
                 )
             )

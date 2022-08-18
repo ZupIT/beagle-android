@@ -37,19 +37,18 @@ import br.com.zup.beagle.sample.widgets.Input
 import br.com.zup.beagle.sample.widgets.MutableText
 import br.com.zup.beagle.sample.widgets.Text2
 
-class BeagleSetup2(
-    override val config: BeagleConfig = AppBeagleConfig(),
-    override val deepLinkHandler: DeepLinkHandler? = null,
-    override val httpClientFactory: HttpClientFactory? = null,
-    override val designSystem: DesignSystem? = null,
-    override val imageDownloader: BeagleImageDownloader? = null,
-    override val viewClient: ViewClient? = null,
-    override val controllerReference: BeagleControllerReference? = null,
-    override val typeAdapterResolver: TypeAdapterResolver? = null,
-    override val analyticsProvider: AnalyticsProvider? = null,
-    override val urlBuilder: UrlBuilder? = null,
-    override val logger: BeagleLogger? = null,
-) : BeagleSdk {
+class BeagleSetup2: BeagleSdk {
+    override val config: BeagleConfig = AppBeagleConfig()
+    override val deepLinkHandler: DeepLinkHandler? = null
+    override val httpClientFactory: HttpClientFactory? = null
+    override val designSystem: DesignSystem? = null
+    override val imageDownloader: BeagleImageDownloader? = null
+    override val viewClient: ViewClient? = null
+    override val controllerReference: BeagleControllerReference? = null
+    override val typeAdapterResolver: TypeAdapterResolver? = null
+    override val analyticsProvider: AnalyticsProvider? = null
+    override val urlBuilder: UrlBuilder? = null
+    override val logger: BeagleLogger? = null
     override fun registeredWidgets(): List<Class<WidgetView>>
         = listOf(
             ActionExecutor::class.java as Class<WidgetView>,

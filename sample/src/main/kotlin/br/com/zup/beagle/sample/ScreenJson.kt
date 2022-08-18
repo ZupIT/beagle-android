@@ -15,8 +15,9 @@
  */
 
 package br.com.zup.beagle.sample
-
-const val screen2 = """{
+const val SCREEN_BASE_URL = "https://gist.githubusercontent.com/Tiagoperes/" +
+    "4579284bbace403f35c897dbc54a5d30/raw/2e1d5fa908bd678f837cdb4b69cb48eac9633148"
+const val SCREEN2 = """{
   "_beagleComponent_": "beagle:screenComponent",
   "title": "Movies",
   "child": {
@@ -28,7 +29,7 @@ const val screen2 = """{
     "onInit": [
       {
         "_beagleAction_": "beagle:sendRequest",
-        "url": "https://gist.githubusercontent.com/Tiagoperes/4579284bbace403f35c897dbc54a5d30/raw/2e1d5fa908bd678f837cdb4b69cb48eac9633148/films1.json",
+        "url": "${SCREEN_BASE_URL}/films1.json",
         "onSuccess": [
           {
             "_beagleAction_": "beagle:setContext",
@@ -53,7 +54,7 @@ const val screen2 = """{
           },
           {
             "_beagleAction_": "beagle:sendRequest",
-            "url": "https://gist.githubusercontent.com/Tiagoperes/4579284bbace403f35c897dbc54a5d30/raw/2e1d5fa908bd678f837cdb4b69cb48eac9633148/films2.json",
+            "url": "${SCREEN_BASE_URL}/films2.json",
             "onSuccess": [
               {
                 "_beagleAction_": "beagle:setContext",
@@ -148,7 +149,7 @@ const val screen2 = """{
   }
 }"""
 
-const val screen3 = """{
+const val SCREEN3 = """{
   "_beagleComponent_": "beagle:screenComponent",
   "title": "Movies",
   "child": {
@@ -160,7 +161,7 @@ const val screen3 = """{
     "onInit": [
       {
         "_beagleAction_": "beagle:sendRequest",
-        "url": "https://gist.githubusercontent.com/Tiagoperes/4579284bbace403f35c897dbc54a5d30/raw/2e1d5fa908bd678f837cdb4b69cb48eac9633148/films1.json",
+        "url": "${SCREEN_BASE_URL}/films1.json",
         "onSuccess": [
           {
             "_beagleAction_": "beagle:setContext",
@@ -185,7 +186,7 @@ const val screen3 = """{
           },
           {
             "_beagleAction_": "beagle:sendRequest",
-            "url": "https://gist.githubusercontent.com/Tiagoperes/4579284bbace403f35c897dbc54a5d30/raw/2e1d5fa908bd678f837cdb4b69cb48eac9633148/films2.json",
+            "url": "${SCREEN_BASE_URL}/films2.json",
             "onSuccess": [
               {
                 "_beagleAction_": "beagle:setContext",
