@@ -522,7 +522,6 @@ class ViewExtensionsKtTest : BaseTest() {
         @Test
         fun testRenderScreenWithActivity() {
             // Given
-            beagleSerializerFactory = serializerFactory
             every { component.id } returns SCREEN_ID
             every { serializerFactory.deserializeComponent(any()) } returns component
 
@@ -545,7 +544,6 @@ class ViewExtensionsKtTest : BaseTest() {
         @Test
         fun testRenderScreenWithFragment() {
             // Given
-            beagleSerializerFactory = serializerFactory
             every { component.id } returns SCREEN_ID
             every { serializerFactory.deserializeComponent(any()) } returns component
 

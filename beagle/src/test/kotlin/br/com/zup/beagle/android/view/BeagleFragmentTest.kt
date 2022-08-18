@@ -25,6 +25,7 @@ import br.com.zup.beagle.android.BaseSoLoaderTest
 import br.com.zup.beagle.android.action.NavigationContext
 import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.view.viewmodel.AnalyticsViewModel
+import br.com.zup.beagle.android.widget.RootView
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
@@ -43,7 +44,7 @@ import org.robolectric.annotation.Config
 class BeagleFragmentTest : BaseSoLoaderTest() {
 
     private val analyticsViewModel = mockk<AnalyticsViewModel>()
-    private val screenIdentifierSlot = slot<String>()
+    private val screenIdentifierSlot = slot<RootView>()
     private val rootIdSlot = slot<String>()
     private val json = """{
                 "_beagleComponent_" : "beagle:screenComponent",
@@ -84,7 +85,7 @@ class BeagleFragmentTest : BaseSoLoaderTest() {
         scenario.moveToState(Lifecycle.State.RESUMED)
 
         // Then
-        assertEquals(url, screenIdentifierSlot.captured)
+        assertEquals(url, screenIdentifierSlot.captured.getScreenId())
     }
 
     @Test

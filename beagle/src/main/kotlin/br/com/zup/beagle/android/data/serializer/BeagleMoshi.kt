@@ -59,7 +59,7 @@ internal object BeagleMoshi {
     fun createMoshi(
         typeAdapterResolver: TypeAdapterResolver? =
             BeagleEnvironment.beagleSdk.typeAdapterResolver,
-        registeredWidgets: List<Class<WidgetView>>,
+        registeredWidgets: List<Class<WidgetView>> = emptyList(),
     ): Moshi = Moshi.Builder()
         .add(BindAdapterFactory())
         .add(ImagePathTypeJsonAdapterFactory.make())

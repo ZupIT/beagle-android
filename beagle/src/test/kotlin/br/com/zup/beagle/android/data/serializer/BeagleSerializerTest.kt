@@ -55,7 +55,7 @@ class BeagleSerializerTest : BaseTest() {
     @BeforeAll
     override fun setUp() {
         super.setUp()
-        beagleSerializer = BeagleSerializer(BeagleMoshi)
+        beagleSerializer = BeagleSerializer(moshi)
 
         mockkObject(BeagleMessageLogs)
         mockkObject(BeagleMoshi)

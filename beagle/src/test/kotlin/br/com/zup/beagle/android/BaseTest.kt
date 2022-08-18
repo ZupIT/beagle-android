@@ -42,6 +42,7 @@ abstract class BaseTest {
     open fun setUp() {
         mockBeagleEnvironment()
         every { rootView.activity } returns activity
+        every { rootView.getScreenId() } returns "screen_id"
     }
 
     @AfterAll

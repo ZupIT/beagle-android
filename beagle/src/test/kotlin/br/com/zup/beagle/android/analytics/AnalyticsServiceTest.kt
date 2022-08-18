@@ -74,7 +74,7 @@ class AnalyticsServiceTest : BaseTest() {
             every { anyConstructed<DataScreenReport>().report(capture(slot)) } returns analyticsRecord
 
             //When
-            AnalyticsService.createScreenRecord("url")
+            AnalyticsService.createScreenRecord(screenIdentifier = "url", analyticsProvider = analyticsProvider)
 
             //Then
             verify(exactly = 1) { analyticsProvider.createRecord(any()) }
@@ -92,7 +92,7 @@ class AnalyticsServiceTest : BaseTest() {
             every { beagleSdk.analyticsProvider } returns analyticsProvider
             every { anyConstructed<DataScreenReport>().report(capture(slot)) } returns null
             //When
-            AnalyticsService.createScreenRecord("url")
+            AnalyticsService.createScreenRecord(screenIdentifier = "url", analyticsProvider = analyticsProvider)
 
 
             //then

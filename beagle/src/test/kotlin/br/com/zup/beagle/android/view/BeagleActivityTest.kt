@@ -36,6 +36,7 @@ import br.com.zup.beagle.android.view.BeagleFragment.Companion.NAVIGATION_CONTEX
 import br.com.zup.beagle.android.view.BeagleFragment.Companion.NAVIGATION_CONTEXT_DATA_KEY
 import br.com.zup.beagle.android.view.viewmodel.AnalyticsViewModel
 import br.com.zup.beagle.android.view.viewmodel.BeagleScreenViewModel
+import br.com.zup.beagle.android.widget.RootView
 import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.every
@@ -67,7 +68,7 @@ class BeagleActivityTest : BaseSoLoaderTest() {
     private lateinit var beagleViewModel: BeagleScreenViewModel
     private var activity: ServerDrivenActivity? = null
     private val analyticsViewModel = mockk<AnalyticsViewModel>()
-    private val screenIdentifierSlot = slot<String>()
+    private val screenIdentifierSlot = slot<RootView>()
     private val navigationContext = NavigationContext(value = "test")
     private val navigationContextData = ContextData(id = NAVIGATION_CONTEXT_DATA_ID, value = "test")
     lateinit var activityScenario: ActivityScenario<ServerDrivenActivity>
@@ -77,7 +78,7 @@ class BeagleActivityTest : BaseSoLoaderTest() {
     fun mockBeforeTest() {
         coEvery { componentRequester.fetchComponent(RequestData(url = "/url")) } returns component
         beagleViewModel =
-            BeagleScreenViewModel(ioDispatcher = TestCoroutineDispatcher(), componentRequester)
+            BeagleScreenViewModel(ioDispatcher = TestCoroutineDispatcher(), componentRequester = componentRequester)
         prepareViewModelMock(beagleViewModel)
         activityScenario =
             ActivityScenario.launch(ServerDrivenActivity::class.java)

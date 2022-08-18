@@ -36,6 +36,7 @@ import br.com.zup.beagle.android.view.viewmodel.AnalyticsViewModel
 import br.com.zup.beagle.android.view.viewmodel.BeagleViewModel
 import br.com.zup.beagle.android.view.viewmodel.ViewState
 import br.com.zup.beagle.android.widget.ActivityRootView
+import br.com.zup.beagle.android.widget.RootView
 import com.facebook.yoga.YogaNode
 import com.facebook.yoga.YogaNodeFactory
 import io.mockk.Runs
@@ -63,7 +64,7 @@ internal class BeagleViewTest : BaseTest() {
     private val viewModel: BeagleViewModel = mockk()
     private val analyticsViewModel = mockk<AnalyticsViewModel>()
 
-    private val screenIdentifierSlot = slot<String>()
+    private val screenIdentifierSlot = slot<RootView>()
     private val rootIdSlot = slot<String>()
 
     private val mutableLiveData = MutableLiveData<ViewState>()
@@ -118,7 +119,7 @@ internal class BeagleViewTest : BaseTest() {
         beagleView.loadView(RequestData(url))
 
         // Then
-        Assert.assertEquals(url, screenIdentifierSlot.captured)
+        Assert.assertEquals(url, screenIdentifierSlot.captured.getScreenId())
     }
 
     @Test

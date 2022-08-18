@@ -86,6 +86,8 @@ class BeagleNavigatorTest : BaseTest() {
         mockkObject(BeagleFragment.Companion)
         mockkObject(BeagleActivity.Companion)
         mockkObject(BeagleLoggerProxy)
+
+        every { rootView.getContext() } returns context
     }
 
     @BeforeEach
@@ -280,7 +282,7 @@ class BeagleNavigatorTest : BaseTest() {
             every { context.navigateTo(requestData, null, navigationContext) } just Runs
 
             // When
-            BeagleNavigator.pushView(context, route, navigationContext)
+            BeagleNavigator.pushView(rootView, route, navigationContext)
 
             // Then
             verify(exactly = 1) { context.navigateTo(requestData, null, navigationContext) }
@@ -295,7 +297,7 @@ class BeagleNavigatorTest : BaseTest() {
             every { context.startActivity(any()) } just Runs
 
             // When
-            BeagleNavigator.pushView(context, route, navigationContext)
+            BeagleNavigator.pushView(rootView, route, navigationContext)
 
             // Then
             verify(exactly = 1) { context.startActivity(any()) }
@@ -386,7 +388,7 @@ class BeagleNavigatorTest : BaseTest() {
             every { backStackEntry.name } returns relativePath
 
             // When
-            BeagleNavigator.popToView(context, relativePath, navigationContext)
+            BeagleNavigator.popToView(rootView, relativePath, navigationContext)
 
             // Then
             verify(exactly = 1) {
@@ -406,7 +408,7 @@ class BeagleNavigatorTest : BaseTest() {
             every { backStackEntry.name } returns fullPath
 
             // When
-            BeagleNavigator.popToView(context, relativePath, navigationContext)
+            BeagleNavigator.popToView(rootView, relativePath, navigationContext)
 
             // Then
             verify {
@@ -426,7 +428,7 @@ class BeagleNavigatorTest : BaseTest() {
             every { backStackEntry.name } returns relativePath
 
             // When
-            BeagleNavigator.popToView(context, relativePath, navigationContext)
+            BeagleNavigator.popToView(rootView, relativePath, navigationContext)
 
             // Then
             verify {
@@ -447,7 +449,7 @@ class BeagleNavigatorTest : BaseTest() {
             every { backStackEntry.name } returns relativePath
 
             // When
-            BeagleNavigator.popToView(context, fullPath, navigationContext)
+            BeagleNavigator.popToView(rootView, fullPath, navigationContext)
 
             // Then
             verify {
@@ -468,7 +470,7 @@ class BeagleNavigatorTest : BaseTest() {
             every { backStackEntry.name } returns fullPath
 
             // When
-            BeagleNavigator.popToView(context, fullPath, navigationContext)
+            BeagleNavigator.popToView(rootView, fullPath, navigationContext)
 
             // Then
             verify {

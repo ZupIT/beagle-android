@@ -19,6 +19,7 @@ package br.com.zup.beagle.android.view.viewmodel
 import android.view.View
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.action.AnalyticsAction
+import br.com.zup.beagle.android.analytics.AnalyticsProvider
 import br.com.zup.beagle.android.analytics.AnalyticsService
 import io.mockk.Runs
 import io.mockk.every
@@ -40,12 +41,14 @@ class AnalyticsViewModelTest : BaseTest() {
     private val analyticsViewModel = AnalyticsViewModel()
     private val origin: View = mockk()
     private val action: AnalyticsAction = mockk()
+    private val analyticsProvider: AnalyticsProvider = mockk()
     private val analyticsValue: String = "any"
 
     @BeforeAll
     override fun setUp() {
         super.setUp()
         mockkObject(AnalyticsService)
+        every { rootView.getConfig().analyticsProvider } returns analyticsProvider
     }
 
     @DisplayName("When create action report")
@@ -83,14 +86,16 @@ class AnalyticsViewModelTest : BaseTest() {
         @Test
         fun testCreateScreenReportShouldCallCorrectFun() = runBlockingTest {
             //given
-            every { AnalyticsService.createScreenRecord("screenId") } just Runs
+            every { AnalyticsService.createScreenRecord(screenIdentifier = "screenId",
+                analyticsProvider = analyticsProvider ) } just Runs
 
             //when
-            analyticsViewModel.createScreenReport("screenId")
+            analyticsViewModel.createScreenReport(rootView, "screenId")
 
             //then
             verify(exactly = 1) {
-                AnalyticsService.createScreenRecord("screenId")
+                AnalyticsService.createScreenRecord(screenIdentifier = "screenId",
+                    analyticsProvider = analyticsProvider)
             }
         }
     }

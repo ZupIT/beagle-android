@@ -76,7 +76,6 @@ internal class ViewGroupExtensionsKtTest : BaseTest() {
             analyticsViewModel
         )
 
-        beagleSerializerFactory = serializerFactory
         every { component.id } returns SCREEN_ID
         every { ViewFactory.makeBeagleView(any()) } returns beagleView
         every { serializerFactory.deserializeComponent(any()) } returns component
@@ -212,7 +211,7 @@ internal class ViewGroupExtensionsKtTest : BaseTest() {
                 beagleView.listenerOnViewDetachedFromWindow = any()
                 viewGroup.removeAllViews()
                 viewGroup.addView(beagleView)
-                analyticsViewModel.createScreenReport("screen_id", any())
+                analyticsViewModel.createScreenReport(rootView, any())
             }
         }
     }
