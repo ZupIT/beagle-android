@@ -28,9 +28,9 @@ import com.squareup.moshi.Moshi
 
 class BeagleConfigurator(
     private val beagleSdk: BeagleSdk,
-    val moshi: Moshi,
+    private val moshi: Moshi,
     val application: Application,
-    val serializer: BeagleJsonSerializer = BeagleJsonSerializerFactory.create(moshi),
+    internal val serializer: BeagleJsonSerializer = BeagleJsonSerializerFactory.create(moshi),
 ) {
     companion object {
         internal fun factory(
