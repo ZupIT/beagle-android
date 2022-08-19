@@ -35,7 +35,6 @@ import br.com.zup.beagle.R
 import br.com.zup.beagle.android.action.NavigationContext
 import br.com.zup.beagle.android.components.layout.Screen
 import br.com.zup.beagle.android.data.serializer.BeagleJsonSerializer
-import br.com.zup.beagle.android.data.serializer.BeagleSerializer
 import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.setup.BeagleConfigurator
 import br.com.zup.beagle.android.utils.BeagleRetry
@@ -87,7 +86,8 @@ abstract class BeagleActivity : AppCompatActivity() {
     }
 
     internal val beagleConfigurator: BeagleConfigurator by lazy {
-        requireNotNull((intent.extras?.getBinder(BEAGLE_CONFIGURATOR) as? ObjectWrapperForBinder)?.data as? BeagleConfigurator)
+        requireNotNull((intent.extras?.getBinder(BEAGLE_CONFIGURATOR)
+            as? ObjectWrapperForBinder)?.data as? BeagleConfigurator)
     }
 
     private val screenViewModel by lazy { ViewModelProvider(this, BeagleScreenViewModel.provideFactory(

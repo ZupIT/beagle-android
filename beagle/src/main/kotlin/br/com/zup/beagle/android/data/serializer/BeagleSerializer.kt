@@ -19,7 +19,6 @@ package br.com.zup.beagle.android.data.serializer
 import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.exception.BeagleException
 import br.com.zup.beagle.android.logger.BeagleMessageLogs
-import br.com.zup.beagle.android.setup.BeagleConfigurator
 import br.com.zup.beagle.android.setup.BeagleSdk
 import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 import com.squareup.moshi.Moshi

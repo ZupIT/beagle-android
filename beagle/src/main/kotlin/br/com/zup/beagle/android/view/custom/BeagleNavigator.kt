@@ -63,7 +63,8 @@ internal object BeagleNavigator {
     fun popStack(rootView: RootView, navigationContext: NavigationContext?) {
         val context = rootView.getContext()
         if (context is AppCompatActivity) {
-            setContextInPreviousActivity(rootView.getContext() as BeagleActivity, navigationContext, rootView.getBeagleConfigurator())
+            setContextInPreviousActivity(rootView.getContext()
+                as BeagleActivity, navigationContext, rootView.getBeagleConfigurator())
             context.finish()
         }
     }
@@ -105,7 +106,9 @@ internal object BeagleNavigator {
         }
     }
 
-    private fun setContextInPreviousActivity(context: AppCompatActivity, navigationContext: NavigationContext?, beagleConfigurator: BeagleConfigurator) {
+    private fun setContextInPreviousActivity(context: AppCompatActivity,
+                                             navigationContext: NavigationContext?,
+                                             beagleConfigurator: BeagleConfigurator) {
         navigationContext?.let {
             context.setResult(Activity.RESULT_OK, Intent().putExtras(BeagleActivity.bundleOf(navigationContext,
                 beagleConfigurator)))

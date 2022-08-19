@@ -43,7 +43,8 @@ import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 internal class BeagleFragment : Fragment() {
 
     private val beagleConfigurator: BeagleConfigurator by lazy {
-        requireNotNull((arguments?.getBinder(BEAGLE_CONFIGURATOR) as? ObjectWrapperForBinder)?.data as? BeagleConfigurator)
+        requireNotNull((arguments?.getBinder(BEAGLE_CONFIGURATOR)
+            as? ObjectWrapperForBinder)?.data as? BeagleConfigurator)
     }
 
     private val beagleSerializer: BeagleJsonSerializer by lazy {
