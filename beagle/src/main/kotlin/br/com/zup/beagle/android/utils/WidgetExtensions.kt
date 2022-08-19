@@ -23,7 +23,6 @@ import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.setup.BeagleConfigurator
-import br.com.zup.beagle.android.setup.BeagleSdk
 import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.widget.FragmentRootView
 import br.com.zup.beagle.android.widget.RootView
@@ -111,14 +110,14 @@ internal fun ServerDrivenComponent.toView(
     fragment: Fragment,
     idView: Int = R.id.beagle_default_id,
     screenIdentifier: String? = null,
-    beagleSdk: BeagleSdk? = null
+    beagleConfigurator: BeagleConfigurator
 ): View =
     this.toView(
         FragmentRootView(
             fragment,
             idView,
             this.getServerDrivenIdentifier(screenIdentifier),
-            config = BeagleConfigurator.factory(beagleSdk)
+            config = beagleConfigurator
         )
     )
 

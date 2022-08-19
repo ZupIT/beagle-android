@@ -205,7 +205,7 @@ internal fun ViewGroup.loadView(
         viewModel.clearContexts()
     }
     generateIdManager.createSingleManagerByRootViewId()
-    val component = rootView.getConfig().serializer.deserializeComponent(screenJson)
+    val component = rootView.getBeagleConfigurator().serializer.deserializeComponent(screenJson)
 
     val view = ViewFactory.makeBeagleView(rootView).apply {
         addServerDrivenComponent(component)

@@ -94,7 +94,7 @@ data class SendRequest(
     override fun execute(rootView: RootView, origin: View) {
         val viewModel = rootView.generateViewModelInstance<ActionRequestViewModel>(
             ActionRequestViewModel.provideFactory(
-                rootView.getConfig()
+                rootView.getBeagleConfigurator()
             ))
         val setContext = toSendRequestInternal(rootView, origin)
         viewModel.fetch(setContext).observe(rootView.getLifecycleOwner(), { state ->

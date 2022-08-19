@@ -28,11 +28,7 @@ import br.com.zup.beagle.android.action.SetContextInternal
 import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.context.normalize
 import br.com.zup.beagle.android.data.serializer.BeagleJsonSerializer
-import br.com.zup.beagle.android.data.serializer.BeagleSerializer
-import br.com.zup.beagle.android.data.serializer.BeagleSerializer.Companion.beagleSerializerFactory
 import br.com.zup.beagle.android.setup.BeagleConfigurator
-import br.com.zup.beagle.android.setup.BeagleEnvironment
-import br.com.zup.beagle.android.setup.BeagleSdk
 import br.com.zup.beagle.android.utils.ObjectWrapperForBinder
 import br.com.zup.beagle.android.utils.applyBackgroundFromWindowBackgroundTheme
 import br.com.zup.beagle.android.utils.getRootId
@@ -44,19 +40,14 @@ import br.com.zup.beagle.android.widget.FragmentRootView
 import br.com.zup.beagle.android.widget.UndefinedWidget
 import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 
-
 internal class BeagleFragment : Fragment() {
 
-    private val beagleSdk: BeagleSdk by lazy {
-        requireNotNull((arguments?.getBinder(BEAGLE_SDK_KEY) as? ObjectWrapperForBinder)?.data as? BeagleSdk)
-    }
-
     private val beagleConfigurator: BeagleConfigurator by lazy {
-        BeagleConfigurator.factory(beagleSdk)
+        requireNotNull((arguments?.getBinder(BEAGLE_CONFIGURATOR) as? ObjectWrapperForBinder)?.data as? BeagleConfigurator)
     }
 
     private val beagleSerializer: BeagleJsonSerializer by lazy {
-        beagleSerializerFactory(beagleSdk)
+        beagleConfigurator.serializer
     }
 
     private val screen: ServerDrivenComponent by lazy {
@@ -100,7 +91,7 @@ internal class BeagleFragment : Fragment() {
         screenIdentifier?.let { screenIdentifier ->
                 analyticsViewModel.createScreenReport(
                     FragmentRootView(this, this.id, screenIdentifier,
-                        config = BeagleConfigurator.factory(beagleSdk)),
+                        config = beagleConfigurator),
                     getRootId(screen))
         }
 
@@ -126,7 +117,7 @@ internal class BeagleFragment : Fragment() {
                     screen.toView(
                         this@BeagleFragment,
                         screenIdentifier = screenIdentifier,
-                        beagleSdk = beagleSdk
+                        beagleConfigurator = beagleConfigurator
                     ))
             }
         }
@@ -188,13 +179,12 @@ internal class BeagleFragment : Fragment() {
             component: ServerDrivenComponent,
             screenIdentifier: String? = null,
             navigationContext: NavigationContext? = null,
-            beagleSdk: BeagleSdk? = null,
-            beagleSerializer: BeagleSerializer = beagleSerializerFactory(beagleSdk)
+            beagleConfigurator: BeagleConfigurator,
         ) = newInstance(
-            beagleSerializer.serializeComponent(component),
+            beagleConfigurator.serializer.serializeComponent(component),
             screenIdentifier,
             navigationContext,
-            beagleSdk
+            beagleConfigurator
         )
 
         @JvmStatic
@@ -202,23 +192,21 @@ internal class BeagleFragment : Fragment() {
             json: String,
             screenIdentifier: String? = null,
             navigationContext: NavigationContext? = null,
-            beagleSdk: BeagleSdk? = null,
+            beagleConfigurator: BeagleConfigurator,
         ) = BeagleFragment().apply {
-            arguments = newBundle(json, screenIdentifier, navigationContext, beagleSdk)
+            arguments = newBundle(json, screenIdentifier, navigationContext, beagleConfigurator)
         }
 
         fun newBundle(
             json: String,
             screenIdentifier: String? = null,
             navigationContext: NavigationContext? = null,
-            beagleSdk: BeagleSdk? = null,
+            beagleConfigurator: BeagleConfigurator,
         ): Bundle {
             val bundle = Bundle(4)
             bundle.putString(JSON_SCREEN_KEY, json)
             bundle.putString(SCREEN_IDENTIFIER_KEY, screenIdentifier)
-            beagleSdk?.let {
-                bundle.putBinder(BEAGLE_SDK_KEY, ObjectWrapperForBinder(it))
-            } ?: bundle.putBinder(BeagleActivity.BEAGLE_SDK_KEY, ObjectWrapperForBinder(BeagleEnvironment.beagleSdk))
+            bundle.putBinder(BEAGLE_CONFIGURATOR, ObjectWrapperForBinder(beagleConfigurator))
 
             navigationContext?.let {
                 bundle.putParcelable(NAVIGATION_CONTEXT_KEY, it)
@@ -227,7 +215,7 @@ internal class BeagleFragment : Fragment() {
         }
 
         private const val JSON_SCREEN_KEY = "JSON_SCREEN_KEY"
-        private const val BEAGLE_SDK_KEY = "BEAGLE_SDK_KEY"
+        private const val BEAGLE_CONFIGURATOR = "BEAGLE_CONFIGURATOR"
         private const val SCREEN_IDENTIFIER_KEY = "SCREEN_IDENTIFIER_KEY"
         internal const val NAVIGATION_CONTEXT_KEY = "NAVIGATION_CONTEXT_KEY"
         internal const val NAVIGATION_CONTEXT_DATA_KEY = "NAVIGATION_CONTEXT_DATA_KEY"

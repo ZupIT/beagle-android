@@ -57,7 +57,7 @@ interface RootView {
     /**
      * Returns the Beagle config that should be used for this server-driven flow.
      */
-    fun getConfig(): BeagleConfigurator
+    fun getBeagleConfigurator(): BeagleConfigurator
 }
 
 /**
@@ -86,7 +86,7 @@ class FragmentRootView(
 
     override fun getScreenId(): String = screenId
 
-    override fun getConfig(): BeagleConfigurator = config
+    override fun getBeagleConfigurator(): BeagleConfigurator = config
 }
 
 /**
@@ -115,6 +115,6 @@ class ActivityRootView(
 
     override fun getScreenId(): String = screenId
 
-    override fun getConfig(): BeagleConfigurator = config
+    override fun getBeagleConfigurator(): BeagleConfigurator = config
 }
 

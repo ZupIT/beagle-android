@@ -38,7 +38,7 @@ typealias OnLoadCompleted = () -> Unit
 internal class BeagleView(
     private val rootView: RootView,
     private val viewModel: BeagleViewModel = rootView.generateViewModelInstance(
-        BeagleViewModel.provideFactory(rootView.getConfig())),
+        BeagleViewModel.provideFactory(rootView.getBeagleConfigurator())),
 ) : InternalBeagleFlexView(rootView) {
 
     var serverStateChangedListener: OnServerStateChanged? = null

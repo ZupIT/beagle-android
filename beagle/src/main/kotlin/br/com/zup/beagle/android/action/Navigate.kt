@@ -90,7 +90,7 @@ sealed class Navigate : AnalyticsAction {
         val navigationContext: NavigationContext? = null,
     ) : Navigate() {
         override fun execute(rootView: RootView, origin: View) {
-            BeagleNavigator.popStack(rootView.getContext(), navigationContext?.getWithExpression { value ->
+            BeagleNavigator.popStack(rootView, navigationContext?.getWithExpression { value ->
                 evaluateExpression(rootView, origin, value)
             })
         }
@@ -180,7 +180,7 @@ sealed class Navigate : AnalyticsAction {
     ) : Navigate() {
         override fun execute(rootView: RootView, origin: View) {
             BeagleNavigator.pushStack(
-                rootView.getContext(), route.getSafe(rootView, origin),
+                rootView, route.getSafe(rootView, origin),
                 controllerId, navigationContext?.getWithExpression { value ->
                 evaluateExpression(rootView, origin, value)
             },
@@ -207,7 +207,7 @@ sealed class Navigate : AnalyticsAction {
         val navigationContext: NavigationContext? = null,
     ) : Navigate() {
         override fun execute(rootView: RootView, origin: View) {
-            BeagleNavigator.resetApplication(rootView.getContext(), route.getSafe(rootView, origin),
+            BeagleNavigator.resetApplication(rootView, route.getSafe(rootView, origin),
                 controllerId, navigationContext?.getWithExpression { value ->
                 evaluateExpression(rootView, origin, value)
             })
@@ -232,7 +232,7 @@ sealed class Navigate : AnalyticsAction {
         val navigationContext: NavigationContext? = null,
     ) : Navigate() {
         override fun execute(rootView: RootView, origin: View) {
-            BeagleNavigator.resetStack(rootView.getContext(), route.getSafe(rootView, origin),
+            BeagleNavigator.resetStack(rootView, route.getSafe(rootView, origin),
                 controllerId, navigationContext?.getWithExpression { value ->
                 evaluateExpression(rootView, origin, value)
             })

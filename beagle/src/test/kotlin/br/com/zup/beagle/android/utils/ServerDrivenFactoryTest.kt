@@ -33,7 +33,6 @@ import br.com.zup.beagle.android.view.ServerDrivenActivity
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
-import io.mockk.mockkStatic
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -73,7 +72,7 @@ class ServerDrivenFactoryTest {
         val bundle = Bundle()
         bundle.putParcelable(BeagleActivity.FIRST_SCREEN_REQUEST_KEY, requestData)
         bundle.putParcelable(BeagleActivity.NAVIGATION_CONTEXT_KEY, navigationContext)
-        bundle.putBinder(BeagleActivity.BEAGLE_SDK_KEY, ObjectWrapperForBinder(beagleSdk))
+        bundle.putBinder(BeagleActivity.BEAGLE_CONFIGURATOR, ObjectWrapperForBinder(beagleSdk))
 
         expected.putExtras(bundle)
 
@@ -82,7 +81,7 @@ class ServerDrivenFactoryTest {
         assertEquals(expected.extras!!.get(BeagleActivity.FIRST_SCREEN_REQUEST_KEY), result.extras!!.get(BeagleActivity.FIRST_SCREEN_REQUEST_KEY))
         assertEquals(expected.extras!!.get(BeagleActivity.NAVIGATION_CONTEXT_KEY),
             result.extras!!.get(BeagleActivity.NAVIGATION_CONTEXT_KEY))
-        assertEquals(expected.extras!!.getBinder(BeagleActivity.BEAGLE_SDK_KEY), ObjectWrapperForBinder(beagleSdk))
+        assertEquals(expected.extras!!.getBinder(BeagleActivity.BEAGLE_CONFIGURATOR), ObjectWrapperForBinder(beagleSdk))
     }
 
     @Test
@@ -99,7 +98,7 @@ class ServerDrivenFactoryTest {
         val bundle = Bundle()
         bundle.putString(BeagleActivity.FIRST_SCREEN_KEY, screenJson)
         bundle.putParcelable(BeagleActivity.NAVIGATION_CONTEXT_KEY, navigationContext)
-        bundle.putBinder(BeagleActivity.BEAGLE_SDK_KEY, ObjectWrapperForBinder(beagleSdk))
+        bundle.putBinder(BeagleActivity.BEAGLE_CONFIGURATOR, ObjectWrapperForBinder(beagleSdk))
 
         expected.putExtras(bundle)
 
@@ -107,7 +106,7 @@ class ServerDrivenFactoryTest {
         assertEquals(expected.extras!!.get(BeagleActivity.FIRST_SCREEN_KEY), result.extras!!.get(BeagleActivity.FIRST_SCREEN_KEY))
         assertEquals(expected.extras!!.get(BeagleActivity.NAVIGATION_CONTEXT_KEY),
             result.extras!!.get(BeagleActivity.NAVIGATION_CONTEXT_KEY))
-        assertEquals(expected.extras!!.getBinder(BeagleActivity.BEAGLE_SDK_KEY), ObjectWrapperForBinder(beagleSdk))
+        assertEquals(expected.extras!!.getBinder(BeagleActivity.BEAGLE_CONFIGURATOR), ObjectWrapperForBinder(beagleSdk))
 
     }
 }

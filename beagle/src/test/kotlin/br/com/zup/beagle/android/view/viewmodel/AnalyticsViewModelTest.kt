@@ -48,7 +48,7 @@ class AnalyticsViewModelTest : BaseTest() {
     override fun setUp() {
         super.setUp()
         mockkObject(AnalyticsService)
-        every { rootView.getConfig().analyticsProvider } returns analyticsProvider
+        every { rootView.getBeagleConfigurator().analyticsProvider } returns analyticsProvider
     }
 
     @DisplayName("When create action report")

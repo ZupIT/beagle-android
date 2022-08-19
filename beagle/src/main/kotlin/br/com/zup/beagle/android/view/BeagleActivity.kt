@@ -38,8 +38,6 @@ import br.com.zup.beagle.android.data.serializer.BeagleJsonSerializer
 import br.com.zup.beagle.android.data.serializer.BeagleSerializer
 import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.setup.BeagleConfigurator
-import br.com.zup.beagle.android.setup.BeagleEnvironment
-import br.com.zup.beagle.android.setup.BeagleSdk
 import br.com.zup.beagle.android.utils.BeagleRetry
 import br.com.zup.beagle.android.utils.ObjectWrapperForBinder
 import br.com.zup.beagle.android.view.viewmodel.BeagleScreenViewModel
@@ -88,20 +86,16 @@ abstract class BeagleActivity : AppCompatActivity() {
         )
     }
 
-    private val beagleSdk: BeagleSdk by lazy {
-        requireNotNull((intent.extras?.getBinder(BEAGLE_SDK_KEY) as? ObjectWrapperForBinder)?.data as? BeagleSdk)
-    }
-
-    private val beagleConfigurator: BeagleConfigurator by lazy {
-        BeagleConfigurator.factory(beagleSdk)
+    internal val beagleConfigurator: BeagleConfigurator by lazy {
+        requireNotNull((intent.extras?.getBinder(BEAGLE_CONFIGURATOR) as? ObjectWrapperForBinder)?.data as? BeagleConfigurator)
     }
 
     private val screenViewModel by lazy { ViewModelProvider(this, BeagleScreenViewModel.provideFactory(
-        beagleConfigurator
+        this.beagleConfigurator
     )).get(BeagleScreenViewModel::class.java) }
 
     private val beagleSerializer: BeagleJsonSerializer by lazy {
-        BeagleSerializer.beagleSerializerFactory(beagleSdk)
+        beagleConfigurator.serializer
     }
 
     private val screen by lazy { intent.extras?.getString(FIRST_SCREEN_KEY) }
@@ -261,7 +255,7 @@ abstract class BeagleActivity : AppCompatActivity() {
                     component,
                     screenName,
                     navigationContext,
-                    beagleSdk
+                    this.beagleConfigurator
                 )
             )
             .addToBackStack(screenName)
@@ -272,19 +266,17 @@ abstract class BeagleActivity : AppCompatActivity() {
         internal const val FIRST_SCREEN_REQUEST_KEY = "FIRST_SCREEN_REQUEST_KEY"
         internal const val FIRST_SCREEN_KEY = "FIRST_SCREEN_KEY"
         internal const val NAVIGATION_CONTEXT_KEY = "NAVIGATION_CONTEXT_KEY"
-        internal const val BEAGLE_SDK_KEY = "BEAGLE_SDK_KEY"
+        internal const val BEAGLE_CONFIGURATOR = "BEAGLE_CONFIGURATOR"
 
         fun bundleOf(
             requestData: RequestData,
             navigationContext: NavigationContext? = null,
-            beagleSdk: BeagleSdk? = null
+            beagleConfigurator: BeagleConfigurator
         ): Bundle {
             return Bundle(3).apply {
                 putParcelable(FIRST_SCREEN_REQUEST_KEY, requestData)
                 putParcelable(NAVIGATION_CONTEXT_KEY, navigationContext)
-                beagleSdk?.let {
-                    putBinder(BEAGLE_SDK_KEY, ObjectWrapperForBinder(it))
-                } ?: putBinder(BEAGLE_SDK_KEY, ObjectWrapperForBinder(BeagleEnvironment.beagleSdk))
+                putBinder(BEAGLE_CONFIGURATOR, ObjectWrapperForBinder(beagleConfigurator))
             }
         }
 
@@ -292,55 +284,45 @@ abstract class BeagleActivity : AppCompatActivity() {
             requestData: RequestData,
             fallbackScreen: Screen,
             navigationContext: NavigationContext? = null,
-            beagleSdk: BeagleSdk? = null,
-            beagleSerializer: BeagleSerializer = BeagleSerializer.beagleSerializerFactory(beagleSdk)
+            beagleConfigurator: BeagleConfigurator
         ): Bundle {
             return Bundle(4).apply {
                 putParcelable(FIRST_SCREEN_REQUEST_KEY, requestData)
                 putParcelable(NAVIGATION_CONTEXT_KEY, navigationContext)
-                putString(FIRST_SCREEN_KEY, beagleSerializer.serializeComponent(fallbackScreen))
-                beagleSdk?.let {
-                    putBinder(BEAGLE_SDK_KEY, ObjectWrapperForBinder(it))
-                } ?: putBinder(BEAGLE_SDK_KEY, ObjectWrapperForBinder(BeagleEnvironment.beagleSdk))
+                putString(FIRST_SCREEN_KEY, beagleConfigurator.serializer.serializeComponent(fallbackScreen))
+                putBinder(BEAGLE_CONFIGURATOR, ObjectWrapperForBinder(beagleConfigurator))
             }
         }
 
         internal fun bundleOf(
             screen: Screen,
             navigationContext: NavigationContext? = null,
-            beagleSdk: BeagleSdk? = null,
-            beagleSerializer: BeagleSerializer = BeagleSerializer.beagleSerializerFactory(beagleSdk)
+            beagleConfigurator: BeagleConfigurator
         ): Bundle {
             return Bundle(2).apply {
-                putString(FIRST_SCREEN_KEY, beagleSerializer.serializeComponent(screen))
+                putString(FIRST_SCREEN_KEY, beagleConfigurator.serializer.serializeComponent(screen))
                 putParcelable(NAVIGATION_CONTEXT_KEY, navigationContext)
-                beagleSdk?.let {
-                    putBinder(BEAGLE_SDK_KEY, ObjectWrapperForBinder(it))
-                } ?: putBinder(BEAGLE_SDK_KEY, ObjectWrapperForBinder(BeagleEnvironment.beagleSdk))
+                putBinder(BEAGLE_CONFIGURATOR, ObjectWrapperForBinder(beagleConfigurator))
             }
         }
 
         fun bundleOf(
             screenJson: String,
             navigationContext: NavigationContext? = null,
-            beagleSdk: BeagleSdk? = null
+            beagleConfigurator: BeagleConfigurator
         ): Bundle {
             return Bundle(3).apply {
                 putString(FIRST_SCREEN_KEY, screenJson)
                 putParcelable(NAVIGATION_CONTEXT_KEY, navigationContext)
-                beagleSdk?.let {
-                    putBinder(BEAGLE_SDK_KEY, ObjectWrapperForBinder(it))
-                } ?: putBinder(BEAGLE_SDK_KEY, ObjectWrapperForBinder(BeagleEnvironment.beagleSdk))
+                putBinder(BEAGLE_CONFIGURATOR, ObjectWrapperForBinder(beagleConfigurator))
             }
         }
 
         internal fun bundleOf(navigationContext: NavigationContext,
-                              beagleSdk: BeagleSdk? = null): Bundle {
+                              beagleConfigurator: BeagleConfigurator): Bundle {
             return Bundle(2).apply {
                 putParcelable(NAVIGATION_CONTEXT_KEY, navigationContext)
-                beagleSdk?.let {
-                    putBinder(BEAGLE_SDK_KEY, ObjectWrapperForBinder(it))
-                } ?: putBinder(BEAGLE_SDK_KEY, ObjectWrapperForBinder(BeagleEnvironment.beagleSdk))
+                putBinder(BEAGLE_CONFIGURATOR, ObjectWrapperForBinder(beagleConfigurator))
             }
         }
     }

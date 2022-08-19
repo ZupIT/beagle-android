@@ -33,7 +33,7 @@ internal object AnalyticsService {
                 return
             }
         }
-        val analyticsProvider = rootView.getConfig().analyticsProvider
+        val analyticsProvider = rootView.getBeagleConfigurator().analyticsProvider
         analyticsProvider?.getConfig()?.let {
             val dataActionReport = ActionReportFactory.generateDataActionReport(
                 rootView,
