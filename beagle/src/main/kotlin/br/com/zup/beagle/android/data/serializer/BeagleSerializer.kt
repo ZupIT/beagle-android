@@ -19,7 +19,6 @@ package br.com.zup.beagle.android.data.serializer
 import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.exception.BeagleException
 import br.com.zup.beagle.android.logger.BeagleMessageLogs
-import br.com.zup.beagle.android.setup.BeagleSdk
 import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 import com.squareup.moshi.Moshi
 
@@ -28,12 +27,6 @@ private const val EXCEPTION_MESSAGE = "Unexpected error when trying to serialize
 internal class BeagleSerializer(
     val moshi: Moshi = BeagleMoshi.moshi
 ): BeagleJsonSerializer {
-
-    companion object {
-        fun beagleSerializerFactory(beagleSdk: BeagleSdk?) =
-            (beagleSdk?.let { BeagleSerializer(BeagleMoshi.moshiFactory(it)) }
-                ?: BeagleJsonSerializerFactory.serializer) as BeagleSerializer
-    }
 
     @Throws(BeagleException::class)
     override fun serializeComponent(component: ServerDrivenComponent): String {
