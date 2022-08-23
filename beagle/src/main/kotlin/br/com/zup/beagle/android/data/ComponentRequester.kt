@@ -30,6 +30,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
 internal class ComponentRequester(
+    private val baseUrl: String,
     private val viewClient: ViewClient,
     private val serializer: BeagleJsonSerializer,
 ) {
@@ -44,7 +45,7 @@ internal class ComponentRequester(
         requestData: RequestData,
         call: suspend (requestData: RequestData) -> ResponseData,
     ): ServerDrivenComponent {
-        val responseData = call(requestData.copy(url = requestData.url.formatUrl()))
+        val responseData = call(requestData.copy(url = requestData.url.formatUrl(baseUrl = baseUrl)))
         return serializer.deserializeComponent(String(responseData.data))
     }
 

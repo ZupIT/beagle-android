@@ -20,23 +20,24 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import br.com.zup.beagle.android.data.ComponentRequester
-import br.com.zup.beagle.android.data.serializer.BeagleJsonSerializerFactory
-import br.com.zup.beagle.android.networking.ViewClientDefault
 import br.com.zup.beagle.android.setup.BeagleConfigurator
 import br.com.zup.beagle.android.utils.CoroutineDispatchers
 import kotlinx.coroutines.CoroutineDispatcher
 
 internal class BeagleScreenViewModel(
-    beagleConfigurator: BeagleConfigurator? = null,
+    beagleConfigurator: BeagleConfigurator,
     ioDispatcher: CoroutineDispatcher = CoroutineDispatchers.IO,
     componentRequester: ComponentRequester = ComponentRequester(
-        viewClient = beagleConfigurator?.viewClient ?: ViewClientDefault.instance,
-        serializer = beagleConfigurator?.serializer ?: BeagleJsonSerializerFactory.serializer)
-) : BeagleViewModel(ioDispatcher = ioDispatcher, componentRequester = componentRequester) {
+        baseUrl = beagleConfigurator.baseUrl,
+        viewClient = beagleConfigurator.viewClient,
+        serializer = beagleConfigurator.serializer),
+) : BeagleViewModel(beagleConfigurator = beagleConfigurator,
+    ioDispatcher = ioDispatcher,
+    componentRequester = componentRequester) {
 
     companion object {
         fun provideFactory(
-            beagleConfigurator: BeagleConfigurator?,
+            beagleConfigurator: BeagleConfigurator,
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {

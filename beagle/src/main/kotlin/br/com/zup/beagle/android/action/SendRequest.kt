@@ -140,6 +140,7 @@ data class SendRequest(
     }
 
     private fun toSendRequestInternal(rootView: RootView, origin: View) = SendRequestInternal(
+        rootView = rootView,
         url = evaluateExpression(rootView, origin, this.url) ?: "",
         method = evaluateExpression(rootView, origin, this.method) ?: RequestActionMethod.GET,
         headers = this.headers?.let { evaluateExpression(rootView, origin, it) },
@@ -151,6 +152,7 @@ data class SendRequest(
 }
 
 internal data class SendRequestInternal(
+    val rootView: RootView,
     val url: String,
     val method: RequestActionMethod = RequestActionMethod.GET,
     val headers: Map<String, String>?,

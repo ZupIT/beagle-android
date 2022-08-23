@@ -26,7 +26,7 @@ import br.com.zup.beagle.android.setup.BeagleEnvironment
 internal fun String.toRequestData(urlBuilder: UrlBuilder = UrlBuilderFactory().make(),
                                   beagleEnvironment: BeagleEnvironment = BeagleEnvironment,
                                   method: HttpMethod = HttpMethod.GET): RequestData {
-    val newUrl = this.formatUrl(urlBuilder, beagleEnvironment)
+    val newUrl = this.formatUrl(urlBuilder, beagleEnvironment.beagleSdk.config.baseUrl)
     return RequestData(
         url = newUrl,
         httpAdditionalData = HttpAdditionalData(method = method)
@@ -35,5 +35,5 @@ internal fun String.toRequestData(urlBuilder: UrlBuilder = UrlBuilderFactory().m
 
 internal fun String.formatUrl(
     urlBuilder: UrlBuilder = UrlBuilderFactory().make(),
-    beagleEnvironment: BeagleEnvironment = BeagleEnvironment,
-) = urlBuilder.format(beagleEnvironment.beagleSdk.config.baseUrl, this) ?: ""
+    baseUrl: String,
+) = urlBuilder.format(baseUrl, this) ?: ""
