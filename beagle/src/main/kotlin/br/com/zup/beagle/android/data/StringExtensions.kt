@@ -21,12 +21,11 @@ import br.com.zup.beagle.android.networking.HttpMethod
 import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.networking.urlbuilder.UrlBuilder
 import br.com.zup.beagle.android.networking.urlbuilder.UrlBuilderFactory
-import br.com.zup.beagle.android.setup.BeagleEnvironment
 
 internal fun String.toRequestData(urlBuilder: UrlBuilder = UrlBuilderFactory().make(),
-                                  beagleEnvironment: BeagleEnvironment = BeagleEnvironment,
+                                  baseUrl: String,
                                   method: HttpMethod = HttpMethod.GET): RequestData {
-    val newUrl = this.formatUrl(urlBuilder, beagleEnvironment.beagleSdk.config.baseUrl)
+    val newUrl = this.formatUrl(urlBuilder, baseUrl)
     return RequestData(
         url = newUrl,
         httpAdditionalData = HttpAdditionalData(method = method)
