@@ -19,7 +19,6 @@ package br.com.zup.beagle.android.widget
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.view.View
-import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.setup.Environment
 import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.annotation.RegisterWidget
@@ -29,7 +28,7 @@ internal class UndefinedWidget : WidgetView() {
 
     @SuppressLint("SetTextI18n")
     override fun buildView(rootView: RootView): View {
-        return if (BeagleEnvironment.beagleSdk.config.environment == Environment.DEBUG) {
+        return if (rootView.getBeagleConfigurator().environment == Environment.DEBUG) {
             ViewFactory.makeTextView(rootView.getContext()).apply {
                 text = "undefined component"
                 setTextColor(Color.RED)

@@ -33,7 +33,6 @@ import br.com.zup.beagle.R
 import br.com.zup.beagle.android.components.layout.NavigationBar
 import br.com.zup.beagle.android.components.layout.NavigationBarItem
 import br.com.zup.beagle.android.components.layout.Screen
-import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.setup.DesignSystem
 import br.com.zup.beagle.android.view.BeagleActivity
 import br.com.zup.beagle.android.view.custom.BeagleFlexView
@@ -82,11 +81,12 @@ internal class ToolbarManager(private val toolbarTextManager: ToolbarTextManager
     }
 
     private fun setAttributeToolbar(
-        context: Context,
+        rootView: RootView,
         toolbar: Toolbar,
         navigationBar: NavigationBar
     ) {
-        val designSystem = BeagleEnvironment.beagleSdk.designSystem
+        val context = rootView.getContext()
+        val designSystem = rootView.getBeagleConfigurator().designSystem
         val toolbarStyle = navigationBar.styleId?.let { designSystem?.toolbarStyle(it) }
         if (toolbarStyle == null) {
             setTitle(context, toolbar, navigationBar)
@@ -180,7 +180,7 @@ internal class ToolbarManager(private val toolbarTextManager: ToolbarTextManager
         (rootView.getContext() as BeagleActivity).getToolbar().apply {
             visibility = View.VISIBLE
             menu.clear()
-            setAttributeToolbar(rootView.getContext(), this, navigationBar)
+            setAttributeToolbar(rootView,this, navigationBar)
             navigationBar.navigationBarItems?.let { items ->
                 configToolbarItems(rootView, this, items, container, screen)
             }
@@ -194,7 +194,7 @@ internal class ToolbarManager(private val toolbarTextManager: ToolbarTextManager
         container: BeagleFlexView,
         screen: Screen,
     ) {
-        val designSystem = BeagleEnvironment.beagleSdk.designSystem
+        val designSystem = rootView.getBeagleConfigurator().designSystem
         for (i in items.indices) {
             toolbar.menu.add(Menu.NONE, i, Menu.NONE, items[i].text)
                 .apply {
