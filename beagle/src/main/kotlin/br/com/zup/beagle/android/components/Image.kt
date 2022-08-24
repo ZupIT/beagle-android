@@ -23,12 +23,12 @@ import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.context.expressionOrConstant
 import br.com.zup.beagle.android.engine.mapper.ViewMapper
 import br.com.zup.beagle.android.logger.BeagleMessageLogs
-import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.utils.observeBindChanges
 import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.android.widget.WidgetView
 import br.com.zup.beagle.android.annotation.RegisterWidget
+import br.com.zup.beagle.android.setup.DesignSystem
 import br.com.zup.beagle.android.widget.core.BeagleJson
 import br.com.zup.beagle.android.widget.core.CornerRadius
 import br.com.zup.beagle.android.widget.core.ImageContentMode
@@ -80,7 +80,7 @@ data class Image constructor(
     private fun loadLocalImage(rootView: RootView, imageView: ImageView, pathType: ImagePath.Local) {
         imageView.apply {
             observeBindChanges(rootView, imageView, pathType.mobileId) { mobileId ->
-                getImage(mobileId)?.let {
+                getImage(rootView.getBeagleConfigurator().designSystem, mobileId)?.let {
                     try {
                         setImageResource(it)
                     } catch (ex: Exception) {
@@ -116,9 +116,9 @@ data class Image constructor(
     private fun downloadImage(imageView: ImageView, url: String, rootView: RootView) =
         rootView.getBeagleConfigurator().imageDownloader.download(url, imageView, rootView)
 
-    private fun getImage(imagePath: String?): Int? =
+    private fun getImage(designSystem: DesignSystem?, imagePath: String?): Int? =
         imagePath?.let {
-            BeagleEnvironment.beagleSdk.designSystem?.image(it)
+            designSystem?.image(it)
         }
 }
 
