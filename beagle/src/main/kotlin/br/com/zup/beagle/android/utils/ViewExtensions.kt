@@ -137,7 +137,7 @@ internal fun View.hideKeyboard() {
 }
 
 internal fun View.applyStyle(component: ServerDrivenComponent, designSystem: DesignSystem?) {
-    styleManagerFactory.configure(designSystem)
+    styleManagerFactory.init(designSystem)
     (component as? StyleComponent)?.let {
         if (it.style?.backgroundColor != null) {
             this.background = GradientDrawable()

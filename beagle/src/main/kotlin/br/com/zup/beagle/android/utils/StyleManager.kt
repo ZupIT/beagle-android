@@ -35,7 +35,7 @@ class StyleManager(
 
     private var designSystem: DesignSystem? = null
 
-    @Synchronized fun configure(designSystem: DesignSystem?) {
+    @Synchronized fun init(designSystem: DesignSystem?) {
         this.designSystem = designSystem
     }
 

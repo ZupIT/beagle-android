@@ -51,7 +51,7 @@ data class Button(
     private val styleManager: StyleManager = StyleManager()
 
     override fun buildView(rootView: RootView): View {
-        styleManager.configure(rootView.getBeagleConfigurator().designSystem)
+        styleManager.init(rootView.getBeagleConfigurator().designSystem)
         onPress?.let {
             preFetchHelper.handlePreFetch(rootView, it)
         }
