@@ -24,13 +24,14 @@ import br.com.zup.beagle.android.networking.RequestCall
 import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.networking.ResponseData
 import br.com.zup.beagle.android.networking.ViewClient
+import br.com.zup.beagle.android.setup.BeagleConfigurator
 import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
 internal class ComponentRequester(
-    private val baseUrl: String,
+    private val beagleConfigurator: BeagleConfigurator,
     private val viewClient: ViewClient,
     private val serializer: BeagleJsonSerializer,
 ) {
@@ -45,7 +46,7 @@ internal class ComponentRequester(
         requestData: RequestData,
         call: suspend (requestData: RequestData) -> ResponseData,
     ): ServerDrivenComponent {
-        val responseData = call(requestData.copy(url = requestData.url.formatUrl(baseUrl = baseUrl)))
+        val responseData = call(requestData.copy(url = requestData.url.formatUrl(beagleConfigurator)))
         return serializer.deserializeComponent(String(responseData.data))
     }
 

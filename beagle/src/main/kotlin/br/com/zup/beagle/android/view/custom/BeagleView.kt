@@ -50,7 +50,7 @@ internal class BeagleView(
     }
 
     fun updateView(url: String, view: View) {
-        val urlFormatted = url.formatUrl(baseUrl = rootView.getBeagleConfigurator().baseUrl)
+        val urlFormatted = url.formatUrl(beagleConfigurator = rootView.getBeagleConfigurator())
         loadView(RequestData(url = urlFormatted), view)
     }
 

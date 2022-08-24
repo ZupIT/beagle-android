@@ -21,11 +21,12 @@ import br.com.zup.beagle.android.networking.HttpMethod
 import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.networking.urlbuilder.UrlBuilder
 import br.com.zup.beagle.android.networking.urlbuilder.UrlBuilderFactory
+import br.com.zup.beagle.android.setup.BeagleConfigurator
 
-internal fun String.toRequestData(urlBuilder: UrlBuilder = UrlBuilderFactory().make(),
-                                  baseUrl: String,
+internal fun String.toRequestData(beagleConfigurator: BeagleConfigurator,
+                                  urlBuilder: UrlBuilder = UrlBuilderFactory().make(beagleConfigurator),
                                   method: HttpMethod = HttpMethod.GET): RequestData {
-    val newUrl = this.formatUrl(urlBuilder, baseUrl)
+    val newUrl = this.formatUrl(beagleConfigurator, urlBuilder)
     return RequestData(
         url = newUrl,
         httpAdditionalData = HttpAdditionalData(method = method)
@@ -33,6 +34,6 @@ internal fun String.toRequestData(urlBuilder: UrlBuilder = UrlBuilderFactory().m
 }
 
 internal fun String.formatUrl(
-    urlBuilder: UrlBuilder = UrlBuilderFactory().make(),
-    baseUrl: String,
-) = urlBuilder.format(baseUrl, this) ?: ""
+    beagleConfigurator: BeagleConfigurator,
+    urlBuilder: UrlBuilder = UrlBuilderFactory().make(beagleConfigurator),
+) = urlBuilder.format(beagleConfigurator.baseUrl, this) ?: ""

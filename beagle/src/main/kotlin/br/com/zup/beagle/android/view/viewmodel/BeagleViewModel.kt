@@ -48,7 +48,7 @@ internal open class BeagleViewModel(
     private val beagleConfigurator: BeagleConfigurator,
     private val ioDispatcher: CoroutineDispatcher = CoroutineDispatchers.IO,
     private val componentRequester: ComponentRequester = ComponentRequester(
-        baseUrl = beagleConfigurator.baseUrl,
+        beagleConfigurator = beagleConfigurator,
         viewClient = beagleConfigurator.viewClient,
         serializer = beagleConfigurator.serializer),
 ) : ViewModel() {

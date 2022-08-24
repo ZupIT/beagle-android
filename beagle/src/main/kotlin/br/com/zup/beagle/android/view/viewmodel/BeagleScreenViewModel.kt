@@ -28,7 +28,7 @@ internal class BeagleScreenViewModel(
     beagleConfigurator: BeagleConfigurator,
     ioDispatcher: CoroutineDispatcher = CoroutineDispatchers.IO,
     componentRequester: ComponentRequester = ComponentRequester(
-        baseUrl = beagleConfigurator.baseUrl,
+        beagleConfigurator = beagleConfigurator,
         viewClient = beagleConfigurator.viewClient,
         serializer = beagleConfigurator.serializer),
 ) : BeagleViewModel(beagleConfigurator = beagleConfigurator,

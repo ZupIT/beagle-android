@@ -123,7 +123,7 @@ internal object BeagleNavigator {
              * and function popBackStack will execute in the next event loop cycle because this has a better performance
              * but to this case I need to use this function
              */
-            context.supportFragmentManager.popBackStackImmediate(getFragmentName(route, context,
+            context.supportFragmentManager.popBackStackImmediate(getFragmentName(rootView,route, context,
                 rootView.getBeagleConfigurator().baseUrl), 0)
             updateContext(context, navigationContext)
         }
@@ -136,9 +136,12 @@ internal object BeagleNavigator {
         }
     }
 
-    private fun getFragmentName(route: String, context: AppCompatActivity, baseUrl: String): String {
+    private fun getFragmentName(rootView: RootView,
+                                route: String,
+                                context: AppCompatActivity,
+                                baseUrl: String): String {
         var fragmentName = route
-        val urlBuilder = UrlBuilderFactory().make()
+        val urlBuilder = UrlBuilderFactory().make(rootView.getBeagleConfigurator())
         val routeFormatted = urlBuilder.format(baseUrl, route)
         for (index in 0 until context.supportFragmentManager.backStackEntryCount) {
             val backStackEntryName = context.supportFragmentManager.getBackStackEntryAt(index).name
@@ -216,7 +219,7 @@ internal object BeagleNavigator {
             is Route.Local -> BeagleActivity.bundleOf(route.screen, navigationContext, rootView.getBeagleConfigurator())
         }
 
-        val activityClass = BeagleEnvironment.beagleSdk.controllerReference?.classFor(controllerName)
+        val activityClass = rootView.getBeagleConfigurator().controllerReference?.classFor(controllerName)
 
         return Intent(context, activityClass).apply {
             putExtras(bundle)
