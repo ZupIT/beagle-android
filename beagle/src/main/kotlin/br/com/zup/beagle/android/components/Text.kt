@@ -52,6 +52,7 @@ data class Text(
     private val styleManager: StyleManager = StyleManager()
 
     override fun buildView(rootView: RootView): View {
+        styleManager.configure(rootView.getBeagleConfigurator().designSystem)
         val textStyle = styleManager.getTextStyle(styleId)
 
         val textView = if (textStyle == 0) ViewFactory.makeTextView(rootView.getContext())

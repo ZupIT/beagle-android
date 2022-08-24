@@ -33,6 +33,7 @@ import br.com.zup.beagle.android.components.utils.getFloatArray
 import br.com.zup.beagle.android.context.ContextBinding
 import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.context.normalize
+import br.com.zup.beagle.android.setup.DesignSystem
 import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 import br.com.zup.beagle.android.widget.core.StyleComponent
@@ -135,7 +136,8 @@ internal fun View.hideKeyboard() {
     imm.hideSoftInputFromWindow(windowToken, 0)
 }
 
-internal fun View.applyStyle(component: ServerDrivenComponent) {
+internal fun View.applyStyle(component: ServerDrivenComponent, designSystem: DesignSystem?) {
+    styleManagerFactory.configure(designSystem)
     (component as? StyleComponent)?.let {
         if (it.style?.backgroundColor != null) {
             this.background = GradientDrawable()
