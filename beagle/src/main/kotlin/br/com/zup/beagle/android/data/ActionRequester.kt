@@ -20,7 +20,6 @@ import br.com.zup.beagle.android.exception.BeagleApiException
 import br.com.zup.beagle.android.networking.HttpClient
 import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.networking.ResponseData
-import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.utils.doRequest
 import kotlinx.coroutines.suspendCancellableCoroutine
 import java.lang.Exception
@@ -28,7 +27,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
 internal class ActionRequester(
-    private val httpClient: HttpClient? = BeagleEnvironment.beagleSdk.httpClientFactory?.create(),
+    private val httpClient: HttpClient?,
 ) {
 
     @Throws(BeagleApiException::class)
