@@ -227,7 +227,7 @@ internal class ListAdapter(
                 clearAdapterContent()
                 notifyListViewIdViewModel(listItems.isEmpty(), componentId)
                 listItems = list
-                adapterItems = list.map { ListItem(data = it.normalizeContextValue()) }
+                adapterItems = list.map { ListItem(data = it.normalizeContextValue(serializer.moshi)) }
                 notifyDataSetChanged()
             }
         } ?: clearList()

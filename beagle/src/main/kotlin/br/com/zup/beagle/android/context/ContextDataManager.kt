@@ -31,11 +31,13 @@ import br.com.zup.beagle.android.utils.getContextBinding
 import br.com.zup.beagle.android.utils.getContextId
 import br.com.zup.beagle.android.utils.setContextBinding
 import br.com.zup.beagle.android.utils.setContextData
+import com.squareup.moshi.Moshi
 
 private const val GLOBAL_CONTEXT_ID = Int.MAX_VALUE
 
 internal class ContextDataManager(
-    private val contextDataEvaluation: ContextDataEvaluation = ContextDataEvaluation(),
+    private val moshi: Moshi,
+    private val contextDataEvaluation: ContextDataEvaluation = ContextDataEvaluation(moshi = moshi),
     private val contextDataManipulator: ContextDataManipulator = ContextDataManipulator()
 ) {
 
@@ -70,7 +72,7 @@ internal class ContextDataManager(
         contextsWithoutId[view]?.apply {
             contexts[view.id]?.let {
                 it.forEach { binding ->
-                    view.setContextData(binding.context)
+                    view.setContextData(binding.context, moshi)
                 }
             } ?: run {
                 contexts[view.id] = this
@@ -127,7 +129,7 @@ internal class ContextDataManager(
     }
 
     private fun updateContextAndReference(view: View, context: ContextData) {
-        view.setContextData(context)
+        view.setContextData(context, moshi)
         view.getContextBinding()?.let {
             if (view.id != View.NO_ID) {
                 contexts[view.id] = it
@@ -227,7 +229,7 @@ internal class ContextDataManager(
 
     fun updateContext(view: View, setContextInternal: SetContextInternal) {
         if (setContextInternal.contextId == globalContext.context.id) {
-            GlobalContext.set(setContextInternal.value, setContextInternal.path)
+            GlobalContext.set(setContextInternal.value, setContextInternal.path, moshi)
         } else {
             view.findParentContextWithId(setContextInternal.contextId)?.let { parentView ->
                 val currentContextBinding = parentView.getContextBinding()

@@ -37,6 +37,7 @@ import br.com.zup.beagle.android.setup.DesignSystem
 import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 import br.com.zup.beagle.android.widget.core.StyleComponent
+import com.squareup.moshi.Moshi
 
 internal var styleManagerFactory = StyleManager()
 const val FLOAT_ZERO = 0.0f
@@ -85,8 +86,8 @@ internal fun View.getParentContextData(): View? {
     return parentView
 }
 
-internal fun View.setContextData(context: ContextData) {
-    val normalizedContext = context.normalize()
+internal fun View.setContextData(context: ContextData, moshi: Moshi) {
+    val normalizedContext = context.normalize(moshi)
     val contextBindings = getContextBinding()
     if (contextBindings != null && contextBindings.isNotEmpty()) {
         val contextBindingsMutable = contextBindings.toMutableSet()

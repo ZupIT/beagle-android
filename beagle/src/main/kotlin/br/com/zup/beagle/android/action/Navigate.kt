@@ -242,7 +242,7 @@ sealed class Navigate : AnalyticsAction {
     internal fun Route.getSafe(rootView: RootView, origin: View): Route {
         if (this is Route.Remote) {
             val newValue = evaluateExpression(rootView, origin, url)
-            val body = httpAdditionalData?.body?.normalizeContextValue()
+            val body = httpAdditionalData?.body?.normalizeContextValue(rootView.getBeagleConfigurator().moshi)
                 ?.let { evaluateExpression(rootView, origin, it) }
 
             return this.copy(

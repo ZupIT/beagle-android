@@ -144,7 +144,8 @@ data class SendRequest(
         url = evaluateExpression(rootView, origin, this.url) ?: "",
         method = evaluateExpression(rootView, origin, this.method) ?: RequestActionMethod.GET,
         headers = this.headers?.let { evaluateExpression(rootView, origin, it) },
-        data = this.data?.normalizeContextValue()?.let { evaluateExpression(rootView, origin, it) },
+        data = this.data?.normalizeContextValue(
+            rootView.getBeagleConfigurator().moshi)?.let { evaluateExpression(rootView, origin, it) },
         onSuccess = this.onSuccess,
         onError = this.onError,
         onFinish = this.onFinish

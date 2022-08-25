@@ -25,7 +25,7 @@ import com.squareup.moshi.Moshi
 private const val EXCEPTION_MESSAGE = "Unexpected error when trying to serialize json="
 
 internal class BeagleSerializer(
-    val moshi: Moshi = BeagleMoshi.moshi
+    override val moshi: Moshi
 ): BeagleJsonSerializer {
 
     @Throws(BeagleException::class)

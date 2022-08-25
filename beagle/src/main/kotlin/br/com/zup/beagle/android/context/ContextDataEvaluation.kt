@@ -19,7 +19,6 @@ package br.com.zup.beagle.android.context
 import androidx.collection.LruCache
 import br.com.zup.beagle.android.context.tokenizer.ExpressionToken
 import br.com.zup.beagle.android.context.tokenizer.ExpressionTokenExecutor
-import br.com.zup.beagle.android.data.serializer.BeagleMoshi
 import br.com.zup.beagle.android.logger.BeagleMessageLogs
 import com.squareup.moshi.Moshi
 import org.json.JSONArray
@@ -27,10 +26,10 @@ import org.json.JSONObject
 import java.lang.reflect.Type
 
 internal class ContextDataEvaluation(
+    private val moshi: Moshi,
     private val contextDataManipulator: ContextDataManipulator = ContextDataManipulator(),
     private val expressionTokenExecutor: ExpressionTokenExecutor = ExpressionTokenExecutor(),
     private val contextExpressionReplacer: ContextExpressionReplacer = ContextExpressionReplacer(),
-    private val moshi: Moshi = BeagleMoshi.moshi
 ) {
 
     fun evaluateBindExpression(

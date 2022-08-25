@@ -19,7 +19,6 @@ package br.com.zup.beagle.android.data.serializer.adapter
 import br.com.zup.beagle.android.action.Route
 import br.com.zup.beagle.android.components.layout.Screen
 import br.com.zup.beagle.android.context.Bind
-import br.com.zup.beagle.android.data.serializer.BeagleMoshi.moshi
 import br.com.zup.beagle.android.networking.HttpAdditionalData
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.JsonDataException
@@ -35,21 +34,22 @@ class RouteAdapterFactory : JsonAdapter.Factory {
         annotations: MutableSet<out Annotation>,
         moshi: Moshi
     ): JsonAdapter<Route>? {
-        val adapter: JsonAdapter<Bind<String>> = getBindAdapter()
+        val adapter: JsonAdapter<Bind<String>> = getBindAdapter(moshi)
         return if (Types.getRawType(type) == Route::class.java) {
-            RouteAdapter(adapter)
+            RouteAdapter(adapter, moshi)
         } else {
             null
         }
     }
 }
 
-private fun getBindAdapter(): JsonAdapter<Bind<String>> {
+private fun getBindAdapter(moshi: Moshi): JsonAdapter<Bind<String>> {
     val type: Type = Types.newParameterizedType(Bind::class.java, String::class.java)
     return moshi.adapter(type)
 }
 
-internal class RouteAdapter(private val adapter: JsonAdapter<Bind<String>>) : JsonAdapter<Route>() {
+internal class RouteAdapter(private val adapter: JsonAdapter<Bind<String>>,
+                            private val moshi: Moshi) : JsonAdapter<Route>() {
     override fun fromJson(reader: JsonReader): Route {
         val jsonValue = reader.readJsonValue()
 
@@ -77,7 +77,7 @@ internal class RouteAdapter(private val adapter: JsonAdapter<Bind<String>>) : Js
         when (value) {
             is Route.Remote -> {
                 writer.name(URL)
-                getBindAdapter().toJson(writer, value.url)
+                getBindAdapter(moshi).toJson(writer, value.url)
                 writer.name(SHOULD_PREFETCH)
                 moshi.adapter(Boolean::class.java).toJson(writer, value.shouldPrefetch ?: false)
                 writer.name(FALLBACK)

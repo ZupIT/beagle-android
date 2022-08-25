@@ -38,8 +38,8 @@ import com.squareup.moshi.Moshi
 
 class BeagleConfigurator(
     private val beagleSdk: BeagleSdk,
-    private val moshi: Moshi,
-    val application: Application,
+    internal val moshi: Moshi,
+    internal val application: Application,
     internal val serializer: BeagleJsonSerializer = BeagleJsonSerializerFactory.create(moshi),
 ) {
     companion object {

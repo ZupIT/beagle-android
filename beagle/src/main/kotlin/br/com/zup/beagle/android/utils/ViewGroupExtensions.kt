@@ -201,7 +201,9 @@ internal fun ViewGroup.loadView(
     generateIdManager: GenerateIdManager = GenerateIdManager(rootView),
 ) {
     if (shouldResetContext) {
-        val viewModel = rootView.generateViewModelInstance<ScreenContextViewModel>()
+        val viewModel = rootView.generateViewModelInstance<ScreenContextViewModel>(
+            ScreenContextViewModel.provideFactory(rootView.getBeagleConfigurator())
+        )
         viewModel.clearContexts()
     }
     generateIdManager.createSingleManagerByRootViewId()

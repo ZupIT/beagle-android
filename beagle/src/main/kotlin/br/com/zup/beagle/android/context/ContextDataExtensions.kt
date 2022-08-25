@@ -16,7 +16,7 @@
 
 package br.com.zup.beagle.android.context
 
-import br.com.zup.beagle.android.data.serializer.BeagleMoshi
+import com.squareup.moshi.Moshi
 import kotlin.reflect.KClass
 import kotlin.reflect.full.isSubclassOf
 import org.json.JSONArray
@@ -28,11 +28,11 @@ import org.json.JSONObject
  * because if user pass a map, list or any kind of object, this should be normalized
  * to a JSONArray or JSONObject.
  */
-internal fun ContextData.normalize(): ContextData {
-    return ContextData(this.id, value.normalizeContextValue())
+internal fun ContextData.normalize(moshi: Moshi): ContextData {
+    return ContextData(this.id, value.normalizeContextValue(moshi))
 }
 
-internal fun Any.normalizeContextValue(): Any {
+internal fun Any.normalizeContextValue(moshi: Moshi): Any {
 
     return when {
         isValueNormalized() -> {
@@ -42,7 +42,7 @@ internal fun Any.normalizeContextValue(): Any {
             this.toString()
         }
         else -> {
-            val newValue = BeagleMoshi.moshi.adapter(Any::class.java).toJson(this) ?: ""
+            val newValue = moshi.adapter(Any::class.java).toJson(this) ?: ""
             newValue.normalizeContextValue()
         }
     }

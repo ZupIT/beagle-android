@@ -69,7 +69,9 @@ internal class BeagleFragment : Fragment() {
     }
 
     private val contextViewModel by lazy {
-        ViewModelProvider(this).get(
+        ViewModelProvider(this, ScreenContextViewModel.provideFactory(
+            beagleConfigurator
+        )).get(
             ScreenContextViewModel::class.java
         )
     }
@@ -161,7 +163,7 @@ internal class BeagleFragment : Fragment() {
     private fun saveContextData() {
         val contextData = contextViewModel.getContextData(NAVIGATION_CONTEXT_DATA_ID)
 
-        savedState.putParcelable(NAVIGATION_CONTEXT_DATA_KEY, contextData?.normalize())
+        savedState.putParcelable(NAVIGATION_CONTEXT_DATA_KEY, contextData?.normalize(beagleConfigurator.moshi))
     }
 
     fun updateNavigationContext(navigationContext: NavigationContext) {
