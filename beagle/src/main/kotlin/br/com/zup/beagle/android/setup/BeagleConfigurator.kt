@@ -43,7 +43,7 @@ class BeagleConfigurator(
     internal val serializer: BeagleJsonSerializer = BeagleJsonSerializerFactory.create(moshi),
 ) {
     companion object {
-        val configurator: BeagleConfigurator by lazy {
+        internal val configurator: BeagleConfigurator by lazy {
             BeagleConfigurator(
                 moshi = BeagleMoshi.moshi,
                 beagleSdk = BeagleEnvironment.beagleSdk,
