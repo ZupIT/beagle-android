@@ -21,9 +21,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelStoreOwner
-import br.com.zup.beagle.android.data.serializer.BeagleMoshi
 import br.com.zup.beagle.android.setup.BeagleConfigurator
-import br.com.zup.beagle.android.setup.BeagleEnvironment
 
 /**
  * Interface RootView holder the reference of activity or fragment.
@@ -70,10 +68,7 @@ class FragmentRootView(
     val fragment: Fragment,
     private val parentId: Int,
     private val screenId : String,
-    private val config: BeagleConfigurator = BeagleConfigurator(
-        moshi = BeagleMoshi.moshi,
-        beagleSdk = BeagleEnvironment.beagleSdk,
-        application = BeagleEnvironment.application)
+    private val config: BeagleConfigurator = BeagleConfigurator.configurator
 ) : RootView {
 
     override fun getContext(): Context = fragment.requireContext()
@@ -99,10 +94,7 @@ class ActivityRootView(
     val activity: AppCompatActivity,
     private val parentId: Int,
     private val screenId: String,
-    private val config: BeagleConfigurator = BeagleConfigurator(
-        moshi = BeagleMoshi.moshi,
-        beagleSdk = BeagleEnvironment.beagleSdk,
-        application = BeagleEnvironment.application),
+    private val config: BeagleConfigurator = BeagleConfigurator.configurator,
 ) : RootView {
 
     override fun getContext(): Context = activity

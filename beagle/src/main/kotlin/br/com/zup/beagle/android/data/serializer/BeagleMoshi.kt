@@ -18,6 +18,7 @@ package br.com.zup.beagle.android.data.serializer
 
 import android.annotation.SuppressLint
 import androidx.annotation.VisibleForTesting
+import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.data.serializer.adapter.AnalyticsActionConfigAdapterFactory
 import br.com.zup.beagle.android.data.serializer.adapter.AndroidActionJsonAdapterFactory
 import br.com.zup.beagle.android.data.serializer.adapter.BeagleKotlinJsonAdapterFactory
@@ -44,13 +45,15 @@ import com.squareup.moshi.Moshi
 internal object BeagleMoshi {
 
     val moshi: Moshi by lazy {
-        createMoshi(registeredWidgets = BeagleEnvironment.beagleSdk.registeredWidgets())
+        createMoshi(registeredWidgets = BeagleEnvironment.beagleSdk.registeredWidgets(),
+            registeredActions = BeagleEnvironment.beagleSdk.registeredActions())
     }
 
     @SuppressLint("CheckResult")
     fun moshiFactory(config: BeagleSdk): Moshi {
         val moshi = createMoshi(config.typeAdapterResolver,
-        registeredWidgets = config.registeredWidgets())
+        registeredWidgets = config.registeredWidgets(),
+        registeredActions = config.registeredActions())
         moshi.adapter(ServerDrivenComponent::class.java)
         return moshi
     }
@@ -60,6 +63,7 @@ internal object BeagleMoshi {
         typeAdapterResolver: TypeAdapterResolver? =
             BeagleEnvironment.beagleSdk.typeAdapterResolver,
         registeredWidgets: List<Class<WidgetView>> = emptyList(),
+        registeredActions: List<Class<Action>> = emptyList(),
     ): Moshi = Moshi.Builder()
         .add(BindAdapterFactory())
         .add(ImagePathTypeJsonAdapterFactory.make())
@@ -67,7 +71,7 @@ internal object BeagleMoshi {
         .add(HttpAdditionalDataAdapter())
         .add(RouteAdapterFactory())
         .add(AnalyticsActionConfigAdapterFactory())
-        .add(AndroidActionJsonAdapterFactory.make())
+        .add(AndroidActionJsonAdapterFactory.make(registeredActions))
         .add(ContextDataAdapterFactory())
         .add(MoshiArrayListJsonAdapter.FACTORY)
         .add(MoshiMapJsonAdapter.FACTORY)

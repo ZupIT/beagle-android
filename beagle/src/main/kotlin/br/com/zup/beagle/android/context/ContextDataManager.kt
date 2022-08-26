@@ -24,6 +24,7 @@ import br.com.zup.beagle.android.context.tokenizer.Token
 import br.com.zup.beagle.android.context.tokenizer.TokenBinding
 import br.com.zup.beagle.android.context.tokenizer.TokenFunction
 import br.com.zup.beagle.android.logger.BeagleMessageLogs
+import br.com.zup.beagle.android.setup.BeagleConfigurator
 import br.com.zup.beagle.android.utils.Observer
 import br.com.zup.beagle.android.utils.findParentContextWithId
 import br.com.zup.beagle.android.utils.getAllParentContexts
@@ -31,13 +32,12 @@ import br.com.zup.beagle.android.utils.getContextBinding
 import br.com.zup.beagle.android.utils.getContextId
 import br.com.zup.beagle.android.utils.setContextBinding
 import br.com.zup.beagle.android.utils.setContextData
-import com.squareup.moshi.Moshi
 
 private const val GLOBAL_CONTEXT_ID = Int.MAX_VALUE
 
 internal class ContextDataManager(
-    private val moshi: Moshi,
-    private val contextDataEvaluation: ContextDataEvaluation = ContextDataEvaluation(moshi = moshi),
+    private val beagleConfigurator: BeagleConfigurator,
+    private val contextDataEvaluation: ContextDataEvaluation = ContextDataEvaluation(beagleConfigurator),
     private val contextDataManipulator: ContextDataManipulator = ContextDataManipulator()
 ) {
 
@@ -72,7 +72,7 @@ internal class ContextDataManager(
         contextsWithoutId[view]?.apply {
             contexts[view.id]?.let {
                 it.forEach { binding ->
-                    view.setContextData(binding.context, moshi)
+                    view.setContextData(binding.context, beagleConfigurator.moshi)
                 }
             } ?: run {
                 contexts[view.id] = this
@@ -129,7 +129,7 @@ internal class ContextDataManager(
     }
 
     private fun updateContextAndReference(view: View, context: ContextData) {
-        view.setContextData(context, moshi)
+        view.setContextData(context, beagleConfigurator.moshi)
         view.getContextBinding()?.let {
             if (view.id != View.NO_ID) {
                 contexts[view.id] = it
@@ -229,7 +229,7 @@ internal class ContextDataManager(
 
     fun updateContext(view: View, setContextInternal: SetContextInternal) {
         if (setContextInternal.contextId == globalContext.context.id) {
-            GlobalContext.set(setContextInternal.value, setContextInternal.path, moshi)
+            GlobalContext.set(setContextInternal.value, setContextInternal.path, beagleConfigurator.moshi)
         } else {
             view.findParentContextWithId(setContextInternal.contextId)?.let { parentView ->
                 val currentContextBinding = parentView.getContextBinding()

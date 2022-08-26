@@ -18,12 +18,14 @@ package br.com.zup.beagle.android.operation
 
 import br.com.zup.beagle.android.exception.BeagleException
 import br.com.zup.beagle.android.logger.BeagleMessageLogs
-import br.com.zup.beagle.android.setup.BeagleEnvironment
+import br.com.zup.beagle.android.setup.BeagleConfigurator
 import br.com.zup.beagle.android.setup.InternalOperationFactory
 import org.json.JSONArray
 import org.json.JSONObject
 
-internal class OperationResolver {
+internal class OperationResolver(
+    private val beagleConfigurator: BeagleConfigurator
+) {
 
     private val functions = createOperations()
 
@@ -57,7 +59,7 @@ internal class OperationResolver {
     private fun createOperations(): Map<String, Operation> {
         return mutableMapOf<String, Operation>() +
             InternalOperationFactory.registeredOperations() +
-            BeagleEnvironment.beagleSdk.registeredOperations()
+            beagleConfigurator.registeredOperations
     }
 
 }

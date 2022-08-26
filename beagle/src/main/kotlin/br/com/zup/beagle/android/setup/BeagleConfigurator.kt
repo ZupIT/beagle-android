@@ -43,6 +43,13 @@ class BeagleConfigurator(
     internal val serializer: BeagleJsonSerializer = BeagleJsonSerializerFactory.create(moshi),
 ) {
     companion object {
+        val configurator: BeagleConfigurator by lazy {
+            BeagleConfigurator(
+                moshi = BeagleMoshi.moshi,
+                beagleSdk = BeagleEnvironment.beagleSdk,
+                application = BeagleEnvironment.application)
+        }
+
         fun factory(
             beagleSdk: BeagleSdk?,
             moshi: Moshi = beagleSdk?.let { BeagleMoshi.moshiFactory(beagleSdk) } ?: BeagleMoshi.moshi,
@@ -51,10 +58,7 @@ class BeagleConfigurator(
             beagleSdk?.let {
                 BeagleConfigurator(beagleSdk = it,
                     moshi = moshi, application = application)
-            } ?: BeagleConfigurator(
-                moshi = BeagleMoshi.moshi,
-                beagleSdk = BeagleEnvironment.beagleSdk,
-                application = BeagleEnvironment.application)
+            } ?: configurator
     }
 
     internal val httpClient: HttpClient by lazy {

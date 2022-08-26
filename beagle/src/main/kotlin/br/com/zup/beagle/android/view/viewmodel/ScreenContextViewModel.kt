@@ -31,8 +31,8 @@ import br.com.zup.beagle.android.utils.Observer
 @Suppress("TooManyFunctions")
 internal class ScreenContextViewModel(
     private val beagleConfigurator: BeagleConfigurator,
-    private val contextDataManager: ContextDataManager = ContextDataManager(beagleConfigurator.moshi),
-    private val contextDataEvaluation: ContextDataEvaluation = ContextDataEvaluation(moshi = beagleConfigurator.moshi),
+    private val contextDataManager: ContextDataManager = ContextDataManager(beagleConfigurator),
+    private val contextDataEvaluation: ContextDataEvaluation = ContextDataEvaluation(beagleConfigurator),
     private val implicitContextManager: ImplicitContextManager = ImplicitContextManager()
 ) : ViewModel() {
 
