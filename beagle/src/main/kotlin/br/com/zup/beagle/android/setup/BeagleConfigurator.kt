@@ -27,6 +27,7 @@ import br.com.zup.beagle.android.imagedownloader.BeagleImageDownloader
 import br.com.zup.beagle.android.imagedownloader.DefaultImageDownloader
 import br.com.zup.beagle.android.logger.BeagleLogger
 import br.com.zup.beagle.android.navigation.BeagleControllerReference
+import br.com.zup.beagle.android.navigation.DeepLinkHandler
 import br.com.zup.beagle.android.networking.HttpClient
 import br.com.zup.beagle.android.networking.ViewClient
 import br.com.zup.beagle.android.networking.ViewClientDefault
@@ -39,15 +40,13 @@ import com.squareup.moshi.Moshi
 class BeagleConfigurator(
     private val beagleSdk: BeagleSdk,
     internal val moshi: Moshi,
-    internal val application: Application,
     internal val serializer: BeagleJsonSerializer = BeagleJsonSerializerFactory.create(moshi),
 ) {
     companion object {
         internal val configurator: BeagleConfigurator by lazy {
             BeagleConfigurator(
                 moshi = BeagleMoshi.moshi,
-                beagleSdk = BeagleEnvironment.beagleSdk,
-                application = BeagleEnvironment.application)
+                beagleSdk = BeagleEnvironment.beagleSdk)
         }
 
         fun factory(
@@ -57,7 +56,7 @@ class BeagleConfigurator(
         ) =
             beagleSdk?.let {
                 BeagleConfigurator(beagleSdk = it,
-                    moshi = moshi, application = application)
+                    moshi = moshi)
             } ?: configurator
     }
 
@@ -72,6 +71,10 @@ class BeagleConfigurator(
 
     internal val baseUrl: String by lazy {
         this.beagleSdk.config.baseUrl
+    }
+
+    internal val deepLinkHandler: DeepLinkHandler? by lazy {
+        this.beagleSdk.deepLinkHandler
     }
 
     internal val environment: Environment by lazy {

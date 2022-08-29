@@ -31,7 +31,6 @@ import br.com.zup.beagle.android.networking.HttpMethod
 import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.networking.urlbuilder.UrlBuilderFactory
 import br.com.zup.beagle.android.setup.BeagleConfigurator
-import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.view.BeagleActivity
 import br.com.zup.beagle.android.view.BeagleFragment
 import br.com.zup.beagle.android.widget.RootView
@@ -54,7 +53,7 @@ internal object BeagleNavigator {
         data: Map<String, String>?,
         shouldResetApplication: Boolean,
     ) {
-        BeagleEnvironment.beagleSdk.deepLinkHandler?.getDeepLinkIntent(
+        rootView.getBeagleConfigurator().deepLinkHandler?.getDeepLinkIntent(
             rootView, route, data, shouldResetApplication)?.let {
             rootView.getContext().startActivity(it)
         }

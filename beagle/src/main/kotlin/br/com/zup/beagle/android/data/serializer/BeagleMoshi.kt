@@ -46,7 +46,8 @@ internal object BeagleMoshi {
 
     val moshi: Moshi by lazy {
         createMoshi(registeredWidgets = BeagleEnvironment.beagleSdk.registeredWidgets(),
-            registeredActions = BeagleEnvironment.beagleSdk.registeredActions())
+            registeredActions = BeagleEnvironment.beagleSdk.registeredActions(),
+        typeAdapterResolver = BeagleEnvironment.beagleSdk.typeAdapterResolver)
     }
 
     @SuppressLint("CheckResult")
@@ -60,8 +61,7 @@ internal object BeagleMoshi {
 
     @VisibleForTesting
     fun createMoshi(
-        typeAdapterResolver: TypeAdapterResolver? =
-            BeagleEnvironment.beagleSdk.typeAdapterResolver,
+        typeAdapterResolver: TypeAdapterResolver?,
         registeredWidgets: List<Class<WidgetView>> = emptyList(),
         registeredActions: List<Class<Action>> = emptyList(),
     ): Moshi = Moshi.Builder()
