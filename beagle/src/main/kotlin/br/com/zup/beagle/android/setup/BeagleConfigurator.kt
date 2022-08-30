@@ -16,7 +16,6 @@
 
 package br.com.zup.beagle.android.setup
 
-import android.app.Application
 import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.analytics.AnalyticsProvider
 import br.com.zup.beagle.android.data.serializer.BeagleJsonSerializer
@@ -51,11 +50,11 @@ class BeagleConfigurator(
 
         fun factory(
             beagleSdk: BeagleSdk?,
-            moshi: Moshi = beagleSdk?.let { BeagleMoshi.moshiFactory(beagleSdk) } ?: BeagleMoshi.moshi,
-            application: Application = BeagleEnvironment.application,
+            moshi: Moshi = beagleSdk?.let { BeagleMoshi.moshiFactory(beagleSdk) } ?: BeagleMoshi.moshi
         ) =
             beagleSdk?.let {
-                BeagleConfigurator(beagleSdk = it,
+                BeagleConfigurator(
+                    beagleSdk = it,
                     moshi = moshi)
             } ?: configurator
     }
