@@ -18,13 +18,13 @@ package br.com.zup.beagle.android.view.viewmodel
 
 import android.view.View
 import br.com.zup.beagle.android.BaseTest
-import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.action.SetContextInternal
 import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.context.ContextDataEvaluation
 import br.com.zup.beagle.android.context.ContextDataManager
 import br.com.zup.beagle.android.context.ImplicitContextManager
+import br.com.zup.beagle.android.setup.BeagleConfigurator
 import br.com.zup.beagle.android.utils.Observer
 import io.mockk.every
 import io.mockk.mockk
@@ -40,13 +40,17 @@ class ScreenContextViewModelTest : BaseTest() {
     private val contextDataManager = mockk<ContextDataManager>(relaxed = true)
     private val contextDataEvaluation = mockk<ContextDataEvaluation>(relaxed = true)
     private val implicitContextManager = mockk<ImplicitContextManager>(relaxed = true)
+    private val beagleConfigurator = mockk<BeagleConfigurator>(relaxed = true)
     val view = mockk<View>()
 
     private lateinit var screenContextViewModel: ScreenContextViewModel
 
     @BeforeEach
     fun clear() {
-        screenContextViewModel = ScreenContextViewModel(contextDataManager, contextDataEvaluation, implicitContextManager)
+        screenContextViewModel = ScreenContextViewModel(beagleConfigurator,
+            contextDataManager,
+            contextDataEvaluation,
+            implicitContextManager)
     }
 
     @Test

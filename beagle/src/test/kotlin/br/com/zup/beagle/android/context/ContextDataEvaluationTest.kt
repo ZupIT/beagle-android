@@ -20,6 +20,7 @@ import androidx.collection.LruCache
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.logger.BeagleMessageLogs
 import br.com.zup.beagle.android.mockdata.ComponentModel
+import br.com.zup.beagle.android.setup.BeagleConfigurator
 import br.com.zup.beagle.android.testutil.RandomData
 import br.com.zup.beagle.android.widget.core.TextAlignment
 import com.squareup.moshi.Moshi
@@ -47,17 +48,20 @@ private val CONTEXT_DATA = ContextData(CONTEXT_ID, JSONObject().apply {
 internal class ContextDataEvaluationTest : BaseTest() {
 
     private lateinit var contextDataEvaluation: ContextDataEvaluation
+    private val beagleConfigurator = mockk<BeagleConfigurator>(relaxed = true)
+    private val moshi = mockk<Moshi>(relaxed = true)
 
     @BeforeAll
     override fun setUp() {
         super.setUp()
 
-        contextDataEvaluation = ContextDataEvaluation()
+        contextDataEvaluation = ContextDataEvaluation(beagleConfigurator)
 
         mockkObject(BeagleMessageLogs)
 
         every { BeagleMessageLogs.errorWhileTryingToNotifyContextChanges(any()) } just Runs
         every { BeagleMessageLogs.errorWhileTryingToAccessContext(any()) } just Runs
+        every { beagleConfigurator.moshi } returns moshi
     }
 
     @Test
@@ -162,7 +166,8 @@ internal class ContextDataEvaluationTest : BaseTest() {
         val moshi = mockk<Moshi> {
             every { adapter<Any>(bind.type).fromJson(any<String>()) } returns null
         }
-        val contextDataEvaluation = ContextDataEvaluation(moshi = moshi)
+        every { beagleConfigurator.moshi } returns moshi
+        val contextDataEvaluation = ContextDataEvaluation(beagleConfigurator)
 
         // When
         val value = contextDataEvaluation.evaluateBindExpression(listOf(CONTEXT_DATA), bind)
@@ -310,7 +315,7 @@ internal class ContextDataEvaluationTest : BaseTest() {
         // Given
         val context = ContextData(
             id = "binding",
-            value = listOf(1, 2, 3).normalizeContextValue()
+            value = listOf(1, 2, 3).normalizeContextValue(moshi)
         )
         val bind = expressionOf<String>("@{insert(binding, 2)}")
 
@@ -408,7 +413,7 @@ internal class ContextDataEvaluationTest : BaseTest() {
         val bind = expressionOf<Boolean>("@{contains(insert(${CONTEXT_ID}, 4), 4)}")
         val contextData = ContextData(
             id = CONTEXT_ID,
-            value = listOf(1, 2, 3).normalizeContextValue()
+            value = listOf(1, 2, 3).normalizeContextValue(moshi)
         )
 
         // When
@@ -423,7 +428,7 @@ internal class ContextDataEvaluationTest : BaseTest() {
         // Given
         val bind = expressionOf<Any>("@{insert(${CONTEXT_ID}, 4, 5)}")
 
-        val initialArray = listOf(1, 2, 3).normalizeContextValue()
+        val initialArray = listOf(1, 2, 3).normalizeContextValue(moshi)
         val contextData = ContextData(
             id = CONTEXT_ID,
             value = initialArray
@@ -442,7 +447,7 @@ internal class ContextDataEvaluationTest : BaseTest() {
         val bind = expressionOf<String>("result: @{insert(context, 4, 2)}")
         val contextData = ContextData(
             id = "context",
-            value = listOf(1, 2, 3).normalizeContextValue()
+            value = listOf(1, 2, 3).normalizeContextValue(moshi)
         )
 
         // When
@@ -458,7 +463,7 @@ internal class ContextDataEvaluationTest : BaseTest() {
         val bind = expressionOf<String>("result: @{remove(context, 2)}")
         val contextData = ContextData(
             id = "context",
-            value = listOf(1, 2, 3).normalizeContextValue()
+            value = listOf(1, 2, 3).normalizeContextValue(moshi)
         )
 
         // When
