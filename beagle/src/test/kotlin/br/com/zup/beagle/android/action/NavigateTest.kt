@@ -181,7 +181,7 @@ class NavigateTest : BaseTest() {
             // Then
             verify(exactly = 1) {
                 BeagleNavigator.resetApplication(
-                    rootView.getContext(),
+                    rootView,
                     route,
                     null,
                     navigationContextStub
@@ -201,7 +201,7 @@ class NavigateTest : BaseTest() {
             navigate.execute(rootView, view)
 
             // Then
-            verify(exactly = 1) { BeagleNavigator.resetStack(rootView.getContext(), route, null, navigationContextStub) }
+            verify(exactly = 1) { BeagleNavigator.resetStack(rootView, route, null, navigationContextStub) }
         }
 
         @DisplayName("Then should call pushView if type is PushView")
@@ -255,7 +255,7 @@ class NavigateTest : BaseTest() {
             navigate.execute(rootView, view)
 
             // Then
-            verify(exactly = 1) { BeagleNavigator.popStack(rootView.getContext(), navigationContextStub) }
+            verify(exactly = 1) { BeagleNavigator.popStack(rootView, navigationContextStub) }
         }
 
         @DisplayName("Then should call popView if type is PopView")
@@ -319,7 +319,7 @@ class NavigateTest : BaseTest() {
             navigate.execute(rootView, view)
 
             // Then
-            verify(exactly = 1) { BeagleNavigator.pushStack(rootView.getContext(), route, null, navigationContextStub) }
+            verify(exactly = 1) { BeagleNavigator.pushStack(rootView, route, null, navigationContextStub) }
         }
     }
 }

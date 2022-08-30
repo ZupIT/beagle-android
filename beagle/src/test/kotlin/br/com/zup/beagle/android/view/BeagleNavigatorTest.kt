@@ -31,9 +31,7 @@ import br.com.zup.beagle.android.action.NavigationContext
 import br.com.zup.beagle.android.action.Route
 import br.com.zup.beagle.android.components.Text
 import br.com.zup.beagle.android.components.layout.Screen
-import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.context.constant
-import br.com.zup.beagle.android.data.formatUrl
 import br.com.zup.beagle.android.logger.BeagleLoggerProxy
 import br.com.zup.beagle.android.navigation.DeepLinkHandler
 import br.com.zup.beagle.android.networking.RequestData
@@ -116,10 +114,9 @@ class BeagleNavigatorTest : BaseTest() {
 
         every { anyConstructed<Intent>().putExtras(any<Bundle>()) } returns intent
         every { anyConstructed<Intent>().addFlags(any()) } returns intent
-        every { BeagleActivity.bundleOf(any<RequestData>()) } returns mockk()
-        every { BeagleActivity.bundleOf(any<Screen>()) } returns mockk()
-        every { BeagleActivity.bundleOf(any<NavigationContext>()) } returns mockk()
-        every { BeagleActivity.bundleOf(any<RequestData>(), any<NavigationContext>()) } returns mockk()
+        every { BeagleActivity.bundleOf(any<Screen>(), any(), any()) } returns mockk()
+        every { BeagleActivity.bundleOf(any(), any()) } returns mockk()
+        every { BeagleActivity.bundleOf(any<RequestData>(), any(), any()) } returns mockk()
         every { context.setResult(any(), any()) } just runs
 
         every { context.supportFragmentManager } returns supportFragmentManager
@@ -203,7 +200,7 @@ class BeagleNavigatorTest : BaseTest() {
             every { context.finish() } just Runs
 
             // When
-            BeagleNavigator.popStack(context, navigationContext)
+            BeagleNavigator.popStack(rootView, navigationContext)
 
             // Then
             verify(exactly = 1) {
@@ -317,7 +314,7 @@ class BeagleNavigatorTest : BaseTest() {
             every { anyConstructed<Intent>().addFlags(capture(flagSlot)) } returns intent
 
             // When
-            BeagleNavigator.resetApplication(context, route, null, navigationContext)
+            BeagleNavigator.resetApplication(rootView, route, null, navigationContext)
 
             // Then
             verify(exactly = 1) { context.startActivity(any()) }
@@ -342,7 +339,7 @@ class BeagleNavigatorTest : BaseTest() {
             every { context.nextActivity } returns nextActivity
 
             // When
-            BeagleNavigator.resetStack(context, route, null, navigationContext)
+            BeagleNavigator.resetStack(rootView, route, null, navigationContext)
 
             // Then
             verify(exactly = 1) {
@@ -360,7 +357,7 @@ class BeagleNavigatorTest : BaseTest() {
             every { context.startActivity(any()) } just Runs
 
             // When
-            BeagleNavigator.resetStack(context, route, null, navigationContext)
+            BeagleNavigator.resetStack(rootView, route, null, navigationContext)
 
             // Then
             verify(exactly = 1) {
@@ -499,7 +496,7 @@ class BeagleNavigatorTest : BaseTest() {
             every { context.startActivity(any()) } just Runs
 
             // When
-            BeagleNavigator.pushStack(context, route, null, navigationContext)
+            BeagleNavigator.pushStack(rootView, route, null, navigationContext)
 
             // Then
             verify(exactly = 1) { context.startActivity(any()) }
@@ -514,7 +511,7 @@ class BeagleNavigatorTest : BaseTest() {
             every { context.nextActivity } returns nextActivity
 
             // When
-            BeagleNavigator.pushStack(context, route, null, navigationContext)
+            BeagleNavigator.pushStack(rootView, route, null, navigationContext)
 
             // Then
             verify(exactly = 1) {
