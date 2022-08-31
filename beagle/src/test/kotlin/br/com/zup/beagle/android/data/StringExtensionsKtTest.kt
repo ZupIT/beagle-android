@@ -28,7 +28,6 @@ import org.junit.jupiter.api.Test
 class StringExtensionsKtTest : BaseTest() {
 
     private val urlBuilder: UrlBuilder = mockk()
-    private val baseUrl: String = mockk(relaxed = true)
 
     @Test
     fun `should return request data when using extension function to mapper`() {
@@ -37,7 +36,7 @@ class StringExtensionsKtTest : BaseTest() {
         every { any<String>().formatUrl(any(), any()) } returns ""
 
         // When
-        val requestData = "".toRequestData(urlBuilder, baseUrl)
+        val requestData = "".toRequestData(beagleConfigurator, urlBuilder)
 
         // Then
         val expectedResult = RequestData(url = "")
@@ -50,7 +49,7 @@ class StringExtensionsKtTest : BaseTest() {
         every { urlBuilder.format(any(), "") } returns ""
 
         // When
-        val requestData = "".formatUrl(urlBuilder, baseUrl)
+        val requestData = "".formatUrl(beagleConfigurator, urlBuilder)
 
         // Then
         assertEquals("", requestData)

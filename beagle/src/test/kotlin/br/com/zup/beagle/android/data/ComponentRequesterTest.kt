@@ -66,7 +66,7 @@ class ComponentRequesterTest : BaseTest() {
         every { serializer.deserializeComponent(any()) } returns component
         every { requestData.copy(any()) } returns requestDataCopy
 
-        componentRequester = ComponentRequester(viewClient, serializer)
+        componentRequester = ComponentRequester(beagleConfigurator, viewClient, serializer)
     }
 
     @BeforeEach

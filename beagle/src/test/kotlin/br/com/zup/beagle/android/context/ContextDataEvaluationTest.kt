@@ -48,8 +48,6 @@ private val CONTEXT_DATA = ContextData(CONTEXT_ID, JSONObject().apply {
 internal class ContextDataEvaluationTest : BaseTest() {
 
     private lateinit var contextDataEvaluation: ContextDataEvaluation
-    private val beagleConfigurator = mockk<BeagleConfigurator>(relaxed = true)
-    private val moshi = mockk<Moshi>(relaxed = true)
 
     @BeforeAll
     override fun setUp() {

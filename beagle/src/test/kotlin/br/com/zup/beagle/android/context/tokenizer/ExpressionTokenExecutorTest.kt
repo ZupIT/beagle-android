@@ -32,7 +32,7 @@ class ExpressionTokenExecutorTest : BaseTest() {
     @BeforeAll
     override fun setUp() {
         super.setUp()
-        expressionTokenExecutor = ExpressionTokenExecutor()
+        expressionTokenExecutor = ExpressionTokenExecutor(beagleConfigurator)
     }
 
     @Test

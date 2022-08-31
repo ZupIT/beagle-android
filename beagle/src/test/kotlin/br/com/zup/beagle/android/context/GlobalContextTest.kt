@@ -58,7 +58,7 @@ class GlobalContextTest : BaseTest() {
             // Given
             val path = RandomData.string()
             val value = RandomData.string()
-            GlobalContext.set(value = value, path = path)
+            GlobalContext.set(value = value, path = path, moshi)
 
             // When
             val result = GlobalContext.get(path)
@@ -92,7 +92,7 @@ class GlobalContextTest : BaseTest() {
             val value = RandomData.string()
 
             // When
-            GlobalContext.set(value = value)
+            GlobalContext.set(value = value, moshi = moshi)
             val result = GlobalContext.get()
 
             // Then
@@ -107,7 +107,7 @@ class GlobalContextTest : BaseTest() {
             val path = RandomData.string()
 
             // When
-            GlobalContext.set(value = value, path = path)
+            GlobalContext.set(value = value, path = path, moshi = moshi)
             val result = GlobalContext.get(path)
 
             // Then
@@ -120,12 +120,12 @@ class GlobalContextTest : BaseTest() {
             // Given
             val valueOne = RandomData.string()
             val pathOne = RandomData.string()
-            GlobalContext.set(valueOne, pathOne)
+            GlobalContext.set(valueOne, pathOne, moshi)
             val valueTwo = RandomData.string()
             val pathTwo = RandomData.string()
 
             // When
-            GlobalContext.set(value = valueTwo, path = pathTwo)
+            GlobalContext.set(value = valueTwo, path = pathTwo, moshi = moshi)
             val resultOne = GlobalContext.get(pathOne)
             val resultTwo = GlobalContext.get(pathTwo)
 
@@ -141,7 +141,7 @@ class GlobalContextTest : BaseTest() {
             val user = User(id = "identifier")
 
             // When
-            GlobalContext.set(value = user, path = "user")
+            GlobalContext.set(value = user, path = "user", moshi = moshi)
 
             // Then
             val result = GlobalContext.get("user.id")
@@ -160,7 +160,7 @@ class GlobalContextTest : BaseTest() {
             val pathForSet = RandomData.string()
             val value = RandomData.string()
             val valueAfterClear = ""
-            GlobalContext.set(value = value, path = pathForSet)
+            GlobalContext.set(value = value, path = pathForSet, moshi = moshi)
             val path = null
 
             // When
@@ -177,7 +177,7 @@ class GlobalContextTest : BaseTest() {
             // Given
             val path = RandomData.string()
             val value = RandomData.string()
-            GlobalContext.set(value = value, path = path)
+            GlobalContext.set(value = value, path = path, moshi = moshi)
 
             // When
             GlobalContext.clear(path)
@@ -192,8 +192,8 @@ class GlobalContextTest : BaseTest() {
         fun clearJsonObjectAttribute() {
             // Given
             val attributeContent = RandomData.string()
-            GlobalContext.set(value = attributeContent, path = "a.b")
-            GlobalContext.set(value = attributeContent, path = "a.c")
+            GlobalContext.set(value = attributeContent, path = "a.b", moshi = moshi)
+            GlobalContext.set(value = attributeContent, path = "a.c", moshi = moshi)
 
             // When
             GlobalContext.clear("a.b")
@@ -226,7 +226,7 @@ class GlobalContextTest : BaseTest() {
         @DisplayName("Then should not clear a path that does not exist in Json Array")
         fun clearNonexistentJsonArrayPath() {
             // Given
-            GlobalContext.set(true, "f.e")
+            GlobalContext.set(true, "f.e", moshi = moshi)
             val objectPath = "a[0].c.e"
 
             // When

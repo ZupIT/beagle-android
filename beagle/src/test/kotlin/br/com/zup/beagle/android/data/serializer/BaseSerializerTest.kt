@@ -19,16 +19,11 @@ package br.com.zup.beagle.android.data.serializer
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.mockdata.TypeAdapterResolverImpl
 import br.com.zup.beagle.android.testutil.withoutWhiteSpaces
-import com.squareup.moshi.Moshi
 import io.mockk.every
-import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.TestInstance
 
 abstract class BaseSerializerTest<T>(private val clazz: Class<T>) : BaseTest() {
-
-    lateinit var moshi: Moshi
 
     @BeforeAll
     override fun setUp() {

@@ -19,9 +19,11 @@ package br.com.zup.beagle.android
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import br.com.zup.beagle.android.setup.BeagleConfigurator
 import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.setup.BeagleSdk
 import br.com.zup.beagle.android.widget.ActivityRootView
+import com.squareup.moshi.Moshi
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkConstructor
@@ -34,7 +36,9 @@ import org.junit.jupiter.api.TestInstance
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 abstract class BaseTest {
 
+    protected val beagleConfigurator = mockk<BeagleConfigurator>(relaxed = true, relaxUnitFun = true)
     protected val rootView = mockk<ActivityRootView>(relaxed = true, relaxUnitFun = true)
+    protected val moshi = mockk<Moshi>(relaxed = true, relaxUnitFun = true)
     protected val beagleSdk = mockk<BeagleSdk>(relaxed = true)
     private val activity: AppCompatActivity = mockk(relaxed = true)
 

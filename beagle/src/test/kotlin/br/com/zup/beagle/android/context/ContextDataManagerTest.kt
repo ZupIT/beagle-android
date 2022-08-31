@@ -77,7 +77,7 @@ class ContextDataManagerTest : BaseTest() {
         every { BeagleMessageLogs.errorWhileTryingToNotifyContextChanges(any()) } just Runs
         every { BeagleMessageLogs.errorWhileTryingToChangeContext(any()) } just Runs
         every { BeagleMessageLogs.errorWhileTryingToAccessContext(any()) } just Runs
-        every { GlobalContext.set(any(), any()) } just Runs
+        every { GlobalContext.set(any(), any(), any()) } just Runs
 
         every { viewContext.id } returns viewId
         every { viewContext.parent } returns null
@@ -103,7 +103,7 @@ class ContextDataManagerTest : BaseTest() {
             GlobalContext,
             answers = false
         )
-        contextDataManager = ContextDataManager()
+        contextDataManager = ContextDataManager(beagleConfigurator)
 
         contexts = contextDataManager.getPrivateField("contexts")
         viewBinding = contextDataManager.getPrivateField("viewBinding")
@@ -121,7 +121,7 @@ class ContextDataManagerTest : BaseTest() {
             every { GlobalContext.observeGlobalContextChange(any()) } just Runs
 
             // When
-            val contextDataManager = ContextDataManager()
+            val contextDataManager = ContextDataManager(beagleConfigurator)
 
             // Then
             val contexts = contextDataManager.getPrivateField<Map<Int, ContextBinding>>("contexts")
@@ -496,7 +496,7 @@ class ContextDataManagerTest : BaseTest() {
             contextDataManager.updateContext(viewContext, updateContext)
 
             // Then
-            verify(exactly = 1) { GlobalContext.set(updateContext.value, updateContext.path) }
+            verify(exactly = 1) { GlobalContext.set(updateContext.value, updateContext.path, moshi) }
         }
     }
 
@@ -567,7 +567,7 @@ class ContextDataManagerTest : BaseTest() {
             val bind = mockk<Bind.Expression<Boolean>>()
             val observer = mockk<Observer<Boolean?>>()
             val context = ContextData(id = RandomData.string(), value = RandomData.string())
-            val contextDataManager = ContextDataManager()
+            val contextDataManager = ContextDataManager(beagleConfigurator)
             val viewWithoutId = mockk<View>(relaxed = true) {
                 every { id } returns View.NO_ID
                 every { getContextBinding() } returns mockk(relaxed = true)
