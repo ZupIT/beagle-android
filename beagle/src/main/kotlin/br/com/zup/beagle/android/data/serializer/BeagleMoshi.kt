@@ -37,7 +37,7 @@ import br.com.zup.beagle.android.data.serializer.adapter.defaults.PairAdapterFac
 import br.com.zup.beagle.android.data.serializer.adapter.generic.BeagleGenericAdapterFactory
 import br.com.zup.beagle.android.data.serializer.adapter.generic.TypeAdapterResolver
 import br.com.zup.beagle.android.setup.BeagleEnvironment
-import br.com.zup.beagle.android.setup.BeagleSdk
+import br.com.zup.beagle.android.setup.BeagleSdkWrapper
 import br.com.zup.beagle.android.widget.WidgetView
 import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 import com.squareup.moshi.Moshi
@@ -51,10 +51,12 @@ internal object BeagleMoshi {
     }
 
     @SuppressLint("CheckResult")
-    fun moshiFactory(config: BeagleSdk): Moshi {
-        val moshi = createMoshi(config.typeAdapterResolver,
-        registeredWidgets = config.registeredWidgets(),
-        registeredActions = config.registeredActions())
+    fun moshiFactory(config: BeagleSdkWrapper): Moshi {
+        val moshi = createMoshi(config.typeAdapterResolver?.create(
+            config
+        ),
+        registeredWidgets = config.registeredWidgets().create(config),
+        registeredActions = config.registeredActions().create(config))
         moshi.adapter(ServerDrivenComponent::class.java)
         return moshi
     }

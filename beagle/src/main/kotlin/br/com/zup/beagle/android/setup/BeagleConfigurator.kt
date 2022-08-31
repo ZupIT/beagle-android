@@ -49,12 +49,12 @@ class BeagleConfigurator(
         }
 
         fun factory(
-            beagleSdk: BeagleSdk?,
+            beagleSdk: BeagleSdkWrapper?,
             moshi: Moshi = beagleSdk?.let { BeagleMoshi.moshiFactory(beagleSdk) } ?: BeagleMoshi.moshi
         ) =
             beagleSdk?.let {
                 BeagleConfigurator(
-                    beagleSdk = it,
+                    beagleSdk = it.asBeagleSdk(),
                     moshi = moshi)
             } ?: configurator
     }
