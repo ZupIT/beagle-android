@@ -43,14 +43,22 @@ import br.com.zup.beagle.sample.widgets.Input
 import br.com.zup.beagle.sample.widgets.MutableText
 import br.com.zup.beagle.sample.widgets.Text3
 
-class BeagleSetup3: BeagleSdkWrapper {
+class BeagleSetupThirdConfig: BeagleSdkWrapper {
+    override val logger: BeagleConfigFactory<BeagleLogger> = beagleConfigFactory {
+        BeagleLoggerDefault()
+    }
+
     override val config = beagleConfigFactory<BeagleConfig> { beagleSdkWrapper ->
         object : BeagleConfig {
             override val environment: Environment get() {
-                return Environment.DEBUG.also { logger?.create(beagleSdkWrapper)?.info("BeagleSetup3:environment: $it")}
+                return Environment.DEBUG.also {
+                    beagleSdkWrapper.logger?.create(beagleSdkWrapper)?.info("BeagleSetupThird:environment: $it")
+                }
             }
             override val baseUrl: String get() {
-                return BASE_URL.also { logger?.create(beagleSdkWrapper)?.info("BeagleSetup3:baseUrl: $it")}
+                return BASE_URL.also {
+                    beagleSdkWrapper.logger?.create(beagleSdkWrapper)?.info("BeagleSetupThird:baseUrl: $it")
+                }
             }
         }
     }
@@ -64,7 +72,6 @@ class BeagleSetup3: BeagleSdkWrapper {
     override val typeAdapterResolver: BeagleConfigFactory<TypeAdapterResolver>? = null
     override val analyticsProvider: BeagleConfigFactory<AnalyticsProvider>? = null
     override val urlBuilder: BeagleConfigFactory<UrlBuilder>? = null
-    override val logger: BeagleConfigFactory<BeagleLogger>? = null
     override fun registeredWidgets() =
         beagleConfigFactory {
             listOf(
