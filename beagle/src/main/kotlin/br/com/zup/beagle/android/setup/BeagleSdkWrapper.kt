@@ -85,3 +85,8 @@ fun BeagleSdkWrapper.asBeagleSdk(): BeagleSdk = object : BeagleSdk {
 interface BeagleConfigFactory<T> {
     fun create(beagleConfigurator: BeagleSdkWrapper): T
 }
+
+fun <T> beagleConfigFactory(execution: (beagleConfigurator: BeagleSdkWrapper) -> T) =
+    object : BeagleConfigFactory<T> {
+        override fun create(beagleConfigurator: BeagleSdkWrapper) = execution(beagleConfigurator)
+    }
