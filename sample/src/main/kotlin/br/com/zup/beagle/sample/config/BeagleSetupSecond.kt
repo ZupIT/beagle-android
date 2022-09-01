@@ -34,36 +34,34 @@ import br.com.zup.beagle.android.setup.DesignSystem
 import br.com.zup.beagle.android.setup.Environment
 import br.com.zup.beagle.android.setup.beagleConfigFactory
 import br.com.zup.beagle.android.widget.WidgetView
-import br.com.zup.beagle.sample.AppDeepLinkHandler
-import br.com.zup.beagle.sample.actions.CustomAndroidAction
 import br.com.zup.beagle.sample.constants.BASE_URL
-import br.com.zup.beagle.sample.operations.IsValidCPFOperation
 import br.com.zup.beagle.sample.widgets.ActionExecutor
 import br.com.zup.beagle.sample.widgets.Input
 import br.com.zup.beagle.sample.widgets.MutableText
-import br.com.zup.beagle.sample.widgets.Text3
+import br.com.zup.beagle.sample.widgets.Text2
 
-class BeagleSetupThirdConfig: BeagleSdkWrapper {
+class BeagleSetupSecond: BeagleSdkWrapper {
     override val logger: BeagleConfigFactory<BeagleLogger> = beagleConfigFactory {
         BeagleLoggerDefault()
     }
 
     override val config = beagleConfigFactory<BeagleConfig> { beagleSdkWrapper ->
         object : BeagleConfig {
-            override val environment: Environment get() {
+            override val environment: Environment
+                get() {
                 return Environment.DEBUG.also {
-                    beagleSdkWrapper.logger?.create(beagleSdkWrapper)?.info("BeagleSetupThird:environment: $it")
+                    beagleSdkWrapper.logger?.create(beagleSdkWrapper)?.info("BeagleSetupSecond:environment: $it")
                 }
             }
             override val baseUrl: String get() {
                 return BASE_URL.also {
-                    beagleSdkWrapper.logger?.create(beagleSdkWrapper)?.info("BeagleSetupThird:baseUrl: $it")
+                    beagleSdkWrapper.logger?.create(beagleSdkWrapper)?.info("BeagleSetupSecond:baseUrl: $it")
                 }
             }
         }
     }
 
-    override val deepLinkHandler = beagleConfigFactory<DeepLinkHandler> { AppDeepLinkHandler() }
+    override val deepLinkHandler: BeagleConfigFactory<DeepLinkHandler>? = null
     override val httpClientFactory: BeagleConfigFactory<HttpClientFactory>? = null
     override val designSystem: BeagleConfigFactory<DesignSystem>? = null
     override val imageDownloader: BeagleConfigFactory<BeagleImageDownloader>? = null
@@ -76,7 +74,7 @@ class BeagleSetupThirdConfig: BeagleSdkWrapper {
         beagleConfigFactory {
             listOf(
                 ActionExecutor::class.java as Class<WidgetView>,
-                Text3::class.java as Class<WidgetView>,
+                Text2::class.java as Class<WidgetView>,
                 MutableText::class.java as Class<WidgetView>,
                 Input::class.java as Class<WidgetView>)
         }
@@ -84,14 +82,14 @@ class BeagleSetupThirdConfig: BeagleSdkWrapper {
     override fun registeredActions() =
         beagleConfigFactory {
             listOf(
-                CustomAndroidAction::class.java as Class<Action>,
+                br.com.zup.beagle.sample.actions.CustomAndroidAction::class.java as Class<Action>,
             )
         }
 
     override fun registeredOperations() =
         beagleConfigFactory {
             mapOf<String, Operation>(
-                "isValidCpf" to IsValidCPFOperation(),
+                "isValidCpf" to br.com.zup.beagle.sample.operations.IsValidCPFOperation(),
 
                 )
         }
