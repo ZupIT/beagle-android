@@ -29,6 +29,7 @@ import br.com.zup.beagle.android.networking.urlbuilder.UrlBuilder
 import br.com.zup.beagle.android.operation.Operation
 import br.com.zup.beagle.android.setup.BeagleConfig
 import br.com.zup.beagle.android.setup.BeagleConfigFactory
+import br.com.zup.beagle.android.setup.BeagleConfigProvider
 import br.com.zup.beagle.android.setup.BeagleSdkWrapper
 import br.com.zup.beagle.android.setup.DesignSystem
 import br.com.zup.beagle.android.setup.Environment
@@ -52,12 +53,14 @@ class BeagleSetupThird: BeagleSdkWrapper {
         object : BeagleConfig {
             override val environment: Environment get() {
                 return Environment.DEBUG.also {
-                    beagleSdkWrapper.logger?.create(beagleSdkWrapper)?.info("BeagleSetupThird:environment: $it")
+                    BeagleConfigProvider(beagleSdkWrapper, beagleSdkWrapper.logger)
+                        .get()?.info("BeagleSetupThird:environment: $it")
                 }
             }
             override val baseUrl: String get() {
                 return BASE_URL.also {
-                    beagleSdkWrapper.logger?.create(beagleSdkWrapper)?.info("BeagleSetupThird:baseUrl: $it")
+                    BeagleConfigProvider(beagleSdkWrapper, beagleSdkWrapper.logger)
+                        .get()?.info("BeagleSetupThird:baseUrl: $it")
                 }
             }
         }

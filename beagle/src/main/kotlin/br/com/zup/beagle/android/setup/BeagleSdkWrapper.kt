@@ -90,3 +90,7 @@ fun <T> beagleConfigFactory(execution: (beagleConfigurator: BeagleSdkWrapper) ->
     object : BeagleConfigFactory<T> {
         override fun create(beagleConfigurator: BeagleSdkWrapper) = execution(beagleConfigurator)
     }
+
+class BeagleConfigProvider<T>(private val owner: BeagleSdkWrapper, private val factory: BeagleConfigFactory<T>?) {
+    fun get() = factory?.create(owner)
+}

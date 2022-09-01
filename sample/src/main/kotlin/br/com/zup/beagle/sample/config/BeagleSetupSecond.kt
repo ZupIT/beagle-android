@@ -16,6 +16,7 @@
 
 package br.com.zup.beagle.sample.config
 
+import androidx.lifecycle.ViewModelProvider
 import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.analytics.AnalyticsProvider
 import br.com.zup.beagle.android.data.serializer.adapter.generic.TypeAdapterResolver
@@ -29,6 +30,7 @@ import br.com.zup.beagle.android.networking.urlbuilder.UrlBuilder
 import br.com.zup.beagle.android.operation.Operation
 import br.com.zup.beagle.android.setup.BeagleConfig
 import br.com.zup.beagle.android.setup.BeagleConfigFactory
+import br.com.zup.beagle.android.setup.BeagleConfigProvider
 import br.com.zup.beagle.android.setup.BeagleSdkWrapper
 import br.com.zup.beagle.android.setup.DesignSystem
 import br.com.zup.beagle.android.setup.Environment
@@ -50,12 +52,14 @@ class BeagleSetupSecond: BeagleSdkWrapper {
             override val environment: Environment
                 get() {
                 return Environment.DEBUG.also {
-                    beagleSdkWrapper.logger?.create(beagleSdkWrapper)?.info("BeagleSetupSecond:environment: $it")
+                    BeagleConfigProvider(beagleSdkWrapper, beagleSdkWrapper.logger)
+                        .get()?.info("BeagleSetupSecond:environment: $it")
                 }
             }
             override val baseUrl: String get() {
                 return BASE_URL.also {
-                    beagleSdkWrapper.logger?.create(beagleSdkWrapper)?.info("BeagleSetupSecond:baseUrl: $it")
+                    BeagleConfigProvider(beagleSdkWrapper, beagleSdkWrapper.logger)
+                        .get()?.info("BeagleSetupSecond:baseUrl: $it")
                 }
             }
         }
