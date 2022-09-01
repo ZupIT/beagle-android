@@ -32,16 +32,6 @@ class BeagleJsonSerializerFactoryTest : BaseTest() {
     @Nested
     inner class SerializeTest {
 
-        @DisplayName("Then should return correct implementation")
-        @Test
-        fun testCreateObject() {
-            // When
-            val actual = BeagleJsonSerializerFactory.serializer
-
-            // Then
-            assertTrue(actual is BeagleSerializer)
-        }
-
         @DisplayName("Then should return the correct implementation of moshi")
         @Test
         fun testCreateObjectWithMoshi() {

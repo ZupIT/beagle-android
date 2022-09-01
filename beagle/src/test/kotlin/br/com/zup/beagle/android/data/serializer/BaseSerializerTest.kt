@@ -33,7 +33,7 @@ abstract class BaseSerializerTest<T>(private val clazz: Class<T>) : BaseTest() {
         every { beagleSdk.registeredActions() } returns listOf()
         every { beagleSdk.typeAdapterResolver } returns TypeAdapterResolverImpl()
 
-        moshi = BeagleMoshi.createMoshi(registeredWidgets = emptyList())
+        moshi = BeagleMoshi.createMoshi()
     }
 
     fun serialize(anObject: T): String = moshi.adapter(clazz).toJson(anObject)

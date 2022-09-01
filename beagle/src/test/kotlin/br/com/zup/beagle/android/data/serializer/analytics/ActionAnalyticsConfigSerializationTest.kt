@@ -32,8 +32,6 @@ import org.junit.jupiter.api.Test
 @DisplayName("Given a Moshi Adapter")
 class ActionAnalyticsConfigSerializationTest : BaseTest() {
 
-    private lateinit var moshi: Moshi
-
     @BeforeAll
     override fun setUp() {
         super.setUp()

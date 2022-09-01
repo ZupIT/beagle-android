@@ -38,7 +38,7 @@ abstract class BaseTest {
 
     protected val beagleConfigurator = mockk<BeagleConfigurator>(relaxed = true, relaxUnitFun = true)
     protected val rootView = mockk<ActivityRootView>(relaxed = true, relaxUnitFun = true)
-    protected val moshi = mockk<Moshi>(relaxed = true, relaxUnitFun = true)
+    protected var moshi: Moshi = mockk<Moshi>(relaxed = true, relaxUnitFun = true)
     protected val beagleSdk = mockk<BeagleSdk>(relaxed = true)
     private val activity: AppCompatActivity = mockk(relaxed = true)
 

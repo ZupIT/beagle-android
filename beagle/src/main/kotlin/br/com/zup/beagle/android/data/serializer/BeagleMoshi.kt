@@ -63,7 +63,7 @@ internal object BeagleMoshi {
 
     @VisibleForTesting
     fun createMoshi(
-        typeAdapterResolver: TypeAdapterResolver?,
+        typeAdapterResolver: TypeAdapterResolver? = null,
         registeredWidgets: List<Class<WidgetView>> = emptyList(),
         registeredActions: List<Class<Action>> = emptyList(),
     ): Moshi = Moshi.Builder()
