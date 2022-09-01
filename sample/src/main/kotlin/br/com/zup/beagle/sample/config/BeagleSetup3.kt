@@ -28,7 +28,8 @@ import br.com.zup.beagle.android.networking.ViewClient
 import br.com.zup.beagle.android.networking.urlbuilder.UrlBuilder
 import br.com.zup.beagle.android.operation.Operation
 import br.com.zup.beagle.android.setup.BeagleConfig
-import br.com.zup.beagle.android.setup.BeagleSdk
+import br.com.zup.beagle.android.setup.BeagleConfigFactory
+import br.com.zup.beagle.android.setup.BeagleSdkWrapper
 import br.com.zup.beagle.android.setup.DesignSystem
 import br.com.zup.beagle.android.widget.WidgetView
 import br.com.zup.beagle.sample.AppBeagleConfig
@@ -37,32 +38,44 @@ import br.com.zup.beagle.sample.widgets.Input
 import br.com.zup.beagle.sample.widgets.MutableText
 import br.com.zup.beagle.sample.widgets.Text3
 
-class BeagleSetup3: BeagleSdk {
-    override val config: BeagleConfig = AppBeagleConfig()
-    override val deepLinkHandler: DeepLinkHandler? = null
-    override val httpClientFactory: HttpClientFactory? = null
-    override val designSystem: DesignSystem? = null
-    override val imageDownloader: BeagleImageDownloader? = null
-    override val viewClient: ViewClient? = null
-    override val controllerReference: BeagleControllerReference? = null
-    override val typeAdapterResolver: TypeAdapterResolver? = null
-    override val analyticsProvider: AnalyticsProvider? = null
-    override val urlBuilder: UrlBuilder? = null
-    override val logger: BeagleLogger? = null
-    override fun registeredWidgets(): List<Class<WidgetView>>
-        = listOf(
-            ActionExecutor::class.java as Class<WidgetView>,
-            Text3::class.java as Class<WidgetView>,
-            MutableText::class.java as Class<WidgetView>,
-            Input::class.java as Class<WidgetView>,
+class BeagleSetup3: BeagleSdkWrapper {
+    override val config: BeagleConfigFactory<BeagleConfig> = object : BeagleConfigFactory<BeagleConfig> {
+        override fun create(beagleConfigurator: BeagleSdkWrapper) = AppBeagleConfig()
+    }
+    override val deepLinkHandler: BeagleConfigFactory<DeepLinkHandler>? = null
+    override val httpClientFactory: BeagleConfigFactory<HttpClientFactory>? = null
+    override val designSystem: BeagleConfigFactory<DesignSystem>? = null
+    override val imageDownloader: BeagleConfigFactory<BeagleImageDownloader>? = null
+    override val viewClient: BeagleConfigFactory<ViewClient>? = null
+    override val controllerReference: BeagleConfigFactory<BeagleControllerReference>? = null
+    override val typeAdapterResolver: BeagleConfigFactory<TypeAdapterResolver>? = null
+    override val analyticsProvider: BeagleConfigFactory<AnalyticsProvider>? = null
+    override val urlBuilder: BeagleConfigFactory<UrlBuilder>? = null
+    override val logger: BeagleConfigFactory<BeagleLogger>? = null
+    override fun registeredWidgets(): BeagleConfigFactory<List<Class<WidgetView>>> =
+        object : BeagleConfigFactory<List<Class<WidgetView>>> {
+            override fun create(beagleConfigurator: BeagleSdkWrapper): List<Class<WidgetView>> = listOf(
+                ActionExecutor::class.java as Class<WidgetView>,
+                Text3::class.java as Class<WidgetView>,
+                MutableText::class.java as Class<WidgetView>,
+                Input::class.java as Class<WidgetView>,
             )
+        }
 
-    override fun registeredActions(): List<Class<Action>> = listOf(
-        br.com.zup.beagle.sample.actions.CustomAndroidAction::class.java as Class<Action>,
-    )
+    override fun registeredActions(): BeagleConfigFactory<List<Class<Action>>> =
+        object : BeagleConfigFactory<List<Class<Action>>> {
+            override fun create(beagleConfigurator: BeagleSdkWrapper): List<Class<Action>> =
+                listOf(
+                    br.com.zup.beagle.sample.actions.CustomAndroidAction::class.java as Class<Action>,
+                )
+        }
 
-    override fun registeredOperations(): Map<String, Operation> = mapOf<String, Operation>(
-        "isValidCpf" to br.com.zup.beagle.sample.operations.IsValidCPFOperation(),
+    override fun registeredOperations(): BeagleConfigFactory<Map<String, Operation>> =
+        object : BeagleConfigFactory<Map<String, Operation>> {
+            override fun create(beagleConfigurator: BeagleSdkWrapper): Map<String, Operation> =
+                mapOf<String, Operation>(
+                    "isValidCpf" to br.com.zup.beagle.sample.operations.IsValidCPFOperation(),
 
-        )
+                    )
+        }
 }

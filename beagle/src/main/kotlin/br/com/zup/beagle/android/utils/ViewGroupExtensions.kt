@@ -23,7 +23,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.setup.BeagleConfigurator
-import br.com.zup.beagle.android.setup.BeagleSdk
+import br.com.zup.beagle.android.setup.BeagleSdkWrapper
 import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.view.custom.OnServerStateChanged
 import br.com.zup.beagle.android.view.viewmodel.AnalyticsViewModel
@@ -40,7 +40,7 @@ import br.com.zup.beagle.android.widget.RootView
 fun ViewGroup.loadView(
     activity: AppCompatActivity,
     requestData: RequestData,
-    config: BeagleSdk? = null
+    config: BeagleSdkWrapper? = null
 ) {
     loadView(
         viewGroup = this,
@@ -59,7 +59,7 @@ fun ViewGroup.loadView(
 fun ViewGroup.loadView(
     fragment: Fragment,
     requestData: RequestData,
-    config: BeagleSdk? = null
+    config: BeagleSdkWrapper? = null
 ) {
 
     loadView(
@@ -81,7 +81,7 @@ fun ViewGroup.loadView(
     activity: AppCompatActivity,
     requestData: RequestData,
     listener: OnServerStateChanged? = null,
-    config: BeagleSdk? = null
+    config: BeagleSdkWrapper? = null
 ) {
     loadView(
         this,
@@ -102,7 +102,7 @@ fun ViewGroup.loadView(
     fragment: Fragment,
     requestData: RequestData,
     listener: OnServerStateChanged? = null,
-    config: BeagleSdk? = null
+    config: BeagleSdkWrapper? = null
 ) {
     loadView(
         this,
@@ -168,7 +168,7 @@ fun ViewGroup.loadView(
     screenJson: String,
     screenId: String = "",
     shouldResetContext: Boolean = false,
-    config: BeagleSdk? = null,
+    config: BeagleSdkWrapper? = null,
 ) {
     loadView(ActivityRootView(activity, this.id, screenId, config = BeagleConfigurator
         .factory(beagleSdk = config)), screenJson, shouldResetContext)
@@ -188,7 +188,7 @@ fun ViewGroup.loadView(
     screenJson: String,
     screenId: String = "",
     shouldResetContext: Boolean = false,
-    config: BeagleSdk? = null,
+    config: BeagleSdkWrapper? = null,
 ) {
     loadView(FragmentRootView(fragment, this.id, screenId, config = BeagleConfigurator
         .factory(beagleSdk = config)), screenJson, shouldResetContext)
