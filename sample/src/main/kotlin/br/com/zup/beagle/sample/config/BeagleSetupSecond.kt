@@ -16,7 +16,7 @@
 
 package br.com.zup.beagle.sample.config
 
-import androidx.lifecycle.ViewModelProvider
+import android.content.Intent
 import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.analytics.AnalyticsProvider
 import br.com.zup.beagle.android.data.serializer.adapter.generic.TypeAdapterResolver
@@ -24,18 +24,21 @@ import br.com.zup.beagle.android.imagedownloader.BeagleImageDownloader
 import br.com.zup.beagle.android.logger.BeagleLogger
 import br.com.zup.beagle.android.navigation.BeagleControllerReference
 import br.com.zup.beagle.android.navigation.DeepLinkHandler
+import br.com.zup.beagle.android.networking.HttpClient
 import br.com.zup.beagle.android.networking.HttpClientFactory
 import br.com.zup.beagle.android.networking.ViewClient
 import br.com.zup.beagle.android.networking.urlbuilder.UrlBuilder
 import br.com.zup.beagle.android.operation.Operation
 import br.com.zup.beagle.android.setup.BeagleConfig
 import br.com.zup.beagle.android.setup.BeagleConfigFactory
-import br.com.zup.beagle.android.setup.BeagleConfigProvider
 import br.com.zup.beagle.android.setup.BeagleSdkWrapper
 import br.com.zup.beagle.android.setup.DesignSystem
 import br.com.zup.beagle.android.setup.Environment
 import br.com.zup.beagle.android.setup.beagleConfigFactory
+import br.com.zup.beagle.android.setup.loggerWrapped
+import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.android.widget.WidgetView
+import br.com.zup.beagle.sample.DeepLinkHandlelr
 import br.com.zup.beagle.sample.constants.BASE_URL
 import br.com.zup.beagle.sample.widgets.ActionExecutor
 import br.com.zup.beagle.sample.widgets.Input
@@ -52,21 +55,35 @@ class BeagleSetupSecond: BeagleSdkWrapper {
             override val environment: Environment
                 get() {
                 return Environment.DEBUG.also {
-                    BeagleConfigProvider(beagleSdkWrapper, beagleSdkWrapper.logger)
-                        .get()?.info("BeagleSetupSecond:environment: $it")
+                    beagleSdkWrapper.loggerWrapped?.info("BeagleSetupSecond:environment: $it")
                 }
             }
             override val baseUrl: String get() {
                 return BASE_URL.also {
-                    BeagleConfigProvider(beagleSdkWrapper, beagleSdkWrapper.logger)
-                        .get()?.info("BeagleSetupSecond:baseUrl: $it")
+                    beagleSdkWrapper.loggerWrapped?.info("BeagleSetupSecond:baseUrl: $it")
                 }
             }
         }
     }
 
-    override val deepLinkHandler: BeagleConfigFactory<DeepLinkHandler>? = null
-    override val httpClientFactory: BeagleConfigFactory<HttpClientFactory>? = null
+    override val deepLinkHandler: BeagleConfigFactory<DeepLinkHandler> = beagleConfigFactory { beagleSdkWrapper ->
+        object : DeepLinkHandler {
+            override fun getDeepLinkIntent(rootView: RootView, path: String, data: Map<String, String>?,
+                                           shouldResetApplication: Boolean): Intent {
+                beagleSdkWrapper.loggerWrapped?.info("DeepLinkHandlerSecond:path: $path")
+                return DeepLinkHandlelr.handleDeepLink(path, data)
+            }
+        }
+    }
+    override val httpClientFactory: BeagleConfigFactory<HttpClientFactory> = beagleConfigFactory {  beagleSdkWrapper ->
+        object : HttpClientFactory {
+            override fun create(): HttpClient {
+                beagleSdkWrapper.loggerWrapped?.info("HttpClientFactorySecond")
+                return HttpClientFactoryDefault.HTTP_CLIENT
+            }
+        }
+    }
+
     override val designSystem: BeagleConfigFactory<DesignSystem>? = null
     override val imageDownloader: BeagleConfigFactory<BeagleImageDownloader>? = null
     override val viewClient: BeagleConfigFactory<ViewClient>? = null
