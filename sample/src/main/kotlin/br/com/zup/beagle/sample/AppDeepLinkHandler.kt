@@ -28,11 +28,11 @@ class AppDeepLinkHandler : DeepLinkHandler {
                                    path: String,
                                    data: Map<String, String>?,
                                    shouldResetApplication: Boolean): Intent {
-        return DeepLinkHandlelr.handleDeepLink(path, data)
+        return DeepLinkHandlerObject.handleDeepLink(path, data)
     }
 }
 
-object DeepLinkHandlelr {
+object DeepLinkHandlerObject {
     fun handleDeepLink(
         path: String,
         data: Map<String, String>?,

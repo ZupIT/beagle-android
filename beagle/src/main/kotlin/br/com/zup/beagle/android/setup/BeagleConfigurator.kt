@@ -59,65 +59,65 @@ class BeagleConfigurator(
             } ?: configurator
     }
 
-    internal val httpClient: HttpClient by lazy {
+    val httpClient: HttpClient by lazy {
         (this.beagleSdk.httpClientFactory?.create()
             ?: BeagleEnvironment.beagleSdk.httpClientFactory?.create()) as HttpClient
     }
 
-    internal val viewClient: ViewClient by lazy {
+    val viewClient: ViewClient by lazy {
         this.beagleSdk.viewClient ?: BeagleEnvironment.beagleSdk.viewClient ?: ViewClientDefault(httpClient)
     }
 
-    internal val baseUrl: String by lazy {
+    val baseUrl: String by lazy {
         this.beagleSdk.config.baseUrl
     }
 
-    internal val deepLinkHandler: DeepLinkHandler? by lazy {
+    val deepLinkHandler: DeepLinkHandler? by lazy {
         this.beagleSdk.deepLinkHandler
     }
 
-    internal val environment: Environment by lazy {
+    val environment: Environment by lazy {
         this.beagleSdk.config.environment
     }
 
-    internal val designSystem: DesignSystem? by lazy {
+    val designSystem: DesignSystem? by lazy {
         this.beagleSdk.designSystem ?: BeagleEnvironment.beagleSdk.designSystem
     }
 
-    internal val imageDownloader: BeagleImageDownloader by lazy {
+    val imageDownloader: BeagleImageDownloader by lazy {
         this.beagleSdk.imageDownloader ?: BeagleEnvironment.beagleSdk.imageDownloader ?: DefaultImageDownloader()
     }
 
-    internal val controllerReference: BeagleControllerReference? by lazy {
+    val controllerReference: BeagleControllerReference? by lazy {
         this.beagleSdk.controllerReference ?: BeagleEnvironment.beagleSdk.controllerReference
     }
 
     //TODO Check references
-    internal val typeAdapterResolver: TypeAdapterResolver? by lazy {
+    val typeAdapterResolver: TypeAdapterResolver? by lazy {
         this.beagleSdk.typeAdapterResolver ?: BeagleEnvironment.beagleSdk.typeAdapterResolver
     }
 
-    internal val analyticsProvider: AnalyticsProvider? by lazy {
+    val analyticsProvider: AnalyticsProvider? by lazy {
         this.beagleSdk.analyticsProvider ?: BeagleEnvironment.beagleSdk.analyticsProvider
     }
 
-    internal val urlBuilder: UrlBuilder by lazy {
+    val urlBuilder: UrlBuilder by lazy {
         this.beagleSdk.urlBuilder ?: BeagleEnvironment.beagleSdk.urlBuilder ?: UrlBuilderDefault()
     }
 
-    internal val logger: BeagleLogger? by lazy {
+    val logger: BeagleLogger? by lazy {
         this.beagleSdk.logger ?: BeagleEnvironment.beagleSdk.logger
     }
 
-    internal val registeredWidgets: List<Class<WidgetView>> by lazy {
+    val registeredWidgets: List<Class<WidgetView>> by lazy {
         this.beagleSdk.registeredWidgets()
     }
 
-    internal val registeredActions: List<Class<Action>> by lazy {
+    val registeredActions: List<Class<Action>> by lazy {
         this.beagleSdk.registeredActions()
     }
 
-    internal val registeredOperations: Map<String, Operation> by lazy {
+    val registeredOperations: Map<String, Operation> by lazy {
         this.beagleSdk.registeredOperations()
     }
 }
