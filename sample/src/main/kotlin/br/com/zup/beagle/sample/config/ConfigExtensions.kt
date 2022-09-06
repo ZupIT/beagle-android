@@ -16,11 +16,21 @@
 
 package br.com.zup.beagle.sample.config
 
-import br.com.zup.beagle.android.networking.HttpClient
-import br.com.zup.beagle.android.networking.HttpClientFactory
+import br.com.zup.beagle.android.setup.BeagleSdkWrapper
+import br.com.zup.beagle.android.setup.loggerInstance
 
-class AppHttpClientFactory : HttpClientFactory {
-    override fun create(): HttpClient {
-        return HttpClientFactoryDefault.HTTP_CLIENT
+internal fun BeagleSdkWrapper.logInfo(message: String) {
+    this.loggerInstance?.info(message)
+}
+
+internal fun BeagleSdkWrapper.logWarning(message: String) {
+    this.loggerInstance?.warning(message)
+}
+
+internal fun BeagleSdkWrapper.logError(message: String, throwable: Throwable? = null) {
+    if (throwable != null) {
+        this.loggerInstance?.error(message, throwable)
+    } else {
+        this.loggerInstance?.error(message)
     }
 }

@@ -16,11 +16,10 @@
 
 package br.com.zup.beagle.sample.config
 
-import br.com.zup.beagle.android.networking.HttpClient
-import br.com.zup.beagle.android.networking.HttpClientFactory
+import br.com.zup.beagle.android.navigation.BeagleControllerReference
+import br.com.zup.beagle.android.view.BeagleActivity
 
-class AppHttpClientFactory : HttpClientFactory {
-    override fun create(): HttpClient {
-        return HttpClientFactoryDefault.HTTP_CLIENT
-    }
+val beagleControllerReferenceObject = object : BeagleControllerReference {
+    override fun classFor(id: String?): Class<BeagleActivity> =
+        br.com.zup.beagle.android.view.ServerDrivenActivity::class.java as Class<BeagleActivity>
 }

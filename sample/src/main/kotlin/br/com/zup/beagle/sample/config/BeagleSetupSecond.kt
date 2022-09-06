@@ -31,56 +31,63 @@ import br.com.zup.beagle.android.setup.BeagleConfig
 import br.com.zup.beagle.android.setup.BeagleConfigFactory
 import br.com.zup.beagle.android.setup.BeagleSdkWrapper
 import br.com.zup.beagle.android.setup.DesignSystem
-import br.com.zup.beagle.android.setup.Environment
 import br.com.zup.beagle.android.setup.beagleConfigFactory
-import br.com.zup.beagle.android.setup.loggerInstance
+import br.com.zup.beagle.android.setup.httpClientFactoryInstance
 import br.com.zup.beagle.android.widget.WidgetView
+import br.com.zup.beagle.sample.AppBeagleConfig
+import br.com.zup.beagle.sample.AppDeepLinkHandler
 import br.com.zup.beagle.sample.AppDesignSystem
-import br.com.zup.beagle.sample.constants.BASE_URL
 import br.com.zup.beagle.sample.widgets.ActionExecutor
 import br.com.zup.beagle.sample.widgets.Input
 import br.com.zup.beagle.sample.widgets.MutableText
 import br.com.zup.beagle.sample.widgets.Text2
+
+private const val CONFIG_NAME = "BeagleSetupSecond"
 
 class BeagleSetupSecond: BeagleSdkWrapper {
     override val logger: BeagleConfigFactory<BeagleLogger> = beagleConfigFactory {
         BeagleLoggerDefault()
     }
 
-    override val config = beagleConfigFactory<BeagleConfig> { beagleSdkWrapper ->
-        object : BeagleConfig {
-            override val environment: Environment
-                get() {
-                return Environment.DEBUG.also {
-                    beagleSdkWrapper.loggerInstance?.info("BeagleSetupSecond:environment: $it")
-                }
-            }
-            override val baseUrl: String get() {
-                return BASE_URL.also {
-                    beagleSdkWrapper.loggerInstance?.info("BeagleSetupSecond:baseUrl: $it")
-                }
-            }
-        }
+    override val config = beagleConfigFactory<BeagleConfig> {
+        it.logInfo("$CONFIG_NAME:config")
+        AppBeagleConfig()
     }
 
-    override val deepLinkHandler: BeagleConfigFactory<DeepLinkHandler> = beagleConfigFactory { beagleSdkWrapper ->
-        AppDeepLinkHandler(beagleSdkWrapper.loggerInstance)
-    }
-    override val httpClientFactory: BeagleConfigFactory<HttpClientFactory> = beagleConfigFactory {  beagleSdkWrapper ->
-        AppHttpClientFactory(beagleSdkWrapper.loggerInstance)
+    override val deepLinkHandler: BeagleConfigFactory<DeepLinkHandler> = beagleConfigFactory {
+        it.logInfo("$CONFIG_NAME:deepLinkHandler")
+        AppDeepLinkHandler()
     }
 
-    override val designSystem: BeagleConfigFactory<DesignSystem> =
-        beagleConfigFactory {
-            AppDesignSystem()
-        }
+    override val httpClientFactory: BeagleConfigFactory<HttpClientFactory> = beagleConfigFactory {
+        it.logInfo("$CONFIG_NAME:httpClientFactory")
+        AppHttpClientFactory()
+    }
+
+    override val designSystem: BeagleConfigFactory<DesignSystem> = beagleConfigFactory {
+        it.logInfo("$CONFIG_NAME:designSystem")
+        AppDesignSystem()
+    }
+
     override val imageDownloader: BeagleConfigFactory<BeagleImageDownloader> = beagleConfigFactory {
-        it.loggerInstance?.info("BeagleSetupSecond:imageDownloader")
+        it.logInfo("BeagleSetupSecond:imageDownloader")
         imageDownloaderObject
     }
-    override val viewClient: BeagleConfigFactory<ViewClient>? = null
-    override val controllerReference: BeagleConfigFactory<BeagleControllerReference>? = null
-    override val typeAdapterResolver: BeagleConfigFactory<TypeAdapterResolver>? = null
+    override val viewClient: BeagleConfigFactory<ViewClient> = beagleConfigFactory {
+        it.logInfo("BeagleSetupSecond:viewClient")
+        AppViewClient(it.httpClientFactoryInstance?.create())
+    }
+
+    override val controllerReference: BeagleConfigFactory<BeagleControllerReference> = beagleConfigFactory {
+        it.logInfo("$CONFIG_NAME:controllerReference")
+        beagleControllerReferenceObject
+    }
+
+    override val typeAdapterResolver: BeagleConfigFactory<TypeAdapterResolver> = beagleConfigFactory {
+        it.logInfo("$CONFIG_NAME:typeAdapterResolver")
+        typeAdapterObject
+    }
+
     override val analyticsProvider: BeagleConfigFactory<AnalyticsProvider>? = null
     override val urlBuilder: BeagleConfigFactory<UrlBuilder>? = null
     override fun registeredWidgets() =

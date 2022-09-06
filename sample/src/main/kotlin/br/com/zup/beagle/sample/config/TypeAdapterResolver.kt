@@ -16,15 +16,13 @@
 
 package br.com.zup.beagle.sample.config
 
-import android.content.Intent
-import br.com.zup.beagle.android.logger.BeagleLogger
-import br.com.zup.beagle.android.widget.RootView
-import br.com.zup.beagle.sample.DeepLinkHandlerObject
+import br.com.zup.beagle.android.data.serializer.adapter.generic.BeagleTypeAdapter
+import br.com.zup.beagle.android.data.serializer.adapter.generic.TypeAdapterResolver
+import java.lang.reflect.Type
 
-class AppDeepLinkHandler(private val logger: BeagleLogger?) : br.com.zup.beagle.android.navigation.DeepLinkHandler {
-    override fun getDeepLinkIntent(rootView: RootView, path: String, data: Map<String, String>?,
-                                   shouldResetApplication: Boolean): Intent {
-        logger?.info("DeepLinkHandlerSecond:path: $path")
-        return DeepLinkHandlerObject.handleDeepLink(path, data)
+val typeAdapterObject = object : TypeAdapterResolver {
+    override fun <T> getAdapter(type: Type): BeagleTypeAdapter<T>? = when(type) {
+        else -> null
     }
+
 }
