@@ -48,7 +48,7 @@ interface BeagleSdkWrapper {
 }
 
 fun BeagleSdkWrapper.asBeagleSdk(): BeagleSdk = object : BeagleSdk {
-    override val config: BeagleConfig = this@asBeagleSdk.configInstance!!
+    override val config: BeagleConfig = this@asBeagleSdk.configInstance
     override val deepLinkHandler: DeepLinkHandler? =
         this@asBeagleSdk.deepLinkHandlerInstance
     override val httpClientFactory: HttpClientFactory? =
@@ -71,19 +71,19 @@ fun BeagleSdkWrapper.asBeagleSdk(): BeagleSdk = object : BeagleSdk {
         this@asBeagleSdk.loggerInstance
 
     override fun registeredWidgets(): List<Class<WidgetView>> =
-        this@asBeagleSdk.registeredWidgetsInstance!!
+        this@asBeagleSdk.registeredWidgetsInstance
 
     override fun registeredActions(): List<Class<Action>> =
-        this@asBeagleSdk.registeredActionsInstance!!
+        this@asBeagleSdk.registeredActionsInstance
 
     override fun registeredOperations(): Map<String, Operation> =
-        this@asBeagleSdk.registeredOperationsInstance!!
+        this@asBeagleSdk.registeredOperationsInstance
 
 }
 
-val BeagleSdkWrapper.configInstance: BeagleConfig?
+val BeagleSdkWrapper.configInstance: BeagleConfig
     get() = BeagleConfigProvider(this, this.config)
-        .get()
+        .get()!!
 
 val BeagleSdkWrapper.deepLinkHandlerInstance: DeepLinkHandler?
     get() = BeagleConfigProvider(this, this.deepLinkHandler)
@@ -125,17 +125,17 @@ val BeagleSdkWrapper.loggerInstance: BeagleLogger?
     get() = BeagleConfigProvider(this, this.logger)
         .get()
 
-val BeagleSdkWrapper.registeredWidgetsInstance: List<Class<WidgetView>>?
+val BeagleSdkWrapper.registeredWidgetsInstance: List<Class<WidgetView>>
     get() = BeagleConfigProvider(this, this.registeredWidgets())
-        .get()
+        .get()!!
 
-val BeagleSdkWrapper.registeredActionsInstance: List<Class<Action>>?
+val BeagleSdkWrapper.registeredActionsInstance: List<Class<Action>>
     get() = BeagleConfigProvider(this, this.registeredActions())
-        .get()
+        .get()!!
 
-val BeagleSdkWrapper.registeredOperationsInstance: Map<String, Operation>?
+val BeagleSdkWrapper.registeredOperationsInstance: Map<String, Operation>
     get() = BeagleConfigProvider(this, this.registeredOperations())
-        .get()
+        .get()!!
 
 interface BeagleConfigFactory<T> {
     fun create(beagleConfigurator: BeagleSdkWrapper): T
