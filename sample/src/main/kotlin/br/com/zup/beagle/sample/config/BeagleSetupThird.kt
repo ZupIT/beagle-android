@@ -18,7 +18,6 @@ package br.com.zup.beagle.sample.config
 
 import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.analytics.AnalyticsProvider
-import br.com.zup.beagle.android.imagedownloader.BeagleImageDownloader
 import br.com.zup.beagle.android.logger.BeagleLogger
 import br.com.zup.beagle.android.navigation.DeepLinkHandler
 import br.com.zup.beagle.android.networking.HttpClientFactory
@@ -67,7 +66,7 @@ class BeagleSetupThird: BeagleSdkWrapper {
         AppDesignSystem()
     }
 
-    override val imageDownloader = beagleConfigFactory<BeagleImageDownloader> {
+    override val imageDownloader = beagleConfigFactory {
         it.logInfo("BeagleSetupSecond:imageDownloader")
         imageDownloaderObject
     }
