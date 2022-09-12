@@ -42,9 +42,9 @@ interface BeagleSdkWrapper {
     val urlBuilder: BeagleConfigFactory<UrlBuilder>?
     val logger: BeagleConfigFactory<BeagleLogger>?
 
-    fun registeredWidgets(): BeagleConfigFactory<List<Class<WidgetView>>>
-    fun registeredActions(): BeagleConfigFactory<List<Class<Action>>>
-    fun registeredOperations(): BeagleConfigFactory<Map<String, Operation>>
+    val registeredWidgets: BeagleConfigFactory<List<Class<WidgetView>>>
+    val registeredActions: BeagleConfigFactory<List<Class<Action>>>
+    val registeredOperations: BeagleConfigFactory<Map<String, Operation>>
 }
 
 fun BeagleSdkWrapper.asBeagleSdk(): BeagleSdk = object : BeagleSdk {
@@ -126,15 +126,15 @@ val BeagleSdkWrapper.loggerInstance: BeagleLogger?
         .get()
 
 val BeagleSdkWrapper.registeredWidgetsInstance: List<Class<WidgetView>>
-    get() = BeagleConfigProvider(this, this.registeredWidgets())
+    get() = BeagleConfigProvider(this, this.registeredWidgets)
         .get()!!
 
 val BeagleSdkWrapper.registeredActionsInstance: List<Class<Action>>
-    get() = BeagleConfigProvider(this, this.registeredActions())
+    get() = BeagleConfigProvider(this, this.registeredActions)
         .get()!!
 
 val BeagleSdkWrapper.registeredOperationsInstance: Map<String, Operation>
-    get() = BeagleConfigProvider(this, this.registeredOperations())
+    get() = BeagleConfigProvider(this, this.registeredOperations)
         .get()!!
 
 interface BeagleConfigFactory<T> {

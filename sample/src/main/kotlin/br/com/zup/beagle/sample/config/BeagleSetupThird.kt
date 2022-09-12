@@ -95,7 +95,7 @@ class BeagleSetupThird: BeagleSdkWrapper {
         AppUrlBuilder()
     }
 
-    override fun registeredWidgets() =
+    override val registeredWidgets =
         beagleConfigFactory {
             it.logInfo("$CONFIG_NAME:registeredWidgets")
             listOf(
@@ -105,7 +105,7 @@ class BeagleSetupThird: BeagleSdkWrapper {
                 Input::class.java as Class<WidgetView>)
         }
 
-    override fun registeredActions() =
+    override val registeredActions =
         beagleConfigFactory {
             it.logInfo("$CONFIG_NAME:registeredActions")
             listOf(
@@ -113,7 +113,7 @@ class BeagleSetupThird: BeagleSdkWrapper {
             )
         }
 
-    override fun registeredOperations() =
+    override val registeredOperations =
         beagleConfigFactory {
             it.logInfo("$CONFIG_NAME:registeredOperations")
             mapOf<String, Operation>(

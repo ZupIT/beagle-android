@@ -42,6 +42,7 @@ import br.com.zup.beagle.sample.widgets.Text2
 private const val CONFIG_NAME = "BeagleSetupSecond"
 
 class BeagleSetupSecond: BeagleSdkWrapper {
+
     override val logger = beagleConfigFactory<BeagleLogger> {
         BeagleLoggerDefault()
     }
@@ -95,7 +96,7 @@ class BeagleSetupSecond: BeagleSdkWrapper {
         AppUrlBuilder()
     }
 
-    override fun registeredWidgets() =
+    override val registeredWidgets =
         beagleConfigFactory {
             it.logInfo("$CONFIG_NAME:registeredWidgets")
             listOf(
@@ -105,7 +106,7 @@ class BeagleSetupSecond: BeagleSdkWrapper {
                 Input::class.java as Class<WidgetView>)
         }
 
-    override fun registeredActions() =
+    override val registeredActions =
         beagleConfigFactory {
             it.logInfo("$CONFIG_NAME:registeredActions")
             listOf(
@@ -113,7 +114,7 @@ class BeagleSetupSecond: BeagleSdkWrapper {
             )
         }
 
-    override fun registeredOperations() =
+    override val registeredOperations =
         beagleConfigFactory {
             it.logInfo("$CONFIG_NAME:registeredOperations")
             mapOf<String, Operation>(
