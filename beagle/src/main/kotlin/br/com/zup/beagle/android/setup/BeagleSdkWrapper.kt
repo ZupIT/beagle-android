@@ -54,7 +54,7 @@ fun BeagleSdkWrapper.asBeagleSdk(): BeagleSdk = object : BeagleSdk {
     override val httpClientFactory: HttpClientFactory? =
         this@asBeagleSdk.httpClientFactoryInstance
     override val designSystem: DesignSystem? =
-        this@asBeagleSdk.designSystem?.create(this@asBeagleSdk)
+        this@asBeagleSdk.designSystemInstance
     override val imageDownloader: BeagleImageDownloader? =
         this@asBeagleSdk.imageDownloaderInstance
     override val viewClient: ViewClient? =
