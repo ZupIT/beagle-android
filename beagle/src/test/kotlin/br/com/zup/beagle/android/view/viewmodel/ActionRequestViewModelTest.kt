@@ -22,7 +22,6 @@ import br.com.zup.beagle.android.action.SendRequestInternal
 import br.com.zup.beagle.android.data.ActionRequester
 import br.com.zup.beagle.android.exception.BeagleApiException
 import br.com.zup.beagle.android.networking.ResponseData
-import br.com.zup.beagle.android.setup.BeagleConfigurator
 import br.com.zup.beagle.android.testutil.CoroutinesTestExtension
 import br.com.zup.beagle.android.testutil.InstantExecutorExtension
 import br.com.zup.beagle.android.view.mapper.toRequestData
@@ -43,8 +42,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExperimentalCoroutinesApi
 @ExtendWith(InstantExecutorExtension::class, CoroutinesTestExtension::class)
 class ActionRequestViewModelTest : BaseTest() {
-
-    private val beagleConfigurator: BeagleConfigurator = mockk()
 
     private val actionRequester: ActionRequester = mockk()
 

@@ -39,7 +39,7 @@ internal class OperationResolverTest : BaseTest() {
     @BeforeAll
     override fun setUp() {
         super.setUp()
-        operationResolver = OperationResolver()
+        operationResolver = OperationResolver(beagleConfigurator)
 
         mockkObject(BeagleMessageLogs)
     }

@@ -81,7 +81,8 @@ class BeagleFragmentTest : BaseSoLoaderTest() {
     fun `Given a BeagleFragment with screen identifier When BeagleFragment is resumed Then should report screen`() {
         // When
         val scenario =
-            launchFragmentInContainer<BeagleFragment>(BeagleFragment.newBundle(json, url, navigationContext))
+            launchFragmentInContainer<BeagleFragment>(BeagleFragment.newBundle(json, url, navigationContext,
+            beagleConfigurator))
         scenario.moveToState(Lifecycle.State.RESUMED)
 
         // Then
@@ -92,7 +93,8 @@ class BeagleFragmentTest : BaseSoLoaderTest() {
     fun `Given a BeagleFragment without screen identifier When BeagleFragment is resumed Then should not report screen`() {
         // When
         val scenario =
-            launchFragmentInContainer<BeagleFragment>(BeagleFragment.newBundle(json, null, navigationContext))
+            launchFragmentInContainer<BeagleFragment>(BeagleFragment.newBundle(json, null, navigationContext,
+            beagleConfigurator))
         scenario.moveToState(Lifecycle.State.RESUMED)
 
         // then
@@ -103,7 +105,8 @@ class BeagleFragmentTest : BaseSoLoaderTest() {
     fun `Given a BeagleFragment When call updateNavigationContext Then should update context`() {
         // When
         val scenario =
-            launchFragmentInContainer<BeagleFragment>(BeagleFragment.newBundle(json, null, navigationContext))
+            launchFragmentInContainer<BeagleFragment>(BeagleFragment.newBundle(json, null, navigationContext,
+             beagleConfigurator))
 
         scenario.moveToState(Lifecycle.State.RESUMED)
         scenario.withFragment {
@@ -125,7 +128,8 @@ class BeagleFragmentTest : BaseSoLoaderTest() {
         //When
 
         val scenario =
-            launchFragmentInContainer<BeagleFragment>(BeagleFragment.newBundle(jsonWithIdentifier, "This is an identifier", navigationContext))
+            launchFragmentInContainer<BeagleFragment>(BeagleFragment.newBundle(jsonWithIdentifier, "This is an identifier", navigationContext,
+             beagleConfigurator))
 
         scenario.moveToState(Lifecycle.State.RESUMED)
 

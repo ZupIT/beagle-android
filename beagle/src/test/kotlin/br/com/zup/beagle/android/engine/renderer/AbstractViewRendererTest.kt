@@ -98,7 +98,7 @@ class AbstractViewRendererTest : BaseTest() {
         // Then
         verifySequence {
             rootView.getViewModelStoreOwner()
-            componentStylization.apply(view, component)
+            componentStylization.apply(rootView, view, component)
             contextViewRenderer.handleComponent(view, contextViewModel, component)
         }
     }

@@ -135,7 +135,9 @@ class WidgetExtensionsKtTest : BaseTest() {
             val screenId = "screenId"
 
             //when
-            widgetComponent.toView(fragment = fragment, screenIdentifier = screenId)
+            widgetComponent.toView(fragment = fragment,
+                screenIdentifier = screenId,
+                beagleConfigurator = beagleConfigurator)
 
             //then
             assertEquals(screenId, slot.captured.getScreenId())
@@ -149,7 +151,9 @@ class WidgetExtensionsKtTest : BaseTest() {
             val componentId = "componentId"
 
             //when
-            widgetComponent.toView(fragment = fragment, screenIdentifier = null)
+            widgetComponent.toView(fragment = fragment,
+                screenIdentifier = null,
+                beagleConfigurator = beagleConfigurator)
 
             //then
             assertEquals(componentId, slot.captured.getScreenId())

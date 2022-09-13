@@ -40,7 +40,6 @@ class ScreenContextViewModelTest : BaseTest() {
     private val contextDataManager = mockk<ContextDataManager>(relaxed = true)
     private val contextDataEvaluation = mockk<ContextDataEvaluation>(relaxed = true)
     private val implicitContextManager = mockk<ImplicitContextManager>(relaxed = true)
-    private val beagleConfigurator = mockk<BeagleConfigurator>(relaxed = true)
     val view = mockk<View>()
 
     private lateinit var screenContextViewModel: ScreenContextViewModel

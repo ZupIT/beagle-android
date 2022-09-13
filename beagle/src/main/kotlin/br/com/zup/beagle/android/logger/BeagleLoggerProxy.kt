@@ -18,7 +18,7 @@ package br.com.zup.beagle.android.logger
 
 internal object BeagleLoggerProxy : BeagleLogger {
 
-    private var logger: BeagleLogger? = null
+    var logger: BeagleLogger? = null
 
     fun init(logger: BeagleLogger?) {
         this.logger = logger

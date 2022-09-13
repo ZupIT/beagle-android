@@ -49,7 +49,7 @@ class ActionExtensionsKtTest : BaseTest() {
             answers = false
         )
 
-        viewModel = ScreenContextViewModel()
+        viewModel = ScreenContextViewModel(beagleConfigurator)
 
         prepareViewModelMock(viewModel)
     }

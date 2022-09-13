@@ -91,7 +91,7 @@ internal class BeagleViewTest : BaseTest() {
             beagleView = BeagleView(rootView, viewModel)
         }
 
-        url = "/url".formatUrl()
+        url = "/url".formatUrl(beagleConfigurator)
         component = Text(constant("Test component"))
     }
 

@@ -23,12 +23,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import br.com.zup.beagle.android.setup.BeagleConfigurator
 import br.com.zup.beagle.test.rules.BeagleComponentsRule
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
-import io.mockk.mockk
 import io.mockk.mockkConstructor
 import io.mockk.unmockkAll
 import io.mockk.verifyOrder
@@ -46,8 +44,6 @@ class PreviewActivityTest {
 
     @get:Rule
     val beagleComponentsRule = BeagleComponentsRule()
-
-    val beagleConfigurator: BeagleConfigurator = mockk()
 
     lateinit var activityScenario: ActivityScenario<PreviewActivity>
 

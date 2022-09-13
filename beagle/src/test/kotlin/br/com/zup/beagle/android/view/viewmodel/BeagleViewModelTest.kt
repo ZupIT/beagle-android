@@ -73,7 +73,8 @@ class BeagleViewModelTest : BaseTest() {
             actionRequester,
             answers = false
         )
-        beagleUIViewModel = BeagleViewModel(componentRequester = componentRequester)
+        beagleUIViewModel = BeagleViewModel(beagleConfigurator = beagleConfigurator,
+            componentRequester = componentRequester)
 
         coEvery { componentRequester.fetchComponent(any()) } returns component
         every { observer.onChanged(any()) } just Runs

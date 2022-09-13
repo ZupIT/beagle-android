@@ -169,7 +169,7 @@ class ViewExtensionsKtTest : BaseTest() {
             every { view.setContextBinding(capture(bindingSlot)) } just Runs
 
             // When
-            view.setContextData(contextData)
+            view.setContextData(contextData, moshi)
 
             // Then
             assertEquals(contextData, bindingSlot.captured.first().context)
@@ -186,7 +186,7 @@ class ViewExtensionsKtTest : BaseTest() {
             every { view.setContextBinding(capture(bindingSlot)) } just Runs
 
             // When
-            view.setContextData(contextData)
+            view.setContextData(contextData, moshi)
 
             // Then
             assertEquals(bindingSlot.captured.first().context, contextData)

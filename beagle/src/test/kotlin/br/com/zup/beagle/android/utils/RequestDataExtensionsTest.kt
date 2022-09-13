@@ -72,7 +72,7 @@ class RequestDataExtensionsTest : BaseTest() {
         mockkStatic("br.com.zup.beagle.android.data.StringExtensionsKt")
 
         every { any<String>().formatUrl(any(), any()) } returns url
-        every { anyConstructed<UrlBuilderFactory>().make() } returns urlBuilder
+        every { anyConstructed<UrlBuilderFactory>().make(beagleConfigurator) } returns urlBuilder
 
         every { BeagleMessageLogs.logHttpRequestData(any()) } just Runs
         every { BeagleMessageLogs.logHttpResponseData(any()) } just Runs

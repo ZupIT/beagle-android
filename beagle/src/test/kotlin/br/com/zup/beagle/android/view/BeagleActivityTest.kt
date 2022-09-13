@@ -78,7 +78,8 @@ class BeagleActivityTest : BaseSoLoaderTest() {
     fun mockBeforeTest() {
         coEvery { componentRequester.fetchComponent(RequestData(url = "/url")) } returns component
         beagleViewModel =
-            BeagleScreenViewModel(ioDispatcher = TestCoroutineDispatcher(), componentRequester = componentRequester)
+            BeagleScreenViewModel(ioDispatcher = TestCoroutineDispatcher(), componentRequester = componentRequester,
+            beagleConfigurator = beagleConfigurator)
         prepareViewModelMock(beagleViewModel)
         activityScenario =
             ActivityScenario.launch(ServerDrivenActivity::class.java)

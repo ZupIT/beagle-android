@@ -19,12 +19,10 @@ package br.com.zup.beagle.android.networking.urlbuilder
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.setup.BeagleEnvironment
 import io.mockk.every
-import io.mockk.impl.annotations.MockK
-import org.junit.jupiter.api.Test
-import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Test
 
 class UrlBuilderFactoryTest : BaseTest() {
 
@@ -38,7 +36,7 @@ class UrlBuilderFactoryTest : BaseTest() {
         every { BeagleEnvironment.beagleSdk.urlBuilder } returns null
 
         // When
-        val builder = urlBuilderFactory.make()
+        val builder = urlBuilderFactory.make(beagleConfigurator)
 
         // Then
         assertTrue { builder is UrlBuilderDefault }
@@ -50,7 +48,7 @@ class UrlBuilderFactoryTest : BaseTest() {
         every { BeagleEnvironment.beagleSdk.urlBuilder } returns urlBuilder
 
         // When
-        val actual = urlBuilderFactory.make()
+        val actual = urlBuilderFactory.make(beagleConfigurator)
 
         // Then
         assertEquals(urlBuilder, actual)
