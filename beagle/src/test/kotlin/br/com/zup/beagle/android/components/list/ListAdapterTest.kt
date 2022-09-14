@@ -396,6 +396,7 @@ class ListAdapterTest : BaseTest() {
             templateList = templateList,
             originView = recyclerViewMock
         )
+        every { serializer.deserializeComponent(any()) } returns expectedTemplate
 
         every {
             listViewModels.contextViewModel.evaluateExpressionForGivenContext(
@@ -436,6 +437,7 @@ class ListAdapterTest : BaseTest() {
             originView = recyclerViewMock
         )
 
+        every { serializer.deserializeComponent(any()) } returns expectedTemplate
         every {
             listViewModels.contextViewModel.evaluateExpressionForGivenContext(
                 recyclerViewMock,
@@ -471,6 +473,7 @@ class ListAdapterTest : BaseTest() {
             templateList = templateListWithNoDefault,
             originView = recyclerViewMock
         )
+        every { serializer.deserializeComponent(any()) } returns expectedTemplate
 
         every {
             listViewModels.contextViewModel.evaluateExpressionForGivenContext(
