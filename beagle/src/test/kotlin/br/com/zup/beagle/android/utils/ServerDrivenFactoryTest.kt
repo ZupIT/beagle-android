@@ -43,7 +43,7 @@ class ServerDrivenFactoryTest {
 
     private val navigationContext = NavigationContext(value = "")
 
-    val beagleSdk: BeagleSdk = mockk()
+    val beagleSdk: BeagleSdk = mockk(relaxed = true, relaxUnitFun = true)
 
     @Before
     fun setup() {

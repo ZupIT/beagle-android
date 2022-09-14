@@ -18,4 +18,4 @@ package br.com.zup.beagle.android.utils
 
 import android.os.Binder
 
-internal class ObjectWrapperForBinder(val data: Any) : Binder()
+internal data class ObjectWrapperForBinder(val data: Any) : Binder()
