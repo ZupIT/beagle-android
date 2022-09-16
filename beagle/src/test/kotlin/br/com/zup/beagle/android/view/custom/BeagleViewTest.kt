@@ -17,6 +17,8 @@
 package br.com.zup.beagle.android.view.custom
 
 import android.app.Application
+import android.content.Intent
+import android.os.Bundle
 import android.view.View
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
@@ -30,7 +32,9 @@ import br.com.zup.beagle.android.context.constant
 import br.com.zup.beagle.android.data.formatUrl
 import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.setup.BeagleSdk
+import br.com.zup.beagle.android.utils.ObjectWrapperForBinder
 import br.com.zup.beagle.android.view.ApplicationTest
+import br.com.zup.beagle.android.view.BeagleActivity
 import br.com.zup.beagle.android.view.ServerDrivenActivity
 import br.com.zup.beagle.android.view.viewmodel.AnalyticsViewModel
 import br.com.zup.beagle.android.view.viewmodel.BeagleViewModel
@@ -84,8 +88,13 @@ internal class BeagleViewTest : BaseTest() {
         prepareViewModelMock(analyticsViewModel)
         every { analyticsViewModel.createScreenReport(capture(screenIdentifierSlot), capture(rootIdSlot)) } just Runs
         every { viewModel.fetchComponent(any(), any()) } returns mutableLiveData
+        val intent = Intent(application, ServerDrivenActivity::class.java)
+        val bundle = Bundle().apply {
+            putBinder(BeagleActivity.BEAGLE_CONFIGURATOR, ObjectWrapperForBinder(beagleConfigurator))
+        }
+        intent.putExtras(bundle)
         val activityScenario: ActivityScenario<ServerDrivenActivity> =
-            ActivityScenario.launch(ServerDrivenActivity::class.java)
+            ActivityScenario.launch(intent)
         activityScenario.onActivity {
             val rootView = ActivityRootView(it, 10, "")
             beagleView = BeagleView(rootView, viewModel)

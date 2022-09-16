@@ -176,13 +176,4 @@ internal class BeagleFlexViewTest : BaseTest() {
         }
     }
 
-
-    private fun mockYoga() {
-        val yogaNode = mockk<YogaNode>(relaxed = true, relaxUnitFun = true)
-        val view = View(mockk())
-        mockkStatic(YogaNode::class)
-        mockkStatic(YogaNodeFactory::class)
-        every { YogaNodeFactory.create() } returns yogaNode
-        every { yogaNode.data } returns view
-    }
 }
