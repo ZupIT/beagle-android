@@ -16,6 +16,8 @@
 
 package br.com.zup.beagle.android.view
 
+import android.content.Intent
+import android.os.Bundle
 import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.fragment.app.testing.withFragment
 import androidx.lifecycle.Lifecycle
@@ -24,6 +26,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import br.com.zup.beagle.android.BaseSoLoaderTest
 import br.com.zup.beagle.android.action.NavigationContext
 import br.com.zup.beagle.android.context.ContextData
+import br.com.zup.beagle.android.utils.ObjectWrapperForBinder
 import br.com.zup.beagle.android.view.viewmodel.AnalyticsViewModel
 import br.com.zup.beagle.android.widget.RootView
 import io.mockk.Runs
@@ -65,12 +68,17 @@ class BeagleFragmentTest : BaseSoLoaderTest() {
     private var activity: ServerDrivenActivity? = null
     private val navigationContext = NavigationContext(value = "test")
     private val navigationContextData = ContextData(id = BeagleFragment.NAVIGATION_CONTEXT_DATA_ID, value = "testtwo")
-
     @Before
     fun mockBeforeTest() {
         prepareViewModelMock(analyticsViewModel)
         every { analyticsViewModel.createScreenReport(capture(screenIdentifierSlot), capture(rootIdSlot)) } just Runs
-        val activityScenario: ActivityScenario<ServerDrivenActivity> = ActivityScenario.launch(ServerDrivenActivity::class.java)
+
+        val intent = Intent(application, ServerDrivenActivity::class.java)
+        val bundle = Bundle().apply {
+            putBinder(BeagleActivity.BEAGLE_CONFIGURATOR, ObjectWrapperForBinder(beagleConfigurator))
+        }
+        intent.putExtras(bundle)
+        val activityScenario: ActivityScenario<ServerDrivenActivity> = ActivityScenario.launch(intent)
         activityScenario.onActivity {
             activityScenario.moveToState(Lifecycle.State.RESUMED)
             activity = it

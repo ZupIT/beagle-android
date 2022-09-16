@@ -16,13 +16,18 @@
 
 package br.com.zup.beagle.android
 
+import android.app.Application
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.test.core.app.ApplicationProvider
+import br.com.zup.beagle.android.data.serializer.BeagleJsonSerializer
+import br.com.zup.beagle.android.data.serializer.BeagleMoshi
 import br.com.zup.beagle.android.setup.BeagleConfigurator
 import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.setup.BeagleSdk
 import br.com.zup.beagle.android.widget.ActivityRootView
+import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 import com.squareup.moshi.Moshi
 import io.mockk.every
 import io.mockk.mockk
@@ -36,17 +41,20 @@ import org.junit.jupiter.api.TestInstance
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 abstract class BaseTest {
 
-    protected val beagleConfigurator = mockk<BeagleConfigurator>(relaxed = true, relaxUnitFun = true)
     protected val rootView = mockk<ActivityRootView>(relaxed = true, relaxUnitFun = true)
     protected var moshi: Moshi = mockk(relaxed = true, relaxUnitFun = true)
     protected val beagleSdk = mockk<BeagleSdk>(relaxed = true)
     private val activity: AppCompatActivity = mockk(relaxed = true)
-
+    protected val application = ApplicationProvider.getApplicationContext() as Application
+    protected lateinit var beagleConfigurator: BeagleConfigurator
     @BeforeAll
     open fun setUp() {
         mockBeagleEnvironment()
         every { rootView.activity } returns activity
         every { rootView.getScreenId() } returns "screen_id"
+        BeagleSdk.setInTestMode()
+        MyBeagleSetup().init(application)
+        beagleConfigurator = BeagleConfigurator.configurator
     }
 
     @AfterAll

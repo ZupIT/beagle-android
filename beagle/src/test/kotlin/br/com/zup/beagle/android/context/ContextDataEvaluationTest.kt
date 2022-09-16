@@ -53,13 +53,12 @@ internal class ContextDataEvaluationTest : BaseTest() {
     override fun setUp() {
         super.setUp()
 
-        contextDataEvaluation = ContextDataEvaluation(beagleConfigurator)
+        contextDataEvaluation = ContextDataEvaluation(BeagleConfigurator.configurator)
 
         mockkObject(BeagleMessageLogs)
 
         every { BeagleMessageLogs.errorWhileTryingToNotifyContextChanges(any()) } just Runs
         every { BeagleMessageLogs.errorWhileTryingToAccessContext(any()) } just Runs
-        every { beagleConfigurator.moshi } returns moshi
     }
 
     @Test
@@ -164,8 +163,7 @@ internal class ContextDataEvaluationTest : BaseTest() {
         val moshi = mockk<Moshi> {
             every { adapter<Any>(bind.type).fromJson(any<String>()) } returns null
         }
-        every { beagleConfigurator.moshi } returns moshi
-        val contextDataEvaluation = ContextDataEvaluation(beagleConfigurator)
+        val contextDataEvaluation = ContextDataEvaluation(BeagleConfigurator.configurator)
 
         // When
         val value = contextDataEvaluation.evaluateBindExpression(listOf(CONTEXT_DATA), bind)

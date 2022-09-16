@@ -16,10 +16,8 @@
 
 package br.com.zup.beagle.android
 
-import android.app.Application
 import android.view.View
-import androidx.test.core.app.ApplicationProvider
-import br.com.zup.beagle.android.BaseTest
+import br.com.zup.beagle.android.setup.BeagleConfigurator
 import br.com.zup.beagle.android.setup.BeagleSdk
 import com.facebook.yoga.YogaNode
 import com.facebook.yoga.YogaNodeFactory
@@ -31,14 +29,12 @@ import org.junit.Before
 
 open class BaseSoLoaderTest : BaseTest() {
 
-    protected val application = ApplicationProvider.getApplicationContext() as Application
-
-
     @Before
     fun setup() {
         mockYoga()
         BeagleSdk.setInTestMode()
         MyBeagleSetup().init(application)
+        beagleConfigurator = BeagleConfigurator.configurator
     }
 
     @After
