@@ -17,6 +17,8 @@
 package br.com.zup.beagle.android.view
 
 import android.app.Application
+import android.content.Intent
+import android.os.Bundle
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
 import androidx.test.core.app.ActivityScenario
@@ -32,6 +34,7 @@ import br.com.zup.beagle.android.data.ComponentRequester
 import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.testutil.CoroutinesTestExtension
 import br.com.zup.beagle.android.testutil.InstantExecutorExtension
+import br.com.zup.beagle.android.utils.ObjectWrapperForBinder
 import br.com.zup.beagle.android.view.BeagleFragment.Companion.NAVIGATION_CONTEXT_DATA_ID
 import br.com.zup.beagle.android.view.BeagleFragment.Companion.NAVIGATION_CONTEXT_DATA_KEY
 import br.com.zup.beagle.android.view.viewmodel.AnalyticsViewModel
@@ -68,7 +71,7 @@ class BeagleActivityTest : BaseSoLoaderTest() {
     private lateinit var beagleViewModel: BeagleScreenViewModel
     private var activity: ServerDrivenActivity? = null
     private val analyticsViewModel = mockk<AnalyticsViewModel>()
-    private val screenIdentifierSlot = slot<RootView>()
+    private val rootViewSlot = slot<RootView>()
     private val navigationContext = NavigationContext(value = "test")
     private val navigationContextData = ContextData(id = NAVIGATION_CONTEXT_DATA_ID, value = "test")
     lateinit var activityScenario: ActivityScenario<ServerDrivenActivity>
@@ -81,8 +84,13 @@ class BeagleActivityTest : BaseSoLoaderTest() {
             BeagleScreenViewModel(ioDispatcher = TestCoroutineDispatcher(), componentRequester = componentRequester,
             beagleConfigurator = beagleConfigurator)
         prepareViewModelMock(beagleViewModel)
+        val intent = Intent(application, ServerDrivenActivity::class.java)
+        val bundle = Bundle().apply {
+            putBinder(BeagleActivity.BEAGLE_CONFIGURATOR, ObjectWrapperForBinder(beagleConfigurator))
+        }
+        intent.putExtras(bundle)
         activityScenario =
-            ActivityScenario.launch(ServerDrivenActivity::class.java)
+            ActivityScenario.launch(intent)
         activityScenario.onActivity {
             activityScenario.moveToState(Lifecycle.State.STARTED)
             activity = it
@@ -96,7 +104,7 @@ class BeagleActivityTest : BaseSoLoaderTest() {
             val url = "/url"
             val screenRequest = RequestData(url = url)
             prepareViewModelMock(analyticsViewModel)
-            every { analyticsViewModel.createScreenReport(capture(screenIdentifierSlot), capture(rootIdSlot)) } just Runs
+            every { analyticsViewModel.createScreenReport(capture(rootViewSlot), capture(rootIdSlot)) } just Runs
 
             //When
             activity?.navigateTo(screenRequest, null, navigationContext)
@@ -106,7 +114,7 @@ class BeagleActivityTest : BaseSoLoaderTest() {
 
             //Then
             val contextData: ContextData = fragment.savedState.getParcelable(NAVIGATION_CONTEXT_DATA_KEY)!!
-            assertEquals(url, screenIdentifierSlot.captured)
+            assertEquals(url, rootViewSlot.captured.getScreenId())
             assertEquals(navigationContextData, contextData)
         }
 
@@ -121,7 +129,7 @@ class BeagleActivityTest : BaseSoLoaderTest() {
 
 
             prepareViewModelMock(analyticsViewModel)
-            every { analyticsViewModel.createScreenReport(capture(screenIdentifierSlot), capture(rootIdSlot)) } just Runs
+            every { analyticsViewModel.createScreenReport(capture(rootViewSlot), capture(rootIdSlot)) } just Runs
 
             //When
             activity?.navigateTo(screenRequest, screen, navigationContext)
@@ -131,7 +139,7 @@ class BeagleActivityTest : BaseSoLoaderTest() {
 
             // THEN
             val contextData: ContextData = fragment.savedState.getParcelable(NAVIGATION_CONTEXT_DATA_KEY)!!
-            assertEquals(screenId, screenIdentifierSlot.captured)
+            assertEquals(screenId, rootViewSlot.captured.getScreenId())
             assertEquals(navigationContextData, contextData)
         }
 
