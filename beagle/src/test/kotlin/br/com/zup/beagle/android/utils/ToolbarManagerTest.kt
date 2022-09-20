@@ -105,6 +105,10 @@ internal class ToolbarManagerTest : BaseTest() {
         every { typedArray.recycle() } just Runs
 
         every { toolbar.setNavigationOnClickListener(capture(listenerSlot)) } returns Unit
+
+        every { rootView.getContext() } returns context
+
+        every { rootView.getBeagleConfigurator().designSystem } returns designSystemMock
     }
 
     @BeforeEach
