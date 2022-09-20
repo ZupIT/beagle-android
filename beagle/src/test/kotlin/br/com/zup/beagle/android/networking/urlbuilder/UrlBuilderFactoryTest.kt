@@ -16,6 +16,7 @@
 
 package br.com.zup.beagle.android.networking.urlbuilder
 
+import br.com.zup.beagle.android.BaseSoLoaderTest
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.setup.BeagleEnvironment
 import io.mockk.every
@@ -24,7 +25,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
-class UrlBuilderFactoryTest : BaseTest() {
+class UrlBuilderFactoryTest : BaseSoLoaderTest() {
 
     private val urlBuilderFactory = UrlBuilderFactory()
 

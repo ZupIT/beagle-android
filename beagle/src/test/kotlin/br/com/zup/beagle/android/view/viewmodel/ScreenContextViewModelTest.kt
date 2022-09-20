@@ -17,6 +17,7 @@
 package br.com.zup.beagle.android.view.viewmodel
 
 import android.view.View
+import br.com.zup.beagle.android.BaseSoLoaderTest
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.action.SetContextInternal
 import br.com.zup.beagle.android.context.Bind
@@ -35,7 +36,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 @DisplayName("Given a ScreenContextViewModel")
-class ScreenContextViewModelTest : BaseTest() {
+class ScreenContextViewModelTest : BaseSoLoaderTest() {
 
     private val contextDataManager = mockk<ContextDataManager>(relaxed = true)
     private val contextDataEvaluation = mockk<ContextDataEvaluation>(relaxed = true)

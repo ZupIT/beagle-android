@@ -17,6 +17,7 @@
 package br.com.zup.beagle.android.view.viewmodel
 
 import androidx.lifecycle.Observer
+import br.com.zup.beagle.android.BaseSoLoaderTest
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.components.layout.Screen
@@ -51,7 +52,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 @DisplayName("Given a BeagleViewModel")
 @ExperimentalCoroutinesApi
 @ExtendWith(InstantExecutorExtension::class, CoroutinesTestExtension::class)
-class BeagleViewModelTest : BaseTest() {
+class BeagleViewModelTest : BaseSoLoaderTest() {
 
     private val component: ServerDrivenComponent = mockk()
 

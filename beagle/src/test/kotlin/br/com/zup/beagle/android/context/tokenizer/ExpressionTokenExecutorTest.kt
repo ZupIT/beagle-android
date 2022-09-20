@@ -16,6 +16,7 @@
 
 package br.com.zup.beagle.android.context.tokenizer
 
+import br.com.zup.beagle.android.BaseSoLoaderTest
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.testutil.RandomData
@@ -24,7 +25,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 
-class ExpressionTokenExecutorTest : BaseTest() {
+class ExpressionTokenExecutorTest : BaseSoLoaderTest() {
 
     private lateinit var expressionTokenExecutor: ExpressionTokenExecutor
     private val tokenParser = TokenParser()

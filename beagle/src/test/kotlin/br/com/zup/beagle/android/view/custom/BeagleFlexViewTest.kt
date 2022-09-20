@@ -49,9 +49,6 @@ internal class BeagleFlexViewTest : BaseTest() {
     override fun setUp() {
         super.setUp()
         every { BeagleEnvironment.application } returns mockk(relaxed = true)
-
-        mockYoga()
-
         beagleFlexView = spyk(BeagleFlexView(rootView, styleMock))
     }
 

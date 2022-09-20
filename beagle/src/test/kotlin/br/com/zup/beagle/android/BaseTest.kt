@@ -35,6 +35,8 @@ import io.mockk.mockkConstructor
 import io.mockk.mockkObject
 import io.mockk.mockkStatic
 import io.mockk.unmockkAll
+import org.junit.After
+import org.junit.Before
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.TestInstance
@@ -46,26 +48,12 @@ abstract class BaseTest {
     protected var moshi: Moshi = mockk(relaxed = true, relaxUnitFun = true)
     protected val beagleSdk = mockk<BeagleSdk>(relaxed = true)
     private val activity: AppCompatActivity = mockk(relaxed = true)
-    protected val application = ApplicationProvider.getApplicationContext() as Application
-    protected lateinit var beagleConfigurator: BeagleConfigurator
+
     @BeforeAll
     open fun setUp() {
         mockBeagleEnvironment()
         every { rootView.activity } returns activity
         every { rootView.getScreenId() } returns "screen_id"
-        mockYoga()
-        BeagleSdk.setInTestMode()
-        MyBeagleSetup().init(application)
-        beagleConfigurator = BeagleConfigurator.configurator
-    }
-
-    protected fun mockYoga() {
-        val yogaNode = mockk<YogaNode>(relaxed = true, relaxUnitFun = true)
-        val view = View(application)
-        mockkStatic(YogaNode::class)
-        mockkStatic(YogaNodeFactory::class)
-        every { YogaNodeFactory.create() } returns yogaNode
-        every { yogaNode.data } returns view
     }
 
     @AfterAll

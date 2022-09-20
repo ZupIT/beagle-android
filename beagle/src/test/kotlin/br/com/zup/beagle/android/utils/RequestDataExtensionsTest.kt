@@ -16,6 +16,7 @@
 
 package br.com.zup.beagle.android.utils
 
+import br.com.zup.beagle.android.BaseSoLoaderTest
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.data.formatUrl
 import br.com.zup.beagle.android.exception.BeagleApiException
@@ -50,7 +51,7 @@ import org.junit.jupiter.api.assertThrows
 
 @DisplayName("Given a RequestData extension function")
 @ExperimentalCoroutinesApi
-class RequestDataExtensionsTest : BaseTest() {
+class RequestDataExtensionsTest : BaseSoLoaderTest() {
 
     private val httpClient: HttpClient = mockk()
     private val urlBuilder: UrlBuilder = mockk()

@@ -16,6 +16,7 @@
 
 package br.com.zup.beagle.android.data
 
+import br.com.zup.beagle.android.BaseSoLoaderTest
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.networking.urlbuilder.UrlBuilder
@@ -25,7 +26,7 @@ import io.mockk.mockkStatic
 import org.junit.Assert.assertEquals
 import org.junit.jupiter.api.Test
 
-class StringExtensionsKtTest : BaseTest() {
+class StringExtensionsKtTest : BaseSoLoaderTest() {
 
     private val urlBuilder: UrlBuilder = mockk()
 

@@ -16,19 +16,37 @@
 
 package br.com.zup.beagle.android
 
+import android.app.Application
+import android.view.View
+import androidx.test.core.app.ApplicationProvider
 import br.com.zup.beagle.android.setup.BeagleConfigurator
 import br.com.zup.beagle.android.setup.BeagleSdk
+import com.facebook.yoga.YogaNode
+import com.facebook.yoga.YogaNodeFactory
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.mockkStatic
 import org.junit.After
 import org.junit.Before
 
 open class BaseSoLoaderTest : BaseTest() {
-
+    protected val application = ApplicationProvider.getApplicationContext() as Application
+    protected lateinit var beagleConfigurator: BeagleConfigurator
     @Before
     fun setup() {
         mockYoga()
         BeagleSdk.setInTestMode()
         MyBeagleSetup().init(application)
         beagleConfigurator = BeagleConfigurator.configurator
+    }
+
+    protected fun mockYoga() {
+        val yogaNode = mockk<YogaNode>(relaxed = true, relaxUnitFun = true)
+        val view = View(application)
+        mockkStatic(YogaNode::class)
+        mockkStatic(YogaNodeFactory::class)
+        every { YogaNodeFactory.create() } returns yogaNode
+        every { yogaNode.data } returns view
     }
 
     @After

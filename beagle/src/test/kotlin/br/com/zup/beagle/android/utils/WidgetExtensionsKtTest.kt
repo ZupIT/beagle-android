@@ -17,6 +17,7 @@
 package br.com.zup.beagle.android.utils
 
 import androidx.fragment.app.Fragment
+import br.com.zup.beagle.android.BaseSoLoaderTest
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.context.expressionOf
@@ -45,7 +46,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 @DisplayName("Given a widget extension")
-class WidgetExtensionsKtTest : BaseTest() {
+class WidgetExtensionsKtTest : BaseSoLoaderTest() {
 
     private val component = mockk<ServerDrivenComponent>()
     private val widgetComponent = mockk<Widget>()

@@ -17,6 +17,7 @@
 
 package br.com.zup.beagle.android.data
 
+import br.com.zup.beagle.android.BaseSoLoaderTest
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.data.serializer.BeagleSerializer
 import br.com.zup.beagle.android.exception.BeagleApiException
@@ -46,7 +47,7 @@ import org.junit.jupiter.api.assertThrows
 
 @DisplayName("Given a ComponentRequester")
 @ExperimentalCoroutinesApi
-class ComponentRequesterTest : BaseTest() {
+class ComponentRequesterTest : BaseSoLoaderTest() {
 
     private val viewClient: ViewClient = mockk(relaxed = true)
     private val serializer: BeagleSerializer = mockk()

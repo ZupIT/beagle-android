@@ -16,6 +16,7 @@
 
 package br.com.zup.beagle.android.operation
 
+import br.com.zup.beagle.android.BaseSoLoaderTest
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.logger.BeagleMessageLogs
 import io.mockk.Runs
@@ -32,7 +33,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 @DisplayName("Given an OperationResolver object")
-internal class OperationResolverTest : BaseTest() {
+internal class OperationResolverTest : BaseSoLoaderTest() {
 
     private lateinit var operationResolver: OperationResolver
 

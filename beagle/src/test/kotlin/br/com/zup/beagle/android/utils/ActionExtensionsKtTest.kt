@@ -16,6 +16,7 @@
 
 package br.com.zup.beagle.android.utils
 
+import br.com.zup.beagle.android.BaseSoLoaderTest
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.context.ContextData
@@ -33,7 +34,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class ActionExtensionsKtTest : BaseTest() {
+class ActionExtensionsKtTest : BaseSoLoaderTest() {
 
     private val contextView = createViewForContext()
     private val bindView = createViewForContext(contextView)

@@ -20,6 +20,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.collection.LruCache
 import br.com.zup.beagle.R
+import br.com.zup.beagle.android.BaseSoLoaderTest
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.action.SetContextInternal
 import br.com.zup.beagle.android.logger.BeagleMessageLogs
@@ -57,7 +58,7 @@ import org.junit.jupiter.api.Test
 private val CONTEXT_ID = RandomData.string()
 
 @DisplayName("Given a ContextDataManager")
-class ContextDataManagerTest : BaseTest() {
+class ContextDataManagerTest : BaseSoLoaderTest() {
 
     private lateinit var contextDataManager: ContextDataManager
     private lateinit var contexts: MutableMap<Int, Set<ContextBinding>>
