@@ -19,9 +19,12 @@ package br.com.zup.beagle.android.operation
 import br.com.zup.beagle.android.BaseSoLoaderTest
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.logger.BeagleMessageLogs
+import br.com.zup.beagle.android.setup.BeagleConfigurator
+import br.com.zup.beagle.android.widget.ActivityRootView
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
+import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.verify
 import org.json.JSONArray
@@ -33,9 +36,11 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 @DisplayName("Given an OperationResolver object")
-internal class OperationResolverTest : BaseSoLoaderTest() {
+internal class OperationResolverTest : BaseTest() {
 
     private lateinit var operationResolver: OperationResolver
+    val beagleConfigurator = mockk<BeagleConfigurator>(relaxed = true, relaxUnitFun = true)
+
 
     @BeforeAll
     override fun setUp() {
