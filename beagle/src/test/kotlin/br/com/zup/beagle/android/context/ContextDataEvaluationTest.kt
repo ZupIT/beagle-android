@@ -18,6 +18,7 @@ package br.com.zup.beagle.android.context
 
 import androidx.collection.LruCache
 import br.com.zup.beagle.android.BaseTest
+import br.com.zup.beagle.android.data.serializer.BeagleMoshi
 import br.com.zup.beagle.android.logger.BeagleMessageLogs
 import br.com.zup.beagle.android.mockdata.ComponentModel
 import br.com.zup.beagle.android.setup.BeagleConfigurator
@@ -48,12 +49,17 @@ private val CONTEXT_DATA = ContextData(CONTEXT_ID, JSONObject().apply {
 internal class ContextDataEvaluationTest : BaseTest() {
 
     private lateinit var contextDataEvaluation: ContextDataEvaluation
+    val beagleConfigurator = mockk<BeagleConfigurator>()
+
+    override lateinit var moshi: Moshi
 
     @BeforeAll
     override fun setUp() {
         super.setUp()
-
-        contextDataEvaluation = ContextDataEvaluation(BeagleConfigurator.configurator)
+        moshi = BeagleMoshi.moshi
+        every { beagleConfigurator.registeredOperations } returns emptyMap()
+        every { beagleConfigurator.moshi } returns moshi
+        contextDataEvaluation = ContextDataEvaluation(beagleConfigurator)
 
         mockkObject(BeagleMessageLogs)
 
@@ -163,7 +169,7 @@ internal class ContextDataEvaluationTest : BaseTest() {
         val moshi = mockk<Moshi> {
             every { adapter<Any>(bind.type).fromJson(any<String>()) } returns null
         }
-        val contextDataEvaluation = ContextDataEvaluation(BeagleConfigurator.configurator)
+        val contextDataEvaluation = ContextDataEvaluation(beagleConfigurator)
 
         // When
         val value = contextDataEvaluation.evaluateBindExpression(listOf(CONTEXT_DATA), bind)

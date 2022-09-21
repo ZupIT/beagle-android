@@ -45,7 +45,7 @@ import org.junit.jupiter.api.TestInstance
 abstract class BaseTest {
 
     protected val rootView = mockk<ActivityRootView>(relaxed = true, relaxUnitFun = true)
-    protected var moshi: Moshi = mockk(relaxed = true, relaxUnitFun = true)
+    protected open var moshi: Moshi = mockk(relaxed = true, relaxUnitFun = true)
     protected val beagleSdk = mockk<BeagleSdk>(relaxed = true)
     private val activity: AppCompatActivity = mockk(relaxed = true)
 
