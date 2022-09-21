@@ -169,6 +169,8 @@ internal class ContextDataEvaluationTest : BaseTest() {
         val moshi = mockk<Moshi> {
             every { adapter<Any>(bind.type).fromJson(any<String>()) } returns null
         }
+        every { beagleConfigurator.moshi } returns moshi
+
         val contextDataEvaluation = ContextDataEvaluation(beagleConfigurator)
 
         // When
