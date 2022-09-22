@@ -20,6 +20,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.collection.LruCache
 import br.com.zup.beagle.R
+import br.com.zup.beagle.android.BaseConfigurationTest
 import br.com.zup.beagle.android.BaseSoLoaderTest
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.action.SetContextInternal
@@ -61,7 +62,7 @@ import org.junit.jupiter.api.Test
 private val CONTEXT_ID = RandomData.string()
 
 @DisplayName("Given a ContextDataManager")
-class ContextDataManagerTest : BaseTest() {
+class ContextDataManagerTest : BaseConfigurationTest() {
 
     private lateinit var contextDataManager: ContextDataManager
     private lateinit var contexts: MutableMap<Int, Set<ContextBinding>>
@@ -71,17 +72,9 @@ class ContextDataManagerTest : BaseTest() {
     private val viewId = RandomData.int()
     private val contextBindingSlot = slot<Set<ContextBinding>>()
 
-    val beagleConfigurator = mockk<BeagleConfigurator>()
-
-    override lateinit var moshi: Moshi
-
     @BeforeAll
     override fun setUp() {
         super.setUp()
-
-        moshi = BeagleMoshi.moshi
-        every { beagleConfigurator.registeredOperations } returns emptyMap()
-        every { beagleConfigurator.moshi } returns moshi
 
         mockkObject(BeagleMessageLogs)
         mockkObject(BeagleConfigurator.Companion)

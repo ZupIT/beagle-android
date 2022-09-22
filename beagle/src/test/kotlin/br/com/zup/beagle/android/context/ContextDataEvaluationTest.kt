@@ -17,11 +17,10 @@
 package br.com.zup.beagle.android.context
 
 import androidx.collection.LruCache
-import br.com.zup.beagle.android.BaseTest
+import br.com.zup.beagle.android.BaseConfigurationTest
 import br.com.zup.beagle.android.data.serializer.BeagleMoshi
 import br.com.zup.beagle.android.logger.BeagleMessageLogs
 import br.com.zup.beagle.android.mockdata.ComponentModel
-import br.com.zup.beagle.android.setup.BeagleConfigurator
 import br.com.zup.beagle.android.testutil.RandomData
 import br.com.zup.beagle.android.widget.core.TextAlignment
 import com.squareup.moshi.Moshi
@@ -47,19 +46,13 @@ private val CONTEXT_DATA = ContextData(CONTEXT_ID, JSONObject().apply {
     put("b", true)
 })
 
-internal class ContextDataEvaluationTest : BaseTest() {
+internal class ContextDataEvaluationTest : BaseConfigurationTest() {
 
     private lateinit var contextDataEvaluation: ContextDataEvaluation
-    val beagleConfigurator = mockk<BeagleConfigurator>()
-
-    override lateinit var moshi: Moshi
 
     @BeforeAll
     override fun setUp() {
         super.setUp()
-        moshi = BeagleMoshi.moshi
-        every { beagleConfigurator.registeredOperations } returns emptyMap()
-        every { beagleConfigurator.moshi } returns moshi
         contextDataEvaluation = ContextDataEvaluation(beagleConfigurator)
 
         mockkObject(BeagleMessageLogs)

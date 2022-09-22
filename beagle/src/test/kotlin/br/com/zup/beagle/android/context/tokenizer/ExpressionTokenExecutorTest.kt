@@ -16,34 +16,25 @@
 
 package br.com.zup.beagle.android.context.tokenizer
 
-import br.com.zup.beagle.android.BaseSoLoaderTest
-import br.com.zup.beagle.android.BaseTest
+import br.com.zup.beagle.android.BaseConfigurationTest
 import br.com.zup.beagle.android.context.ContextData
-import br.com.zup.beagle.android.data.serializer.BeagleMoshi
-import br.com.zup.beagle.android.setup.BeagleConfigurator
 import br.com.zup.beagle.android.testutil.RandomData
 import com.squareup.moshi.Moshi
-import io.mockk.every
-import io.mockk.mockk
 import org.junit.Assert.assertNull
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 
-class ExpressionTokenExecutorTest : BaseTest() {
+class ExpressionTokenExecutorTest : BaseConfigurationTest() {
 
     private lateinit var expressionTokenExecutor: ExpressionTokenExecutor
     private val tokenParser = TokenParser()
-    val beagleConfigurator = mockk<BeagleConfigurator>()
 
     override lateinit var moshi: Moshi
 
     @BeforeAll
     override fun setUp() {
         super.setUp()
-        moshi = BeagleMoshi.moshi
-        every { beagleConfigurator.registeredOperations } returns emptyMap()
-        every { beagleConfigurator.moshi } returns moshi
         expressionTokenExecutor = ExpressionTokenExecutor(beagleConfigurator)
     }
 

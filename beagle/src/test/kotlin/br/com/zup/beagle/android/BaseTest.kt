@@ -16,27 +16,18 @@
 
 package br.com.zup.beagle.android
 
-import android.app.Application
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.test.core.app.ApplicationProvider
-import br.com.zup.beagle.android.setup.BeagleConfigurator
 import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.setup.BeagleSdk
 import br.com.zup.beagle.android.widget.ActivityRootView
-import com.facebook.yoga.YogaNode
-import com.facebook.yoga.YogaNodeFactory
 import com.squareup.moshi.Moshi
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkConstructor
 import io.mockk.mockkObject
-import io.mockk.mockkStatic
 import io.mockk.unmockkAll
-import org.junit.After
-import org.junit.Before
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.TestInstance
@@ -74,7 +65,7 @@ abstract class BaseTest {
         }
     }
 
-    protected fun mockBeagleEnvironment(){
+    protected fun mockBeagleEnvironment() {
         mockkObject(BeagleEnvironment)
         every { BeagleEnvironment.beagleSdk } returns beagleSdk
         every { beagleSdk.typeAdapterResolver } returns null
