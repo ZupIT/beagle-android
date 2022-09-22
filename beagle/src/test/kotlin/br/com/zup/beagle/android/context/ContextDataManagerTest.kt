@@ -23,8 +23,10 @@ import br.com.zup.beagle.R
 import br.com.zup.beagle.android.BaseSoLoaderTest
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.action.SetContextInternal
+import br.com.zup.beagle.android.data.serializer.BeagleMoshi
 import br.com.zup.beagle.android.logger.BeagleMessageLogs
 import br.com.zup.beagle.android.mockdata.createViewForContext
+import br.com.zup.beagle.android.setup.BeagleConfigurator
 import br.com.zup.beagle.android.testutil.RandomData
 import br.com.zup.beagle.android.testutil.getPrivateField
 import br.com.zup.beagle.android.testutil.setPrivateField
@@ -32,6 +34,7 @@ import br.com.zup.beagle.android.utils.Observer
 import br.com.zup.beagle.android.utils.getContextBinding
 import br.com.zup.beagle.android.utils.getListContextData
 import br.com.zup.beagle.android.utils.setContextBinding
+import com.squareup.moshi.Moshi
 import io.mockk.Runs
 import io.mockk.clearMocks
 import io.mockk.every
@@ -58,7 +61,7 @@ import org.junit.jupiter.api.Test
 private val CONTEXT_ID = RandomData.string()
 
 @DisplayName("Given a ContextDataManager")
-class ContextDataManagerTest : BaseSoLoaderTest() {
+class ContextDataManagerTest : BaseTest() {
 
     private lateinit var contextDataManager: ContextDataManager
     private lateinit var contexts: MutableMap<Int, Set<ContextBinding>>
@@ -68,11 +71,20 @@ class ContextDataManagerTest : BaseSoLoaderTest() {
     private val viewId = RandomData.int()
     private val contextBindingSlot = slot<Set<ContextBinding>>()
 
+    val beagleConfigurator = mockk<BeagleConfigurator>()
+
+    override lateinit var moshi: Moshi
+
     @BeforeAll
     override fun setUp() {
         super.setUp()
 
+        moshi = BeagleMoshi.moshi
+        every { beagleConfigurator.registeredOperations } returns emptyMap()
+        every { beagleConfigurator.moshi } returns moshi
+
         mockkObject(BeagleMessageLogs)
+        mockkObject(BeagleConfigurator.Companion)
         mockkObject(GlobalContext)
 
         every { BeagleMessageLogs.errorWhileTryingToNotifyContextChanges(any()) } just Runs
@@ -102,8 +114,10 @@ class ContextDataManagerTest : BaseSoLoaderTest() {
         clearMocks(
             viewContext,
             GlobalContext,
-            answers = false
+            BeagleConfigurator.Companion,
+            answers = false,
         )
+        every { BeagleConfigurator.configurator } returns beagleConfigurator
         contextDataManager = ContextDataManager(beagleConfigurator)
 
         contexts = contextDataManager.getPrivateField("contexts")
