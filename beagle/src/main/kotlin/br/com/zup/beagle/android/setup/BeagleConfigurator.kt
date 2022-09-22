@@ -37,9 +37,9 @@ import br.com.zup.beagle.android.widget.WidgetView
 import com.squareup.moshi.Moshi
 
 class BeagleConfigurator(
-    private val beagleSdk: BeagleSdk,
-    internal val moshi: Moshi,
-    internal val serializer: BeagleJsonSerializer = BeagleJsonSerializerFactory.create(moshi),
+    val beagleSdk: BeagleSdk,
+    val moshi: Moshi,
+    val serializer: BeagleJsonSerializer = BeagleJsonSerializerFactory.create(moshi),
 ) {
     companion object {
         internal val configurator: BeagleConfigurator by lazy {

@@ -33,6 +33,7 @@ import io.mockk.mockkObject
 import io.mockk.verify
 import org.json.JSONArray
 import org.json.JSONObject
+import org.junit.Before
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull
@@ -65,6 +66,14 @@ internal class ContextDataEvaluationTest : BaseTest() {
 
         every { BeagleMessageLogs.errorWhileTryingToNotifyContextChanges(any()) } just Runs
         every { BeagleMessageLogs.errorWhileTryingToAccessContext(any()) } just Runs
+    }
+
+    @Before
+    fun tearUp() {
+        super.setUp()
+        moshi = BeagleMoshi.moshi
+        every { beagleConfigurator.registeredOperations } returns emptyMap()
+        every { beagleConfigurator.moshi } returns moshi
     }
 
     @Test
@@ -289,7 +298,7 @@ internal class ContextDataEvaluationTest : BaseTest() {
             "context2" to contextValue
         )
         val bind = expressionOf<Int>("@{sum(context1, context2)}")
-
+        every { beagleConfigurator.moshi } returns moshi
         // When
         val value = contextDataEvaluation.evaluateBindExpression(
             contextData,
