@@ -17,6 +17,7 @@
 package br.com.zup.beagle.android
 
 import br.com.zup.beagle.android.data.serializer.BeagleMoshi
+import br.com.zup.beagle.android.networking.urlbuilder.UrlBuilder
 import br.com.zup.beagle.android.setup.BeagleConfigurator
 import com.squareup.moshi.Moshi
 import io.mockk.every
@@ -25,6 +26,7 @@ import org.junit.jupiter.api.BeforeAll
 
 abstract class BaseConfigurationTest : BaseTest() {
     protected val beagleConfigurator = mockk<BeagleConfigurator>()
+    protected val urlBuilder = mockk<UrlBuilder>()
 
     override lateinit var moshi: Moshi
 

@@ -16,37 +16,19 @@
 
 package br.com.zup.beagle.android.networking.urlbuilder
 
-import br.com.zup.beagle.android.BaseSoLoaderTest
-import br.com.zup.beagle.android.BaseTest
-import br.com.zup.beagle.android.setup.BeagleEnvironment
+import br.com.zup.beagle.android.BaseConfigurationTest
 import io.mockk.every
-import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
-class UrlBuilderFactoryTest : BaseSoLoaderTest() {
+class UrlBuilderFactoryTest : BaseConfigurationTest() {
 
     private val urlBuilderFactory = UrlBuilderFactory()
-
-    private val urlBuilder: UrlBuilder = mockk()
-
-    @Test
-    fun make_should_return_default_builder() {
-        // Given
-        every { BeagleEnvironment.beagleSdk.urlBuilder } returns null
-
-        // When
-        val builder = urlBuilderFactory.make(beagleConfigurator)
-
-        // Then
-        assertTrue { builder is UrlBuilderDefault }
-    }
 
     @Test
     fun make_should_return_custom_dispatcher() {
         // Given
-        every { BeagleEnvironment.beagleSdk.urlBuilder } returns urlBuilder
+        every { beagleConfigurator.urlBuilder } returns urlBuilder
 
         // When
         val actual = urlBuilderFactory.make(beagleConfigurator)

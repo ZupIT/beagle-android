@@ -16,6 +16,7 @@
 
 package br.com.zup.beagle.android.context
 
+import br.com.zup.beagle.android.BaseConfigurationTest
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.testutil.RandomData
 import org.junit.Assert.assertEquals
@@ -31,7 +32,7 @@ data class User(
 )
 
 @DisplayName("Given a GlobalContext")
-class GlobalContextTest : BaseTest() {
+class GlobalContextTest : BaseConfigurationTest() {
 
     @BeforeEach
     fun clear() {
