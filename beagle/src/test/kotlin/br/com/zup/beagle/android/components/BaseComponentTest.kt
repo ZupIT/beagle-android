@@ -17,6 +17,7 @@
 package br.com.zup.beagle.android.components
 
 import android.view.View
+import br.com.zup.beagle.android.BaseConfigurationTest
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.engine.renderer.ViewRenderer
 import br.com.zup.beagle.android.engine.renderer.ViewRendererFactory
@@ -31,7 +32,7 @@ import io.mockk.mockkConstructor
 import io.mockk.mockkObject
 import org.junit.jupiter.api.BeforeAll
 
-abstract class BaseComponentTest : BaseTest() {
+abstract class BaseComponentTest : BaseConfigurationTest() {
 
     private val viewRender: ViewRenderer<ServerDrivenComponent> = mockk()
 
