@@ -17,7 +17,7 @@
 package br.com.zup.beagle.android.action
 
 import androidx.lifecycle.Observer
-import br.com.zup.beagle.android.BaseTest
+import br.com.zup.beagle.android.BaseConfigurationTest
 import br.com.zup.beagle.android.testutil.InstantExecutorExtension
 import io.mockk.Runs
 import io.mockk.every
@@ -27,7 +27,7 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(InstantExecutorExtension::class)
-abstract class BaseAsyncActionTest : BaseTest() {
+abstract class BaseAsyncActionTest : BaseConfigurationTest() {
 
     internal val observer = mockk<Observer<AsyncActionStatus>>()
 
