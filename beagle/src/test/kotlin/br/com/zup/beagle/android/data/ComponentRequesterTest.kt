@@ -17,8 +17,7 @@
 
 package br.com.zup.beagle.android.data
 
-import br.com.zup.beagle.android.BaseSoLoaderTest
-import br.com.zup.beagle.android.BaseTest
+import br.com.zup.beagle.android.BaseConfigurationTest
 import br.com.zup.beagle.android.data.serializer.BeagleSerializer
 import br.com.zup.beagle.android.exception.BeagleApiException
 import br.com.zup.beagle.android.networking.OnError
@@ -27,12 +26,10 @@ import br.com.zup.beagle.android.networking.RequestCall
 import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.networking.ResponseData
 import br.com.zup.beagle.android.networking.ViewClient
-import br.com.zup.beagle.android.testutil.RandomData
 import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.mockkStatic
 import io.mockk.slot
 import io.mockk.verifySequence
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -47,7 +44,7 @@ import org.junit.jupiter.api.assertThrows
 
 @DisplayName("Given a ComponentRequester")
 @ExperimentalCoroutinesApi
-class ComponentRequesterTest : BaseSoLoaderTest() {
+class ComponentRequesterTest : BaseConfigurationTest() {
 
     private val viewClient: ViewClient = mockk(relaxed = true)
     private val serializer: BeagleSerializer = mockk()
@@ -66,6 +63,7 @@ class ComponentRequesterTest : BaseSoLoaderTest() {
         super.setUp()
         every { serializer.deserializeComponent(any()) } returns component
         every { requestData.copy(any()) } returns requestDataCopy
+        every { beagleConfigurator.urlBuilder } returns urlBuilder
 
         componentRequester = ComponentRequester(beagleConfigurator, viewClient, serializer)
     }
