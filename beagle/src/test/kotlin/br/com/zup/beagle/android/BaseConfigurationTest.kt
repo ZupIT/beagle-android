@@ -26,9 +26,9 @@ import io.mockk.mockk
 import org.junit.jupiter.api.BeforeAll
 
 abstract class BaseConfigurationTest : BaseTest() {
-    protected val beagleConfigurator = mockk<BeagleConfigurator>()
-    protected val urlBuilder = mockk<UrlBuilder>()
-    protected val httpClient = mockk<HttpClient>()
+    protected val beagleConfigurator = mockk<BeagleConfigurator>(relaxUnitFun = true, relaxed = true)
+    protected val urlBuilder = mockk<UrlBuilder>(relaxUnitFun = true, relaxed = true)
+    protected val httpClient = mockk<HttpClient>(relaxUnitFun = true, relaxed = true)
 
     override lateinit var moshi: Moshi
 

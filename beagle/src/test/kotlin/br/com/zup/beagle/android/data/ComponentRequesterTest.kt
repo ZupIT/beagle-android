@@ -47,7 +47,7 @@ import org.junit.jupiter.api.assertThrows
 class ComponentRequesterTest : BaseConfigurationTest() {
 
     private val viewClient: ViewClient = mockk(relaxed = true)
-    private val serializer: BeagleSerializer = mockk()
+    private val serializer: BeagleSerializer = mockk(relaxUnitFun = true, relaxed = true)
     private val requestCall: RequestCall = mockk()
     private val requestData: RequestData = mockk(relaxed = true)
     private val requestDataCopy: RequestData = RequestData("/test")
@@ -64,13 +64,16 @@ class ComponentRequesterTest : BaseConfigurationTest() {
         every { serializer.deserializeComponent(any()) } returns component
         every { requestData.copy(any()) } returns requestDataCopy
         every { beagleConfigurator.urlBuilder } returns urlBuilder
+        every { beagleConfigurator.serializer } returns serializer
+        every { beagleConfigurator.baseUrl } returns "http://localhost:8080"
+        every { beagleConfigurator.viewClient } returns viewClient
 
         componentRequester = ComponentRequester(beagleConfigurator, viewClient, serializer)
     }
 
     @BeforeEach
     fun clear() {
-        clearMocks(viewClient, serializer, answers = false)
+        clearMocks(beagleConfigurator, viewClient, serializer, answers = false)
     }
 
     @DisplayName("When fetchComponent is called")
