@@ -25,7 +25,6 @@ import br.com.zup.beagle.android.mockdata.ComponentBinding
 import br.com.zup.beagle.android.mockdata.InternalObject
 import br.com.zup.beagle.android.widget.WidgetView
 import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
-import io.mockk.every
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.DisplayName
@@ -44,8 +43,7 @@ class BindSerializationTest :
     @BeforeAll
     override fun setUp() {
         super.setUp()
-        every { beagleSdk.registeredWidgets() } returns WIDGETS
-        moshi = BeagleMoshi.createMoshi()
+        moshi = BeagleMoshi.createMoshi(registeredWidgets = WIDGETS)
     }
 
     @DisplayName("When try to deserialize json Bind")
