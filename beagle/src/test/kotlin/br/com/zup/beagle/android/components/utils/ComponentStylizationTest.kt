@@ -50,7 +50,7 @@ class ComponentStylizationTest : BaseTest() {
 
     private val accessibilitySetup: AccessibilitySetup = mockk(relaxed = true)
 
-    private val view: View = mockk()
+    private val view: View = mockk(relaxed = true, relaxUnitFun = true)
 
     private val widget: Text = mockk(relaxed = true)
 
@@ -65,11 +65,13 @@ class ComponentStylizationTest : BaseTest() {
         super.setUp()
         styleManagerFactory = styleManager
         mockkStatic("br.com.zup.beagle.android.utils.ViewExtensionsKt")
+
     }
 
     @BeforeEach
     fun clear() {
-        clearMocks(beagleSdk)
+        clearMocks(rootView.getBeagleConfigurator())
+        every { rootView.getBeagleConfigurator().designSystem } returns designSystem
     }
 
     @DisplayName("When apply")
@@ -102,7 +104,7 @@ class ComponentStylizationTest : BaseTest() {
             val widgetId = "123"
             val slotId = slot<String>()
             @Suppress("UNCHECKED_CAST")
-            every { beagleSdk.registeredWidgets() } returns listOf(Text::class.java) as List<Class<WidgetView>>
+            every { rootView.getBeagleConfigurator().registeredWidgets } returns listOf(Text::class.java) as List<Class<WidgetView>>
 
             every { view.setTag(R.id.beagle_component_type, capture(slotId)) } just Runs
             every { view.id = any() } just Runs
@@ -208,7 +210,7 @@ class ComponentStylizationTest : BaseTest() {
         fun testApplyOfRegisterActionWidgetShouldGetNameFromAnnotation() {
             val widget = RegisterWidgetWithName()
             //when
-            every { beagleSdk.registeredWidgets() } returns widgetList(widget)
+            every { rootView.getBeagleConfigurator().registeredWidgets } returns widgetList(widget)
             val slotId = slot<String>()
 
             every { view.setTag(R.id.beagle_component_type, capture(slotId)) } just Runs
@@ -228,7 +230,7 @@ class ComponentStylizationTest : BaseTest() {
         fun testApplyOfRegisterActionWidgetShouldGetNameFromClass() {
             //given
             val widget = RegisterWidgetWithoutName()
-            every { beagleSdk.registeredWidgets() } returns widgetList(widget)
+            every { rootView.getBeagleConfigurator().registeredWidgets } returns widgetList(widget)
             val slotId = slot<String>()
 
             every { view.setTag(R.id.beagle_component_type, capture(slotId)) } just Runs
