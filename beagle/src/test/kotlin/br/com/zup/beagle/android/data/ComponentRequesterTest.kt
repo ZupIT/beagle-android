@@ -46,8 +46,6 @@ import org.junit.jupiter.api.assertThrows
 @ExperimentalCoroutinesApi
 class ComponentRequesterTest : BaseConfigurationTest() {
 
-    private val viewClient: ViewClient = mockk(relaxed = true)
-    private val serializer: BeagleSerializer = mockk(relaxUnitFun = true, relaxed = true)
     private val requestCall: RequestCall = mockk()
     private val requestData: RequestData = mockk(relaxed = true)
     private val requestDataCopy: RequestData = RequestData("/test")
@@ -63,10 +61,6 @@ class ComponentRequesterTest : BaseConfigurationTest() {
         super.setUp()
         every { serializer.deserializeComponent(any()) } returns component
         every { requestData.copy(any()) } returns requestDataCopy
-        every { beagleConfigurator.urlBuilder } returns urlBuilder
-        every { beagleConfigurator.serializer } returns serializer
-        every { beagleConfigurator.baseUrl } returns "http://localhost:8080"
-        every { beagleConfigurator.viewClient } returns viewClient
 
         componentRequester = ComponentRequester(beagleConfigurator, viewClient, serializer)
     }

@@ -17,7 +17,9 @@
 package br.com.zup.beagle.android
 
 import br.com.zup.beagle.android.data.serializer.BeagleMoshi
+import br.com.zup.beagle.android.data.serializer.BeagleSerializer
 import br.com.zup.beagle.android.networking.HttpClient
+import br.com.zup.beagle.android.networking.ViewClient
 import br.com.zup.beagle.android.networking.urlbuilder.UrlBuilder
 import br.com.zup.beagle.android.setup.BeagleConfigurator
 import com.squareup.moshi.Moshi
@@ -26,6 +28,8 @@ import io.mockk.mockk
 import org.junit.jupiter.api.BeforeAll
 
 abstract class BaseConfigurationTest : BaseTest() {
+    protected val viewClient: ViewClient = mockk(relaxUnitFun = true, relaxed = true)
+    internal val serializer: BeagleSerializer = mockk(relaxUnitFun = true, relaxed = true)
     protected val beagleConfigurator = mockk<BeagleConfigurator>(relaxUnitFun = true, relaxed = true)
     protected val urlBuilder = mockk<UrlBuilder>(relaxUnitFun = true, relaxed = true)
     protected val httpClient = mockk<HttpClient>(relaxUnitFun = true, relaxed = true)
@@ -40,5 +44,10 @@ abstract class BaseConfigurationTest : BaseTest() {
         every { beagleConfigurator.moshi } returns moshi
         every { beagleConfigurator.httpClient } returns httpClient
         every { rootView.getBeagleConfigurator() } returns beagleConfigurator
+        every { beagleConfigurator.urlBuilder } returns urlBuilder
+        every { beagleConfigurator.baseUrl } returns "http://localhost:8080"
+        every { beagleConfigurator.viewClient } returns viewClient
+        every { beagleConfigurator.serializer } returns serializer
+
     }
 }
