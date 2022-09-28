@@ -36,7 +36,7 @@ import br.com.zup.beagle.android.utils.setContextData
 private const val GLOBAL_CONTEXT_ID = Int.MAX_VALUE
 
 internal class ContextDataManager(
-    private val beagleConfigurator: BeagleConfigurator = BeagleConfigurator.configurator,
+    private val beagleConfigurator: BeagleConfigurator = BeagleConfigurator.factory(),
     private val contextDataEvaluation: ContextDataEvaluation = ContextDataEvaluation(beagleConfigurator),
     private val contextDataManipulator: ContextDataManipulator = ContextDataManipulator()
 ) {

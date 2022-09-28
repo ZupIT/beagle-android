@@ -68,7 +68,7 @@ class FragmentRootView(
     val fragment: Fragment,
     private val parentId: Int,
     private val screenId : String,
-    private val config: BeagleConfigurator = BeagleConfigurator.configurator
+    private val config: BeagleConfigurator = BeagleConfigurator.factory()
 ) : RootView {
 
     override fun getContext(): Context = fragment.requireContext()
@@ -94,7 +94,7 @@ class ActivityRootView(
     val activity: AppCompatActivity,
     private val parentId: Int,
     private val screenId: String,
-    private val config: BeagleConfigurator = BeagleConfigurator.configurator,
+    private val config: BeagleConfigurator = BeagleConfigurator.factory(),
 ) : RootView {
 
     override fun getContext(): Context = activity

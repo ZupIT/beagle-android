@@ -37,7 +37,7 @@ open class BaseSoLoaderTest : BaseTest() {
         mockYoga()
         BeagleSdk.setInTestMode()
         MyBeagleSetup().init(application)
-        beagleConfigurator = BeagleConfigurator.configurator
+        beagleConfigurator = BeagleConfigurator.factory()
     }
 
     protected fun mockYoga() {
