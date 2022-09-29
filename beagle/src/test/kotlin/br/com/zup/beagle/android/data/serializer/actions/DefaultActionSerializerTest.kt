@@ -64,7 +64,6 @@ import br.com.zup.beagle.android.data.serializer.makeResetStackWithExpressionObj
 import br.com.zup.beagle.android.data.serializer.makeResetStackWithHardcodedUrlJson
 import br.com.zup.beagle.android.data.serializer.makeResetStackWithHardcodedUrlObject
 import br.com.zup.beagle.android.mockdata.CustomAndroidAction
-import io.mockk.every
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.params.provider.Arguments
@@ -80,8 +79,7 @@ class DefaultActionSerializerTest : DefaultSerializerTest<Action>(Action::class.
     @BeforeAll
     override fun setUp() {
         super.setUp()
-        every { beagleSdk.registeredActions() } returns ACTIONS
-        moshi = BeagleMoshi.createMoshi()
+        moshi = BeagleMoshi.createMoshi(registeredActions = ACTIONS)
     }
 
     override fun testArguments() = listOf<Arguments>(
