@@ -363,7 +363,7 @@ internal class ActionReportFactoryTest : BaseTest() {
         fun testGenerateDataActionReportOfRegisterActionShouldGetNameFromAnnotation() {
             //given
             val action = RegisterActionWithName()
-            every { beagleSdk.registeredActions() } returns actionList(action)
+            every { rootView.getBeagleConfigurator().registeredActions } returns actionList(action)
 
             //when
             val dataActionReport = ActionReportFactory.generateDataActionReport(
@@ -382,7 +382,7 @@ internal class ActionReportFactoryTest : BaseTest() {
         fun testGenerateDataActionReportOfRegisterActionShouldGetNameFromClass() {
             //given
             val action = RegisterActionWithoutName()
-            every { beagleSdk.registeredActions() } returns actionList(action)
+            every { rootView.getBeagleConfigurator().registeredActions } returns actionList(action)
 
             //when
             val dataActionReport = ActionReportFactory.generateDataActionReport(
