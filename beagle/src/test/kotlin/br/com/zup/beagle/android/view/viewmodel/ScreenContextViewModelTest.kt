@@ -17,15 +17,13 @@
 package br.com.zup.beagle.android.view.viewmodel
 
 import android.view.View
-import br.com.zup.beagle.android.BaseSoLoaderTest
-import br.com.zup.beagle.android.BaseTest
+import br.com.zup.beagle.android.BaseConfigurationTest
 import br.com.zup.beagle.android.action.SetContextInternal
 import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.context.ContextDataEvaluation
 import br.com.zup.beagle.android.context.ContextDataManager
 import br.com.zup.beagle.android.context.ImplicitContextManager
-import br.com.zup.beagle.android.setup.BeagleConfigurator
 import br.com.zup.beagle.android.utils.Observer
 import io.mockk.every
 import io.mockk.mockk
@@ -36,7 +34,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 @DisplayName("Given a ScreenContextViewModel")
-class ScreenContextViewModelTest : BaseSoLoaderTest() {
+class ScreenContextViewModelTest : BaseConfigurationTest() {
 
     private val contextDataManager = mockk<ContextDataManager>(relaxed = true)
     private val contextDataEvaluation = mockk<ContextDataEvaluation>(relaxed = true)
