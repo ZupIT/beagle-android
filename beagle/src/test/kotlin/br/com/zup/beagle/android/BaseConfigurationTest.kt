@@ -28,6 +28,7 @@ import io.mockk.mockk
 import org.junit.jupiter.api.BeforeAll
 
 abstract class BaseConfigurationTest : BaseTest() {
+    protected val baseUrl = "http://baseurl.com"
     protected val viewClient: ViewClient = mockk(relaxUnitFun = true, relaxed = true)
     internal val serializer: BeagleSerializer = mockk(relaxUnitFun = true, relaxed = true)
     protected val beagleConfigurator = mockk<BeagleConfigurator>(relaxUnitFun = true, relaxed = true)
@@ -43,11 +44,10 @@ abstract class BaseConfigurationTest : BaseTest() {
         every { beagleConfigurator.registeredOperations } returns emptyMap()
         every { beagleConfigurator.moshi } returns moshi
         every { beagleConfigurator.httpClient } returns httpClient
-        every { rootView.getBeagleConfigurator() } returns beagleConfigurator
         every { beagleConfigurator.urlBuilder } returns urlBuilder
-        every { beagleConfigurator.baseUrl } returns "http://localhost:8080"
+        every { beagleConfigurator.baseUrl } returns baseUrl
         every { beagleConfigurator.viewClient } returns viewClient
         every { beagleConfigurator.serializer } returns serializer
-
+        every { rootView.getBeagleConfigurator() } returns beagleConfigurator
     }
 }

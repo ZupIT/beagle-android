@@ -63,7 +63,7 @@ internal object BeagleNavigator {
         val context = rootView.getContext()
         if (context is AppCompatActivity) {
             setContextInPreviousActivity(rootView.getContext()
-                as BeagleActivity, navigationContext, rootView.getBeagleConfigurator())
+                as AppCompatActivity, navigationContext, rootView.getBeagleConfigurator())
             context.finish()
         }
     }
