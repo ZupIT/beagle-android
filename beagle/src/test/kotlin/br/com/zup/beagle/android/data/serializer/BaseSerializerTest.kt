@@ -17,23 +17,28 @@
 package br.com.zup.beagle.android.data.serializer
 
 import br.com.zup.beagle.android.BaseTest
+import br.com.zup.beagle.android.action.Action
+import br.com.zup.beagle.android.data.serializer.adapter.generic.TypeAdapterResolver
 import br.com.zup.beagle.android.mockdata.TypeAdapterResolverImpl
 import br.com.zup.beagle.android.testutil.withoutWhiteSpaces
+import br.com.zup.beagle.android.widget.WidgetView
 import io.mockk.every
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeAll
 
 abstract class BaseSerializerTest<T>(private val clazz: Class<T>) : BaseTest() {
 
+    protected var registeredWidgets = listOf<Class<WidgetView>>()
+    protected var registeredActions = listOf<Class<Action>>()
+    protected var typeAdapterResolver: TypeAdapterResolver? = TypeAdapterResolverImpl()
+
     @BeforeAll
     override fun setUp() {
         super.setUp()
 
-        every { beagleSdk.registeredWidgets() } returns listOf()
-        every { beagleSdk.registeredActions() } returns listOf()
-        every { beagleSdk.typeAdapterResolver } returns TypeAdapterResolverImpl()
-
-        moshi = BeagleMoshi.createMoshi()
+        moshi = BeagleMoshi.createMoshi(registeredWidgets = registeredWidgets,
+            registeredActions = registeredActions,
+            typeAdapterResolver = typeAdapterResolver)
     }
 
     fun serialize(anObject: T): String = moshi.adapter(clazz).toJson(anObject)

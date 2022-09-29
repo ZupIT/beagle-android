@@ -17,7 +17,6 @@
 package br.com.zup.beagle.android.data.serializer.actions
 
 import br.com.zup.beagle.android.action.Action
-import br.com.zup.beagle.android.data.serializer.BeagleMoshi
 import br.com.zup.beagle.android.data.serializer.DefaultSerializerTest
 import br.com.zup.beagle.android.data.serializer.makeActionAddChildrenJson
 import br.com.zup.beagle.android.data.serializer.makeActionAddChildrenObject
@@ -78,8 +77,8 @@ class DefaultActionSerializerTest : DefaultSerializerTest<Action>(Action::class.
 
     @BeforeAll
     override fun setUp() {
+        registeredActions = ACTIONS
         super.setUp()
-        moshi = BeagleMoshi.createMoshi(registeredActions = ACTIONS)
     }
 
     override fun testArguments() = listOf<Arguments>(

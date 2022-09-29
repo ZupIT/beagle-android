@@ -81,8 +81,8 @@ class DefaultComponentSerializerTest :
 
     @BeforeAll
     override fun setUp() {
+        registeredWidgets = WIDGETS
         super.setUp()
-        moshi = BeagleMoshi.createMoshi(registeredWidgets = WIDGETS)
     }
 
     override fun testArguments() = listOf(

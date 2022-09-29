@@ -42,8 +42,8 @@ class BindSerializationTest :
 
     @BeforeAll
     override fun setUp() {
+        registeredWidgets = WIDGETS
         super.setUp()
-        moshi = BeagleMoshi.createMoshi(registeredWidgets = WIDGETS)
     }
 
     @DisplayName("When try to deserialize json Bind")
