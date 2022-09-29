@@ -17,7 +17,7 @@
 package br.com.zup.beagle.android.view.viewmodel
 
 import android.view.View
-import br.com.zup.beagle.android.BaseTest
+import br.com.zup.beagle.android.BaseConfigurationTest
 import br.com.zup.beagle.android.action.AnalyticsAction
 import br.com.zup.beagle.android.analytics.AnalyticsProvider
 import br.com.zup.beagle.android.analytics.AnalyticsService
@@ -36,12 +36,12 @@ import org.junit.jupiter.api.Test
 
 @DisplayName("Given an Analytics View Model")
 @ExperimentalCoroutinesApi
-class AnalyticsViewModelTest : BaseTest() {
+class AnalyticsViewModelTest : BaseConfigurationTest() {
 
     private val analyticsViewModel = AnalyticsViewModel()
     private val origin: View = mockk()
     private val action: AnalyticsAction = mockk()
-    private val analyticsProvider: AnalyticsProvider = mockk()
+    private val analyticsProvider: AnalyticsProvider = mockk(relaxed = true, relaxUnitFun = true)
     private val analyticsValue: String = "any"
 
     @BeforeAll
@@ -72,7 +72,7 @@ class AnalyticsViewModelTest : BaseTest() {
             analyticsViewModel.createActionReport(rootView, origin, action, analyticsValue)
 
             //then
-            verify(exactly = 1) {
+            verify {
                 AnalyticsService.createActionRecord(rootView, origin, action, analyticsValue)
             }
         }
