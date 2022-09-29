@@ -39,12 +39,13 @@ abstract class BaseTest {
     protected open var moshi: Moshi = mockk(relaxed = true, relaxUnitFun = true)
     protected val beagleSdk = mockk<BeagleSdk>(relaxed = true)
     private val activity: AppCompatActivity = mockk(relaxed = true)
+    protected val screenId = "screen_id"
 
     @BeforeAll
     open fun setUp() {
         mockBeagleEnvironment()
         every { rootView.activity } returns activity
-        every { rootView.getScreenId() } returns "screen_id"
+        every { rootView.getScreenId() } returns screenId
     }
 
     @AfterAll

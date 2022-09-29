@@ -86,16 +86,17 @@ class AnalyticsViewModelTest : BaseConfigurationTest() {
         @Test
         fun testCreateScreenReportShouldCallCorrectFun() = runBlockingTest {
             //given
-            every { AnalyticsService.createScreenRecord(screenIdentifier = "screenId",
-                analyticsProvider = analyticsProvider ) } just Runs
+            val rootId = "rootId"
+            every { AnalyticsService.createScreenRecord(screenIdentifier = screenId,
+                analyticsProvider = analyticsProvider, rootId = rootId) } just Runs
 
             //when
-            analyticsViewModel.createScreenReport(rootView, "screenId")
+            analyticsViewModel.createScreenReport(rootView, rootId)
 
             //then
-            verify(exactly = 1) {
-                AnalyticsService.createScreenRecord(screenIdentifier = "screenId",
-                    analyticsProvider = analyticsProvider)
+            verify {
+                AnalyticsService.createScreenRecord(screenIdentifier = screenId,
+                    analyticsProvider = analyticsProvider, rootId = rootId)
             }
         }
     }
