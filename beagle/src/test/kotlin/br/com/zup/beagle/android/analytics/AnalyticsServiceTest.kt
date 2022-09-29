@@ -55,6 +55,7 @@ class AnalyticsServiceTest : BaseTest() {
     @BeforeEach
     fun clear() {
         clearMocks(analyticsProvider)
+        every { rootView.getBeagleConfigurator().analyticsProvider } returns analyticsProvider
     }
 
     @DisplayName("When create screen record")
