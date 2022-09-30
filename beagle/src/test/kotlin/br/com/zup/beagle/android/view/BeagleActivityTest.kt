@@ -23,6 +23,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
 import androidx.test.core.app.ActivityScenario
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
 import br.com.zup.beagle.R
 import br.com.zup.beagle.android.BaseSoLoaderTest
 import br.com.zup.beagle.android.action.NavigationContext
@@ -110,13 +111,15 @@ class BeagleActivityTest : BaseSoLoaderTest() {
             //When
             activity?.navigateTo(screenRequest, null, navigationContext)
             activityScenario.moveToState(Lifecycle.State.RESUMED)
-            val fragment = activity?.supportFragmentManager!!.fragments.first() as BeagleFragment
-            fragment.onDestroyView()
+            InstrumentationRegistry.getInstrumentation().waitForIdle {
+                val fragment = activity?.supportFragmentManager!!.fragments.first() as BeagleFragment
+                fragment.onDestroyView()
 
-            //Then
-            val contextData: ContextData = fragment.savedState.getParcelable(NAVIGATION_CONTEXT_DATA_KEY)!!
-            assertEquals(url, rootViewSlot.captured.getScreenId())
-            assertEquals(navigationContextData, contextData)
+                //Then
+                val contextData: ContextData = fragment.savedState.getParcelable(NAVIGATION_CONTEXT_DATA_KEY)!!
+                assertEquals(url, rootViewSlot.captured.getScreenId())
+                assertEquals(navigationContextData, contextData)
+            }
         }
 
 
@@ -135,13 +138,15 @@ class BeagleActivityTest : BaseSoLoaderTest() {
             //When
             activity?.navigateTo(screenRequest, screen, navigationContext)
             activityScenario.moveToState(Lifecycle.State.RESUMED)
-            val fragment = activity?.supportFragmentManager!!.fragments.first() as BeagleFragment
-            fragment.onDestroyView()
+            InstrumentationRegistry.getInstrumentation().waitForIdle {
+                val fragment = activity?.supportFragmentManager!!.fragments.first() as BeagleFragment
+                fragment.onDestroyView()
 
-            // THEN
-            val contextData: ContextData = fragment.savedState.getParcelable(NAVIGATION_CONTEXT_DATA_KEY)!!
-            assertEquals(screenId, rootViewSlot.captured.getScreenId())
-            assertEquals(navigationContextData, contextData)
+                // THEN
+                val contextData: ContextData = fragment.savedState.getParcelable(NAVIGATION_CONTEXT_DATA_KEY)!!
+                assertEquals(screenId, rootViewSlot.captured.getScreenId())
+                assertEquals(navigationContextData, contextData)
+            }
         }
 
 
