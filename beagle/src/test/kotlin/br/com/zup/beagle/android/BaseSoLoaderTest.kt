@@ -19,7 +19,6 @@ package br.com.zup.beagle.android
 import android.app.Application
 import android.view.View
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.platform.app.InstrumentationRegistry
 import br.com.zup.beagle.android.data.serializer.BeagleMoshi
 import br.com.zup.beagle.android.setup.BeagleConfigurator
 import br.com.zup.beagle.android.setup.BeagleSdk
@@ -43,9 +42,8 @@ open class BaseSoLoaderTest : BaseTest() {
         mockYoga()
         BeagleSdk.setInTestMode()
         MyBeagleSetup().init(application)
-        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
         moshi = BeagleMoshi.moshi
-        beagleConfigurator = BeagleConfigurator.factory(moshi = moshi)
+        beagleConfigurator = BeagleConfigurator.factory()
     }
 
     protected fun mockYoga() {
