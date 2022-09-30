@@ -27,11 +27,15 @@ import androidx.lifecycle.Lifecycle
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import br.com.zup.beagle.android.BaseSoLoaderTest
+import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.MyBeagleSetup
 import br.com.zup.beagle.android.action.NavigationContext
 import br.com.zup.beagle.android.context.ContextData
+import br.com.zup.beagle.android.data.serializer.BeagleMoshi
+import br.com.zup.beagle.android.setup.BeagleConfigurator
 import br.com.zup.beagle.android.setup.BeagleSdk
+import br.com.zup.beagle.android.testutil.CoroutinesTestExtension
+import br.com.zup.beagle.android.testutil.InstantExecutorExtension
 import br.com.zup.beagle.android.utils.ObjectWrapperForBinder
 import br.com.zup.beagle.android.view.viewmodel.AnalyticsViewModel
 import br.com.zup.beagle.android.widget.RootView
@@ -43,17 +47,22 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.slot
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
 
+
 @Config(application = ApplicationTest::class)
 @RunWith(AndroidJUnit4::class)
-class BeagleFragmentTest : BaseSoLoaderTest() {
+@ExperimentalCoroutinesApi
+@ExtendWith(InstantExecutorExtension::class, CoroutinesTestExtension::class)
+class BeagleFragmentTest : BaseTest() {
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
     private val analyticsViewModel = mockk<AnalyticsViewModel>()
@@ -78,6 +87,8 @@ class BeagleFragmentTest : BaseSoLoaderTest() {
     private var activity: ServerDrivenActivity? = null
     private val navigationContext = NavigationContext(value = "test")
     private val navigationContextData = ContextData(id = BeagleFragment.NAVIGATION_CONTEXT_DATA_ID, value = "testtwo")
+    protected lateinit var beagleConfigurator: BeagleConfigurator
+
 
     @Before
     override fun setUp() {
@@ -87,6 +98,8 @@ class BeagleFragmentTest : BaseSoLoaderTest() {
         mockYoga(application)
         BeagleSdk.setInTestMode()
         MyBeagleSetup().init(application)
+        moshi = BeagleMoshi.moshi
+        beagleConfigurator = BeagleConfigurator.configurator
         prepareViewModelMock(analyticsViewModel)
         every { analyticsViewModel.createScreenReport(capture(screenIdentifierSlot), capture(rootIdSlot)) } just Runs
 
