@@ -87,7 +87,7 @@ class BeagleFragmentTest : BaseTest() {
     private var activity: ServerDrivenActivity? = null
     private val navigationContext = NavigationContext(value = "test")
     private val navigationContextData = ContextData(id = BeagleFragment.NAVIGATION_CONTEXT_DATA_ID, value = "testtwo")
-    protected lateinit var beagleConfigurator: BeagleConfigurator
+    private lateinit var beagleConfigurator: BeagleConfigurator
 
 
     @Before
