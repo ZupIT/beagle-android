@@ -78,7 +78,8 @@ class BeagleActivityTest : BaseSoLoaderTest() {
     private val rootIdSlot = slot<String>()
 
     @Before
-    fun mockBeforeTest() {
+    override fun setUp() {
+        super.setUp()
         coEvery { componentRequester.fetchComponent(RequestData(url = "/url")) } returns component
         beagleViewModel =
             BeagleScreenViewModel(ioDispatcher = TestCoroutineDispatcher(), componentRequester = componentRequester,

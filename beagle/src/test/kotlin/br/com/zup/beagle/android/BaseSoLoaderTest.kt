@@ -37,7 +37,8 @@ open class BaseSoLoaderTest : BaseTest() {
 
     override lateinit var moshi: Moshi
     @Before
-    fun setup() {
+    override fun setUp() {
+        super.setUp()
         mockYoga()
         BeagleSdk.setInTestMode()
         MyBeagleSetup().init(application)

@@ -68,8 +68,10 @@ class BeagleFragmentTest : BaseSoLoaderTest() {
     private var activity: ServerDrivenActivity? = null
     private val navigationContext = NavigationContext(value = "test")
     private val navigationContextData = ContextData(id = BeagleFragment.NAVIGATION_CONTEXT_DATA_ID, value = "testtwo")
+
     @Before
-    fun mockBeforeTest() {
+    override fun setUp() {
+        super.setUp()
         prepareViewModelMock(analyticsViewModel)
         every { analyticsViewModel.createScreenReport(capture(screenIdentifierSlot), capture(rootIdSlot)) } just Runs
 
