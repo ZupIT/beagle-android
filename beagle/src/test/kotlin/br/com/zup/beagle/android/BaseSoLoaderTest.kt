@@ -19,10 +19,12 @@ package br.com.zup.beagle.android
 import android.app.Application
 import android.view.View
 import androidx.test.core.app.ApplicationProvider
+import br.com.zup.beagle.android.data.serializer.BeagleMoshi
 import br.com.zup.beagle.android.setup.BeagleConfigurator
 import br.com.zup.beagle.android.setup.BeagleSdk
 import com.facebook.yoga.YogaNode
 import com.facebook.yoga.YogaNodeFactory
+import com.squareup.moshi.Moshi
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
@@ -32,12 +34,15 @@ import org.junit.Before
 open class BaseSoLoaderTest : BaseTest() {
     protected val application = ApplicationProvider.getApplicationContext() as Application
     protected lateinit var beagleConfigurator: BeagleConfigurator
+
+    override lateinit var moshi: Moshi
     @Before
     fun setup() {
         mockYoga()
         BeagleSdk.setInTestMode()
         MyBeagleSetup().init(application)
-        beagleConfigurator = BeagleConfigurator.factory()
+        moshi = BeagleMoshi.moshi
+        beagleConfigurator = BeagleConfigurator.factory(moshi = moshi)
     }
 
     protected fun mockYoga() {
