@@ -16,36 +16,46 @@
 
 package br.com.zup.beagle.android.view
 
+import android.app.Application
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.fragment.app.testing.withFragment
 import androidx.lifecycle.Lifecycle
 import androidx.test.core.app.ActivityScenario
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import br.com.zup.beagle.android.BaseSoLoaderTest
+import br.com.zup.beagle.android.MyBeagleSetup
 import br.com.zup.beagle.android.action.NavigationContext
 import br.com.zup.beagle.android.context.ContextData
+import br.com.zup.beagle.android.setup.BeagleSdk
 import br.com.zup.beagle.android.utils.ObjectWrapperForBinder
 import br.com.zup.beagle.android.view.viewmodel.AnalyticsViewModel
 import br.com.zup.beagle.android.widget.RootView
+import com.facebook.yoga.YogaNode
+import com.facebook.yoga.YogaNodeFactory
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
+import io.mockk.mockkStatic
 import io.mockk.slot
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
 
 @Config(application = ApplicationTest::class)
 @RunWith(AndroidJUnit4::class)
-@ExperimentalCoroutinesApi
 class BeagleFragmentTest : BaseSoLoaderTest() {
-
+    @get:Rule
+    var instantExecutorRule = InstantTaskExecutorRule()
     private val analyticsViewModel = mockk<AnalyticsViewModel>()
     private val screenIdentifierSlot = slot<RootView>()
     private val rootIdSlot = slot<String>()
@@ -72,6 +82,11 @@ class BeagleFragmentTest : BaseSoLoaderTest() {
     @Before
     override fun setUp() {
         super.setUp()
+
+        val application: Application = ApplicationProvider.getApplicationContext() as Application
+        mockYoga(application)
+        BeagleSdk.setInTestMode()
+        MyBeagleSetup().init(application)
         prepareViewModelMock(analyticsViewModel)
         every { analyticsViewModel.createScreenReport(capture(screenIdentifierSlot), capture(rootIdSlot)) } just Runs
 
@@ -85,6 +100,21 @@ class BeagleFragmentTest : BaseSoLoaderTest() {
             activityScenario.moveToState(Lifecycle.State.RESUMED)
             activity = it
         }
+    }
+
+    @After
+    override fun tearDown() {
+        super.tearDown()
+        BeagleSdk.deinitForTest()
+    }
+
+    private fun mockYoga(application: Application) {
+        val yogaNode = mockk<YogaNode>(relaxed = true, relaxUnitFun = true)
+        val view = View(application)
+        mockkStatic(YogaNode::class)
+        mockkStatic(YogaNodeFactory::class)
+        every { YogaNodeFactory.create() } returns yogaNode
+        every { yogaNode.data } returns view
     }
 
     @Test
