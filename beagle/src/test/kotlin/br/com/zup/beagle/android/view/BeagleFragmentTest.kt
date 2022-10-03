@@ -20,7 +20,6 @@ import android.app.Application
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.fragment.app.testing.withFragment
 import androidx.lifecycle.Lifecycle
@@ -33,9 +32,8 @@ import br.com.zup.beagle.android.action.NavigationContext
 import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.data.serializer.BeagleMoshi
 import br.com.zup.beagle.android.setup.BeagleConfigurator
+import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.setup.BeagleSdk
-import br.com.zup.beagle.android.testutil.CoroutinesTestExtension
-import br.com.zup.beagle.android.testutil.InstantExecutorExtension
 import br.com.zup.beagle.android.utils.ObjectWrapperForBinder
 import br.com.zup.beagle.android.view.viewmodel.AnalyticsViewModel
 import br.com.zup.beagle.android.widget.RootView
@@ -47,24 +45,17 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.slot
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import io.mockk.unmockkAll
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
-import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
 
-
 @Config(application = ApplicationTest::class)
 @RunWith(AndroidJUnit4::class)
-@ExperimentalCoroutinesApi
-@ExtendWith(InstantExecutorExtension::class, CoroutinesTestExtension::class)
 class BeagleFragmentTest : BaseTest() {
-    @get:Rule
-    var instantExecutorRule = InstantTaskExecutorRule()
     private val analyticsViewModel = mockk<AnalyticsViewModel>()
     private val screenIdentifierSlot = slot<RootView>()
     private val rootIdSlot = slot<String>()
@@ -89,7 +80,6 @@ class BeagleFragmentTest : BaseTest() {
     private val navigationContextData = ContextData(id = BeagleFragment.NAVIGATION_CONTEXT_DATA_ID, value = "testtwo")
     private lateinit var beagleConfigurator: BeagleConfigurator
 
-
     @Before
     override fun setUp() {
         super.setUp()
@@ -98,11 +88,11 @@ class BeagleFragmentTest : BaseTest() {
         mockYoga(application)
         BeagleSdk.setInTestMode()
         MyBeagleSetup().init(application)
-        moshi = BeagleMoshi.moshi
-        beagleConfigurator = BeagleConfigurator.configurator
         prepareViewModelMock(analyticsViewModel)
         every { analyticsViewModel.createScreenReport(capture(screenIdentifierSlot), capture(rootIdSlot)) } just Runs
-
+        moshi = BeagleMoshi.createMoshi()
+        beagleConfigurator = BeagleConfigurator(moshi = moshi,
+            beagleSdk = BeagleEnvironment.beagleSdk)
         val intent = Intent(application, ServerDrivenActivity::class.java)
         val bundle = Bundle().apply {
             putBinder(BeagleActivity.BEAGLE_CONFIGURATOR, ObjectWrapperForBinder(beagleConfigurator))
@@ -118,6 +108,7 @@ class BeagleFragmentTest : BaseTest() {
     @After
     override fun tearDown() {
         super.tearDown()
+        unmockkAll()
         BeagleSdk.deinitForTest()
     }
 
@@ -135,7 +126,7 @@ class BeagleFragmentTest : BaseTest() {
         // When
         val scenario =
             launchFragmentInContainer<BeagleFragment>(BeagleFragment.newBundle(json, url, navigationContext,
-            beagleConfigurator))
+                beagleConfigurator))
         scenario.moveToState(Lifecycle.State.RESUMED)
 
         // Then
@@ -147,7 +138,7 @@ class BeagleFragmentTest : BaseTest() {
         // When
         val scenario =
             launchFragmentInContainer<BeagleFragment>(BeagleFragment.newBundle(json, null, navigationContext,
-            beagleConfigurator))
+                beagleConfigurator))
         scenario.moveToState(Lifecycle.State.RESUMED)
 
         // then
@@ -159,7 +150,7 @@ class BeagleFragmentTest : BaseTest() {
         // When
         val scenario =
             launchFragmentInContainer<BeagleFragment>(BeagleFragment.newBundle(json, null, navigationContext,
-             beagleConfigurator))
+                beagleConfigurator))
 
         scenario.moveToState(Lifecycle.State.RESUMED)
         scenario.withFragment {
@@ -179,10 +170,10 @@ class BeagleFragmentTest : BaseTest() {
     @Test
     fun `Given a Tree with identifier screen analytics should be called with root Id as identifier`() {
         //When
-
         val scenario =
-            launchFragmentInContainer<BeagleFragment>(BeagleFragment.newBundle(jsonWithIdentifier, "This is an identifier", navigationContext,
-             beagleConfigurator))
+            launchFragmentInContainer<BeagleFragment>(BeagleFragment.newBundle(jsonWithIdentifier,
+                "This is an identifier", navigationContext,
+                beagleConfigurator))
 
         scenario.moveToState(Lifecycle.State.RESUMED)
 
