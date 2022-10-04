@@ -38,8 +38,7 @@ import br.com.zup.beagle.android.data.serializer.adapter.generic.BeagleGenericAd
 import br.com.zup.beagle.android.data.serializer.adapter.generic.TypeAdapterResolver
 import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.setup.BeagleSdkWrapper
-import br.com.zup.beagle.android.setup.registeredActionsInstance
-import br.com.zup.beagle.android.setup.registeredWidgetsInstance
+import br.com.zup.beagle.android.setup.asBeagleSdk
 import br.com.zup.beagle.android.widget.WidgetView
 import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 import com.squareup.moshi.Moshi
@@ -57,8 +56,8 @@ internal object BeagleMoshi {
         val moshi = createMoshi(config.typeAdapterResolver?.create(
             config
         ),
-        registeredWidgets = config.registeredWidgetsInstance,
-        registeredActions = config.registeredActionsInstance)
+        registeredWidgets = config.asBeagleSdk().registeredWidgets(),
+        registeredActions = config.asBeagleSdk().registeredActions())
         moshi.adapter(ServerDrivenComponent::class.java)
         return moshi
     }

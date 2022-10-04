@@ -27,8 +27,8 @@ import br.com.zup.beagle.android.operation.Operation
 import br.com.zup.beagle.android.setup.BeagleConfig
 import br.com.zup.beagle.android.setup.BeagleSdkWrapper
 import br.com.zup.beagle.android.setup.DesignSystem
+import br.com.zup.beagle.android.setup.asBeagleSdk
 import br.com.zup.beagle.android.setup.beagleConfigFactory
-import br.com.zup.beagle.android.setup.httpClientFactoryInstance
 import br.com.zup.beagle.android.widget.WidgetView
 import br.com.zup.beagle.sample.AppAnalytics
 import br.com.zup.beagle.sample.AppBeagleConfig
@@ -72,7 +72,7 @@ class BeagleSetupThird: BeagleSdkWrapper {
     }
     override val viewClient = beagleConfigFactory<ViewClient> {
         it.logInfo("BeagleSetupSecond:viewClient")
-        AppViewClient(it.httpClientFactoryInstance?.create())
+        AppViewClient(it.asBeagleSdk().httpClientFactory?.create())
     }
 
     override val controllerReference = beagleConfigFactory {

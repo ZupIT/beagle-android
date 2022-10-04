@@ -17,20 +17,20 @@
 package br.com.zup.beagle.sample.config
 
 import br.com.zup.beagle.android.setup.BeagleSdkWrapper
-import br.com.zup.beagle.android.setup.loggerInstance
+import br.com.zup.beagle.android.setup.asBeagleSdk
 
 internal fun BeagleSdkWrapper.logInfo(message: String) {
-    this.loggerInstance?.info(message)
+    this.asBeagleSdk().logger?.info(message)
 }
 
 internal fun BeagleSdkWrapper.logWarning(message: String) {
-    this.loggerInstance?.warning(message)
+    this.asBeagleSdk().logger?.warning(message)
 }
 
 internal fun BeagleSdkWrapper.logError(message: String, throwable: Throwable? = null) {
     if (throwable != null) {
-        this.loggerInstance?.error(message, throwable)
+        this.asBeagleSdk().logger?.error(message, throwable)
     } else {
-        this.loggerInstance?.error(message)
+        this.asBeagleSdk().logger?.error(message)
     }
 }

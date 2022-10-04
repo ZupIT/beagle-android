@@ -48,94 +48,71 @@ interface BeagleSdkWrapper {
 }
 
 fun BeagleSdkWrapper.asBeagleSdk(): BeagleSdk = object : BeagleSdk {
-    override val config: BeagleConfig = this@asBeagleSdk.configInstance
-    override val deepLinkHandler: DeepLinkHandler? =
-        this@asBeagleSdk.deepLinkHandlerInstance
-    override val httpClientFactory: HttpClientFactory? =
-        this@asBeagleSdk.httpClientFactoryInstance
-    override val designSystem: DesignSystem? =
-        this@asBeagleSdk.designSystemInstance
-    override val imageDownloader: BeagleImageDownloader? =
-        this@asBeagleSdk.imageDownloaderInstance
-    override val viewClient: ViewClient? =
-        this@asBeagleSdk.viewClientInstance
-    override val controllerReference: BeagleControllerReference? =
-        this@asBeagleSdk.controllerReferenceInstance
-    override val typeAdapterResolver: TypeAdapterResolver? =
-        this@asBeagleSdk.typeAdapterResolverInstance
-    override val analyticsProvider: AnalyticsProvider? =
-        this@asBeagleSdk.analyticsProviderInstance
-    override val urlBuilder: UrlBuilder? =
-        this@asBeagleSdk.urlBuilderInstance
-    override val logger: BeagleLogger? =
-        this@asBeagleSdk.loggerInstance
+
+    override val config: BeagleConfig by lazy {
+        BeagleConfigProvider(this@asBeagleSdk, this@asBeagleSdk.config)
+        .get()!!
+    }
+    override val deepLinkHandler: DeepLinkHandler? by lazy {
+        BeagleConfigProvider(this@asBeagleSdk, this@asBeagleSdk.deepLinkHandler)
+            .get()
+    }
+
+    override val httpClientFactory: HttpClientFactory? by lazy {
+        BeagleConfigProvider(this@asBeagleSdk, this@asBeagleSdk.httpClientFactory)
+            .get()
+    }
+
+    override val designSystem: DesignSystem? by lazy {
+        BeagleConfigProvider(this@asBeagleSdk, this@asBeagleSdk.designSystem)
+            .get()
+    }
+
+    override val imageDownloader: BeagleImageDownloader? by lazy {
+        BeagleConfigProvider(this@asBeagleSdk, this@asBeagleSdk.imageDownloader)
+            .get()
+    }
+
+    override val viewClient: ViewClient? by lazy { BeagleConfigProvider(this@asBeagleSdk,
+        this@asBeagleSdk.viewClient)
+        .get()
+    }
+    override val controllerReference: BeagleControllerReference? by lazy {
+        BeagleConfigProvider(this@asBeagleSdk, this@asBeagleSdk.controllerReference)
+            .get()
+    }
+    override val typeAdapterResolver: TypeAdapterResolver? by lazy {
+        BeagleConfigProvider(this@asBeagleSdk, this@asBeagleSdk.typeAdapterResolver)
+            .get()
+    }
+
+    override val analyticsProvider: AnalyticsProvider? by lazy {
+        BeagleConfigProvider(this@asBeagleSdk, this@asBeagleSdk.analyticsProvider)
+            .get()
+    }
+
+    override val urlBuilder: UrlBuilder? by lazy {
+        BeagleConfigProvider(this@asBeagleSdk, this@asBeagleSdk.urlBuilder)
+            .get()
+    }
+    override val logger: BeagleLogger? by lazy {
+        BeagleConfigProvider(this@asBeagleSdk, this@asBeagleSdk.logger)
+            .get()
+    }
 
     override fun registeredWidgets(): List<Class<WidgetView>> =
-        this@asBeagleSdk.registeredWidgetsInstance
+        BeagleConfigProvider(this@asBeagleSdk, this@asBeagleSdk.registeredWidgets)
+            .get()!!
 
     override fun registeredActions(): List<Class<Action>> =
-        this@asBeagleSdk.registeredActionsInstance
+        BeagleConfigProvider(this@asBeagleSdk, this@asBeagleSdk.registeredActions)
+            .get()!!
 
     override fun registeredOperations(): Map<String, Operation> =
-        this@asBeagleSdk.registeredOperationsInstance
+        BeagleConfigProvider(this@asBeagleSdk, this@asBeagleSdk.registeredOperations)
+            .get()!!
 
 }
-
-val BeagleSdkWrapper.configInstance: BeagleConfig
-    get() = BeagleConfigProvider(this, this.config)
-        .get()!!
-
-val BeagleSdkWrapper.deepLinkHandlerInstance: DeepLinkHandler?
-    get() = BeagleConfigProvider(this, this.deepLinkHandler)
-        .get()
-
-val BeagleSdkWrapper.httpClientFactoryInstance: HttpClientFactory?
-    get() = BeagleConfigProvider(this, this.httpClientFactory)
-        .get()
-
-val BeagleSdkWrapper.designSystemInstance: DesignSystem?
-    get() = BeagleConfigProvider(this, this.designSystem)
-        .get()
-
-val BeagleSdkWrapper.imageDownloaderInstance: BeagleImageDownloader?
-    get() = BeagleConfigProvider(this, this.imageDownloader)
-        .get()
-
-val BeagleSdkWrapper.viewClientInstance: ViewClient?
-    get() = BeagleConfigProvider(this, this.viewClient)
-        .get()
-
-val BeagleSdkWrapper.controllerReferenceInstance: BeagleControllerReference?
-    get() = BeagleConfigProvider(this, this.controllerReference)
-        .get()
-
-val BeagleSdkWrapper.typeAdapterResolverInstance: TypeAdapterResolver?
-    get() = BeagleConfigProvider(this, this.typeAdapterResolver)
-        .get()
-
-val BeagleSdkWrapper.analyticsProviderInstance: AnalyticsProvider?
-    get() = BeagleConfigProvider(this, this.analyticsProvider)
-        .get()
-
-val BeagleSdkWrapper.urlBuilderInstance: UrlBuilder?
-    get() = BeagleConfigProvider(this, this.urlBuilder)
-        .get()
-
-val BeagleSdkWrapper.loggerInstance: BeagleLogger?
-    get() = BeagleConfigProvider(this, this.logger)
-        .get()
-
-val BeagleSdkWrapper.registeredWidgetsInstance: List<Class<WidgetView>>
-    get() = BeagleConfigProvider(this, this.registeredWidgets)
-        .get()!!
-
-val BeagleSdkWrapper.registeredActionsInstance: List<Class<Action>>
-    get() = BeagleConfigProvider(this, this.registeredActions)
-        .get()!!
-
-val BeagleSdkWrapper.registeredOperationsInstance: Map<String, Operation>
-    get() = BeagleConfigProvider(this, this.registeredOperations)
-        .get()!!
 
 interface BeagleConfigFactory<T> {
     fun create(beagleConfigurator: BeagleSdkWrapper): T
