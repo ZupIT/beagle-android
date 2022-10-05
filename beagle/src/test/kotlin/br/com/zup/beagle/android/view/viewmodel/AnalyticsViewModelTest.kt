@@ -22,6 +22,7 @@ import br.com.zup.beagle.android.action.AnalyticsAction
 import br.com.zup.beagle.android.analytics.AnalyticsProvider
 import br.com.zup.beagle.android.analytics.AnalyticsService
 import io.mockk.Runs
+import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
@@ -29,7 +30,7 @@ import io.mockk.mockkObject
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
-import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -44,9 +45,9 @@ class AnalyticsViewModelTest : BaseConfigurationTest() {
     private val analyticsProvider: AnalyticsProvider = mockk(relaxed = true, relaxUnitFun = true)
     private val analyticsValue: String = "any"
 
-    @BeforeAll
-    override fun setUp() {
-        super.setUp()
+    @BeforeEach
+    fun clear() {
+        clearMocks(beagleConfigurator, analyticsProvider, AnalyticsService, answers = false)
         mockkObject(AnalyticsService)
         every { rootView.getBeagleConfigurator().analyticsProvider } returns analyticsProvider
     }
