@@ -17,10 +17,11 @@
 package br.com.zup.beagle.android.view.viewmodel
 
 import android.view.View
-import br.com.zup.beagle.android.BaseConfigurationTest
+import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.action.AnalyticsAction
 import br.com.zup.beagle.android.analytics.AnalyticsProvider
 import br.com.zup.beagle.android.analytics.AnalyticsService
+import br.com.zup.beagle.android.setup.BeagleConfigurator
 import io.mockk.Runs
 import io.mockk.clearMocks
 import io.mockk.every
@@ -37,9 +38,10 @@ import org.junit.jupiter.api.Test
 
 @DisplayName("Given an Analytics View Model")
 @ExperimentalCoroutinesApi
-class AnalyticsViewModelTest : BaseConfigurationTest() {
+class AnalyticsViewModelTest : BaseTest() {
 
     private val analyticsViewModel = AnalyticsViewModel()
+    private val beagleConfigurator: BeagleConfigurator = mockk(relaxed = true, relaxUnitFun = true)
     private val origin: View = mockk()
     private val action: AnalyticsAction = mockk()
     private val analyticsProvider: AnalyticsProvider = mockk(relaxed = true, relaxUnitFun = true)
@@ -47,8 +49,9 @@ class AnalyticsViewModelTest : BaseConfigurationTest() {
 
     @BeforeEach
     fun clear() {
-        clearMocks(beagleConfigurator, analyticsProvider, answers = false)
+        clearMocks(rootView, beagleConfigurator, analyticsProvider, answers = false)
         mockkObject(AnalyticsService)
+        every { rootView.getBeagleConfigurator() } returns beagleConfigurator
         every { rootView.getBeagleConfigurator().analyticsProvider } returns analyticsProvider
     }
 
