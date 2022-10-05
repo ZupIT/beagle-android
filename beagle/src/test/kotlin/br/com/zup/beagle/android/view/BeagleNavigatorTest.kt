@@ -276,7 +276,7 @@ class BeagleNavigatorTest : BaseConfigurationTest() {
             // Given
             val url = route.url.value as String
 
-            val requestData = RequestData(url = url, httpAdditionalData = mockk(relaxUnitFun = true, relaxed = true))
+            val requestData = RequestData(url = url)
             every { context.navigateTo(requestData, null, navigationContext) } just Runs
 
             // When
