@@ -47,7 +47,7 @@ class AnalyticsViewModelTest : BaseConfigurationTest() {
 
     @BeforeEach
     fun clear() {
-        clearMocks(beagleConfigurator, analyticsProvider, AnalyticsService, answers = false)
+        clearMocks(beagleConfigurator, analyticsProvider, answers = false)
         mockkObject(AnalyticsService)
         every { rootView.getBeagleConfigurator().analyticsProvider } returns analyticsProvider
     }
