@@ -276,7 +276,7 @@ class BeagleNavigatorTest : BaseConfigurationTest() {
             // Given
             val url = route.url.value as String
 
-            val requestData = RequestData(url = url)
+            val requestData = RequestData(url = url, httpAdditionalData = mockk(relaxUnitFun = true, relaxed = true))
             every { context.navigateTo(requestData, null, navigationContext) } just Runs
 
             // When
@@ -300,6 +300,20 @@ class BeagleNavigatorTest : BaseConfigurationTest() {
 
             // Then
             verify(exactly = 1) { context.startActivity(any()) }
+        }
+
+        @DisplayName("Then should start BeagleActivity")
+        @Test
+        fun testPushViewLocalShouldCallBeagleActivityNavigateTo() {
+            // Given
+            val route = Route.Local(Screen(child = Text(constant("stub"))))
+            every { context.navigateTo(any(), any(), navigationContext) } just Runs
+
+            // When
+            BeagleNavigator.pushView(rootView, route, navigationContext)
+
+            // Then
+            verify(exactly = 1) { context.navigateTo(any(), route.screen, navigationContext) }
         }
     }
 

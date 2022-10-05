@@ -92,7 +92,6 @@ class BeagleConfigurator(
         this.beagleSdk.controllerReference ?: BeagleEnvironment.beagleSdk.controllerReference
     }
 
-    //TODO Check references
     val typeAdapterResolver: TypeAdapterResolver? by lazy {
         this.beagleSdk.typeAdapterResolver ?: BeagleEnvironment.beagleSdk.typeAdapterResolver
     }
