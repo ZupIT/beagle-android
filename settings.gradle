@@ -15,6 +15,7 @@
  */
 
 include ":sample"
+include ":compose-sample"
 include ":beagle"
 include ":processor"
 include ":internal-processor"
