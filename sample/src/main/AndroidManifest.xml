@@ -33,7 +33,8 @@
         android:usesCleartextTraffic="true"
         tools:ignore="AllowBackup"
         tools:targetApi="m">
-        <activity android:name=".activities.DeepLinkActivity">
+        <activity android:name=".activities.DeepLinkActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="screen-deep-link" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -41,6 +42,7 @@
             </intent-filter>
         </activity>
         <activity
+            android:exported="true"
             android:name=".MainActivity"
             android:theme="@style/AppTheme">
             <intent-filter>
