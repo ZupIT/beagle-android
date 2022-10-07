@@ -93,7 +93,7 @@ class ChannelCardView @JvmOverloads constructor(
     }
 }
 
-class ChannelCardRow @JvmOverloads constructor(
+class ChannelCardRowView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0

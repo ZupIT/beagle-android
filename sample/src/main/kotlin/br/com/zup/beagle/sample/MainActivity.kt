@@ -24,6 +24,7 @@ import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.utils.loadView
 import br.com.zup.beagle.android.utils.newServerDrivenIntent
 import br.com.zup.beagle.android.view.ServerDrivenActivity
+import br.com.zup.beagle.sample.constants.SAMPLE_COMPOSE
 import br.com.zup.beagle.sample.constants.SAMPLE_ENDPOINT
 import br.com.zup.beagle.sample.databinding.ActivityMainBinding
 
@@ -56,6 +57,13 @@ class MainActivity : AppCompatActivity() {
                     RequestData(SAMPLE_ENDPOINT)
                 )
             )
+            R.id.compose -> {
+                startActivity(
+                    newServerDrivenIntent<ServerDrivenActivity>(
+                        RequestData(SAMPLE_COMPOSE)
+                    )
+                )
+            }
         }
     }
 

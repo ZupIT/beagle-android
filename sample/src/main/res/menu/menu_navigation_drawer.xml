@@ -29,4 +29,10 @@
         android:title="Preview"
         tools:ignore="HardcodedText" />
 
+    <item
+        android:id="@+id/compose"
+        android:icon="@mipmap/ic_launcher"
+        android:title="Compose"
+        tools:ignore="HardcodedText" />
+
 </menu>

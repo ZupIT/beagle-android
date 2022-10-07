@@ -14,8 +14,20 @@
  * limitations under the License.
  */
 
-package br.com.zup.beagle.sample.constants
+package br.com.zup.beagle.sample.widgets
 
-const val BASE_URL = "http://10.0.2.2:8080"
-const val SAMPLE_ENDPOINT = "/components"
-const val SAMPLE_COMPOSE = "/compose"
+import br.com.zup.beagle.android.annotation.RegisterWidget
+import br.com.zup.beagle.android.widget.RootView
+import br.com.zup.beagle.android.widget.WidgetView
+import br.com.zup.beagle.sample.components.Channel
+import br.com.zup.beagle.sample.components.ChannelCardRowView
+
+@RegisterWidget
+data class ChannelCardRow(
+    var channels: List<Channel> = emptyList(),
+) : WidgetView() {
+    override fun buildView(rootView: RootView): ChannelCardRowView =
+        ChannelCardRowView(rootView.getContext()).also {
+            it.channels = channels
+        }
+}
