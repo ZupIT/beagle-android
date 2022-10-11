@@ -39,13 +39,15 @@ import br.com.zup.beagle.android.widget.core.SingleChildComponent
 import org.json.JSONObject
 import java.util.LinkedList
 
+@Suppress("LongParameterList")
 internal class ListViewHolder(
     itemView: View,
     private val template: ServerDrivenComponent,
     private val serializer: BeagleJsonSerializer,
     private val listViewModels: ListViewModels,
     private val jsonTemplate: String,
-    private val iteratorName: String
+    private val iteratorName: String,
+    private val indexName: String
 ) : RecyclerView.ViewHolder(itemView) {
 
     private val viewsWithId = mutableMapOf<String, View>()
@@ -124,6 +126,7 @@ internal class ListViewHolder(
         }
         // Using a new template reference we populate the components with context
         initializeContextComponents(newTemplate)
+
         // Checks whether views with ids and context have been updated based on the key and updates or restore them
         if (listItem.firstTimeBinding) {
             // Generates an suffix identifier based on the parent's suffix, key and item position
@@ -151,6 +154,12 @@ internal class ListViewHolder(
             restoreContexts()
         }
         // Finally, we updated the context of that cell effectively.
+
+        listViewModels.contextViewModel.addContext(
+            view = itemView,
+            contextData = ContextData(id = indexName, value = position),
+            shouldOverrideExistingContext = true
+        )
         setContext(iteratorName, listItem)
         // Mark this position on the list as finished
         listItem.firstTimeBinding = false

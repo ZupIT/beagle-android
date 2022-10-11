@@ -63,6 +63,7 @@ data class ListView constructor(
     val scrollEndThreshold: Int? = null,
     val isScrollIndicatorVisible: Boolean = false,
     val iteratorName: String = "item",
+    val indexName: String = "index",
     val key: String? = null,
     val templates: List<Template>,
 ) : WidgetView(), ContextComponent, OnInitiableComponent by OnInitiableComponentImpl(onInit) {
@@ -141,6 +142,7 @@ data class ListView constructor(
         val contextAdapter = ListAdapter(
             orientation,
             iteratorName,
+            indexName,
             key,
             ListViewModels(rootView),
             templates,

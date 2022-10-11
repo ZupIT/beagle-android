@@ -38,6 +38,7 @@ import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 internal class ListAdapter(
     val orientation: Int,
     val iteratorName: String,
+    val indexName: String,
     val key: String? = null,
     val listViewModels: ListViewModels,
     val templateList: List<Template>? = null,
@@ -182,7 +183,8 @@ internal class ListAdapter(
             serializer,
             listViewModels,
             jsonTemplate,
-            iteratorName
+            iteratorName,
+            indexName
         )
         createdViewHolders.add(viewHolder)
         return viewHolder
@@ -287,6 +289,7 @@ internal class ListAdapter(
         return ListAdapter(
             this.orientation,
             this.iteratorName,
+            this.indexName,
             this.key,
             this.listViewModels,
             this.templateList,
