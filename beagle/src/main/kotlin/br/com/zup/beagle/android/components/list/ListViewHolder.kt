@@ -155,11 +155,7 @@ internal class ListViewHolder(
         }
         // Finally, we updated the context of that cell effectively.
 
-        listViewModels.contextViewModel.addContext(
-            view = itemView,
-            contextData = ContextData(id = indexName, value = position),
-            shouldOverrideExistingContext = true
-        )
+        setContext(ContextData(id = indexName, value = position))
         setContext(iteratorName, listItem)
         // Mark this position on the list as finished
         listItem.firstTimeBinding = false
@@ -366,12 +362,16 @@ internal class ListViewHolder(
         }
     }
 
-    private fun setContext(iteratorName: String, listItem: ListItem) {
+    private fun setContext(contextData: ContextData) {
         listViewModels.contextViewModel.addContext(
             view = itemView,
-            contextData = ContextData(id = iteratorName, value = listItem.data),
+            contextData = contextData,
             shouldOverrideExistingContext = true
         )
+    }
+
+    private fun setContext(iteratorName: String, listItem: ListItem) {
+        setContext(ContextData(id = iteratorName, value = listItem.data))
     }
 
     fun onViewRecycled() {

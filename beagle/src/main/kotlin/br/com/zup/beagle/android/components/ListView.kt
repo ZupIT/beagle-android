@@ -46,6 +46,7 @@ import br.com.zup.beagle.android.widget.core.ListDirection
  * @param scrollEndThreshold sets the scrolled percentage of the list to trigger onScrollEnd.
  * @param isScrollIndicatorVisible this attribute enables or disables the scroll bar.
  * @param iteratorName is the context identifier of each cell.
+ * @param indexName is the index identifier of each cell.
  * @param key points to a unique value present in each dataSource item used as a suffix in the component ids within
  * the Widget.
  * @param templates Multiple templates support. The template to use will be decided according to the property `case`
