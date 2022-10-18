@@ -24,6 +24,7 @@ import androidx.core.view.children
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import br.com.zup.beagle.android.action.AsyncActionStatus
+import br.com.zup.beagle.android.components.DEFAULT_INDEX_NAME
 import br.com.zup.beagle.android.context.ContextComponent
 import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.data.serializer.BeagleJsonSerializer
@@ -47,7 +48,7 @@ internal class ListViewHolder(
     private val listViewModels: ListViewModels,
     private val jsonTemplate: String,
     private val iteratorName: String,
-    private val indexName: String
+    private val indexName: String = DEFAULT_INDEX_NAME
 ) : RecyclerView.ViewHolder(itemView) {
 
     private val viewsWithId = mutableMapOf<String, View>()
@@ -155,8 +156,9 @@ internal class ListViewHolder(
         }
         // Finally, we updated the context of that cell effectively.
 
-        setContext(ContextData(id = indexName, value = position))
         setContext(iteratorName, listItem)
+        setContext(ContextData(id = indexName, value = position))
+
         // Mark this position on the list as finished
         listItem.firstTimeBinding = false
     }
@@ -362,11 +364,11 @@ internal class ListViewHolder(
         }
     }
 
-    private fun setContext(contextData: ContextData) {
+    private fun setContext(contextData: ContextData, shouldOverrideExistingContext: Boolean = true) {
         listViewModels.contextViewModel.addContext(
             view = itemView,
             contextData = contextData,
-            shouldOverrideExistingContext = true
+            shouldOverrideExistingContext = shouldOverrideExistingContext
         )
     }
 

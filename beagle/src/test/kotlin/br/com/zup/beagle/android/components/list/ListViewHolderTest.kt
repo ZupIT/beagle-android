@@ -21,6 +21,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import br.com.zup.beagle.android.BaseTest
+import br.com.zup.beagle.android.components.DEFAULT_INDEX_NAME
 import br.com.zup.beagle.android.components.layout.Container
 import br.com.zup.beagle.android.context.ContextBinding
 import br.com.zup.beagle.android.context.ContextData
@@ -67,6 +68,7 @@ class ListViewHolderTest : BaseTest() {
     private val listViewIdViewModel = mockk<ListViewIdViewModel>(relaxed = true)
     private val jsonTemplate = ""
     private val iteratorName = "list"
+    private val indexName = "indexName"
     private val listItem = mockk<ListItem>(relaxed = true)
 
     @BeforeAll
@@ -96,7 +98,8 @@ class ListViewHolderTest : BaseTest() {
             serializer,
             listViewModels,
             jsonTemplate,
-            iteratorName
+            iteratorName,
+            indexName
         )
     }
 
@@ -588,15 +591,16 @@ class ListViewHolderTest : BaseTest() {
             // Given
             val data = "data"
             every { listItem.data } returns data
-            val contextSlot = slot<ContextData>()
+            val contextSlot = mutableListOf<ContextData>()
             every { viewModel.addContext(itemView, capture(contextSlot), true) } just Runs
 
             // When
             listViewHolder.onBind(null, null, listItem, 0, 0)
 
             // Then
-            assertEquals(iteratorName, contextSlot.captured.id)
-            assertEquals(data, contextSlot.captured.value)
+            assertEquals(iteratorName, contextSlot.first().id)
+            assertEquals(data, contextSlot.first().value)
+            assertEquals(indexName, contextSlot.last().id)
         }
 
         @DisplayName("Then should set firstTimeBinding to false to every item")

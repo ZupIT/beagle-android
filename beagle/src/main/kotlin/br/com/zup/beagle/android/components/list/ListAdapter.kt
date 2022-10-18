@@ -22,6 +22,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import br.com.zup.beagle.android.action.AsyncAction
 import br.com.zup.beagle.android.action.AsyncActionStatus
+import br.com.zup.beagle.android.components.DEFAULT_INDEX_NAME
 import br.com.zup.beagle.android.components.utils.Template
 import br.com.zup.beagle.android.components.utils.TemplateJson
 import br.com.zup.beagle.android.context.AsyncActionData
@@ -38,7 +39,7 @@ import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 internal class ListAdapter(
     val orientation: Int,
     val iteratorName: String,
-    val indexName: String,
+    val indexName: String = DEFAULT_INDEX_NAME,
     val key: String? = null,
     val listViewModels: ListViewModels,
     val templateList: List<Template>? = null,

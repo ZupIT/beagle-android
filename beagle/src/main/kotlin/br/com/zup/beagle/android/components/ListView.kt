@@ -53,6 +53,8 @@ import br.com.zup.beagle.android.widget.core.ListDirection
  * of the template. The first template where `case` is `true` is the template chosen to render an item. If for every
  * template `case` is `false`, then, the first template where `case` is omitted (default template) is used.
  */
+internal const val DEFAULT_ITERATOR_NAME = "item"
+internal const val DEFAULT_INDEX_NAME = "index"
 
 @RegisterWidget("listView")
 data class ListView constructor(
@@ -63,8 +65,8 @@ data class ListView constructor(
     val onScrollEnd: List<Action>? = null,
     val scrollEndThreshold: Int? = null,
     val isScrollIndicatorVisible: Boolean = false,
-    val iteratorName: String = "item",
-    val indexName: String = "index",
+    val iteratorName: String = DEFAULT_ITERATOR_NAME,
+    val indexName: String = DEFAULT_INDEX_NAME,
     val key: String? = null,
     val templates: List<Template>,
 ) : WidgetView(), ContextComponent, OnInitiableComponent by OnInitiableComponentImpl(onInit) {

@@ -232,7 +232,12 @@ internal class ContextDataManager(
             view.findParentContextWithId(setContextInternal.contextId)?.let { parentView ->
                 val currentContextBinding = parentView.getContextBinding()
                 currentContextBinding?.forEach { contextBinding ->
-                    setContextValue(contextBinding, setContextInternal)
+                    if(currentContextBinding.size > 1 &&
+                        contextBinding.context.id == setContextInternal.contextId) {
+                        setContextValue(contextBinding, setContextInternal)
+                    } else {
+                        setContextValue(contextBinding, setContextInternal)
+                    }
                 }
             }
         }
