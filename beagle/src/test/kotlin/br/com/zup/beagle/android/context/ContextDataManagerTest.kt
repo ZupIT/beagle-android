@@ -556,6 +556,30 @@ class ContextDataManagerTest : BaseTest() {
         }
     }
 
+    @DisplayName("When removeContextObserver is called")
+    @Nested
+    inner class ContextObserver {
+        @DisplayName("Should Add/Remove context obeservers")
+        @Test
+        fun addRemoveContextObserver() {
+            //Given
+            val contextId = "contextId"
+            val contextObserver: InternalContextObserver = {
+
+            }
+
+            // When
+            contextDataManager.addContextObserver(contextId, contextObserver)
+
+            assertEquals(contextObserver, contextDataManager.getContextObservers(contextId))
+
+            contextDataManager.removeContextObserver(contextId)
+
+            // Then
+            assertEquals(null, contextDataManager.getContextObservers(contextId))
+        }
+    }
+
     @DisplayName("When clearContexts is called")
     @Nested
     inner class ClearContexts {

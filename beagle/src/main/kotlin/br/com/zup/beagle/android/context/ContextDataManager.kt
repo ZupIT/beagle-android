@@ -60,6 +60,8 @@ internal class ContextDataManager(
         GlobalContext.observeGlobalContextChange(globalContextObserver)
     }
 
+    fun getContextObservers(contextId: String): InternalContextObserver? = contextObservers.get(contextId)
+
     fun clearContexts() {
         contextsWithoutId.clear()
         contexts.clear()
