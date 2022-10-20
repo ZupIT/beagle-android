@@ -103,8 +103,6 @@ internal class ContextDataManager(
                            contextObserver: InternalContextObserver) =
         this.contextObservers.put(contextId, contextObserver)
 
-    fun clearAllContextObservers() = this.contextObservers.clear()
-
     fun removeContextObserver(contextId: String) = this.contextObservers.remove(contextId)
 
     fun addContext(view: View, context: ContextData, shouldOverrideExistingContext: Boolean = false) {
