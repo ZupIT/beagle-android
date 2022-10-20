@@ -241,12 +241,7 @@ internal class ContextDataManager(
             view.findParentContextWithId(setContextInternal.contextId)?.let { parentView ->
                 val currentContextBinding = parentView.getContextBinding()
                 currentContextBinding?.forEach { contextBinding ->
-                    if(currentContextBinding.size > 1){
-                        if(contextBinding.context.id == setContextInternal.contextId)
-                            setContextValue(contextBinding, setContextInternal)
-                    } else {
-                        setContextValue(contextBinding, setContextInternal)
-                    }
+                    setContextValue(contextBinding, setContextInternal)
                 }
             }
         }
@@ -265,16 +260,19 @@ internal class ContextDataManager(
         contextBinding: ContextBinding,
         setContextInternal: SetContextInternal
     ) {
-        val result = contextDataManipulator.set(
-            contextBinding.context,
-            setContextInternal.path,
-            setContextInternal.value
-        )
 
-        if (result is ContextSetResult.Succeed) {
-            contextBinding.context = result.newContext
-            contextBinding.cache.evictAll()
-            notifyBindingChanges(contextBinding)
+        if(contextBinding.context.id == setContextInternal.contextId) {
+            val result = contextDataManipulator.set(
+                contextBinding.context,
+                setContextInternal.path,
+                setContextInternal.value
+            )
+
+            if (result is ContextSetResult.Succeed) {
+                contextBinding.context = result.newContext
+                contextBinding.cache.evictAll()
+                notifyBindingChanges(contextBinding)
+            }
         }
     }
 
