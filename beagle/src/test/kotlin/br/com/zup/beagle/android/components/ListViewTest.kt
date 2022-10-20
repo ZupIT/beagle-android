@@ -81,6 +81,7 @@ class ListViewTest : BaseComponentTest() {
     }
     private val onScrollEnd = listOf(mockk<Action>(relaxed = true))
     private val iteratorName = "list"
+    private val indexName = "indexName"
     private val key = "id"
 
     private lateinit var listView: ListView
@@ -97,6 +98,7 @@ class ListViewTest : BaseComponentTest() {
             onScrollEnd = onScrollEnd,
             templates = templates,
             iteratorName = iteratorName,
+            indexName = indexName,
             key = key
         )
 
@@ -138,6 +140,7 @@ class ListViewTest : BaseComponentTest() {
             // Then
             assertEquals(templates, adapterSlot.captured.templateList)
             assertEquals(iteratorName, adapterSlot.captured.iteratorName)
+            assertEquals(indexName, adapterSlot.captured.indexName)
             assertEquals(key, adapterSlot.captured.key)
         }
 
@@ -179,6 +182,7 @@ class ListViewTest : BaseComponentTest() {
                 templates = templates,
                 onScrollEnd = onScrollEnd,
                 iteratorName = iteratorName,
+                indexName = indexName,
                 key = key
             )
 
@@ -201,6 +205,7 @@ class ListViewTest : BaseComponentTest() {
                 templates = templates,
                 onScrollEnd = onScrollEnd,
                 iteratorName = iteratorName,
+                indexName = indexName,
                 key = key,
                 isScrollIndicatorVisible = true
             )
@@ -224,6 +229,7 @@ class ListViewTest : BaseComponentTest() {
                 templates = templates,
                 onScrollEnd = onScrollEnd,
                 iteratorName = iteratorName,
+                indexName = indexName,
                 key = key,
                 isScrollIndicatorVisible = true
             )
