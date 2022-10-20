@@ -21,8 +21,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import br.com.zup.beagle.android.BaseTest
-import br.com.zup.beagle.android.components.DEFAULT_INDEX_NAME
 import br.com.zup.beagle.android.components.layout.Container
+import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.context.ContextBinding
 import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.data.serializer.BeagleSerializer
@@ -66,6 +66,7 @@ class ListViewHolderTest : BaseTest() {
     private val listViewModels = mockk<ListViewModels>()
     private val viewModel = mockk<ScreenContextViewModel>(relaxed = true)
     private val listViewIdViewModel = mockk<ListViewIdViewModel>(relaxed = true)
+    private val dataSource = mockk<Bind<List<Any>>>(relaxed = true)
     private val jsonTemplate = ""
     private val iteratorName = "list"
     private val indexName = "indexName"
@@ -99,7 +100,8 @@ class ListViewHolderTest : BaseTest() {
             listViewModels,
             jsonTemplate,
             iteratorName,
-            indexName
+            indexName,
+            dataSource
         )
     }
 
@@ -122,7 +124,9 @@ class ListViewHolderTest : BaseTest() {
                 serializer,
                 listViewModels,
                 jsonTemplate,
-                iteratorName
+                iteratorName,
+                indexName,
+                dataSource
             )
             val viewsWithOnInit =
                 listViewHolder.getPrivateField<MutableList<View>>("viewsWithOnInit")
@@ -152,7 +156,9 @@ class ListViewHolderTest : BaseTest() {
                 serializer,
                 listViewModels,
                 jsonTemplate,
-                iteratorName
+                iteratorName,
+                indexName,
+                dataSource
             )
             val viewsWithId =
                 listViewHolder.getPrivateField<MutableMap<String, View>>("viewsWithId")
@@ -175,7 +181,9 @@ class ListViewHolderTest : BaseTest() {
                 serializer,
                 listViewModels,
                 jsonTemplate,
-                iteratorName
+                iteratorName,
+                indexName,
+                dataSource
             )
             val viewsWithContext =
                 listViewHolder.getPrivateField<MutableList<View>>("viewsWithContext")
@@ -197,7 +205,9 @@ class ListViewHolderTest : BaseTest() {
                 serializer,
                 listViewModels,
                 jsonTemplate,
-                iteratorName
+                iteratorName,
+                indexName,
+                dataSource
             )
             val directNestedRecyclers =
                 listViewHolder.getPrivateField<MutableList<RecyclerView>>("directNestedRecyclers")
@@ -251,7 +261,9 @@ class ListViewHolderTest : BaseTest() {
                 serializer,
                 listViewModels,
                 jsonTemplate,
-                iteratorName
+                iteratorName,
+                indexName,
+                dataSource
             )
 
             // When
@@ -389,7 +401,9 @@ class ListViewHolderTest : BaseTest() {
                 serializer,
                 listViewModels,
                 jsonTemplate,
-                iteratorName
+                iteratorName,
+                indexName,
+                dataSource
             )
             listViewHolder.onViewRecycled()
 
@@ -426,7 +440,9 @@ class ListViewHolderTest : BaseTest() {
                 serializer,
                 listViewModels,
                 jsonTemplate,
-                iteratorName
+                iteratorName,
+                indexName,
+                dataSource
             )
             listViewHolder.onViewRecycled()
 
@@ -453,7 +469,9 @@ class ListViewHolderTest : BaseTest() {
                 serializer,
                 listViewModels,
                 jsonTemplate,
-                iteratorName
+                iteratorName,
+                indexName,
+                dataSource
             )
             listViewHolder.onViewRecycled()
 
@@ -479,7 +497,9 @@ class ListViewHolderTest : BaseTest() {
                 serializer,
                 listViewModels,
                 jsonTemplate,
-                iteratorName
+                iteratorName,
+                indexName,
+                dataSource
             )
 
             // When
@@ -509,7 +529,9 @@ class ListViewHolderTest : BaseTest() {
                 serializer,
                 listViewModels,
                 jsonTemplate,
-                iteratorName
+                iteratorName,
+                indexName,
+                dataSource
             )
 
             // When
@@ -554,7 +576,9 @@ class ListViewHolderTest : BaseTest() {
                 serializer,
                 listViewModels,
                 jsonTemplate,
-                iteratorName
+                iteratorName,
+                indexName,
+                dataSource
             )
 
             // When
@@ -575,7 +599,9 @@ class ListViewHolderTest : BaseTest() {
                 serializer,
                 listViewModels,
                 jsonTemplate,
-                iteratorName
+                iteratorName,
+                indexName,
+                dataSource
             )
 
             // When
@@ -634,7 +660,9 @@ class ListViewHolderTest : BaseTest() {
                 serializer,
                 listViewModels,
                 jsonTemplate,
-                iteratorName
+                iteratorName,
+                indexName,
+                dataSource
             )
             listViewHolder.onViewRecycled()
 
@@ -662,7 +690,9 @@ class ListViewHolderTest : BaseTest() {
                 serializer,
                 listViewModels,
                 jsonTemplate,
-                iteratorName
+                iteratorName,
+                indexName,
+                dataSource
             )
             listViewHolder.onViewAttachedToWindow()
 

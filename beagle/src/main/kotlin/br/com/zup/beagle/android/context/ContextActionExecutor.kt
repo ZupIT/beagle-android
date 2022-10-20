@@ -54,7 +54,7 @@ internal object ContextActionExecutor {
         viewModel.addImplicitContext(context.normalize(), sender, origin)
     }
 
-    private fun executeActions(
+    internal fun executeActions(
         rootView: RootView,
         origin: View,
         actions: List<Action>?,

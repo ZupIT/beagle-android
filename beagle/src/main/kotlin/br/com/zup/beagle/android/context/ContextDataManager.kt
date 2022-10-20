@@ -38,6 +38,7 @@ internal class ContextDataManager(
     private val contextDataEvaluation: ContextDataEvaluation = ContextDataEvaluation(),
     private val contextDataManipulator: ContextDataManipulator = ContextDataManipulator()
 ) {
+    private val contextObservers = mutableMapOf<String, InternalContextObserver>()
 
     private var globalContext: ContextBinding = ContextBinding(GlobalContext.getContext())
     private val contexts = mutableMapOf<Int, Set<ContextBinding>>()
@@ -50,7 +51,7 @@ internal class ContextDataManager(
      */
     private val bindingsWithoutContextData = mutableListOf<Binding<*>>()
 
-    private val globalContextObserver: GlobalContextObserver = {
+    private val globalContextObserver: ContextObserver = {
         updateGlobalContext(it)
     }
 
@@ -97,6 +98,14 @@ internal class ContextDataManager(
             addContext(view, it, shouldOverrideExistingContext)
         }
     }
+
+    fun addContextObserver(contextId: String,
+                           contextObserver: InternalContextObserver) =
+        this.contextObservers.put(contextId, contextObserver)
+
+    fun clearAllContextObservers() = this.contextObservers.clear()
+
+    fun removeContextObserver(contextId: String) = this.contextObservers.remove(contextId)
 
     fun addContext(view: View, context: ContextData, shouldOverrideExistingContext: Boolean = false) {
         if (context.id == globalContext.context.id) {
@@ -225,21 +234,32 @@ internal class ContextDataManager(
             .map { it.context }
     }
 
+    @Suppress("NestedBlockDepth")
     fun updateContext(view: View, setContextInternal: SetContextInternal) {
+
         if (setContextInternal.contextId == globalContext.context.id) {
             GlobalContext.set(setContextInternal.value, setContextInternal.path)
         } else {
             view.findParentContextWithId(setContextInternal.contextId)?.let { parentView ->
                 val currentContextBinding = parentView.getContextBinding()
                 currentContextBinding?.forEach { contextBinding ->
-                    if(currentContextBinding.size > 1 &&
-                        contextBinding.context.id == setContextInternal.contextId) {
-                        setContextValue(contextBinding, setContextInternal)
+                    if(currentContextBinding.size > 1){
+                        if(contextBinding.context.id == setContextInternal.contextId)
+                            setContextValue(contextBinding, setContextInternal)
                     } else {
                         setContextValue(contextBinding, setContextInternal)
                     }
                 }
             }
+        }
+        notifyContextChanges(setContextInternal)
+    }
+
+    private fun notifyContextChanges(
+        context: SetContextInternal
+    ) {
+        contextObservers.filterKeys { it == context.contextId }.forEach {
+            it.value.invoke(context)
         }
     }
 

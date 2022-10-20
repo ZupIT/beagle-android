@@ -133,7 +133,7 @@ class ContextDataManagerTest : BaseTest() {
         @Test
         fun globalContextMethod() {
             // Given
-            val globalContextObserver = slot<GlobalContextObserver>()
+            val globalContextObserver = slot<ContextObserver>()
             val contextData = ContextData("global", "")
             val globalContextMock = mockk<ContextBinding>(relaxed = true) {
                 every { copy(any(), any(), any()) } returns this

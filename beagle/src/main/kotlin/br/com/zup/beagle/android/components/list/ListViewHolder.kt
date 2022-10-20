@@ -16,6 +16,8 @@
 
 package br.com.zup.beagle.android.components.list
 
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -24,7 +26,9 @@ import androidx.core.view.children
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import br.com.zup.beagle.android.action.AsyncActionStatus
+import br.com.zup.beagle.android.action.SetContextInternal
 import br.com.zup.beagle.android.components.DEFAULT_INDEX_NAME
+import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.context.ContextComponent
 import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.data.serializer.BeagleJsonSerializer
@@ -48,7 +52,8 @@ internal class ListViewHolder(
     private val listViewModels: ListViewModels,
     private val jsonTemplate: String,
     private val iteratorName: String,
-    private val indexName: String = DEFAULT_INDEX_NAME
+    private val indexName: String = DEFAULT_INDEX_NAME,
+    private val dataSource: Bind<List<Any>>
 ) : RecyclerView.ViewHolder(itemView) {
 
     private val viewsWithId = mutableMapOf<String, View>()
@@ -155,13 +160,45 @@ internal class ListViewHolder(
             restoreContexts()
         }
         // Finally, we updated the context of that cell effectively.
+        listViewModels.contextViewModel.removeContextObserver(iteratorName)
 
         setContext(iteratorName, listItem)
         setContext(ContextData(id = indexName, value = position))
 
+        if(isObservableExpression(dataSource)) {
+            observeSetContextForContext(iteratorName, dataSource, position)
+        }
+
         // Mark this position on the list as finished
         listItem.firstTimeBinding = false
     }
+
+    private fun isObservableExpression(dataSource: Bind<List<Any>>) =
+        (dataSource is Bind.Expression
+                && dataSource.expressions.size == 1)
+
+    private fun observeSetContextForContext(
+        contextId: String,
+        dataSource: Bind<List<Any>>,
+        position: Int,
+    ) {
+        val dataSourceExpression = (dataSource as Bind.Expression).expressions.first().value
+        val expressionContextId = dataSourceExpression.split(".").first()
+        val expressionPath = if(dataSourceExpression.contains("."))
+            dataSourceExpression.replace("${expressionContextId}.", "")
+        else ""
+        listViewModels.contextViewModel.addContextObserver(contextId) {
+            postOnUi {
+                listViewModels.contextViewModel.updateContext(
+                    originView = itemView,
+                    setContextInternal = SetContextInternal(contextId = expressionContextId, value = it.value,
+                        path = "${expressionPath}[$position]")
+                )
+            }
+        }
+    }
+
+    private fun postOnUi(r: Runnable) = Handler(Looper.getMainLooper()).post(r)
 
     private fun initializeContextComponents(component: ServerDrivenComponent) {
         (component as? ContextComponent)?.let {

@@ -16,7 +16,10 @@
 
 package br.com.zup.beagle.android.context
 
-typealias GlobalContextObserver = (ContextData) -> Unit
+import br.com.zup.beagle.android.action.SetContextInternal
+
+typealias ContextObserver = (ContextData) -> Unit
+internal typealias InternalContextObserver = (SetContextInternal) -> Unit
 
 /**
  * A Global Context is a object that can assume as value of any type of variable, like a map defines a subset
@@ -31,7 +34,7 @@ object GlobalContext {
     internal const val GLOBAL_KEY = "global"
 
     private var globalContext = ContextData(id = GLOBAL_KEY, value = "")
-    private val globalContextObservers = mutableListOf<GlobalContextObserver>()
+    private val globalContextObservers = mutableListOf<ContextObserver>()
     private val contextDataManipulator = ContextDataManipulator()
 
     /**
@@ -68,11 +71,11 @@ object GlobalContext {
         notifyContextChanges(result)
     }
 
-    internal fun observeGlobalContextChange(observer: GlobalContextObserver) {
+    internal fun observeGlobalContextChange(observer: ContextObserver) {
         globalContextObservers.add(observer)
     }
 
-    internal fun clearObserverGlobalContext(observer: GlobalContextObserver) {
+    internal fun clearObserverGlobalContext(observer: ContextObserver) {
         globalContextObservers.remove(observer)
     }
 

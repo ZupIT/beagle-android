@@ -44,6 +44,7 @@ internal class ListAdapter(
     val listViewModels: ListViewModels,
     val templateList: List<Template>? = null,
     val originView: View,
+    val dataSource: Bind<List<Any>>
 ) : RecyclerView.Adapter<ListViewHolder>() {
 
     // Recyclerview id for post config changes id management
@@ -185,7 +186,8 @@ internal class ListAdapter(
             listViewModels,
             jsonTemplate,
             iteratorName,
-            indexName
+            indexName,
+            dataSource
         )
         createdViewHolders.add(viewHolder)
         return viewHolder
@@ -294,7 +296,8 @@ internal class ListAdapter(
             this.key,
             this.listViewModels,
             this.templateList,
-            this.originView
+            this.originView,
+            this.dataSource
         )
     }
 }

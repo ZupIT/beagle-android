@@ -150,6 +150,7 @@ data class ListView constructor(
             ListViewModels(rootView),
             templates,
             recyclerView,
+            dataSource
         )
         recyclerView.apply {
             adapter = contextAdapter
