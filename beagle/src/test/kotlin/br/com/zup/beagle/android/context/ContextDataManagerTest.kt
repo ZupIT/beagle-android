@@ -461,12 +461,16 @@ class ContextDataManagerTest : BaseTest() {
             val contextData = ContextData(CONTEXT_ID, json)
             val updateContext = SetContextInternal(CONTEXT_ID, false, "a")
             contextDataManager.addContext(viewContext, contextData)
+            //Given
+            val contextObserver: InternalContextObserver = mockk(relaxed = true, relaxUnitFun = true)
+            contextDataManager.addContextObserver(CONTEXT_ID, contextObserver)
 
             // When
             contextDataManager.updateContext(viewContext, updateContext)
 
             // Then
             assertFalse { json.getBoolean("a") }
+            verify { contextObserver.invoke(updateContext) }
         }
 
         @DisplayName("Then should set value on context root")
