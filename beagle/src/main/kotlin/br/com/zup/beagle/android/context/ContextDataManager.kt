@@ -51,7 +51,7 @@ internal class ContextDataManager(
      */
     private val bindingsWithoutContextData = mutableListOf<Binding<*>>()
 
-    private val globalContextObserver: ContextObserver = {
+    private val globalContextObserver: GlobalContextObserver = {
         updateGlobalContext(it)
     }
 

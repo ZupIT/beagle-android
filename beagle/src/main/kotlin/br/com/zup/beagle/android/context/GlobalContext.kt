@@ -18,7 +18,7 @@ package br.com.zup.beagle.android.context
 
 import br.com.zup.beagle.android.action.SetContextInternal
 
-typealias ContextObserver = (ContextData) -> Unit
+typealias GlobalContextObserver = (ContextData) -> Unit
 internal typealias InternalContextObserver = (SetContextInternal) -> Unit
 
 /**
@@ -34,7 +34,7 @@ object GlobalContext {
     internal const val GLOBAL_KEY = "global"
 
     private var globalContext = ContextData(id = GLOBAL_KEY, value = "")
-    private val globalContextObservers = mutableListOf<ContextObserver>()
+    private val globalContextObservers = mutableListOf<GlobalContextObserver>()
     private val contextDataManipulator = ContextDataManipulator()
 
     /**
@@ -71,11 +71,11 @@ object GlobalContext {
         notifyContextChanges(result)
     }
 
-    internal fun observeGlobalContextChange(observer: ContextObserver) {
+    internal fun observeGlobalContextChange(observer: GlobalContextObserver) {
         globalContextObservers.add(observer)
     }
 
-    internal fun clearObserverGlobalContext(observer: ContextObserver) {
+    internal fun clearObserverGlobalContext(observer: GlobalContextObserver) {
         globalContextObservers.remove(observer)
     }
 
