@@ -16,7 +16,7 @@
 
 package br.com.zup.beagle.android.utils
 
-import br.com.zup.beagle.android.BaseTest
+import br.com.zup.beagle.android.BaseConfigurationTest
 import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.context.expressionOf
@@ -33,7 +33,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class ActionExtensionsKtTest : BaseTest() {
+class ActionExtensionsKtTest : BaseConfigurationTest() {
 
     private val contextView = createViewForContext()
     private val bindView = createViewForContext(contextView)
@@ -49,7 +49,7 @@ class ActionExtensionsKtTest : BaseTest() {
             answers = false
         )
 
-        viewModel = ScreenContextViewModel()
+        viewModel = ScreenContextViewModel(beagleConfigurator)
 
         prepareViewModelMock(viewModel)
     }

@@ -84,7 +84,9 @@ private fun <T> evaluateExpression(
     observes: Observer<T?>? = null,
     caller: Action? = null,
 ): T? {
-    val viewModel = rootView.generateViewModelInstance<ScreenContextViewModel>()
+    val viewModel = rootView.generateViewModelInstance<ScreenContextViewModel>(
+        ScreenContextViewModel.provideFactory(rootView.getBeagleConfigurator())
+    )
     return if (caller != null) {
         @Suppress("UNCHECKED_CAST")
         viewModel.evaluateExpressionForImplicitContext(view, bind) as? T?

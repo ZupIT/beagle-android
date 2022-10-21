@@ -18,16 +18,17 @@ package br.com.zup.beagle.android.setup
 
 import android.app.Application
 import androidx.annotation.VisibleForTesting
-import br.com.zup.beagle.android.analytics.AnalyticsProvider
 import br.com.zup.beagle.android.action.Action
-import br.com.zup.beagle.android.networking.ViewClient
+import br.com.zup.beagle.android.analytics.AnalyticsProvider
 import br.com.zup.beagle.android.data.serializer.BeagleMoshi
 import br.com.zup.beagle.android.data.serializer.adapter.generic.TypeAdapterResolver
 import br.com.zup.beagle.android.imagedownloader.BeagleImageDownloader
 import br.com.zup.beagle.android.logger.BeagleLogger
+import br.com.zup.beagle.android.logger.BeagleLoggerProxy
 import br.com.zup.beagle.android.navigation.BeagleControllerReference
 import br.com.zup.beagle.android.navigation.DeepLinkHandler
 import br.com.zup.beagle.android.networking.HttpClientFactory
+import br.com.zup.beagle.android.networking.ViewClient
 import br.com.zup.beagle.android.networking.urlbuilder.UrlBuilder
 import br.com.zup.beagle.android.operation.Operation
 import br.com.zup.beagle.android.utils.BeagleScope
@@ -56,6 +57,7 @@ interface BeagleSdk {
 
     fun init(application: Application) {
         BeagleEnvironment.beagleSdk = this
+        BeagleLoggerProxy.init(this.logger)
         BeagleEnvironment.application = application
         SoLoader.init(application, false)
         BeagleScope().launch(CoroutineDispatchers.Default) {

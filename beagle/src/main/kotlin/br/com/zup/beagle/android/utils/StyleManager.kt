@@ -26,14 +26,18 @@ import android.view.View
 import br.com.zup.beagle.R
 import br.com.zup.beagle.android.components.Button
 import br.com.zup.beagle.android.components.Text
-import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.setup.DesignSystem
 import br.com.zup.beagle.android.widget.core.StyleComponent
 
 class StyleManager(
-    private val designSystem: DesignSystem? = BeagleEnvironment.beagleSdk.designSystem,
     private val typedValue: TypedValue = TypedValue()
 ) {
+
+    private var designSystem: DesignSystem? = null
+
+    @Synchronized fun init(designSystem: DesignSystem?) {
+        this.designSystem = designSystem
+    }
 
     fun applyStyleComponent(component: StyleComponent, view: View) {
         if (view.background == null) {

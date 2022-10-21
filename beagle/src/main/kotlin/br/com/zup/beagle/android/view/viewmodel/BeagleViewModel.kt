@@ -18,11 +18,13 @@ package br.com.zup.beagle.android.view.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import br.com.zup.beagle.android.data.ComponentRequester
 import br.com.zup.beagle.android.exception.BeagleException
 import br.com.zup.beagle.android.logger.BeagleLoggerProxy
 import br.com.zup.beagle.android.networking.RequestData
+import br.com.zup.beagle.android.setup.BeagleConfigurator
 import br.com.zup.beagle.android.utils.BeagleRetry
 import br.com.zup.beagle.android.utils.CoroutineDispatchers
 import br.com.zup.beagle.android.widget.core.IdentifierComponent
@@ -43,11 +45,28 @@ sealed class ViewState {
 }
 
 internal open class BeagleViewModel(
+    private val beagleConfigurator: BeagleConfigurator,
     private val ioDispatcher: CoroutineDispatcher = CoroutineDispatchers.IO,
-    private val componentRequester: ComponentRequester = ComponentRequester(),
+    private val componentRequester: ComponentRequester = ComponentRequester(
+        beagleConfigurator = beagleConfigurator,
+        viewClient = beagleConfigurator.viewClient,
+        serializer = beagleConfigurator.serializer),
 ) : ViewModel() {
 
     var fetchComponent: FetchComponentLiveData? = null
+
+    companion object {
+        fun provideFactory(
+            beagleConfigurator: BeagleConfigurator,
+        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return BeagleViewModel(
+                    beagleConfigurator = beagleConfigurator
+                ) as T
+            }
+        }
+    }
 
     fun fetchComponent(requestData: RequestData, screen: ServerDrivenComponent? = null): LiveData<ViewState> {
         val fetchComponentLiveData = FetchComponentLiveData(

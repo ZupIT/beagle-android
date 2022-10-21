@@ -21,8 +21,9 @@ package br.com.zup.beagle.android.utils
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import br.com.zup.beagle.android.data.serializer.BeagleJsonSerializerFactory
 import br.com.zup.beagle.android.networking.RequestData
+import br.com.zup.beagle.android.setup.BeagleConfigurator
+import br.com.zup.beagle.android.setup.BeagleSdkWrapper
 import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.view.custom.OnServerStateChanged
 import br.com.zup.beagle.android.view.viewmodel.AnalyticsViewModel
@@ -30,8 +31,6 @@ import br.com.zup.beagle.android.view.viewmodel.ScreenContextViewModel
 import br.com.zup.beagle.android.widget.ActivityRootView
 import br.com.zup.beagle.android.widget.FragmentRootView
 import br.com.zup.beagle.android.widget.RootView
-
-internal var beagleSerializerFactory = BeagleJsonSerializerFactory.serializer
 
 /**
  * Load a ServerDrivenComponent into this ViewGroup
@@ -41,10 +40,12 @@ internal var beagleSerializerFactory = BeagleJsonSerializerFactory.serializer
 fun ViewGroup.loadView(
     activity: AppCompatActivity,
     requestData: RequestData,
+    config: BeagleSdkWrapper? = null
 ) {
     loadView(
         viewGroup = this,
-        rootView = ActivityRootView(activity, this.id, requestData.url),
+        rootView = ActivityRootView(activity, this.id, requestData.url, config = BeagleConfigurator
+            .factory(beagleSdk = config)),
         requestData = requestData,
         listener = null,
     )
@@ -58,10 +59,13 @@ fun ViewGroup.loadView(
 fun ViewGroup.loadView(
     fragment: Fragment,
     requestData: RequestData,
+    config: BeagleSdkWrapper? = null
 ) {
+
     loadView(
         viewGroup = this,
-        rootView = FragmentRootView(fragment, this.id, requestData.url),
+        rootView = FragmentRootView(fragment, this.id, requestData.url, config = BeagleConfigurator
+            .factory(beagleSdk = config)),
         requestData = requestData,
         listener = null,
     )
@@ -77,10 +81,12 @@ fun ViewGroup.loadView(
     activity: AppCompatActivity,
     requestData: RequestData,
     listener: OnServerStateChanged? = null,
+    config: BeagleSdkWrapper? = null
 ) {
     loadView(
         this,
-        ActivityRootView(activity, this.id, requestData.url),
+        ActivityRootView(activity, this.id, requestData.url, config = BeagleConfigurator
+            .factory(beagleSdk = config)),
         requestData,
         listener,
     )
@@ -96,10 +102,12 @@ fun ViewGroup.loadView(
     fragment: Fragment,
     requestData: RequestData,
     listener: OnServerStateChanged? = null,
+    config: BeagleSdkWrapper? = null
 ) {
     loadView(
         this,
-        FragmentRootView(fragment, this.id, requestData.url),
+        FragmentRootView(fragment, this.id, requestData.url, config = BeagleConfigurator
+            .factory(beagleSdk = config)),
         requestData,
         listener
     )
@@ -148,6 +156,26 @@ fun ViewGroup.loadView(
 
 /**
  * Render a Json in String format from a ServerDrivenComponent into this ViewGroup
+ * @param activity that is parent of this view.
+ * Make sure to use this method if you are inside a Activity because of the lifecycle.
+ * @param screenJson Json in String format that represents your component.
+ * @param screenId that represents an screen identifier to create the analytics when the screen is created.
+ * @param shouldResetContext when true, this clear at the time of calling this function all de context data
+ * linked to the lifecycle owner.
+ */
+fun ViewGroup.loadView(
+    activity: AppCompatActivity,
+    screenJson: String,
+    screenId: String = "",
+    shouldResetContext: Boolean = false,
+    config: BeagleSdkWrapper? = null,
+) {
+    loadView(ActivityRootView(activity, this.id, screenId, config = BeagleConfigurator
+        .factory(beagleSdk = config)), screenJson, shouldResetContext)
+}
+
+/**
+ * Render a Json in String format from a ServerDrivenComponent into this ViewGroup
  * @param fragment that is parent of this view.
  * Make sure to use this method if you are inside a Fragment because of the lifecycle.
  * @param screenJson Json in String format that represents your component.
@@ -160,8 +188,10 @@ fun ViewGroup.loadView(
     screenJson: String,
     screenId: String = "",
     shouldResetContext: Boolean = false,
+    config: BeagleSdkWrapper? = null,
 ) {
-    loadView(FragmentRootView(fragment, this.id, screenId), screenJson, shouldResetContext)
+    loadView(FragmentRootView(fragment, this.id, screenId, config = BeagleConfigurator
+        .factory(beagleSdk = config)), screenJson, shouldResetContext)
 }
 
 internal fun ViewGroup.loadView(
@@ -171,11 +201,14 @@ internal fun ViewGroup.loadView(
     generateIdManager: GenerateIdManager = GenerateIdManager(rootView),
 ) {
     if (shouldResetContext) {
-        val viewModel = rootView.generateViewModelInstance<ScreenContextViewModel>()
+        val viewModel = rootView.generateViewModelInstance<ScreenContextViewModel>(
+            ScreenContextViewModel.provideFactory(rootView.getBeagleConfigurator())
+        )
         viewModel.clearContexts()
     }
     generateIdManager.createSingleManagerByRootViewId()
-    val component = beagleSerializerFactory.deserializeComponent(screenJson)
+    val component = rootView.getBeagleConfigurator().serializer.deserializeComponent(screenJson)
+
     val view = ViewFactory.makeBeagleView(rootView).apply {
         addServerDrivenComponent(component)
         listenerOnViewDetachedFromWindow = {
@@ -187,7 +220,7 @@ internal fun ViewGroup.loadView(
 
     if (rootView.getScreenId().isNotEmpty()) {
         rootView.generateViewModelInstance<AnalyticsViewModel>().createScreenReport(
-            rootView.getScreenId(), getRootId(component)
+            rootView, getRootId(component)
         )
     }
 }

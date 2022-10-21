@@ -34,7 +34,7 @@ internal object SendRequestActionMapper {
     fun toRequestData(sendRequest: SendRequestInternal): RequestData {
         val method = toHttpMethod(sendRequest.method)
         val headers = sendRequest.headers ?: mapOf()
-        val urlFormatted = sendRequest.url.formatUrl()
+        val urlFormatted = sendRequest.url.formatUrl(sendRequest.rootView.getBeagleConfigurator())
         return RequestData(
             url = urlFormatted,
             httpAdditionalData = HttpAdditionalData(

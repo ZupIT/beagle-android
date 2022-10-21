@@ -72,6 +72,8 @@ android {
 dependencies {
     implementation Dependencies.AndroidxLibraries.appcompat
     implementation Dependencies.AndroidxLibraries.coreKtx
+    implementation Dependencies.AndroidxLibraries.viewModel
+    implementation Dependencies.AndroidxLibraries.viewModelExtensions
 
     implementation Dependencies.GeneralLibraries.multidex
     implementation Dependencies.GeneralLibraries.kotlinCoroutines

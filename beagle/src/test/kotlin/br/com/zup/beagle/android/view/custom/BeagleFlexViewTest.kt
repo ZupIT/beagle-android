@@ -44,14 +44,22 @@ internal class BeagleFlexViewTest : BaseTest() {
     private val styleMock = mockk<Style>(relaxUnitFun = true, relaxed = true)
 
     private lateinit var beagleFlexView: BeagleFlexView
+    val view = mockk<View>()
+
+    fun mockYoga() {
+        val yogaNode = mockk<YogaNode>(relaxed = true, relaxUnitFun = true)
+
+        mockkStatic(YogaNode::class)
+        mockkStatic(YogaNodeFactory::class)
+        every { YogaNodeFactory.create() } returns yogaNode
+        every { yogaNode.data } returns view
+    }
 
     @BeforeAll
     override fun setUp() {
         super.setUp()
-        every { BeagleEnvironment.application } returns mockk(relaxed = true)
-
         mockYoga()
-
+        every { BeagleEnvironment.application } returns mockk(relaxed = true)
         beagleFlexView = spyk(BeagleFlexView(rootView, styleMock))
     }
 
@@ -68,7 +76,7 @@ internal class BeagleFlexViewTest : BaseTest() {
         @Test
         fun testInternalViewCalled() {
             // Given
-            val view = mockk<View>()
+
             val style = Style()
             every { beagleFlexView.addViewWithStyle(view, style) } just Runs
 
@@ -176,13 +184,4 @@ internal class BeagleFlexViewTest : BaseTest() {
         }
     }
 
-
-    private fun mockYoga() {
-        val yogaNode = mockk<YogaNode>(relaxed = true, relaxUnitFun = true)
-        val view = View(mockk())
-        mockkStatic(YogaNode::class)
-        mockkStatic(YogaNodeFactory::class)
-        every { YogaNodeFactory.create() } returns yogaNode
-        every { yogaNode.data } returns view
-    }
 }

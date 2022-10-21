@@ -18,13 +18,15 @@ package br.com.zup.beagle.android.context.tokenizer
 
 import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.operation.OperationResolver
+import br.com.zup.beagle.android.setup.BeagleConfigurator
 import br.com.zup.beagle.android.utils.getContextId
 import java.lang.IllegalStateException
 
 typealias FindValue = (String, ContextData?) -> Any?
 
 internal class ExpressionTokenExecutor(
-    private val operationResolver: OperationResolver = OperationResolver()
+    private val beagleConfigurator: BeagleConfigurator,
+    private val operationResolver: OperationResolver = OperationResolver(beagleConfigurator)
 ) {
 
     fun execute(

@@ -16,7 +16,6 @@
 
 package br.com.zup.beagle.android.data.serializer.adapter.generic
 
-import br.com.zup.beagle.android.data.serializer.BeagleMoshi
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.JsonReader
 import com.squareup.moshi.JsonWriter
@@ -30,21 +29,22 @@ class BeagleGenericAdapterFactory(private val typeAdapterResolver: TypeAdapterRe
         val genericAdapter = typeAdapterResolver.getAdapter<Type>(type)
 
         if (genericAdapter != null) {
-            return TypeAdapter(genericAdapter)
+            return TypeAdapter(genericAdapter, moshi)
         }
 
         return null
     }
 
     private class TypeAdapter<T>(
-        private val beagleTypeAdapter: BeagleTypeAdapter<T>
+        private val beagleTypeAdapter: BeagleTypeAdapter<T>,
+        private val moshi: Moshi
     ) : JsonAdapter<T>() {
 
         override fun fromJson(reader: JsonReader): T {
             val value = reader.readJsonValue()!!
             var json = value
             if (value !is String) {
-                json = BeagleMoshi.moshi.adapter(Any::class.java).toJson(value)
+                json = moshi.adapter(Any::class.java).toJson(value)
             }
 
             return beagleTypeAdapter.fromJson(json as String)

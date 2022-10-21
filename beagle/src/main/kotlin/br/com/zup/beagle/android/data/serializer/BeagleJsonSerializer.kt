@@ -18,8 +18,11 @@ package br.com.zup.beagle.android.data.serializer
 
 import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
+import com.squareup.moshi.Moshi
 
 interface BeagleJsonSerializer {
+    val moshi: Moshi
+
     fun serializeComponent(component: ServerDrivenComponent): String
 
     fun deserializeComponent(json: String): ServerDrivenComponent

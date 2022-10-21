@@ -17,6 +17,7 @@
 package br.com.zup.beagle.android.data.serializer
 
 import br.com.zup.beagle.android.BaseTest
+import com.squareup.moshi.Moshi
 import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -31,28 +32,18 @@ class BeagleJsonSerializerFactoryTest : BaseTest() {
     @Nested
     inner class SerializeTest {
 
-        @DisplayName("Then should return correct implementation")
-        @Test
-        fun testCreateObject() {
-            // When
-            val actual = BeagleJsonSerializerFactory.serializer
-
-            // Then
-            assertTrue(actual is BeagleSerializer)
-        }
-
         @DisplayName("Then should return the correct implementation of moshi")
         @Test
         fun testCreateObjectWithMoshi() {
             //Given
-            val beagleMoshi: BeagleMoshi = mockk()
+            val beagleMoshi: Moshi = mockk()
 
             // When
             val actual = BeagleJsonSerializerFactory.create(beagleMoshi)
 
             // Then
             assertTrue(actual is BeagleSerializer)
-            assertEquals((actual as BeagleSerializer).beagleMoshiFactory, beagleMoshi)
+            assertEquals((actual as BeagleSerializer).moshi, beagleMoshi)
         }
     }
 }

@@ -17,7 +17,7 @@
 package br.com.zup.beagle.android.utils
 
 import androidx.fragment.app.Fragment
-import br.com.zup.beagle.android.BaseTest
+import br.com.zup.beagle.android.BaseConfigurationTest
 import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.context.expressionOf
 import br.com.zup.beagle.android.mockdata.createViewForContext
@@ -45,7 +45,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 @DisplayName("Given a widget extension")
-class WidgetExtensionsKtTest : BaseTest() {
+class WidgetExtensionsKtTest : BaseConfigurationTest() {
 
     private val component = mockk<ServerDrivenComponent>()
     private val widgetComponent = mockk<Widget>()
@@ -135,7 +135,9 @@ class WidgetExtensionsKtTest : BaseTest() {
             val screenId = "screenId"
 
             //when
-            widgetComponent.toView(fragment = fragment, screenIdentifier = screenId)
+            widgetComponent.toView(fragment = fragment,
+                screenIdentifier = screenId,
+                beagleConfigurator = beagleConfigurator)
 
             //then
             assertEquals(screenId, slot.captured.getScreenId())
@@ -149,7 +151,9 @@ class WidgetExtensionsKtTest : BaseTest() {
             val componentId = "componentId"
 
             //when
-            widgetComponent.toView(fragment = fragment, screenIdentifier = null)
+            widgetComponent.toView(fragment = fragment,
+                screenIdentifier = null,
+                beagleConfigurator = beagleConfigurator)
 
             //then
             assertEquals(componentId, slot.captured.getScreenId())

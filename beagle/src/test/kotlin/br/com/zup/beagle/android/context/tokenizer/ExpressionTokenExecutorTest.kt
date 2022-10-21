@@ -16,23 +16,26 @@
 
 package br.com.zup.beagle.android.context.tokenizer
 
-import br.com.zup.beagle.android.BaseTest
+import br.com.zup.beagle.android.BaseConfigurationTest
 import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.testutil.RandomData
+import com.squareup.moshi.Moshi
 import org.junit.Assert.assertNull
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 
-class ExpressionTokenExecutorTest : BaseTest() {
+class ExpressionTokenExecutorTest : BaseConfigurationTest() {
 
     private lateinit var expressionTokenExecutor: ExpressionTokenExecutor
     private val tokenParser = TokenParser()
 
+    override lateinit var moshi: Moshi
+
     @BeforeAll
     override fun setUp() {
         super.setUp()
-        expressionTokenExecutor = ExpressionTokenExecutor()
+        expressionTokenExecutor = ExpressionTokenExecutor(beagleConfigurator)
     }
 
     @Test

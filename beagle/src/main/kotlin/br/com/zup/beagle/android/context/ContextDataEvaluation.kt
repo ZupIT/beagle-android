@@ -19,18 +19,17 @@ package br.com.zup.beagle.android.context
 import androidx.collection.LruCache
 import br.com.zup.beagle.android.context.tokenizer.ExpressionToken
 import br.com.zup.beagle.android.context.tokenizer.ExpressionTokenExecutor
-import br.com.zup.beagle.android.data.serializer.BeagleMoshi
 import br.com.zup.beagle.android.logger.BeagleMessageLogs
-import com.squareup.moshi.Moshi
+import br.com.zup.beagle.android.setup.BeagleConfigurator
 import org.json.JSONArray
 import org.json.JSONObject
 import java.lang.reflect.Type
 
 internal class ContextDataEvaluation(
+    private val beagleConfigurator: BeagleConfigurator,
     private val contextDataManipulator: ContextDataManipulator = ContextDataManipulator(),
-    private val expressionTokenExecutor: ExpressionTokenExecutor = ExpressionTokenExecutor(),
+    private val expressionTokenExecutor: ExpressionTokenExecutor = ExpressionTokenExecutor(beagleConfigurator),
     private val contextExpressionReplacer: ContextExpressionReplacer = ContextExpressionReplacer(),
-    private val moshi: Moshi = BeagleMoshi.moshi
 ) {
 
     fun evaluateBindExpression(
@@ -71,10 +70,11 @@ internal class ContextDataEvaluation(
             return when {
                 bind.type == String::class.java -> response?.toString() ?: ""
                 expressions.size == 1 && type == null && bind.type == Any::class.java -> response
-                expressions.size == 1 && type == null -> moshi.adapter<Any>(bind.type).fromJsonValue(response)
+                expressions.size == 1 && type == null ->
+                    beagleConfigurator.moshi.adapter<Any>(bind.type).fromJsonValue(response)
                 else -> {
                     val newType = if (bind.type == Any::class.java) type else bind.type
-                    moshi.adapter<Any>(newType ?: bind.type).fromJson(response.toString())
+                    beagleConfigurator.moshi.adapter<Any>(newType ?: bind.type).fromJson(response.toString())
                         ?: showLogErrorAndReturn(bind)
                 }
             }

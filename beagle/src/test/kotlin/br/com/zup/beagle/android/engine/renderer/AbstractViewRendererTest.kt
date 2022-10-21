@@ -21,6 +21,7 @@ import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.components.utils.ComponentStylization
 import br.com.zup.beagle.android.context.ContextComponentHandler
 import br.com.zup.beagle.android.testutil.RandomData
+import br.com.zup.beagle.android.utils.generateViewModelInstance
 import br.com.zup.beagle.android.view.viewmodel.GenerateIdViewModel
 import br.com.zup.beagle.android.view.viewmodel.ScreenContextViewModel
 import br.com.zup.beagle.android.widget.RootView
@@ -32,7 +33,6 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.spyk
 import io.mockk.verify
-import io.mockk.verifySequence
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -96,9 +96,11 @@ class AbstractViewRendererTest : BaseTest() {
         viewRenderer.build(rootView)
 
         // Then
-        verifySequence {
-            rootView.getViewModelStoreOwner()
-            componentStylization.apply(view, component)
+        verify {
+            rootView.generateViewModelInstance<ScreenContextViewModel>(
+                ScreenContextViewModel.provideFactory(rootView.getBeagleConfigurator())
+            )
+            componentStylization.apply(rootView, view, component)
             contextViewRenderer.handleComponent(view, contextViewModel, component)
         }
     }

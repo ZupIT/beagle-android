@@ -37,7 +37,8 @@ typealias OnLoadCompleted = () -> Unit
 @SuppressLint("ViewConstructor")
 internal class BeagleView(
     private val rootView: RootView,
-    private val viewModel: BeagleViewModel = rootView.generateViewModelInstance(),
+    private val viewModel: BeagleViewModel = rootView.generateViewModelInstance(
+        BeagleViewModel.provideFactory(rootView.getBeagleConfigurator())),
 ) : InternalBeagleFlexView(rootView) {
 
     var serverStateChangedListener: OnServerStateChanged? = null
@@ -49,7 +50,7 @@ internal class BeagleView(
     }
 
     fun updateView(url: String, view: View) {
-        val urlFormatted = url.formatUrl()
+        val urlFormatted = url.formatUrl(beagleConfigurator = rootView.getBeagleConfigurator())
         loadView(RequestData(url = urlFormatted), view)
     }
 
@@ -99,7 +100,7 @@ internal class BeagleView(
         }
         screenIdentifier?.let {
             rootView.generateViewModelInstance<AnalyticsViewModel>().createScreenReport(
-                screenIdentifier, getRootId(component)
+                rootView, getRootId(component)
             )
         }
     }

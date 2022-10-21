@@ -23,7 +23,6 @@ import br.com.zup.beagle.android.action.AnalyticsAction
 import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.data.serializer.createNamespace
 import br.com.zup.beagle.android.logger.BeagleMessageLogs
-import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.utils.evaluateExpression
 import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.android.annotation.RegisterAction
@@ -57,19 +56,19 @@ internal object ActionReportFactory {
         ),
         action = action,
         screenId = rootView.getScreenId(),
-        actionType = getActionType(action)
+        actionType = getActionType(action, isCustomAction(action, rootView.getBeagleConfigurator().registeredActions))
     )
 
     private fun getParameters(action: AnalyticsAction): Map<String?, KParameter>? =
         @Suppress("UNCHECKED_CAST")
         (action::class as KClass<AnalyticsAction>).primaryConstructor?.parameters?.associateBy { it.name }
 
-    private fun getActionType(action: Action): String =
-        if (isCustomAction(action)) getActionName("custom", action::class.java)
+    private fun getActionType(action: Action, isCustomAction: Boolean): String =
+        if (isCustomAction) getActionName("custom", action::class.java)
         else getActionName("beagle", action::class.java)
 
-    private fun isCustomAction(action: Action): Boolean =
-        BeagleEnvironment.beagleSdk.registeredActions().contains(action::class.java)
+    private fun isCustomAction(action: Action, registeredActions: List<Class<Action>>): Boolean =
+        registeredActions.contains(action::class.java)
 
     private fun getActionName(appNameSpace: String, clazz: Class<*>): String {
         var name = ""

@@ -17,7 +17,7 @@
 package br.com.zup.beagle.android.view.viewmodel
 
 import androidx.lifecycle.Observer
-import br.com.zup.beagle.android.BaseTest
+import br.com.zup.beagle.android.BaseConfigurationTest
 import br.com.zup.beagle.android.testutil.CoroutinesTestExtension
 import br.com.zup.beagle.android.testutil.InstantExecutorExtension
 import io.mockk.Runs
@@ -32,7 +32,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 
 @ExperimentalCoroutinesApi
 @ExtendWith(InstantExecutorExtension::class, CoroutinesTestExtension::class)
-class BeagleScreenViewModelTest : BaseTest() {
+class BeagleScreenViewModelTest : BaseConfigurationTest() {
 
     private val observer: Observer<Boolean> = mockk()
 
@@ -42,7 +42,7 @@ class BeagleScreenViewModelTest : BaseTest() {
     override fun setUp() {
         super.setUp()
 
-        beagleScreenViewModel = BeagleScreenViewModel()
+        beagleScreenViewModel = BeagleScreenViewModel(beagleConfigurator)
         every { observer.onChanged(any()) } just Runs
     }
 

@@ -25,10 +25,16 @@ import br.com.zup.beagle.android.action.NavigationContext
 import br.com.zup.beagle.android.networking.HttpAdditionalData
 import br.com.zup.beagle.android.networking.HttpMethod
 import br.com.zup.beagle.android.networking.RequestData
+import br.com.zup.beagle.android.setup.BeagleEnvironment
+import br.com.zup.beagle.android.setup.BeagleSdk
 import br.com.zup.beagle.android.testutil.RandomData
 import br.com.zup.beagle.android.view.BeagleActivity
 import br.com.zup.beagle.android.view.ServerDrivenActivity
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.mockkObject
 import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -36,6 +42,14 @@ import org.junit.runner.RunWith
 class ServerDrivenFactoryTest {
 
     private val navigationContext = NavigationContext(value = "")
+
+    val beagleSdk: BeagleSdk = mockk(relaxed = true, relaxUnitFun = true)
+
+    @Before
+    fun setup() {
+        mockkObject(BeagleEnvironment)
+        every { BeagleEnvironment.beagleSdk } returns beagleSdk
+    }
 
     @Test
     fun `Given a Context When call newServerDrivenIntent Then should RequestData through bundle`() {
@@ -58,6 +72,7 @@ class ServerDrivenFactoryTest {
         val bundle = Bundle()
         bundle.putParcelable(BeagleActivity.FIRST_SCREEN_REQUEST_KEY, requestData)
         bundle.putParcelable(BeagleActivity.NAVIGATION_CONTEXT_KEY, navigationContext)
+        bundle.putBinder(BeagleActivity.BEAGLE_CONFIGURATOR, ObjectWrapperForBinder(beagleSdk))
 
         expected.putExtras(bundle)
 
@@ -66,6 +81,7 @@ class ServerDrivenFactoryTest {
         assertEquals(expected.extras!!.get(BeagleActivity.FIRST_SCREEN_REQUEST_KEY), result.extras!!.get(BeagleActivity.FIRST_SCREEN_REQUEST_KEY))
         assertEquals(expected.extras!!.get(BeagleActivity.NAVIGATION_CONTEXT_KEY),
             result.extras!!.get(BeagleActivity.NAVIGATION_CONTEXT_KEY))
+        assertEquals(expected.extras!!.getBinder(BeagleActivity.BEAGLE_CONFIGURATOR), ObjectWrapperForBinder(beagleSdk))
     }
 
     @Test
@@ -82,6 +98,7 @@ class ServerDrivenFactoryTest {
         val bundle = Bundle()
         bundle.putString(BeagleActivity.FIRST_SCREEN_KEY, screenJson)
         bundle.putParcelable(BeagleActivity.NAVIGATION_CONTEXT_KEY, navigationContext)
+        bundle.putBinder(BeagleActivity.BEAGLE_CONFIGURATOR, ObjectWrapperForBinder(beagleSdk))
 
         expected.putExtras(bundle)
 
@@ -89,5 +106,7 @@ class ServerDrivenFactoryTest {
         assertEquals(expected.extras!!.get(BeagleActivity.FIRST_SCREEN_KEY), result.extras!!.get(BeagleActivity.FIRST_SCREEN_KEY))
         assertEquals(expected.extras!!.get(BeagleActivity.NAVIGATION_CONTEXT_KEY),
             result.extras!!.get(BeagleActivity.NAVIGATION_CONTEXT_KEY))
+        assertEquals(expected.extras!!.getBinder(BeagleActivity.BEAGLE_CONFIGURATOR), ObjectWrapperForBinder(beagleSdk))
+
     }
 }

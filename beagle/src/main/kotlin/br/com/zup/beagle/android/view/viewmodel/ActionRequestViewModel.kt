@@ -18,10 +18,12 @@ package br.com.zup.beagle.android.view.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import br.com.zup.beagle.android.action.SendRequestInternal
 import br.com.zup.beagle.android.data.ActionRequester
 import br.com.zup.beagle.android.exception.BeagleApiException
+import br.com.zup.beagle.android.setup.BeagleConfigurator
 import br.com.zup.beagle.android.utils.CoroutineDispatchers
 import br.com.zup.beagle.android.view.mapper.toRequestData
 import br.com.zup.beagle.android.view.mapper.toResponse
@@ -44,9 +46,23 @@ internal sealed class FetchViewState {
 }
 
 internal class ActionRequestViewModel(
+    private val beagleConfigurator: BeagleConfigurator,
     private val ioDispatcher: CoroutineDispatcher = CoroutineDispatchers.IO,
-    private val actionRequester: ActionRequester = ActionRequester()
+    private val actionRequester: ActionRequester = ActionRequester(beagleConfigurator.httpClient)
 ) : ViewModel() {
+
+    companion object {
+        fun provideFactory(
+            beagleConfigurator: BeagleConfigurator,
+        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return ActionRequestViewModel(
+                    beagleConfigurator = beagleConfigurator
+                ) as T
+            }
+        }
+    }
 
     fun fetch(sendRequest: SendRequestInternal): LiveData<FetchViewState> {
         return FetchActionLiveData(actionRequester, sendRequest, viewModelScope, ioDispatcher)
@@ -57,8 +73,7 @@ private class FetchActionLiveData(
     private val actionRequester: ActionRequester,
     private val sendRequest: SendRequestInternal,
     private val coroutineScope: CoroutineScope,
-    private val ioDispatcher: CoroutineDispatcher
-) : LiveData<FetchViewState>() {
+    private val ioDispatcher: CoroutineDispatcher) : LiveData<FetchViewState>() {
 
     override fun onActive() {
         if (value == null) {

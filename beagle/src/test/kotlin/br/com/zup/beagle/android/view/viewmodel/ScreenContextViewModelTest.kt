@@ -17,8 +17,7 @@
 package br.com.zup.beagle.android.view.viewmodel
 
 import android.view.View
-import br.com.zup.beagle.android.BaseTest
-import br.com.zup.beagle.android.action.Action
+import br.com.zup.beagle.android.BaseConfigurationTest
 import br.com.zup.beagle.android.action.SetContextInternal
 import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.context.ContextData
@@ -35,7 +34,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 @DisplayName("Given a ScreenContextViewModel")
-class ScreenContextViewModelTest : BaseTest() {
+class ScreenContextViewModelTest : BaseConfigurationTest() {
 
     private val contextDataManager = mockk<ContextDataManager>(relaxed = true)
     private val contextDataEvaluation = mockk<ContextDataEvaluation>(relaxed = true)
@@ -46,7 +45,10 @@ class ScreenContextViewModelTest : BaseTest() {
 
     @BeforeEach
     fun clear() {
-        screenContextViewModel = ScreenContextViewModel(contextDataManager, contextDataEvaluation, implicitContextManager)
+        screenContextViewModel = ScreenContextViewModel(beagleConfigurator,
+            contextDataManager,
+            contextDataEvaluation,
+            implicitContextManager)
     }
 
     @Test

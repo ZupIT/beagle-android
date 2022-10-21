@@ -16,7 +16,7 @@
 
 package br.com.zup.beagle.android.operation
 
-import br.com.zup.beagle.android.BaseTest
+import br.com.zup.beagle.android.BaseConfigurationTest
 import br.com.zup.beagle.android.logger.BeagleMessageLogs
 import io.mockk.Runs
 import io.mockk.every
@@ -32,14 +32,14 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 @DisplayName("Given an OperationResolver object")
-internal class OperationResolverTest : BaseTest() {
+internal class OperationResolverTest : BaseConfigurationTest() {
 
     private lateinit var operationResolver: OperationResolver
 
     @BeforeAll
     override fun setUp() {
         super.setUp()
-        operationResolver = OperationResolver()
+        operationResolver = OperationResolver(beagleConfigurator)
 
         mockkObject(BeagleMessageLogs)
     }

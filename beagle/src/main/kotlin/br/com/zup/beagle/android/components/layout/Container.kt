@@ -53,6 +53,7 @@ data class Container(
     private val styleManager: StyleManager = StyleManager()
 
     override fun buildView(rootView: RootView): View {
+        styleManager.init(rootView.getBeagleConfigurator().designSystem)
         val styleId = styleManager.getContainerStyle(styleId)
         val view = if (styleId == 0) ViewFactory.makeBeagleFlexView(rootView, style ?: Style())
         else ViewFactory.makeBeagleFlexView(rootView, style ?: Style(), styleId)

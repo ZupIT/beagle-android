@@ -19,11 +19,8 @@ name: Pull Request
 on:  
   push:
     branches:
-      - main
   pull_request:
     branches:
-      - main
-      - release/*
 
 jobs:
     pr-validation:
@@ -62,3 +59,9 @@ jobs:
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                     SONAR_TOKEN: ${{ env.BEAGLE_CORE_GITHUB_SONAR_TOKEN }}
                 run: bundle exec fastlane android pull_request_verification
+            -   name: Upload Reports
+                uses: actions/upload-artifact@v2
+                with:
+                    name: Test-Reports
+                    path: beagle/build/reports
+                if: always()

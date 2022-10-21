@@ -51,7 +51,9 @@ data class SetContext(
 ) : AnalyticsAction {
 
     override fun execute(rootView: RootView, origin: View) {
-        val viewModel = rootView.generateViewModelInstance<ScreenContextViewModel>()
+        val viewModel = rootView.generateViewModelInstance<ScreenContextViewModel>(
+            ScreenContextViewModel.provideFactory(rootView.getBeagleConfigurator())
+        )
         try {
             val value = toInternalSetContext(rootView, origin)
             viewModel.updateContext(origin, value)
@@ -62,7 +64,8 @@ data class SetContext(
 
     private fun toInternalSetContext(rootView: RootView, origin: View) = SetContextInternal(
         contextId = this.contextId,
-        value = evaluateExpression(rootView, origin, this.value)?.normalizeContextValue()
+        value = evaluateExpression(rootView, origin, this.value)?.normalizeContextValue(
+            rootView.getBeagleConfigurator().moshi)
             ?: throw IllegalStateException("SetContext with id=${this.contextId} evaluated to null"),
         path = this.path
     )
