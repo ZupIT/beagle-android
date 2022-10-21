@@ -25,6 +25,7 @@ import br.com.zup.beagle.android.components.layout.Container
 import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.context.ContextBinding
 import br.com.zup.beagle.android.context.ContextData
+import br.com.zup.beagle.android.context.expressionOf
 import br.com.zup.beagle.android.data.serializer.BeagleSerializer
 import br.com.zup.beagle.android.testutil.InstantExecutorExtension
 import br.com.zup.beagle.android.testutil.getPrivateField
@@ -66,7 +67,7 @@ class ListViewHolderTest : BaseTest() {
     private val listViewModels = mockk<ListViewModels>()
     private val viewModel = mockk<ScreenContextViewModel>(relaxed = true)
     private val listViewIdViewModel = mockk<ListViewIdViewModel>(relaxed = true)
-    private val dataSource = mockk<Bind<List<Any>>>(relaxed = true)
+    private val dataSource: Bind<List<Any>> = expressionOf("@{listDatasource.a.array}")
     private val jsonTemplate = ""
     private val iteratorName = "list"
     private val indexName = "indexName"

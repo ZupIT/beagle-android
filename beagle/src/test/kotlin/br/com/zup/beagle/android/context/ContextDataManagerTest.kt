@@ -568,19 +568,21 @@ class ContextDataManagerTest : BaseTest() {
         fun addRemoveContextObserver() {
             //Given
             val contextId = "contextId"
-            val contextObserver: InternalContextObserver = {
-
-            }
+            val contextId2 = "contextId2"
+            val contextObserver: InternalContextObserver = mockk()
+            val contextObserver2: InternalContextObserver = mockk()
 
             // When
             contextDataManager.addContextObserver(contextId, contextObserver)
+            contextDataManager.addContextObserver(contextId2, contextObserver2)
 
-            assertEquals(contextObserver, contextDataManager.getContextObservers(contextId))
+            assertEquals(contextObserver, contextDataManager.getContextObserver(contextId))
 
             contextDataManager.removeContextObserver(contextId)
 
             // Then
-            assertEquals(null, contextDataManager.getContextObservers(contextId))
+            assertEquals(null, contextDataManager.getContextObserver(contextId))
+            assertEquals(contextObserver2, contextDataManager.getContextObserver(contextId2))
         }
     }
 
