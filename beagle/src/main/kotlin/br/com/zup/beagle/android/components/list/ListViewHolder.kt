@@ -176,6 +176,12 @@ internal class ListViewHolder(
     private fun isObservableExpression(dataSource: Bind<List<Any>>) =
         (dataSource is Bind.Expression
                 && dataSource.expressions.size == 1)
+            &&
+            !hasOperation(dataSource)
+
+    private fun hasOperation(dataSource: Bind<List<Any>>) =
+        ((dataSource as Bind.Expression).expressions.first().value.contains("(") &&
+            (dataSource).expressions.first().value.contains(")"))
 
     private fun observeSetContextForContext(
         contextId: String,
