@@ -21,15 +21,28 @@ import br.com.zup.beagle.android.operation.OperationType
 import br.com.zup.beagle.android.annotation.RegisterOperation
 
 @RegisterOperation("lte")
-internal class LteOperation : Operation, ComparisonValidationParameterOperation {
+internal class LteOperation : Operation, ComparisonValidationParameterOperation, ComparisonOperationHandler {
 
     override fun execute(vararg params: OperationType?): OperationType {
         if (parametersIsNull(params)) return OperationType.Null
 
-        val value1 = (params[0] as OperationType.TypeNumber).value.toDouble()
-        val value2 = (params[1] as OperationType.TypeNumber).value.toDouble()
+        return when (params.size) {
+            2 -> handleOperation(params[0], params[1])
+            else -> OperationType.TypeBoolean(false)
+        }
+    }
 
-        val result = value1 <= value2
+    private fun handleOperation(first: OperationType?, second: OperationType?): OperationType {
+        val result = when {
+            first?.value is Int && second?.value is String -> handleStringAndIntCase(first, second, this)
+            second?.value is String && first?.value is Int -> handleStringAndIntCase(second, first, this)
+            first?.value is Double && second?.value is String -> handleStringAndDoubleCase(first, second, this)
+            second?.value is String && first?.value is Int -> handleStringAndDoubleCase(second, first, this)
+            first?.value is Int && second?.value is Double -> handleIntAndDoubleCase(first, second, this)
+            second?.value is Int && first?.value is Double -> handleIntAndDoubleCase(second, first, this)
+            else -> false
+        }
         return OperationType.TypeBoolean(result)
     }
+
 }
