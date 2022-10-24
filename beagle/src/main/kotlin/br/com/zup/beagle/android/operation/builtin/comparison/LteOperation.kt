@@ -27,22 +27,9 @@ internal class LteOperation : Operation, ComparisonValidationParameterOperation,
         if (parametersIsNull(params)) return OperationType.Null
 
         return when (params.size) {
-            2 -> handleOperation(params[0], params[1])
+            2 -> handleOperation(params[0], params[1], this)
             else -> OperationType.TypeBoolean(false)
         }
-    }
-
-    private fun handleOperation(first: OperationType?, second: OperationType?): OperationType {
-        val result = when {
-            first?.value is Int && second?.value is String -> handleStringAndIntCase(first, second, this)
-            second?.value is String && first?.value is Int -> handleStringAndIntCase(second, first, this)
-            first?.value is Double && second?.value is String -> handleStringAndDoubleCase(first, second, this)
-            second?.value is String && first?.value is Int -> handleStringAndDoubleCase(second, first, this)
-            first?.value is Int && second?.value is Double -> handleIntAndDoubleCase(first, second, this)
-            second?.value is Int && first?.value is Double -> handleIntAndDoubleCase(second, first, this)
-            else -> false
-        }
-        return OperationType.TypeBoolean(result)
     }
 
 }
