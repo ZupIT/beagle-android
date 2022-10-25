@@ -15,8 +15,6 @@
  */
 
 package br.com.zup.beagle.android.operation.builtin
-
-import br.com.zup.beagle.android.operation.OperationType
 import java.lang.NumberFormatException
 
 class TypeConverter {
