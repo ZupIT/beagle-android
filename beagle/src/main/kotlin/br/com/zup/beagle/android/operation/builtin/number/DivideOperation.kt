@@ -19,22 +19,50 @@ package br.com.zup.beagle.android.operation.builtin.number
 import br.com.zup.beagle.android.operation.Operation
 import br.com.zup.beagle.android.operation.OperationType
 import br.com.zup.beagle.android.annotation.RegisterOperation
+import br.com.zup.beagle.android.operation.builtin.TypeConverter
+import br.com.zup.beagle.android.operation.builtin.comparison.ComparisonValidationParameterOperation
 
 @RegisterOperation("divide")
-internal class DivideOperation : Operation {
+internal class DivideOperation : Operation, ComparisonValidationParameterOperation {
 
     override fun execute(vararg params: OperationType?): OperationType {
+
         return params.reduce { parameterOne, parameterTwo ->
-            val value1 = (parameterOne as? OperationType.TypeNumber)?.value?.toDouble()
-            val value2 = (parameterTwo as? OperationType.TypeNumber)?.value?.toDouble()
-
-            if (value1 == null || value2 == null) return OperationType.Null
-
-            val result = value1 / value2
-
-            val isInt = (params[0] as OperationType.TypeNumber).value is Int
-            if (isInt) OperationType.TypeNumber(result.toInt()) else OperationType.TypeNumber(result)
+            val two: Array<OperationType?> = arrayOf(parameterOne, parameterTwo)
+            when (parametersIsNull(two)) {
+                true -> OperationType.Null
+                false -> handleDivide(parameterOne, parameterTwo)
+            }
         } ?: OperationType.Null
+    }
+
+    private fun handleDivide(one: OperationType?, two: OperationType?) : OperationType {
+        return when {
+            one?.value is String && two?.value is String -> handleTwoString(one as OperationType.TypeString, two as OperationType.TypeString)
+            one?.value is String && two?.value is Number -> handleOneString(one as OperationType.TypeString, two as OperationType.TypeNumber)
+            two?.value is String && one?.value is Number -> handleOneString(two as OperationType.TypeString, one as OperationType.TypeNumber)
+            else -> OperationType.TypeNumber((one?.value as Double) / (two?.value as Double))
+        }
+    }
+
+    private fun handleTwoString(one: OperationType.TypeString, two: OperationType.TypeString): OperationType {
+        val stringOne: OperationType = TypeConverter.convertStringToDouble(one.value)
+        val stringTwo: OperationType = TypeConverter.convertStringToDouble(two.value)
+
+        return when {
+            stringOne is OperationType.Null -> OperationType.Null
+            stringTwo is OperationType.Null -> OperationType.Null
+            else -> OperationType.TypeNumber(stringOne.value as Double / stringTwo.value as Double)
+        }
+
+    }
+
+    private fun handleOneString(one: OperationType.TypeString, two: OperationType.TypeNumber): OperationType {
+        return when (val stringOne: OperationType = TypeConverter.convertStringToDouble(one.value)) {
+            is OperationType.Null -> OperationType.Null
+            else -> OperationType.TypeNumber(stringOne.value as Double / two.value as Double)
+        }
+
     }
 
 }
