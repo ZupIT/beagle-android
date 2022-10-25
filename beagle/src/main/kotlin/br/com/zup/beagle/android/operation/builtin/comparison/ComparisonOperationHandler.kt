@@ -22,7 +22,9 @@ import java.lang.NumberFormatException
 
 internal interface ComparisonOperationHandler {
 
-    fun handleOperation(first: OperationType?, second: OperationType?, operation: Operation): OperationType {
+    fun handleOperation(first: OperationType?,
+                        second: OperationType?,
+                        operation: Operation): OperationType {
         val result = when {
             first?.value is Int && second?.value is String -> handleStringAndIntCase(first, second, operation)
             second?.value is String && first?.value is Int -> handleStringAndIntCase(second, first, operation)
@@ -35,7 +37,9 @@ internal interface ComparisonOperationHandler {
         return OperationType.TypeBoolean(result)
     }
 
-    private fun handleStringAndIntCase(first: OperationType?, second: OperationType?, operation: Operation): Boolean {
+    private fun handleStringAndIntCase(first: OperationType?,
+                                       second: OperationType?,
+                                       operation: Operation): Boolean {
         try {
             val secondAsInt: Int = (second?.value as String).toInt()
             return when (operation) {
@@ -50,7 +54,9 @@ internal interface ComparisonOperationHandler {
         return false
     }
 
-    private fun handleStringAndDoubleCase(first: OperationType?, second: OperationType?, operation: Operation): Boolean {
+    private fun handleStringAndDoubleCase(first: OperationType?,
+                                          second: OperationType?,
+                                          operation: Operation): Boolean {
         try {
             val secondAsDouble: Double = (second?.value as String).toDouble()
             return when (operation) {
@@ -65,7 +71,9 @@ internal interface ComparisonOperationHandler {
         return false
     }
 
-    private fun handleIntAndDoubleCase(first: OperationType?, second: OperationType?, operation: Operation): Boolean {
+    private fun handleIntAndDoubleCase(first: OperationType?,
+                                       second: OperationType?,
+                                       operation: Operation): Boolean {
         val secondAsDouble: Double = second?.value as Double
         val integerPartOfDouble: Int = secondAsDouble.toInt()
 
