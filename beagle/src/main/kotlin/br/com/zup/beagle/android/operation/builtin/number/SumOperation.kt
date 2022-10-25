@@ -28,16 +28,20 @@ internal class SumOperation : Operation {
 
         val result = params.sumOf {
 
-            var number: Number = 0
+            var number: OperationType = OperationType.Null
             if (it?.value is String) {
-                number = TypeConverter.convertStringToInt(it.value as String) ?: 0
+                val mid = TypeConverter.convertStringToDouble(it.value as String)
+                number = when (mid) {
+                    is OperationType.Null -> OperationType.TypeNumber(0)
+                    else -> mid
+                }
             } else if (it?.value is Int) {
-                number = it.value as Int
+                number = OperationType.TypeNumber(it.value as Int)
             } else if (it?.value is Double) {
-                number = it.value as Double
+                number = OperationType.TypeNumber(it.value as Double)
             }
 
-            number.toDouble()
+            (number.value as Number).toDouble()
         }
 
         return OperationType.TypeNumber(result)
