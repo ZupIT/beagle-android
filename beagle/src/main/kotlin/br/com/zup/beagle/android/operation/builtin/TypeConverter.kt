@@ -15,52 +15,53 @@
  */
 
 package br.com.zup.beagle.android.operation.builtin
+import br.com.zup.beagle.android.operation.OperationType
 import java.lang.NumberFormatException
 
 class TypeConverter {
 
     companion object {
 
-        fun convertStringToInt(argument: String): Int? {
-            if (argument.isNullOrEmpty()) return null
+        fun convertStringToInt(argument: String): OperationType {
+            if (argument.isNullOrEmpty()) return OperationType.Null
 
-            var converted: Int? = null
             try {
-                converted = argument.toInt()
+                val converted = argument.toInt()
+                return OperationType.TypeNumber(converted)
             } catch (exception: NumberFormatException) {
 
             }
 
-            return converted
+            return OperationType.Null
         }
 
-        fun convertDoubleToInt(argument: Double): Int {
-            return argument.toInt()
+        fun convertDoubleToInt(argument: Double): OperationType.TypeNumber {
+            return OperationType.TypeNumber(argument.toInt())
         }
 
-        fun convertStringToDouble(argument: String): Double? {
-            if (argument.isNullOrEmpty()) return null
+        fun convertStringToDouble(argument: String):OperationType {
+            if (argument.isNullOrEmpty()) return OperationType.Null
 
-            var converted: Double? = null
             try {
-                converted = argument.toDouble()
+                val converted = argument.toDouble()
+                return OperationType.TypeNumber(converted)
             } catch (exception: NumberFormatException) {
 
             }
 
-            return converted
+            return OperationType.Null
         }
 
-        fun convertIntegerToDouble(argument: Int): Double {
-            return argument.toDouble()
+        fun convertIntegerToDouble(argument: Int): OperationType.TypeNumber {
+            return OperationType.TypeNumber(argument.toDouble())
         }
 
-        fun convertIntToString(argument: Int): String {
-            return argument.toString()
+        fun convertIntToString(argument: Int): OperationType.TypeString {
+            return OperationType.TypeString(argument.toString())
         }
 
-        fun convertDoubleToString(argument: Double): String {
-            return argument.toString()
+        fun convertDoubleToString(argument: Double): OperationType.TypeString {
+            return OperationType.TypeString(argument.toString())
         }
 
     }
