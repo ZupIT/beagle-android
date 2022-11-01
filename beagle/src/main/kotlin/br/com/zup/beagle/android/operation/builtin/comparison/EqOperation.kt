@@ -21,11 +21,14 @@ import br.com.zup.beagle.android.operation.OperationType
 import br.com.zup.beagle.android.annotation.RegisterOperation
 
 @RegisterOperation("eq")
-internal class EqOperation : Operation {
+internal class EqOperation : Operation, ComparisonValidationParameterOperation, ComparisonOperationHandler {
 
     override fun execute(vararg params: OperationType?): OperationType {
-        val result = params[0].toString() == params[1].toString()
+        if (parametersIsNull(params)) return OperationType.Null
 
-        return OperationType.TypeBoolean(result)
+        return when (params.size) {
+            2 -> handleOperation(params[0], params[1], this)
+            else -> OperationType.TypeBoolean(false)
+        }
     }
 }

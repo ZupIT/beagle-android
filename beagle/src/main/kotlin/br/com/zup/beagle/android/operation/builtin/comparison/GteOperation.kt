@@ -21,15 +21,14 @@ import br.com.zup.beagle.android.operation.OperationType
 import br.com.zup.beagle.android.annotation.RegisterOperation
 
 @RegisterOperation("gte")
-internal class GteOperation : Operation, ComparisonValidationParameterOperation {
+internal class GteOperation : Operation, ComparisonValidationParameterOperation, ComparisonOperationHandler {
 
     override fun execute(vararg params: OperationType?): OperationType {
         if (parametersIsNull(params)) return OperationType.Null
 
-        val value1 = (params[0] as OperationType.TypeNumber).value
-        val value2 = (params[1] as OperationType.TypeNumber).value
-
-        val result = value1.toDouble() >= value2.toDouble()
-        return OperationType.TypeBoolean(result)
+        return when (params.size) {
+            2 -> handleOperation(params[0], params[1], this)
+            else -> OperationType.TypeBoolean(false)
+        }
     }
 }
