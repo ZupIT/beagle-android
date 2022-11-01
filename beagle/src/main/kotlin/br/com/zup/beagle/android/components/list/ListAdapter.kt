@@ -22,6 +22,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import br.com.zup.beagle.android.action.AsyncAction
 import br.com.zup.beagle.android.action.AsyncActionStatus
+import br.com.zup.beagle.android.components.DEFAULT_INDEX_NAME
 import br.com.zup.beagle.android.components.utils.Template
 import br.com.zup.beagle.android.components.utils.TemplateJson
 import br.com.zup.beagle.android.context.AsyncActionData
@@ -38,10 +39,12 @@ import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 internal class ListAdapter(
     val orientation: Int,
     val iteratorName: String,
+    val indexName: String = DEFAULT_INDEX_NAME,
     val key: String? = null,
     val listViewModels: ListViewModels,
     val templateList: List<Template>? = null,
     val originView: View,
+    val dataSource: Bind<List<Any>>
 ) : RecyclerView.Adapter<ListViewHolder>() {
 
     // Recyclerview id for post config changes id management
@@ -182,7 +185,9 @@ internal class ListAdapter(
             serializer,
             listViewModels,
             jsonTemplate,
-            iteratorName
+            iteratorName,
+            indexName,
+            dataSource
         )
         createdViewHolders.add(viewHolder)
         return viewHolder
@@ -287,10 +292,12 @@ internal class ListAdapter(
         return ListAdapter(
             this.orientation,
             this.iteratorName,
+            this.indexName,
             this.key,
             this.listViewModels,
             this.templateList,
-            this.originView
+            this.originView,
+            this.dataSource
         )
     }
 }

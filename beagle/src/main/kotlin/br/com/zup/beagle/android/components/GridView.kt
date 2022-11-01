@@ -53,7 +53,7 @@ data class GridView constructor(
     val onScrollEnd: List<Action>? = null,
     val scrollEndThreshold: Int? = null,
     val isScrollIndicatorVisible: Boolean = false,
-    val iteratorName: String = "item",
+    val iteratorName: String = DEFAULT_ITERATOR_NAME,
     val key: String? = null,
     val spanCount: Int? = null,
     val direction: GridViewDirection? = GridViewDirection.VERTICAL,

@@ -68,6 +68,8 @@ class ListAdapterTest : BaseTest() {
     private val viewGroupMock = mockk<ViewGroup>(relaxed = true)
     private val viewTypeMock = 0
     private val recyclerViewMock = mockk<RecyclerView>(relaxed = true)
+    private val dataSource = mockk<Bind<List<Any>>>(relaxed = true)
+
     private val asyncActionMock = mockk<AsyncActionImpl>()
     private val asyncActionDataMock = AsyncActionData(
         viewHolderItemView, asyncActionMock
@@ -149,7 +151,8 @@ class ListAdapterTest : BaseTest() {
             key = key,
             listViewModels = listViewModels,
             templateList = templateList,
-            originView = recyclerViewMock
+            originView = recyclerViewMock,
+            dataSource = dataSource
         )
     }
 
@@ -207,7 +210,8 @@ class ListAdapterTest : BaseTest() {
             key = key,
             listViewModels = listViewModels,
             templateList = templateList,
-            originView = recyclerViewMock
+            originView = recyclerViewMock,
+            dataSource = dataSource
         )
 
         subject.onCreateViewHolder(viewGroupMock, viewTypeMock)
@@ -223,7 +227,8 @@ class ListAdapterTest : BaseTest() {
             key = key,
             listViewModels = listViewModels,
             templateList = templateList,
-            originView = recyclerViewMock
+            originView = recyclerViewMock,
+            dataSource = dataSource
         )
         val expectedLayoutParams = ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -246,7 +251,8 @@ class ListAdapterTest : BaseTest() {
             key = key,
             listViewModels = listViewModels,
             templateList = templateList,
-            originView = recyclerViewMock
+            originView = recyclerViewMock,
+            dataSource = dataSource
         )
 
         every {
@@ -280,7 +286,8 @@ class ListAdapterTest : BaseTest() {
             key = key,
             listViewModels = listViewModels,
             templateList = templateList,
-            originView = recyclerViewMock
+            originView = recyclerViewMock,
+            dataSource = dataSource
         )
 
         every {
@@ -315,7 +322,8 @@ class ListAdapterTest : BaseTest() {
             key = key,
             listViewModels = listViewModels,
             templateList = templateList,
-            originView = recyclerViewMock
+            originView = recyclerViewMock,
+            dataSource = dataSource
         )
 
         every {
@@ -356,7 +364,8 @@ class ListAdapterTest : BaseTest() {
             key = key,
             listViewModels = listViewModels,
             templateList = templateList,
-            originView = recyclerViewMock
+            originView = recyclerViewMock,
+            dataSource = dataSource
         )
 
         every {
@@ -384,7 +393,8 @@ class ListAdapterTest : BaseTest() {
             key = key,
             listViewModels = listViewModels,
             templateList = templateList,
-            originView = recyclerViewMock
+            originView = recyclerViewMock,
+            dataSource = dataSource
         )
 
         every {
@@ -422,7 +432,8 @@ class ListAdapterTest : BaseTest() {
             key = key,
             listViewModels = listViewModels,
             templateList = templateList,
-            originView = recyclerViewMock
+            originView = recyclerViewMock,
+            dataSource = dataSource
         )
 
         every {
@@ -457,7 +468,8 @@ class ListAdapterTest : BaseTest() {
             key = key,
             listViewModels = listViewModels,
             templateList = templateListWithNoDefault,
-            originView = recyclerViewMock
+            originView = recyclerViewMock,
+            dataSource = dataSource
         )
 
         every {

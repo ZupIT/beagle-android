@@ -16,7 +16,10 @@
 
 package br.com.zup.beagle.android.context
 
+import br.com.zup.beagle.android.action.SetContextInternal
+
 typealias GlobalContextObserver = (ContextData) -> Unit
+internal typealias InternalContextObserver = (SetContextInternal) -> Unit
 
 /**
  * A Global Context is a object that can assume as value of any type of variable, like a map defines a subset
