@@ -24,7 +24,7 @@ internal interface ComparisonValidationParameterOperation {
         params.isNullOrEmpty() || checkItemsInParameterIsNull(params)
 
     @Suppress("UNCHECKED_CAST")
-    fun comparison(params: Array<out OperationType?>): Int? {
+    fun comparison(vararg params: OperationType?): Int? {
         val paramsAsNumber = params.map {
             when (it?.value) {
                 is Int -> OperationType.TypeNumber((it.value as Int).toDouble())
