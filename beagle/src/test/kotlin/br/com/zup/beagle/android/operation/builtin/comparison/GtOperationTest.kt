@@ -144,4 +144,56 @@ internal class GtOperationTest {
         }
 
     }
+
+    @DisplayName("When execute operation with type coertion parameters")
+    @Nested
+    inner class TypeCoertionOperation {
+
+        @Test
+        @DisplayName("Then should return true")
+        fun checkGt() {
+            //Given
+            val operationResolver = GtOperation()
+            val operations = listOf<Pair<OperationType, OperationType>>(
+                OperationType.TypeAny( 2) to OperationType.TypeAny( 1),
+                OperationType.TypeAny( 1) to OperationType.TypeAny( 1),
+                OperationType.TypeAny( 1) to OperationType.TypeAny( 2),
+                OperationType.TypeAny( 2.0) to OperationType.TypeAny( 1.0),
+                OperationType.TypeAny( 2.0) to OperationType.TypeAny( 1),
+                OperationType.TypeAny( 1.0) to OperationType.TypeAny( 1),
+                OperationType.TypeAny( "2") to OperationType.TypeAny( 1.0),
+                OperationType.TypeAny( "2") to OperationType.TypeAny( 1),
+                OperationType.TypeAny( "2") to OperationType.TypeAny( "1"),
+                OperationType.TypeAny( "1") to OperationType.TypeAny( "1"),
+                OperationType.TypeAny( "1") to OperationType.TypeAny( "1.0"),
+                OperationType.TypeAny( "1.0") to OperationType.TypeAny( 2.0),
+                OperationType.TypeAny( "1.0") to OperationType.TypeAny( "2.0"),
+                OperationType.TypeAny( "true") to OperationType.TypeAny( 2),
+            )
+
+            //When
+            val result = operations.map { operationResolver.execute(it.first, it.second) }
+
+            //Then
+            val expected = listOf(
+                OperationType.TypeBoolean(true),
+                OperationType.TypeBoolean(false),
+                OperationType.TypeBoolean(false),
+                OperationType.TypeBoolean(true),
+                OperationType.TypeBoolean(true),
+                OperationType.TypeBoolean(false),
+                OperationType.TypeBoolean(true),
+                OperationType.TypeBoolean(true),
+                OperationType.TypeBoolean(true),
+                OperationType.TypeBoolean(false),
+                OperationType.TypeBoolean(false),
+                OperationType.TypeBoolean(false),
+                OperationType.TypeBoolean(false),
+                OperationType.TypeBoolean(false)
+            )
+
+            assertEquals(expected, result)
+        }
+    }
+
 }

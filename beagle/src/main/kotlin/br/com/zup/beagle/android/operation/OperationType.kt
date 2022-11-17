@@ -25,5 +25,6 @@ sealed class OperationType(open val value: Any?) {
     data class TypeNumber(override val value: Number) : OperationType(value)
     data class TypeJsonArray(override val value: JSONArray) : OperationType(value)
     data class TypeJsonObject(override val value: JSONObject) : OperationType(value)
+    internal data class TypeAny(override val value: Any?) : OperationType(value)
     object Null : OperationType(null)
 }
