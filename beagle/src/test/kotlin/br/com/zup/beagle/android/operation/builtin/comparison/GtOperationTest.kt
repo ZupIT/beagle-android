@@ -155,20 +155,20 @@ internal class GtOperationTest {
             //Given
             val operationResolver = GtOperation()
             val operations = listOf<Pair<OperationType, OperationType>>(
-                OperationType.TypeAny( 2) to OperationType.TypeAny( 1),
-                OperationType.TypeAny( 1) to OperationType.TypeAny( 1),
-                OperationType.TypeAny( 1) to OperationType.TypeAny( 2),
-                OperationType.TypeAny( 2.0) to OperationType.TypeAny( 1.0),
-                OperationType.TypeAny( 2.0) to OperationType.TypeAny( 1),
-                OperationType.TypeAny( 1.0) to OperationType.TypeAny( 1),
-                OperationType.TypeAny( "2") to OperationType.TypeAny( 1.0),
-                OperationType.TypeAny( "2") to OperationType.TypeAny( 1),
-                OperationType.TypeAny( "2") to OperationType.TypeAny( "1"),
-                OperationType.TypeAny( "1") to OperationType.TypeAny( "1"),
-                OperationType.TypeAny( "1") to OperationType.TypeAny( "1.0"),
-                OperationType.TypeAny( "1.0") to OperationType.TypeAny( 2.0),
-                OperationType.TypeAny( "1.0") to OperationType.TypeAny( "2.0"),
-                OperationType.TypeAny( "true") to OperationType.TypeAny( 2),
+                OperationType.TypeAny(2) to OperationType.TypeAny(1),
+                OperationType.TypeAny(1) to OperationType.TypeAny(1),
+                OperationType.TypeAny(1) to OperationType.TypeAny(2),
+                OperationType.TypeAny(2.0) to OperationType.TypeAny(1.0),
+                OperationType.TypeAny(2.0) to OperationType.TypeAny(1),
+                OperationType.TypeAny(1.0) to OperationType.TypeAny(1),
+                OperationType.TypeAny("2") to OperationType.TypeAny(1.0),
+                OperationType.TypeAny("2") to OperationType.TypeAny(1),
+                OperationType.TypeAny("2") to OperationType.TypeAny("1"),
+                OperationType.TypeAny("1") to OperationType.TypeAny("1"),
+                OperationType.TypeAny("1") to OperationType.TypeAny("1.0"),
+                OperationType.TypeAny("1.0") to OperationType.TypeAny(2.0),
+                OperationType.TypeAny("1.0") to OperationType.TypeAny("2.0"),
+                OperationType.TypeAny("true") to OperationType.TypeAny(2),
             )
 
             //When
