@@ -145,9 +145,9 @@ internal class GtOperationTest {
 
     }
 
-    @DisplayName("When execute operation with type coertion parameters")
+    @DisplayName("When execute operation with type coercion parameters")
     @Nested
-    inner class TypeCoertionOperation {
+    inner class TypeCoercionOperation {
 
         @Test
         @DisplayName("Then should return true")
