@@ -27,6 +27,7 @@ internal interface ComparisonValidationParameterOperation {
      * Compares 2 params.
      * Returns zero if the first is equal to the second, a negative number if it's less than,
      * or a positive number if it's greater than.
+     * Returns Null if it's an invalid operation
      */
     @Suppress("UNCHECKED_CAST")
     fun comparison(vararg params: OperationType?): Int? {
