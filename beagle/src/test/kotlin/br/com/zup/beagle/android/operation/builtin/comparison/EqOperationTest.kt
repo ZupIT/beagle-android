@@ -183,4 +183,73 @@ internal class EqOperationTest {
         }
 
     }
+
+    @DisplayName("When execute operation with type coercion parameters")
+    @Nested
+    inner class TypeCoercionEqOperation {
+
+        @Test
+        @DisplayName("Then should return true")
+        fun checkEq() {
+            //Given
+            val operationResolver = EqOperation()
+            val operations = listOf<Pair<OperationType, OperationType>>(
+
+                OperationType.TypeAny(2) to OperationType.TypeAny(1),
+                OperationType.TypeAny(1) to OperationType.TypeAny(1),
+                OperationType.TypeAny(1) to OperationType.TypeAny(2),
+
+                OperationType.TypeAny(2.0) to OperationType.TypeAny(1.0),
+                OperationType.TypeAny(2.0) to OperationType.TypeAny(1),
+                OperationType.TypeAny(1.0) to OperationType.TypeAny(1),
+                OperationType.TypeAny(1.0) to OperationType.TypeAny(2),
+
+                OperationType.TypeAny("2") to OperationType.TypeAny(1.0),
+                OperationType.TypeAny("2") to OperationType.TypeAny(1),
+                OperationType.TypeAny("2") to OperationType.TypeAny("1"),
+
+                OperationType.TypeAny("1") to OperationType.TypeAny("1"),
+                OperationType.TypeAny("1") to OperationType.TypeAny("1.0"),
+                OperationType.TypeAny("1.0") to OperationType.TypeAny(2.0),
+                OperationType.TypeAny("1.0") to OperationType.TypeAny("2.0"),
+
+                OperationType.TypeAny("true") to OperationType.TypeAny("true"),
+                OperationType.TypeAny("true") to OperationType.TypeAny("false"),
+                OperationType.TypeAny("no") to OperationType.TypeAny("no"),
+                OperationType.TypeAny("no") to OperationType.TypeAny("yes"),
+                OperationType.TypeAny("true") to OperationType.TypeAny(2),
+            )
+
+            //When
+            val result = operations.map { operationResolver.execute(it.first, it.second) }
+
+            //Then
+            val expected = listOf(
+                false,
+                true,
+                false,
+
+                false,
+                false,
+                true,
+                false,
+
+                false,
+                false,
+                false,
+                true,
+                true,
+                false,
+                false,
+
+                true,
+                false,
+                true,
+                false,
+                false
+            )
+
+            Assertions.assertEquals(expected, result.map { it.value })
+        }
+    }
 }

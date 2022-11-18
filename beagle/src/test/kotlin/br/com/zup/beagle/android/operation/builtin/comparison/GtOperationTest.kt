@@ -147,7 +147,7 @@ internal class GtOperationTest {
 
     @DisplayName("When execute operation with type coercion parameters")
     @Nested
-    inner class TypeCoercionOperation {
+    inner class TypeCoercionGtOperation {
 
         @Test
         @DisplayName("Then should return true")
@@ -176,23 +176,23 @@ internal class GtOperationTest {
 
             //Then
             val expected = listOf(
-                OperationType.TypeBoolean(true),
-                OperationType.TypeBoolean(false),
-                OperationType.TypeBoolean(false),
-                OperationType.TypeBoolean(true),
-                OperationType.TypeBoolean(true),
-                OperationType.TypeBoolean(false),
-                OperationType.TypeBoolean(true),
-                OperationType.TypeBoolean(true),
-                OperationType.TypeBoolean(true),
-                OperationType.TypeBoolean(false),
-                OperationType.TypeBoolean(false),
-                OperationType.TypeBoolean(false),
-                OperationType.TypeBoolean(false),
-                OperationType.TypeBoolean(false)
+                true,
+                false,
+                false,
+                true,
+                true,
+                false,
+                true,
+                true,
+                true,
+                false,
+                false,
+                false,
+                false,
+                false
             )
 
-            assertEquals(expected, result)
+            assertEquals(expected, result.map { it.value })
         }
     }
 

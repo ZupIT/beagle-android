@@ -31,15 +31,15 @@ internal interface ComparisonValidationParameterOperation {
      */
     @Suppress("UNCHECKED_CAST")
     fun comparison(vararg params: OperationType?): Int? {
-        val paramsAsNumber: List<Double?> = params.map {
+        val paramsAsNumber: List<Comparable<Any>?> = params.map {
             when (it?.value) {
-                is Int -> (it.value as Int).toDouble()
-                is Double -> it.value as Double
+                is Int -> ((it.value as Int).toDouble()) as Comparable<Any>
+                is Double -> (it.value as Double) as Comparable<Any>
                 is String -> {
                     try {
-                        (it.value as String).toDouble()
+                        ((it.value as String).toDouble()) as Comparable<Any>
                     } catch (e: Throwable) {
-                        null
+                        (it.value as String) as Comparable<Any>
                     }
 
                 }
@@ -53,7 +53,7 @@ internal interface ComparisonValidationParameterOperation {
         val value1 = paramsAsNumber[0]
         val value2 = paramsAsNumber[1]
 
-        return value2?.let { (value1)?.compareTo(it) }
+        return kotlin.runCatching { value2?.let { (value1)?.compareTo(it) } }.getOrNull()
     }
 
     private fun checkItemsInParameterIsNull(params: Array<out OperationType?>): Boolean =
