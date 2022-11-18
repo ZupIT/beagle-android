@@ -23,15 +23,20 @@ internal interface ComparisonValidationParameterOperation {
     fun parametersIsNull(params: Array<out OperationType?>): Boolean =
         params.isNullOrEmpty() || checkItemsInParameterIsNull(params)
 
+    /**
+     * Compares 2 params.
+     * Returns zero if the first is equal to the second, a negative number if it's less than,
+     * or a positive number if it's greater than.
+     */
     @Suppress("UNCHECKED_CAST")
     fun comparison(vararg params: OperationType?): Int? {
-        val paramsAsNumber = params.map {
+        val paramsAsNumber: List<Double?> = params.map {
             when (it?.value) {
-                is Int -> OperationType.TypeNumber((it.value as Int).toDouble())
-                is Double -> OperationType.TypeNumber(it.value as Double)
+                is Int -> (it.value as Int).toDouble()
+                is Double -> it.value as Double
                 is String -> {
                     try {
-                        OperationType.TypeNumber((it.value as String).toDouble())
+                        (it.value as String).toDouble()
                     } catch (e: Throwable) {
                         null
                     }
@@ -41,10 +46,13 @@ internal interface ComparisonValidationParameterOperation {
             }
 
         }
-        val value1 = paramsAsNumber[0]?.value
-        val value2 = paramsAsNumber[1]?.value
 
-        return (value1 as? Comparable<Any>)?.compareTo(value2 as Double)
+        if(paramsAsNumber.size != 2) return null
+
+        val value1 = paramsAsNumber[0]
+        val value2 = paramsAsNumber[1]
+
+        return value2?.let { (value1)?.compareTo(it) }
     }
 
     private fun checkItemsInParameterIsNull(params: Array<out OperationType?>): Boolean =
