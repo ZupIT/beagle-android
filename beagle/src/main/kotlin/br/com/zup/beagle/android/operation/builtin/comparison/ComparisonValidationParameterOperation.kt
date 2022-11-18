@@ -34,14 +34,14 @@ internal interface ComparisonValidationParameterOperation {
     fun comparison(vararg params: OperationType?): Int? {
         val paramsAsNumber: List<Comparable<Any>?> = params.map {
             when (it?.value) {
-                is Int -> ((it.value as Int).toDouble()) as Comparable<Any>
-                is Double -> (it.value as Double) as Comparable<Any>
+                is Int -> ((it.value as Int).toDouble()).toBigDecimal() as Comparable<Any>
+                is Double -> (it.value as Double).toBigDecimal() as Comparable<Any>
                 is JSONArray -> {
                     ((it.value as JSONArray).join(",")) as Comparable<Any>
                 }
                 is String -> {
                     try {
-                        ((it.value as String).toDouble()) as Comparable<Any>
+                        ((it.value as String).toBigDecimal()) as Comparable<Any>
                     } catch (e: Throwable) {
                         (it.value as String) as Comparable<Any>
                     }
