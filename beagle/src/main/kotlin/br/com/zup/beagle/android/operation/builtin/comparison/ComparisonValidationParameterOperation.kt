@@ -17,6 +17,7 @@
 package br.com.zup.beagle.android.operation.builtin.comparison
 
 import br.com.zup.beagle.android.operation.OperationType
+import org.json.JSONArray
 
 internal interface ComparisonValidationParameterOperation {
 
@@ -35,6 +36,9 @@ internal interface ComparisonValidationParameterOperation {
             when (it?.value) {
                 is Int -> ((it.value as Int).toDouble()) as Comparable<Any>
                 is Double -> (it.value as Double) as Comparable<Any>
+                is JSONArray -> {
+                    ((it.value as JSONArray).join(",")) as Comparable<Any>
+                }
                 is String -> {
                     try {
                         ((it.value as String).toDouble()) as Comparable<Any>

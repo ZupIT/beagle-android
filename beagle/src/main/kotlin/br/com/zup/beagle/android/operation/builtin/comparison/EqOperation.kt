@@ -24,7 +24,6 @@ import br.com.zup.beagle.android.annotation.RegisterOperation
 internal class EqOperation : Operation, ComparisonValidationParameterOperation {
 
     override fun execute(vararg params: OperationType?): OperationType {
-        if (parametersIsNull(params)) return OperationType.Null
         val result = comparison(params[0], params[1])
         return OperationType.TypeBoolean(
             result != null && result == 0
