@@ -150,7 +150,7 @@ internal class GtOperationTest {
     inner class TypeCoercionGtOperation {
 
         @Test
-        @DisplayName("Then should return true")
+        @DisplayName("Then should return as expected")
         fun checkGt() {
             //Given
             val operationResolver = GtOperation()

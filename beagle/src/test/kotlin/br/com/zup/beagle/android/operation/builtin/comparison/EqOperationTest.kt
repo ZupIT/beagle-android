@@ -189,7 +189,7 @@ internal class EqOperationTest {
     inner class TypeCoercionEqOperation {
 
         @Test
-        @DisplayName("Then should return true")
+        @DisplayName("Then should return as expected")
         fun checkEq() {
             //Given
             val operationResolver = EqOperation()

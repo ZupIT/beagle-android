@@ -145,4 +145,57 @@ internal class LteOperationTest {
         }
 
     }
+
+    @DisplayName("When execute operation with type coercion parameters")
+    @Nested
+    inner class TypeCoercionLteOperation {
+
+        @Test
+        @DisplayName("Then should return as expected")
+        fun checkLte() {
+            //Given
+            val operationResolver = LteOperation()
+            val operations = listOf<Pair<OperationType, OperationType>>(
+                OperationType.TypeAny(2) to OperationType.TypeAny(1),
+                OperationType.TypeAny(1) to OperationType.TypeAny(1),
+                OperationType.TypeAny(1) to OperationType.TypeAny(2),
+                OperationType.TypeAny(2.0) to OperationType.TypeAny(1.0),
+                OperationType.TypeAny(2.0) to OperationType.TypeAny(1),
+                OperationType.TypeAny(1.0) to OperationType.TypeAny(1),
+                OperationType.TypeAny(1.0) to OperationType.TypeAny(2),
+                OperationType.TypeAny("2") to OperationType.TypeAny(1.0),
+                OperationType.TypeAny("2") to OperationType.TypeAny(1),
+                OperationType.TypeAny("2") to OperationType.TypeAny("1"),
+                OperationType.TypeAny("1") to OperationType.TypeAny("1"),
+                OperationType.TypeAny("1") to OperationType.TypeAny("1.0"),
+                OperationType.TypeAny("1.0") to OperationType.TypeAny(2.0),
+                OperationType.TypeAny("1.0") to OperationType.TypeAny("2.0"),
+                OperationType.TypeAny("true") to OperationType.TypeAny(2),
+            )
+
+            //When
+            val result = operations.map { operationResolver.execute(it.first, it.second) }
+
+            //Then
+            val expected = listOf(
+                false,
+                true,
+                true,
+                false,
+                false,
+                true,
+                true,
+                false,
+                false,
+                false,
+                true,
+                true,
+                true,
+                true,
+                false
+            )
+
+            assertEquals(expected, result.map { it.value })
+        }
+    }
 }
