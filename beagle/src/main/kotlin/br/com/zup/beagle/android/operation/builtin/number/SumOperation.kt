@@ -25,7 +25,6 @@ import br.com.zup.beagle.android.operation.plus
 internal class SumOperation : Operation {
 
     override fun execute(vararg params: OperationType?): OperationType {
-
         assert(params[0] != null)
         assert(params[1] != null)
 

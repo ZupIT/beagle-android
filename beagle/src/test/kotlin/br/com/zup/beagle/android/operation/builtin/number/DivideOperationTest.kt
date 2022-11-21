@@ -59,9 +59,35 @@ internal class DivideOperationTest {
             val result = divideOperation.execute(inputOne, inputTwo)
 
             // THEN
-            val expected = OperationType.TypeNumber(1)
+            val expected = OperationType.TypeNumber(1.0)
 
             assertEquals(expected, result)
+        }
+
+        @Test
+        @DisplayName("Then should return correct value")
+        fun checkCoercion() {
+            // GIVEN
+            val operationResolver = DivideOperation()
+
+            val operations = listOf<Pair<Any, Any>>(
+                6 to 4, 4.5 to 6, 4.5 to 4.5, 6 to 3.0,
+                3 to 1.5, 2.0 to 1, "1" to 1.0, 2.5 to "1.0", "1" to "1", "2" to 1,
+                1 to true, "1" to false, "" to ""
+            )
+
+            //When
+            val result = operations.map {
+                OperationType.TypeString(it.first.toString()) to OperationType.TypeString(it.second.toString())
+            }
+                .map { operationResolver.execute(it.first, it.second) }
+
+            // THEN
+            val expected = listOf<Number?>(1.5, 0.75, 1.0, 2.0, 2.0, 2.0, 1.0, 2.5, 1.0, 2.0, null, null, null)
+
+            assertEquals(expected.map {
+                it?.let { OperationType.TypeNumber(it) } ?: OperationType.Null
+            }, result)
         }
     }
 
@@ -73,7 +99,7 @@ internal class DivideOperationTest {
         @DisplayName("Then should throw exception")
         fun checkException() {
             // WHEN THEN
-            assertThrows<UnsupportedOperationException> {
+            assertThrows<ArrayIndexOutOfBoundsException> {
                 divideOperation.execute()
             }
         }

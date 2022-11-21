@@ -41,3 +41,15 @@ internal fun OperationType.isDouble() = this.value is Double || kotlin.runCatchi
 internal operator fun OperationType.plus(other: OperationType): OperationType {
     return CombineOperationUtil.combineOperations(this, other, Int::plus, Double::plus)
 }
+
+internal operator fun OperationType.minus(other: OperationType): OperationType {
+    return CombineOperationUtil.combineOperations(this, other, Int::minus, Double::minus)
+}
+
+internal operator fun OperationType.div(other: OperationType): OperationType {
+    return CombineOperationUtil.combineOperations(this, other, Int::div, Double::div)
+}
+
+internal operator fun OperationType.times(other: OperationType): OperationType {
+    return CombineOperationUtil.combineOperations(this, other, Int::times, Double::times)
+}
