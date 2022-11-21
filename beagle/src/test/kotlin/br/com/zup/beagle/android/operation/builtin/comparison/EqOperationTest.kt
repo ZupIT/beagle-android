@@ -193,35 +193,37 @@ internal class EqOperationTest {
         fun checkEq() {
             //Given
             val operationResolver = EqOperation()
-            val operations = listOf<Pair<OperationType, OperationType>>(
+            val operations = listOf<Pair<Any, Any>>(
 
-                OperationType.TypeAny(2) to OperationType.TypeAny(1),
-                OperationType.TypeAny(1) to OperationType.TypeAny(1),
-                OperationType.TypeAny(1) to OperationType.TypeAny(2),
+                2 to 1,
+                1 to 1,
+                1 to 2,
 
-                OperationType.TypeAny(2.0) to OperationType.TypeAny(1.0),
-                OperationType.TypeAny(2.0) to OperationType.TypeAny(1),
-                OperationType.TypeAny(1.0) to OperationType.TypeAny(1),
-                OperationType.TypeAny(1.0) to OperationType.TypeAny(2),
+                2.0 to 1.0,
+                2.0 to 1,
+                1.0 to 1,
+                1.0 to 2,
 
-                OperationType.TypeAny("2") to OperationType.TypeAny(1.0),
-                OperationType.TypeAny("2") to OperationType.TypeAny(1),
-                OperationType.TypeAny("2") to OperationType.TypeAny("1"),
+                "2" to 1.0,
+                "2" to 1,
+                "2" to "1",
 
-                OperationType.TypeAny("1") to OperationType.TypeAny("1"),
-                OperationType.TypeAny("1") to OperationType.TypeAny("1.0"),
-                OperationType.TypeAny("1.0") to OperationType.TypeAny(2.0),
-                OperationType.TypeAny("1.0") to OperationType.TypeAny("2.0"),
+                "1" to "1",
+                "1" to "1.0",
+                "1.0" to 2.0,
+                "1.0" to "2.0",
 
-                OperationType.TypeAny("true") to OperationType.TypeAny("true"),
-                OperationType.TypeAny("true") to OperationType.TypeAny("false"),
-                OperationType.TypeAny("no") to OperationType.TypeAny("no"),
-                OperationType.TypeAny("no") to OperationType.TypeAny("yes"),
-                OperationType.TypeAny("true") to OperationType.TypeAny(2),
+                "true" to "true",
+                "true" to "false",
+                "no" to "no",
+                "no" to "yes",
+                "true" to 2,
             )
 
             //When
-            val result = operations.map { operationResolver.execute(it.first, it.second) }
+            val result = operations.map {
+                OperationType.TypeString(it.first.toString()) to OperationType.TypeString(it.second.toString()) }
+                .map { operationResolver.execute(it.first, it.second) }
 
             //Then
             val expected = listOf(
