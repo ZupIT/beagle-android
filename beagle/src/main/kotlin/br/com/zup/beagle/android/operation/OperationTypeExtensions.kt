@@ -19,7 +19,7 @@ package br.com.zup.beagle.android.operation
 import br.com.zup.beagle.android.operation.builtin.CombineOperationUtil
 
 internal fun OperationType.isInt() = this.value is Int || kotlin.runCatching {
-    if(this.value is String) {
+    if(this.isString()) {
         this.value.toString().toInt()
         true
     } else {
@@ -29,14 +29,34 @@ internal fun OperationType.isInt() = this.value is Int || kotlin.runCatching {
 }.getOrElse { false }
 
 internal fun OperationType.isDouble() = this.value is Double || kotlin.runCatching {
-    if(this.value is String) {
+    if(this.isString()) {
         this.value.toString().toDouble()
         true
     } else {
         false
     }
-
 }.getOrElse { false }
+
+internal fun OperationType.convertToDouble(): OperationType {
+    return if (this.isDouble() || this.isInt())
+        OperationType.TypeNumber(this.value.toString().toDouble())
+    else OperationType.Null
+}
+
+internal fun OperationType.convertToInt(): OperationType {
+    return if (this.isDouble() || this.isInt())
+        OperationType.TypeNumber(this.value.toString().toDouble().toInt())
+    else OperationType.Null
+}
+
+internal fun OperationType.convertToString(): OperationType {
+    return if (this.value != null && this.value != OperationType.Null)
+        OperationType.TypeString(this.value.toString())
+    else
+        OperationType.Null
+}
+
+internal fun OperationType.isString() = this.value is String
 
 internal operator fun OperationType.plus(other: OperationType): OperationType {
     return CombineOperationUtil.combineOperations(this, other, Int::plus, Double::plus)
