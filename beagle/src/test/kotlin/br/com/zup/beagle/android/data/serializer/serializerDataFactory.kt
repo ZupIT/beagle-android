@@ -283,6 +283,7 @@ fun makeListViewJson() = """
        "scrollEndThreshold": 80,
        "isScrollIndicatorVisible": false,
        "iteratorName": "itemTest",
+       "indexName": "indexTest",
        "key": "key",
        "templates":[
           {
@@ -308,7 +309,8 @@ fun makeObjectListView() = ListView(
             case = expressionOf("@{eq(item.race,'Half-skaa')}"),
             view = makeObjectContainer()
         )
-    )
+    ),
+    indexName = "indexTest"
 )
 
 fun makeScreenComponentJson() = """

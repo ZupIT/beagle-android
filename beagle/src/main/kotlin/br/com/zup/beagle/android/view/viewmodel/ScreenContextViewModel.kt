@@ -25,6 +25,7 @@ import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.context.ContextDataEvaluation
 import br.com.zup.beagle.android.context.ContextDataManager
 import br.com.zup.beagle.android.context.ImplicitContextManager
+import br.com.zup.beagle.android.context.InternalContextObserver
 import br.com.zup.beagle.android.setup.BeagleConfigurator
 import br.com.zup.beagle.android.utils.Observer
 
@@ -60,6 +61,11 @@ internal class ScreenContextViewModel(
     fun addContext(view: View, contextDataList: List<ContextData>, shouldOverrideExistingContext: Boolean = false) {
         contextDataManager.addContext(view, contextDataList, shouldOverrideExistingContext)
     }
+
+    fun addContextObserver(contextId: String, contextObserver: InternalContextObserver)
+    = contextDataManager.addContextObserver(contextId, contextObserver)
+
+    fun removeContextObserver(contextId: String) = contextDataManager.removeContextObserver(contextId)
 
     fun restoreContext(view: View) {
         contextDataManager.restoreContext(view)

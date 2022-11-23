@@ -40,6 +40,7 @@ internal class ContextDataManager(
     private val contextDataEvaluation: ContextDataEvaluation = ContextDataEvaluation(beagleConfigurator),
     private val contextDataManipulator: ContextDataManipulator = ContextDataManipulator()
 ) {
+    private val contextObservers = mutableMapOf<String, InternalContextObserver>()
 
     private var globalContext: ContextBinding = ContextBinding(GlobalContext.getContext())
     private val contexts = mutableMapOf<Int, Set<ContextBinding>>()
@@ -60,6 +61,8 @@ internal class ContextDataManager(
         contexts[GLOBAL_CONTEXT_ID] = setOf(globalContext)
         GlobalContext.observeGlobalContextChange(globalContextObserver)
     }
+
+    fun getContextObserver(contextId: String): InternalContextObserver? = contextObservers[contextId]
 
     fun clearContexts() {
         contextsWithoutId.clear()
@@ -99,6 +102,12 @@ internal class ContextDataManager(
             addContext(view, it, shouldOverrideExistingContext)
         }
     }
+
+    fun addContextObserver(contextId: String,
+                           contextObserver: InternalContextObserver) =
+        this.contextObservers.put(contextId, contextObserver)
+
+    fun removeContextObserver(contextId: String) = this.contextObservers.remove(contextId)
 
     fun addContext(view: View, context: ContextData, shouldOverrideExistingContext: Boolean = false) {
         if (context.id == globalContext.context.id) {
@@ -227,7 +236,9 @@ internal class ContextDataManager(
             .map { it.context }
     }
 
+    @Suppress("NestedBlockDepth")
     fun updateContext(view: View, setContextInternal: SetContextInternal) {
+
         if (setContextInternal.contextId == globalContext.context.id) {
             GlobalContext.set(setContextInternal.value, setContextInternal.path, beagleConfigurator.moshi)
         } else {
@@ -238,22 +249,34 @@ internal class ContextDataManager(
                 }
             }
         }
+        notifyContextChanges(setContextInternal)
+    }
+
+    private fun notifyContextChanges(
+        context: SetContextInternal
+    ) {
+        contextObservers.filterKeys { it == context.contextId }.forEach {
+            it.value.invoke(context)
+        }
     }
 
     private fun setContextValue(
         contextBinding: ContextBinding,
         setContextInternal: SetContextInternal
     ) {
-        val result = contextDataManipulator.set(
-            contextBinding.context,
-            setContextInternal.path,
-            setContextInternal.value
-        )
 
-        if (result is ContextSetResult.Succeed) {
-            contextBinding.context = result.newContext
-            contextBinding.cache.evictAll()
-            notifyBindingChanges(contextBinding)
+        if(contextBinding.context.id == setContextInternal.contextId) {
+            val result = contextDataManipulator.set(
+                contextBinding.context,
+                setContextInternal.path,
+                setContextInternal.value
+            )
+
+            if (result is ContextSetResult.Succeed) {
+                contextBinding.context = result.newContext
+                contextBinding.cache.evictAll()
+                notifyBindingChanges(contextBinding)
+            }
         }
     }
 

@@ -24,6 +24,7 @@ import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.context.ContextDataEvaluation
 import br.com.zup.beagle.android.context.ContextDataManager
 import br.com.zup.beagle.android.context.ImplicitContextManager
+import br.com.zup.beagle.android.context.InternalContextObserver
 import br.com.zup.beagle.android.utils.Observer
 import io.mockk.every
 import io.mockk.mockk
@@ -205,6 +206,33 @@ class ScreenContextViewModelTest : BaseConfigurationTest() {
 
         // Then
         verify(exactly = 1) { contextDataManager.clearContexts() }
+    }
+
+    @Test
+    fun `GIVEN ScreenContextViewModel WHEN addContextObserver THEN should call addContextObserver`() {
+        //Given
+        val contextId = "contextId"
+        val contextObserver: InternalContextObserver = {
+
+        }
+
+        // When
+        screenContextViewModel.addContextObserver("contextId", contextObserver)
+
+        // Then
+        verify(exactly = 1) { contextDataManager.addContextObserver(contextId, contextObserver) }
+    }
+
+    @Test
+    fun `GIVEN ScreenContextViewModel WHEN removeContextObserver THEN should call removeContextObserver`() {
+        //Given
+        val contextId = "contextId"
+
+        // When
+        screenContextViewModel.removeContextObserver(contextId)
+
+        // Then
+        verify(exactly = 1) { contextDataManager.removeContextObserver(contextId) }
     }
 
     @DisplayName("When tryLinkContextInBindWithoutContext is called")

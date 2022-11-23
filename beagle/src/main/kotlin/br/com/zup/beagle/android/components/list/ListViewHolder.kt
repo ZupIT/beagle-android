@@ -16,6 +16,8 @@
 
 package br.com.zup.beagle.android.components.list
 
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -24,6 +26,9 @@ import androidx.core.view.children
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import br.com.zup.beagle.android.action.AsyncActionStatus
+import br.com.zup.beagle.android.action.SetContextInternal
+import br.com.zup.beagle.android.components.DEFAULT_INDEX_NAME
+import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.context.ContextComponent
 import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.data.serializer.BeagleJsonSerializer
@@ -39,13 +44,16 @@ import br.com.zup.beagle.android.widget.core.SingleChildComponent
 import org.json.JSONObject
 import java.util.LinkedList
 
+@Suppress("LongParameterList")
 internal class ListViewHolder(
     itemView: View,
     private val template: ServerDrivenComponent,
     private val serializer: BeagleJsonSerializer,
     private val listViewModels: ListViewModels,
     private val jsonTemplate: String,
-    private val iteratorName: String
+    private val iteratorName: String,
+    private val indexName: String = DEFAULT_INDEX_NAME,
+    private val dataSource: Bind<List<Any>>
 ) : RecyclerView.ViewHolder(itemView) {
 
     private val viewsWithId = mutableMapOf<String, View>()
@@ -124,6 +132,7 @@ internal class ListViewHolder(
         }
         // Using a new template reference we populate the components with context
         initializeContextComponents(newTemplate)
+
         // Checks whether views with ids and context have been updated based on the key and updates or restore them
         if (listItem.firstTimeBinding) {
             // Generates an suffix identifier based on the parent's suffix, key and item position
@@ -151,10 +160,51 @@ internal class ListViewHolder(
             restoreContexts()
         }
         // Finally, we updated the context of that cell effectively.
+        listViewModels.contextViewModel.removeContextObserver(iteratorName)
+
         setContext(iteratorName, listItem)
+        setContext(ContextData(id = indexName, value = position))
+
+        if(isObservableExpression(dataSource)) {
+            observeSetContextForContext(iteratorName, dataSource, position)
+        }
+
         // Mark this position on the list as finished
         listItem.firstTimeBinding = false
     }
+
+    private fun isObservableExpression(dataSource: Bind<List<Any>>) =
+        (dataSource is Bind.Expression
+                && dataSource.expressions.size == 1)
+            &&
+            !hasOperation(dataSource)
+
+    private fun hasOperation(dataSource: Bind<List<Any>>) =
+        ((dataSource as Bind.Expression).expressions.first().value.contains("(") &&
+            (dataSource).expressions.first().value.contains(")"))
+
+    private fun observeSetContextForContext(
+        contextId: String,
+        dataSource: Bind<List<Any>>,
+        position: Int,
+    ) {
+        val dataSourceExpression = (dataSource as Bind.Expression).expressions.first().value
+        val expressionContextId = dataSourceExpression.split(".").first()
+        val expressionPath = if(dataSourceExpression.contains("."))
+            dataSourceExpression.replace("${expressionContextId}.", "")
+        else ""
+        listViewModels.contextViewModel.addContextObserver(contextId) {
+            postOnUi {
+                listViewModels.contextViewModel.updateContext(
+                    originView = itemView,
+                    setContextInternal = SetContextInternal(contextId = expressionContextId, value = it.value,
+                        path = "${expressionPath}[$position]")
+                )
+            }
+        }
+    }
+
+    private fun postOnUi(r: Runnable) = Handler(Looper.getMainLooper()).post(r)
 
     private fun initializeContextComponents(component: ServerDrivenComponent) {
         (component as? ContextComponent)?.let {
@@ -357,12 +407,16 @@ internal class ListViewHolder(
         }
     }
 
-    private fun setContext(iteratorName: String, listItem: ListItem) {
+    private fun setContext(contextData: ContextData, shouldOverrideExistingContext: Boolean = true) {
         listViewModels.contextViewModel.addContext(
             view = itemView,
-            contextData = ContextData(id = iteratorName, value = listItem.data),
-            shouldOverrideExistingContext = true
+            contextData = contextData,
+            shouldOverrideExistingContext = shouldOverrideExistingContext
         )
+    }
+
+    private fun setContext(iteratorName: String, listItem: ListItem) {
+        setContext(ContextData(id = iteratorName, value = listItem.data))
     }
 
     fun onViewRecycled() {

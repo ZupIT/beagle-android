@@ -469,12 +469,16 @@ class ContextDataManagerTest : BaseConfigurationTest() {
             val contextData = ContextData(CONTEXT_ID, json)
             val updateContext = SetContextInternal(CONTEXT_ID, false, "a")
             contextDataManager.addContext(viewContext, contextData)
+            //Given
+            val contextObserver: InternalContextObserver = mockk(relaxed = true, relaxUnitFun = true)
+            contextDataManager.addContextObserver(CONTEXT_ID, contextObserver)
 
             // When
             contextDataManager.updateContext(viewContext, updateContext)
 
             // Then
             assertFalse { json.getBoolean("a") }
+            verify { contextObserver.invoke(updateContext) }
         }
 
         @DisplayName("Then should set value on context root")
@@ -561,6 +565,32 @@ class ContextDataManagerTest : BaseConfigurationTest() {
 
             // Then
             assertEquals("global", contexts.first().id)
+        }
+    }
+
+    @DisplayName("When removeContextObserver is called")
+    @Nested
+    inner class ContextObserver {
+        @DisplayName("Should Add/Remove context obeservers")
+        @Test
+        fun addRemoveContextObserver() {
+            //Given
+            val contextId = "contextId"
+            val contextId2 = "contextId2"
+            val contextObserver: InternalContextObserver = mockk()
+            val contextObserver2: InternalContextObserver = mockk()
+
+            // When
+            contextDataManager.addContextObserver(contextId, contextObserver)
+            contextDataManager.addContextObserver(contextId2, contextObserver2)
+
+            assertEquals(contextObserver, contextDataManager.getContextObserver(contextId))
+
+            contextDataManager.removeContextObserver(contextId)
+
+            // Then
+            assertEquals(null, contextDataManager.getContextObserver(contextId))
+            assertEquals(contextObserver2, contextDataManager.getContextObserver(contextId2))
         }
     }
 
