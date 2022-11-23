@@ -19,22 +19,30 @@ package br.com.zup.beagle.android.operation.builtin.number
 import br.com.zup.beagle.android.operation.Operation
 import br.com.zup.beagle.android.operation.OperationType
 import br.com.zup.beagle.android.annotation.RegisterOperation
+import br.com.zup.beagle.android.operation.div
+import br.com.zup.beagle.android.operation.isInt
 
 @RegisterOperation("divide")
 internal class DivideOperation : Operation {
 
     override fun execute(vararg params: OperationType?): OperationType {
-        return params.reduce { parameterOne, parameterTwo ->
-            val value1 = (parameterOne as? OperationType.TypeNumber)?.value?.toDouble()
-            val value2 = (parameterTwo as? OperationType.TypeNumber)?.value?.toDouble()
 
-            if (value1 == null || value2 == null) return OperationType.Null
+        assert(params[0] != null)
+        assert(params[1] != null)
 
-            val result = value1 / value2
+        val result = params.map { it ?: OperationType.Null }.
+            map {
+                if (it.isInt()) {
+                    OperationType.TypeNumber(it.value.toString().toDouble())
+                } else {
+                    it
+                }
+            }.reduce {
+            acc, number ->
+            acc / number
+        }
 
-            val isInt = (params[0] as OperationType.TypeNumber).value is Int
-            if (isInt) OperationType.TypeNumber(result.toInt()) else OperationType.TypeNumber(result)
-        } ?: OperationType.Null
+        return result
     }
 
 }

@@ -145,4 +145,60 @@ internal class LtOperationTest {
         }
 
     }
+
+    @DisplayName("When execute operation with type coercion parameters")
+    @Nested
+    inner class TypeCoercionLtOperation {
+
+        @Test
+        @DisplayName("Then should return as expected")
+        fun checkLt() {
+            //Given
+            val operationResolver = LtOperation()
+            val operations = listOf<Pair<Any, Any>>(
+                2 to 1,
+                1 to 1,
+                1 to 2,
+                2.0 to 1.0,
+                2.0 to 1,
+                1.0 to 1,
+                1.0 to 2,
+
+                "2" to 1.0,
+                "2" to 1,
+                "2" to "1",
+                "1" to "1",
+                "1" to "1.0",
+                "1.0" to 2.0,
+                "1.0" to "2.0",
+                "true" to 2,
+            )
+
+            //When
+            val result = operations.map {
+                OperationType.TypeString(it.first.toString()) to OperationType.TypeString(it.second.toString()) }
+                .map { operationResolver.execute(it.first, it.second) }
+
+            //Then
+            val expected = listOf(
+                false,
+                false,
+                true,
+                false,
+                false,
+                false,
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                true,
+                true,
+                false
+            )
+
+            assertEquals(expected, result.map { it.value })
+        }
+    }
 }
