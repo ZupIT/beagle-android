@@ -14,20 +14,19 @@
  * limitations under the License.
  */
 
-package br.com.zup.beagle.android.operation.builtin.comparison
+package br.com.zup.beagle.android.operation.builtin.convert
 
+import br.com.zup.beagle.android.annotation.RegisterOperation
 import br.com.zup.beagle.android.operation.Operation
 import br.com.zup.beagle.android.operation.OperationType
-import br.com.zup.beagle.android.annotation.RegisterOperation
+import br.com.zup.beagle.android.operation.convertToInt
 
-@RegisterOperation("lt")
-internal class LtOperation : Operation, ComparisonValidationParameterOperation {
+@RegisterOperation("int")
+internal class IntOperation : Operation {
 
     override fun execute(vararg params: OperationType?): OperationType {
-        if (parametersIsNull(params)) return OperationType.Null
-        val result = comparison(*params)
-        return OperationType.TypeBoolean(
-            result != null && result < 0
-        )
+        if(params.isNullOrEmpty() || params[0] == OperationType.Null) return OperationType.Null
+
+        return params.map { it ?: OperationType.Null }.first().convertToInt()
     }
 }

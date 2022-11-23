@@ -19,19 +19,20 @@ package br.com.zup.beagle.android.operation.builtin.number
 import br.com.zup.beagle.android.operation.Operation
 import br.com.zup.beagle.android.operation.OperationType
 import br.com.zup.beagle.android.annotation.RegisterOperation
+import br.com.zup.beagle.android.operation.plus
 
 @RegisterOperation("sum")
 internal class SumOperation : Operation {
 
     override fun execute(vararg params: OperationType?): OperationType {
-        val result = params.sumOf {
-            val number = (it as? OperationType.TypeNumber)?.value ?: 0
-            number.toDouble()
+        assert(params[0] != null)
+        assert(params[1] != null)
+
+        val result = params.map { it ?: OperationType.Null }.reduce {
+            acc, number ->
+            acc + number
         }
-        return if ((params[0] as OperationType.TypeNumber).value is Int) {
-            OperationType.TypeNumber(result.toInt())
-        } else {
-            OperationType.TypeNumber(result)
-        }
+
+        return result
     }
 }
