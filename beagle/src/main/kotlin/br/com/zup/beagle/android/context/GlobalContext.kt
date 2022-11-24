@@ -17,6 +17,7 @@
 package br.com.zup.beagle.android.context
 
 import br.com.zup.beagle.android.action.SetContextInternal
+import br.com.zup.beagle.android.data.serializer.BeagleMoshi
 
 import com.squareup.moshi.Moshi
 
@@ -58,7 +59,7 @@ object GlobalContext {
      * @param value represents content that can be any kind.
      * @param path represents the path that it will save this information.
      */
-    fun set(value: Any, path: String? = null, moshi: Moshi) {
+    fun set(value: Any, path: String? = null, moshi: Moshi = BeagleMoshi.moshi) {
         val result = contextDataManipulator.set(globalContext, path, value.normalizeContextValue(moshi))
         notifyContextChanges(result)
     }
