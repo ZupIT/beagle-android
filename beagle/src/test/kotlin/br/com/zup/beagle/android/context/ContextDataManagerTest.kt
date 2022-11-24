@@ -83,7 +83,7 @@ class ContextDataManagerTest : BaseConfigurationTest() {
         every { BeagleMessageLogs.errorWhileTryingToNotifyContextChanges(any()) } just Runs
         every { BeagleMessageLogs.errorWhileTryingToChangeContext(any()) } just Runs
         every { BeagleMessageLogs.errorWhileTryingToAccessContext(any()) } just Runs
-        every { GlobalContext.set(any(), any(), any()) } just Runs
+        every { GlobalContext.set(any(), any(), any<Moshi>()) } just Runs
 
         every { viewContext.id } returns viewId
         every { viewContext.parent } returns null
