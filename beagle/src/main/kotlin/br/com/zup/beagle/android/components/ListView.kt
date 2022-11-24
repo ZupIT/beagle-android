@@ -143,6 +143,7 @@ data class ListView constructor(
 
     private fun setupRecyclerView(orientation: Int) {
         val contextAdapter = ListAdapter(
+            rootView.getBeagleConfigurator().serializer,
             orientation,
             iteratorName,
             indexName,

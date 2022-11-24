@@ -18,6 +18,8 @@ package br.com.zup.beagle.android.context
 
 import br.com.zup.beagle.android.action.SetContextInternal
 
+import com.squareup.moshi.Moshi
+
 typealias GlobalContextObserver = (ContextData) -> Unit
 internal typealias InternalContextObserver = (SetContextInternal) -> Unit
 
@@ -56,8 +58,8 @@ object GlobalContext {
      * @param value represents content that can be any kind.
      * @param path represents the path that it will save this information.
      */
-    fun set(value: Any, path: String? = null) {
-        val result = contextDataManipulator.set(globalContext, path, value.normalizeContextValue())
+    fun set(value: Any, path: String? = null, moshi: Moshi) {
+        val result = contextDataManipulator.set(globalContext, path, value.normalizeContextValue(moshi))
         notifyContextChanges(result)
     }
 

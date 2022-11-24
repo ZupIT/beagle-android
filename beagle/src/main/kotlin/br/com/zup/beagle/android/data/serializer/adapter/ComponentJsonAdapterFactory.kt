@@ -22,7 +22,6 @@ import br.com.zup.beagle.android.components.page.PageView
 import br.com.zup.beagle.android.data.serializer.PolymorphicJsonAdapterFactory
 import br.com.zup.beagle.android.data.serializer.generateNameSpaceToDefaultWidget
 import br.com.zup.beagle.android.data.serializer.generateNameSpaceToWidget
-import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.setup.InternalWidgetFactory
 import br.com.zup.beagle.android.widget.UndefinedWidget
 import br.com.zup.beagle.android.widget.WidgetView
@@ -33,14 +32,14 @@ private const val CUSTOM_NAMESPACE = "custom"
 
 internal object ComponentJsonAdapterFactory {
 
-    fun make(): PolymorphicJsonAdapterFactory<ServerDrivenComponent> {
+    fun make(registeredWidgets: List<Class<WidgetView>>): PolymorphicJsonAdapterFactory<ServerDrivenComponent> {
         var factory = PolymorphicJsonAdapterFactory.of(
             ServerDrivenComponent::class.java, BEAGLE_WIDGET_TYPE
         )
 
         factory = registerUIClass(factory)
         factory = registerWidgets(factory, true, InternalWidgetFactory.registeredWidgets())
-        factory = registerWidgets(factory, false, BeagleEnvironment.beagleSdk.registeredWidgets())
+        factory = registerWidgets(factory, false, registeredWidgets)
         factory = registerUndefinedWidget(factory)
 
         return factory

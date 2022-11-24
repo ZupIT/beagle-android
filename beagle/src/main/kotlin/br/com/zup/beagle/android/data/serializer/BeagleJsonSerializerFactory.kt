@@ -16,11 +16,9 @@
 
 package br.com.zup.beagle.android.data.serializer
 
-object BeagleJsonSerializerFactory {
-    val serializer: BeagleJsonSerializer by lazy {
-        create()
-    }
+import com.squareup.moshi.Moshi
 
-    internal fun create(beagleMoshiFactory:
-                        BeagleMoshi = BeagleMoshi): BeagleJsonSerializer = BeagleSerializer(beagleMoshiFactory)
+object BeagleJsonSerializerFactory {
+
+    internal fun create(moshi: Moshi): BeagleJsonSerializer = BeagleSerializer(moshi)
 }

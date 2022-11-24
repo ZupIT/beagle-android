@@ -16,27 +16,25 @@
 
 package br.com.zup.beagle.android.components
 
-import android.content.Context
 import android.graphics.drawable.Drawable
 import android.view.View
 import android.widget.FrameLayout
 import androidx.core.content.ContextCompat
 import br.com.zup.beagle.R
 import br.com.zup.beagle.android.action.Action
+import br.com.zup.beagle.android.annotation.RegisterWidget
 import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.context.ContextData
-import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.utils.dp
 import br.com.zup.beagle.android.utils.handleEvent
 import br.com.zup.beagle.android.utils.observeBindChanges
+import br.com.zup.beagle.android.utils.styleManagerFactory
 import br.com.zup.beagle.android.view.ViewFactory
 import br.com.zup.beagle.android.view.custom.BeagleFlexView
 import br.com.zup.beagle.android.widget.RootView
 import br.com.zup.beagle.android.widget.WidgetView
-import br.com.zup.beagle.android.annotation.RegisterWidget
-import br.com.zup.beagle.android.utils.styleManagerFactory
-import br.com.zup.beagle.android.widget.core.Style
 import br.com.zup.beagle.android.widget.core.Flex
+import br.com.zup.beagle.android.widget.core.Style
 import com.google.android.material.tabs.TabLayout
 
 private val TAB_BAR_HEIGHT = 48.dp()
@@ -106,7 +104,7 @@ data class TabBar(
 
                     observeBindChanges(rootView, container, imagePath.mobileId) { iconPath ->
                         iconPath?.let {
-                            icon = getIconFromResources(rootView.getContext(), iconPath)
+                            icon = getIconFromResources(rootView, iconPath)
                         }
                     }
                 }
@@ -114,8 +112,9 @@ data class TabBar(
         }
     }
 
-    private fun getIconFromResources(context: Context, icon: String): Drawable? {
-        return BeagleEnvironment.beagleSdk.designSystem?.image(icon)?.let {
+    private fun getIconFromResources(rootView: RootView, icon: String): Drawable? {
+        val context = rootView.getContext()
+        return rootView.getBeagleConfigurator().designSystem?.image(icon)?.let {
             ContextCompat.getDrawable(context, it)
         }
     }

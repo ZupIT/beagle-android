@@ -17,7 +17,7 @@
 package br.com.zup.beagle.android.view.viewmodel
 
 import androidx.lifecycle.Observer
-import br.com.zup.beagle.android.BaseTest
+import br.com.zup.beagle.android.BaseConfigurationTest
 import br.com.zup.beagle.android.action.SendRequestInternal
 import br.com.zup.beagle.android.data.ActionRequester
 import br.com.zup.beagle.android.exception.BeagleApiException
@@ -41,7 +41,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 
 @ExperimentalCoroutinesApi
 @ExtendWith(InstantExecutorExtension::class, CoroutinesTestExtension::class)
-class ActionRequestViewModelTest : BaseTest() {
+class ActionRequestViewModelTest : BaseConfigurationTest() {
 
     private val actionRequester: ActionRequester = mockk()
 
@@ -59,7 +59,8 @@ class ActionRequestViewModelTest : BaseTest() {
 
         mockkStatic("br.com.zup.beagle.android.view.mapper.SendRequestActionMapperKt")
 
-        viewModel = ActionRequestViewModel(actionRequester = actionRequester)
+        viewModel = ActionRequestViewModel(beagleConfigurator = beagleConfigurator,
+            actionRequester = actionRequester)
 
         every { observer.onChanged(any()) } just Runs
     }

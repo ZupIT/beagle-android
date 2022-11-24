@@ -18,7 +18,6 @@ package br.com.zup.beagle.android.analytics
 
 import android.view.View
 import br.com.zup.beagle.android.action.AnalyticsAction
-import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.widget.RootView
 
 internal object AnalyticsService {
@@ -34,7 +33,7 @@ internal object AnalyticsService {
                 return
             }
         }
-        val analyticsProvider = BeagleEnvironment.beagleSdk.analyticsProvider
+        val analyticsProvider = rootView.getBeagleConfigurator().analyticsProvider
         analyticsProvider?.getConfig()?.let {
             val dataActionReport = ActionReportFactory.generateDataActionReport(
                 rootView,
@@ -46,9 +45,8 @@ internal object AnalyticsService {
         }
     }
 
-    fun createScreenRecord(screenIdentifier: String, rootId: String? = null) {
-        val analyticsProvider: AnalyticsProvider? = BeagleEnvironment.beagleSdk.analyticsProvider
-        analyticsProvider?.getConfig()?.let {
+    fun createScreenRecord(screenIdentifier: String, analyticsProvider: AnalyticsProvider, rootId: String? = null) {
+        analyticsProvider.getConfig().let {
             val dataScreenReport = DataScreenReport(screenIdentifier, rootId)
             reportData(dataScreenReport, analyticsProvider, it)
         }

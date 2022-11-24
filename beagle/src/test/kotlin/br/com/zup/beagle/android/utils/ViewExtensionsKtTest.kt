@@ -32,6 +32,7 @@ import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.context.constant
 import br.com.zup.beagle.android.data.serializer.BeagleSerializer
 import br.com.zup.beagle.android.networking.RequestData
+import br.com.zup.beagle.android.setup.BeagleConfigurator
 import br.com.zup.beagle.android.setup.DesignSystem
 import br.com.zup.beagle.android.testutil.RandomData
 import br.com.zup.beagle.android.view.ViewFactory
@@ -108,6 +109,9 @@ class ViewExtensionsKtTest : BaseTest() {
     private val viewSlot = slot<View>()
 
     private val analyticsViewModel = mockk<AnalyticsViewModel>()
+    private val beagleConfigurator = mockk<BeagleConfigurator>()
+    private val serializerFactory: BeagleSerializer = mockk(relaxed = true)
+
 
     @BeforeAll
     override fun setUp() {
@@ -116,7 +120,7 @@ class ViewExtensionsKtTest : BaseTest() {
         mockkStatic(TextViewCompat::class)
         mockkStatic("br.com.zup.beagle.android.utils.StringExtensionsKt")
         mockkStatic("br.com.zup.beagle.android.utils.NumberExtensionsKt")
-
+        mockkObject(BeagleConfigurator.Companion)
         mockkObject(ViewFactory)
 
         prepareViewModelMock(
@@ -138,6 +142,8 @@ class ViewExtensionsKtTest : BaseTest() {
         every { imageView.scaleType = any() } just Runs
         every { imageView.setImageResource(any()) } just Runs
         every { analyticsViewModel.createScreenReport(any(), any()) } just Runs
+        every { BeagleConfigurator.configurator } returns beagleConfigurator
+        every { beagleConfigurator.serializer } returns serializerFactory
     }
 
     @BeforeEach
@@ -146,6 +152,7 @@ class ViewExtensionsKtTest : BaseTest() {
         mockkStatic("br.com.zup.beagle.android.utils.ViewExtensionsKt")
         clearMocks(
             ViewFactory,
+            BeagleConfigurator.Companion,
             inputMethodManager,
             beagleView,
             viewGroup,
@@ -169,7 +176,7 @@ class ViewExtensionsKtTest : BaseTest() {
             every { view.setContextBinding(capture(bindingSlot)) } just Runs
 
             // When
-            view.setContextData(contextData)
+            view.setContextData(contextData, moshi)
 
             // Then
             assertEquals(contextData, bindingSlot.captured.first().context)
@@ -186,7 +193,7 @@ class ViewExtensionsKtTest : BaseTest() {
             every { view.setContextBinding(capture(bindingSlot)) } just Runs
 
             // When
-            view.setContextData(contextData)
+            view.setContextData(contextData, moshi)
 
             // Then
             assertEquals(bindingSlot.captured.first().context, contextData)
@@ -522,10 +529,9 @@ class ViewExtensionsKtTest : BaseTest() {
         @Test
         fun testRenderScreenWithActivity() {
             // Given
-            beagleSerializerFactory = serializerFactory
             every { component.id } returns SCREEN_ID
             every { serializerFactory.deserializeComponent(any()) } returns component
-
+            every { beagleConfigurator.serializer } returns serializerFactory
             // When
             viewGroup.loadView(activity, json, SCREEN_ID)
 
@@ -545,15 +551,14 @@ class ViewExtensionsKtTest : BaseTest() {
         @Test
         fun testRenderScreenWithFragment() {
             // Given
-            beagleSerializerFactory = serializerFactory
             every { component.id } returns SCREEN_ID
             every { serializerFactory.deserializeComponent(any()) } returns component
-
+            every { beagleConfigurator.serializer } returns serializerFactory
             // When
             viewGroup.loadView(fragment, json, SCREEN_ID)
 
             // Then
-            verifySequence {
+            verify {
                 viewGroup.id
                 serializerFactory.deserializeComponent(json)
                 ViewFactory.makeBeagleView(any<FragmentRootView>())

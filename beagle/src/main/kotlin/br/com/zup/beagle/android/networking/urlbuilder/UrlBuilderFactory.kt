@@ -16,10 +16,10 @@
 
 package br.com.zup.beagle.android.networking.urlbuilder
 
-import br.com.zup.beagle.android.setup.BeagleEnvironment
+import br.com.zup.beagle.android.setup.BeagleConfigurator
 
 internal class UrlBuilderFactory {
-    fun make(): UrlBuilder {
-        return BeagleEnvironment.beagleSdk.urlBuilder ?: UrlBuilderDefault()
+    fun make(beagleConfigurator: BeagleConfigurator): UrlBuilder {
+        return beagleConfigurator.urlBuilder
     }
 }

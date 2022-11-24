@@ -25,7 +25,7 @@ import android.graphics.drawable.Drawable
 import android.util.TypedValue
 import android.view.View
 import br.com.zup.beagle.R
-import br.com.zup.beagle.android.BaseTest
+import br.com.zup.beagle.android.BaseConfigurationTest
 import br.com.zup.beagle.android.components.Button
 import br.com.zup.beagle.android.components.Text
 import br.com.zup.beagle.android.components.layout.Container
@@ -42,7 +42,7 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class StyleManagerTest : BaseTest() {
+class StyleManagerTest : BaseConfigurationTest() {
 
     private lateinit var styleManager: StyleManager
 
@@ -83,7 +83,7 @@ class StyleManagerTest : BaseTest() {
             answers = false
         )
         every { view.background } returns mockk()
-        styleManager = StyleManager(typedValue = typedValue)
+        styleManager = StyleManager(typedValue = typedValue).apply { init(designSystem) }
     }
 
     @Test

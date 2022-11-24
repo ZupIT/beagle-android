@@ -17,10 +17,13 @@
 package br.com.zup.beagle.android.view
 
 import android.app.Application
+import android.content.Intent
+import android.os.Bundle
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
 import androidx.test.core.app.ActivityScenario
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
 import br.com.zup.beagle.R
 import br.com.zup.beagle.android.BaseSoLoaderTest
 import br.com.zup.beagle.android.action.NavigationContext
@@ -32,10 +35,12 @@ import br.com.zup.beagle.android.data.ComponentRequester
 import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.testutil.CoroutinesTestExtension
 import br.com.zup.beagle.android.testutil.InstantExecutorExtension
+import br.com.zup.beagle.android.utils.ObjectWrapperForBinder
 import br.com.zup.beagle.android.view.BeagleFragment.Companion.NAVIGATION_CONTEXT_DATA_ID
 import br.com.zup.beagle.android.view.BeagleFragment.Companion.NAVIGATION_CONTEXT_DATA_KEY
 import br.com.zup.beagle.android.view.viewmodel.AnalyticsViewModel
 import br.com.zup.beagle.android.view.viewmodel.BeagleScreenViewModel
+import br.com.zup.beagle.android.widget.RootView
 import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.every
@@ -67,20 +72,27 @@ class BeagleActivityTest : BaseSoLoaderTest() {
     private lateinit var beagleViewModel: BeagleScreenViewModel
     private var activity: ServerDrivenActivity? = null
     private val analyticsViewModel = mockk<AnalyticsViewModel>()
-    private val screenIdentifierSlot = slot<String>()
+    private val rootViewSlot = slot<RootView>()
     private val navigationContext = NavigationContext(value = "test")
     private val navigationContextData = ContextData(id = NAVIGATION_CONTEXT_DATA_ID, value = "test")
     lateinit var activityScenario: ActivityScenario<ServerDrivenActivity>
     private val rootIdSlot = slot<String>()
 
     @Before
-    fun mockBeforeTest() {
+    override fun setUp() {
+        super.setUp()
         coEvery { componentRequester.fetchComponent(RequestData(url = "/url")) } returns component
         beagleViewModel =
-            BeagleScreenViewModel(ioDispatcher = TestCoroutineDispatcher(), componentRequester)
+            BeagleScreenViewModel(ioDispatcher = TestCoroutineDispatcher(), componentRequester = componentRequester,
+            beagleConfigurator = beagleConfigurator)
         prepareViewModelMock(beagleViewModel)
+        val intent = Intent(application, ServerDrivenActivity::class.java)
+        val bundle = Bundle().apply {
+            putBinder(BeagleActivity.BEAGLE_CONFIGURATOR, ObjectWrapperForBinder(beagleConfigurator))
+        }
+        intent.putExtras(bundle)
         activityScenario =
-            ActivityScenario.launch(ServerDrivenActivity::class.java)
+            ActivityScenario.launch(intent)
         activityScenario.onActivity {
             activityScenario.moveToState(Lifecycle.State.STARTED)
             activity = it
@@ -94,18 +106,20 @@ class BeagleActivityTest : BaseSoLoaderTest() {
             val url = "/url"
             val screenRequest = RequestData(url = url)
             prepareViewModelMock(analyticsViewModel)
-            every { analyticsViewModel.createScreenReport(capture(screenIdentifierSlot), capture(rootIdSlot)) } just Runs
+            every { analyticsViewModel.createScreenReport(capture(rootViewSlot), capture(rootIdSlot)) } just Runs
 
             //When
             activity?.navigateTo(screenRequest, null, navigationContext)
             activityScenario.moveToState(Lifecycle.State.RESUMED)
-            val fragment = activity?.supportFragmentManager!!.fragments.first() as BeagleFragment
-            fragment.onDestroyView()
+            InstrumentationRegistry.getInstrumentation().waitForIdle {
+                val fragment = activity?.supportFragmentManager!!.fragments.first() as BeagleFragment
+                fragment.onDestroyView()
 
-            //Then
-            val contextData: ContextData = fragment.savedState.getParcelable(NAVIGATION_CONTEXT_DATA_KEY)!!
-            assertEquals(url, screenIdentifierSlot.captured)
-            assertEquals(navigationContextData, contextData)
+                //Then
+                val contextData: ContextData = fragment.savedState.getParcelable(NAVIGATION_CONTEXT_DATA_KEY)!!
+                assertEquals(url, rootViewSlot.captured.getScreenId())
+                assertEquals(navigationContextData, contextData)
+            }
         }
 
 
@@ -119,18 +133,20 @@ class BeagleActivityTest : BaseSoLoaderTest() {
 
 
             prepareViewModelMock(analyticsViewModel)
-            every { analyticsViewModel.createScreenReport(capture(screenIdentifierSlot), capture(rootIdSlot)) } just Runs
+            every { analyticsViewModel.createScreenReport(capture(rootViewSlot), capture(rootIdSlot)) } just Runs
 
             //When
             activity?.navigateTo(screenRequest, screen, navigationContext)
             activityScenario.moveToState(Lifecycle.State.RESUMED)
-            val fragment = activity?.supportFragmentManager!!.fragments.first() as BeagleFragment
-            fragment.onDestroyView()
+            InstrumentationRegistry.getInstrumentation().waitForIdle {
+                val fragment = activity?.supportFragmentManager!!.fragments.first() as BeagleFragment
+                fragment.onDestroyView()
 
-            // THEN
-            val contextData: ContextData = fragment.savedState.getParcelable(NAVIGATION_CONTEXT_DATA_KEY)!!
-            assertEquals(screenId, screenIdentifierSlot.captured)
-            assertEquals(navigationContextData, contextData)
+                // THEN
+                val contextData: ContextData = fragment.savedState.getParcelable(NAVIGATION_CONTEXT_DATA_KEY)!!
+                assertEquals(screenId, rootViewSlot.captured.getScreenId())
+                assertEquals(navigationContextData, contextData)
+            }
         }
 
 

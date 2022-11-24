@@ -23,7 +23,12 @@ import br.com.zup.beagle.android.imagedownloader.BeagleImageDownloader
 import br.com.zup.beagle.android.logger.BeagleLogger
 import br.com.zup.beagle.android.navigation.BeagleControllerReference
 import br.com.zup.beagle.android.navigation.DeepLinkHandler
+import br.com.zup.beagle.android.networking.HttpClient
 import br.com.zup.beagle.android.networking.HttpClientFactory
+import br.com.zup.beagle.android.networking.OnError
+import br.com.zup.beagle.android.networking.OnSuccess
+import br.com.zup.beagle.android.networking.RequestCall
+import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.networking.ViewClient
 import br.com.zup.beagle.android.networking.urlbuilder.UrlBuilder
 import br.com.zup.beagle.android.operation.Operation
@@ -42,7 +47,16 @@ class MyBeagleSetup(override val analyticsProvider: AnalyticsProvider? = null) :
 
     override val deepLinkHandler: DeepLinkHandler? = null
 
-    override val httpClientFactory: HttpClientFactory? = null
+    override val httpClientFactory: HttpClientFactory = object : HttpClientFactory{
+        override fun create(): HttpClient = object : HttpClient {
+            override fun execute(request: RequestData, onSuccess: OnSuccess, onError: OnError): RequestCall {
+                return object : RequestCall {
+                    override fun cancel() {
+                    }
+                }
+            }
+        }
+    }
 
     override val viewClient: ViewClient? = null
 

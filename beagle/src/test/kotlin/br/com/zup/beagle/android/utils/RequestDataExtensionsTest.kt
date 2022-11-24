@@ -16,17 +16,15 @@
 
 package br.com.zup.beagle.android.utils
 
-import br.com.zup.beagle.android.BaseTest
+import br.com.zup.beagle.android.BaseConfigurationTest
 import br.com.zup.beagle.android.data.formatUrl
 import br.com.zup.beagle.android.exception.BeagleApiException
 import br.com.zup.beagle.android.logger.BeagleMessageLogs
-import br.com.zup.beagle.android.networking.HttpClient
 import br.com.zup.beagle.android.networking.OnError
 import br.com.zup.beagle.android.networking.OnSuccess
 import br.com.zup.beagle.android.networking.RequestCall
 import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.networking.ResponseData
-import br.com.zup.beagle.android.networking.urlbuilder.UrlBuilder
 import br.com.zup.beagle.android.networking.urlbuilder.UrlBuilderFactory
 import br.com.zup.beagle.android.testutil.RandomData
 import io.mockk.Runs
@@ -50,10 +48,8 @@ import org.junit.jupiter.api.assertThrows
 
 @DisplayName("Given a RequestData extension function")
 @ExperimentalCoroutinesApi
-class RequestDataExtensionsTest : BaseTest() {
+class RequestDataExtensionsTest : BaseConfigurationTest() {
 
-    private val httpClient: HttpClient = mockk()
-    private val urlBuilder: UrlBuilder = mockk()
     private val requestCall: RequestCall = mockk()
     private val responseData: ResponseData = mockk()
     private val url = RandomData.string()
@@ -72,7 +68,7 @@ class RequestDataExtensionsTest : BaseTest() {
         mockkStatic("br.com.zup.beagle.android.data.StringExtensionsKt")
 
         every { any<String>().formatUrl(any(), any()) } returns url
-        every { anyConstructed<UrlBuilderFactory>().make() } returns urlBuilder
+        every { anyConstructed<UrlBuilderFactory>().make(beagleConfigurator) } returns urlBuilder
 
         every { BeagleMessageLogs.logHttpRequestData(any()) } just Runs
         every { BeagleMessageLogs.logHttpResponseData(any()) } just Runs

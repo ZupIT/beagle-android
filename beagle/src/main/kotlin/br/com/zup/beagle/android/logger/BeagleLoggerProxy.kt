@@ -16,11 +16,13 @@
 
 package br.com.zup.beagle.android.logger
 
-import br.com.zup.beagle.android.setup.BeagleEnvironment
-
 internal object BeagleLoggerProxy : BeagleLogger {
 
-    internal var logger: BeagleLogger? = BeagleEnvironment.beagleSdk.logger
+    var logger: BeagleLogger? = null
+
+    fun init(logger: BeagleLogger?) {
+        this.logger = logger
+    }
 
     override fun warning(message: String) {
         logger?.warning(message)

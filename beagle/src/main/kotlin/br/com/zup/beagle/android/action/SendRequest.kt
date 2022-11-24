@@ -92,7 +92,10 @@ data class SendRequest(
 ) : AnalyticsAction, AsyncAction by AsyncActionImpl() {
 
     override fun execute(rootView: RootView, origin: View) {
-        val viewModel = rootView.generateViewModelInstance<ActionRequestViewModel>()
+        val viewModel = rootView.generateViewModelInstance<ActionRequestViewModel>(
+            ActionRequestViewModel.provideFactory(
+                rootView.getBeagleConfigurator()
+            ))
         val setContext = toSendRequestInternal(rootView, origin)
         viewModel.fetch(setContext).observe(rootView.getLifecycleOwner(), { state ->
             onActionFinished()
@@ -137,10 +140,12 @@ data class SendRequest(
     }
 
     private fun toSendRequestInternal(rootView: RootView, origin: View) = SendRequestInternal(
+        rootView = rootView,
         url = evaluateExpression(rootView, origin, this.url) ?: "",
         method = evaluateExpression(rootView, origin, this.method) ?: RequestActionMethod.GET,
         headers = this.headers?.let { evaluateExpression(rootView, origin, it) },
-        data = this.data?.normalizeContextValue()?.let { evaluateExpression(rootView, origin, it) },
+        data = this.data?.normalizeContextValue(
+            rootView.getBeagleConfigurator().moshi)?.let { evaluateExpression(rootView, origin, it) },
         onSuccess = this.onSuccess,
         onError = this.onError,
         onFinish = this.onFinish
@@ -148,6 +153,7 @@ data class SendRequest(
 }
 
 internal data class SendRequestInternal(
+    val rootView: RootView,
     val url: String,
     val method: RequestActionMethod = RequestActionMethod.GET,
     val headers: Map<String, String>?,

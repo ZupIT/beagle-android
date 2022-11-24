@@ -20,6 +20,8 @@ import android.content.Context
 import android.content.Intent
 import br.com.zup.beagle.android.action.NavigationContext
 import br.com.zup.beagle.android.networking.RequestData
+import br.com.zup.beagle.android.setup.BeagleConfigurator
+import br.com.zup.beagle.android.setup.BeagleSdkWrapper
 import br.com.zup.beagle.android.view.BeagleActivity
 
 /**
@@ -29,13 +31,20 @@ import br.com.zup.beagle.android.view.BeagleActivity
 inline fun <reified T : BeagleActivity> Context.newServerDrivenIntent(
     screenJson: String,
     navigationContext: NavigationContext? = null,
+    beagleSdk: BeagleSdkWrapper? = null
 ): Intent {
-    return Intent(this, T::class.java).putExtras(BeagleActivity.bundleOf(screenJson, navigationContext))
+    return Intent(this, T::class.java).putExtras(BeagleActivity.bundleOf(screenJson,
+        navigationContext,
+        BeagleConfigurator
+        .factory(beagleSdk = beagleSdk)))
 }
 
 inline fun <reified T : BeagleActivity> Context.newServerDrivenIntent(
     requestData: RequestData,
     navigationContext: NavigationContext? = null,
+    beagleSdk: BeagleSdkWrapper? = null
 ): Intent {
-    return Intent(this, T::class.java).putExtras(BeagleActivity.bundleOf(requestData, navigationContext))
+    return Intent(this, T::class.java).putExtras(BeagleActivity.bundleOf(requestData,
+        navigationContext, BeagleConfigurator
+        .factory(beagleSdk = beagleSdk)))
 }

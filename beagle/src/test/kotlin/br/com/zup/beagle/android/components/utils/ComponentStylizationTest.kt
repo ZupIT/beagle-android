@@ -21,6 +21,7 @@ import br.com.zup.beagle.R
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.annotation.RegisterWidget
 import br.com.zup.beagle.android.components.Text
+import br.com.zup.beagle.android.setup.DesignSystem
 import br.com.zup.beagle.android.utils.StyleManager
 import br.com.zup.beagle.android.utils.applyStyle
 import br.com.zup.beagle.android.utils.styleManagerFactory
@@ -49,9 +50,11 @@ class ComponentStylizationTest : BaseTest() {
 
     private val accessibilitySetup: AccessibilitySetup = mockk(relaxed = true)
 
-    private val view: View = mockk()
+    private val view: View = mockk(relaxed = true, relaxUnitFun = true)
 
     private val widget: Text = mockk(relaxed = true)
+
+    private val designSystem: DesignSystem = mockk(relaxed = true)
 
     private val styleManager: StyleManager = mockk(relaxed = true)
 
@@ -62,11 +65,13 @@ class ComponentStylizationTest : BaseTest() {
         super.setUp()
         styleManagerFactory = styleManager
         mockkStatic("br.com.zup.beagle.android.utils.ViewExtensionsKt")
+
     }
 
     @BeforeEach
     fun clear() {
-        clearMocks(beagleSdk)
+        clearMocks(rootView.getBeagleConfigurator())
+        every { rootView.getBeagleConfigurator().designSystem } returns designSystem
     }
 
     @DisplayName("When apply")
@@ -83,10 +88,10 @@ class ComponentStylizationTest : BaseTest() {
             every { view.id = any() } just Runs
             every { widget.id } returns widgetId
             every { view.setTag(R.id.beagle_component_type, any()) } just Runs
-            every { view.applyStyle(widget) } just Runs
+            every { view.applyStyle(widget, designSystem) } just Runs
 
             // When
-            componentStylization.apply(view, widget)
+            componentStylization.apply(rootView, view, widget)
 
             // Then
             assertEquals(widgetId, slotId.captured)
@@ -99,16 +104,16 @@ class ComponentStylizationTest : BaseTest() {
             val widgetId = "123"
             val slotId = slot<String>()
             @Suppress("UNCHECKED_CAST")
-            every { beagleSdk.registeredWidgets() } returns listOf(Text::class.java) as List<Class<WidgetView>>
+            every { rootView.getBeagleConfigurator().registeredWidgets } returns listOf(Text::class.java) as List<Class<WidgetView>>
 
             every { view.setTag(R.id.beagle_component_type, capture(slotId)) } just Runs
             every { view.id = any() } just Runs
             every { widget.id } returns widgetId
             every { view.setTag(R.id.beagle_component_id, any()) } just Runs
-            every { view.applyStyle(widget) } just Runs
+            every { view.applyStyle(widget, designSystem) } just Runs
 
             // When
-            componentStylization.apply(view, widget)
+            componentStylization.apply(rootView, view, widget)
 
             // Then
             assertEquals("custom:text", slotId.captured)
@@ -125,10 +130,10 @@ class ComponentStylizationTest : BaseTest() {
             every { view.id = any() } just Runs
             every { widget.id } returns widgetId
             every { view.setTag(R.id.beagle_component_id, any()) } just Runs
-            every { view.applyStyle(widget) } just Runs
+            every { view.applyStyle(widget, designSystem) } just Runs
 
             // When
-            componentStylization.apply(view, widget)
+            componentStylization.apply(rootView, view, widget)
 
             // Then
             assertEquals("beagle:text", slotId.captured)
@@ -145,15 +150,15 @@ class ComponentStylizationTest : BaseTest() {
             every { view.setTag(R.id.beagle_component_id, any()) } just Runs
             every { widget.id } returns widgetId
             every { view.id = capture(slotId) } just Runs
-            every { view.applyStyle(widget) } just Runs
+            every { view.applyStyle(widget, designSystem) } just Runs
 
             // WHEN
-            componentStylization.apply(view, widget)
+            componentStylization.apply(rootView, view, widget)
 
             // THEN
             assertEquals(widgetId.toAndroidId(), slotId.captured)
             verifyOrder {
-                view.applyStyle(widget)
+                view.applyStyle(widget, designSystem)
                 accessibilitySetup.applyAccessibility(view, widget)
             }
         }
@@ -173,11 +178,10 @@ class ComponentStylizationTest : BaseTest() {
             every { view.setTag(R.id.beagle_component_type, capture(slotId)) } just Runs
             every { view.id = any() } just Runs
             every { view.setTag(R.id.beagle_component_id, any()) } just Runs
-            every { view.applyStyle(widget) } just Runs
+            every { view.applyStyle(widget, designSystem) } just Runs
 
             //when
-            componentStylization.apply(view, widget)
-
+            componentStylization.apply(rootView, view, widget)
             //then
             Assert.assertEquals("beagle:widgetname", slotId.captured)
         }
@@ -192,10 +196,10 @@ class ComponentStylizationTest : BaseTest() {
             every { view.setTag(R.id.beagle_component_type, capture(slotId)) } just Runs
             every { view.id = any() } just Runs
             every { view.setTag(R.id.beagle_component_id, any()) } just Runs
-            every { view.applyStyle(widget) } just Runs
+            every { view.applyStyle(widget, designSystem) } just Runs
 
             //when
-            componentStylization.apply(view, widget)
+            componentStylization.apply(rootView, view, widget)
 
             //then
             Assert.assertEquals("beagle:beaglejsonwidgetwithoutname", slotId.captured)
@@ -206,16 +210,16 @@ class ComponentStylizationTest : BaseTest() {
         fun testApplyOfRegisterActionWidgetShouldGetNameFromAnnotation() {
             val widget = RegisterWidgetWithName()
             //when
-            every { beagleSdk.registeredWidgets() } returns widgetList(widget)
+            every { rootView.getBeagleConfigurator().registeredWidgets } returns widgetList(widget)
             val slotId = slot<String>()
 
             every { view.setTag(R.id.beagle_component_type, capture(slotId)) } just Runs
             every { view.id = any() } just Runs
             every { view.setTag(R.id.beagle_component_id, any()) } just Runs
-            every { view.applyStyle(widget) } just Runs
+            every { view.applyStyle(widget, designSystem) } just Runs
 
             //when
-            componentStylization.apply(view, widget)
+            componentStylization.apply(rootView, view, widget)
 
             //then
             Assert.assertEquals("custom:widgetname", slotId.captured)
@@ -226,16 +230,16 @@ class ComponentStylizationTest : BaseTest() {
         fun testApplyOfRegisterActionWidgetShouldGetNameFromClass() {
             //given
             val widget = RegisterWidgetWithoutName()
-            every { beagleSdk.registeredWidgets() } returns widgetList(widget)
+            every { rootView.getBeagleConfigurator().registeredWidgets } returns widgetList(widget)
             val slotId = slot<String>()
 
             every { view.setTag(R.id.beagle_component_type, capture(slotId)) } just Runs
             every { view.id = any() } just Runs
             every { view.setTag(R.id.beagle_component_id, any()) } just Runs
-            every { view.applyStyle(widget) } just Runs
+            every { view.applyStyle(widget, designSystem) } just Runs
 
             //when
-            componentStylization.apply(view, widget)
+            componentStylization.apply(rootView, view, widget)
 
             //then
             Assert.assertEquals("custom:registerwidgetwithoutname", slotId.captured)

@@ -22,6 +22,7 @@ import androidx.lifecycle.ViewModelProvider
 import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.setup.BeagleSdk
 import br.com.zup.beagle.android.widget.ActivityRootView
+import com.squareup.moshi.Moshi
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkConstructor
@@ -35,13 +36,16 @@ import org.junit.jupiter.api.TestInstance
 abstract class BaseTest {
 
     protected val rootView = mockk<ActivityRootView>(relaxed = true, relaxUnitFun = true)
+    protected open var moshi: Moshi = mockk(relaxed = true, relaxUnitFun = true)
     protected val beagleSdk = mockk<BeagleSdk>(relaxed = true)
     private val activity: AppCompatActivity = mockk(relaxed = true)
+    protected val screenId = "screen_id"
 
     @BeforeAll
     open fun setUp() {
         mockBeagleEnvironment()
         every { rootView.activity } returns activity
+        every { rootView.getScreenId() } returns screenId
     }
 
     @AfterAll
@@ -62,7 +66,7 @@ abstract class BaseTest {
         }
     }
 
-    protected fun mockBeagleEnvironment(){
+    protected fun mockBeagleEnvironment() {
         mockkObject(BeagleEnvironment)
         every { BeagleEnvironment.beagleSdk } returns beagleSdk
         every { beagleSdk.typeAdapterResolver } returns null

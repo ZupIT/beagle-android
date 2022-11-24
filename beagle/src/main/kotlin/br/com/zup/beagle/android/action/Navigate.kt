@@ -90,7 +90,7 @@ sealed class Navigate : AnalyticsAction {
         val navigationContext: NavigationContext? = null,
     ) : Navigate() {
         override fun execute(rootView: RootView, origin: View) {
-            BeagleNavigator.popStack(rootView.getContext(), navigationContext?.getWithExpression { value ->
+            BeagleNavigator.popStack(rootView, navigationContext?.getWithExpression { value ->
                 evaluateExpression(rootView, origin, value)
             })
         }
@@ -129,7 +129,7 @@ sealed class Navigate : AnalyticsAction {
 
         override fun execute(rootView: RootView, origin: View) {
             evaluateExpression(rootView, origin, route)?.let { route ->
-                BeagleNavigator.popToView(rootView.getContext(), route, navigationContext?.getWithExpression { value ->
+                BeagleNavigator.popToView(rootView, route, navigationContext?.getWithExpression { value ->
                     evaluateExpression(rootView, origin, value)
                 })
             }
@@ -153,7 +153,7 @@ sealed class Navigate : AnalyticsAction {
         val navigationContext: NavigationContext? = null,
     ) : Navigate() {
         override fun execute(rootView: RootView, origin: View) {
-            BeagleNavigator.pushView(rootView.getContext(), route.getSafe(rootView, origin),
+            BeagleNavigator.pushView(rootView, route.getSafe(rootView, origin),
                 navigationContext?.getWithExpression { value ->
                     evaluateExpression(rootView, origin, value)
                 })
@@ -180,7 +180,7 @@ sealed class Navigate : AnalyticsAction {
     ) : Navigate() {
         override fun execute(rootView: RootView, origin: View) {
             BeagleNavigator.pushStack(
-                rootView.getContext(), route.getSafe(rootView, origin),
+                rootView, route.getSafe(rootView, origin),
                 controllerId, navigationContext?.getWithExpression { value ->
                 evaluateExpression(rootView, origin, value)
             },
@@ -207,7 +207,7 @@ sealed class Navigate : AnalyticsAction {
         val navigationContext: NavigationContext? = null,
     ) : Navigate() {
         override fun execute(rootView: RootView, origin: View) {
-            BeagleNavigator.resetApplication(rootView.getContext(), route.getSafe(rootView, origin),
+            BeagleNavigator.resetApplication(rootView, route.getSafe(rootView, origin),
                 controllerId, navigationContext?.getWithExpression { value ->
                 evaluateExpression(rootView, origin, value)
             })
@@ -232,7 +232,7 @@ sealed class Navigate : AnalyticsAction {
         val navigationContext: NavigationContext? = null,
     ) : Navigate() {
         override fun execute(rootView: RootView, origin: View) {
-            BeagleNavigator.resetStack(rootView.getContext(), route.getSafe(rootView, origin),
+            BeagleNavigator.resetStack(rootView, route.getSafe(rootView, origin),
                 controllerId, navigationContext?.getWithExpression { value ->
                 evaluateExpression(rootView, origin, value)
             })
@@ -242,7 +242,7 @@ sealed class Navigate : AnalyticsAction {
     internal fun Route.getSafe(rootView: RootView, origin: View): Route {
         if (this is Route.Remote) {
             val newValue = evaluateExpression(rootView, origin, url)
-            val body = httpAdditionalData?.body?.normalizeContextValue()
+            val body = httpAdditionalData?.body?.normalizeContextValue(rootView.getBeagleConfigurator().moshi)
                 ?.let { evaluateExpression(rootView, origin, it) }
 
             return this.copy(

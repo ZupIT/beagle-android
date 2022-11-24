@@ -43,9 +43,12 @@ internal class AnalyticsViewModel : ViewModel() {
         }
     }
 
-    fun createScreenReport(screenIdentifier: String, rootId: String? = null) {
+    fun createScreenReport(rootView: RootView, rootId: String? = null) {
         viewModelScope.launch(Dispatchers.Default) {
-            AnalyticsService.createScreenRecord(screenIdentifier, rootId)
+            val analyticsProvider = rootView.getBeagleConfigurator().analyticsProvider
+            analyticsProvider?.let {
+                AnalyticsService.createScreenRecord(rootView.getScreenId(), it, rootId)
+            }
         }
     }
 }

@@ -17,8 +17,7 @@
 package br.com.zup.beagle.android.view.viewmodel
 
 import androidx.lifecycle.Observer
-import br.com.zup.beagle.android.BaseTest
-import br.com.zup.beagle.android.action.Action
+import br.com.zup.beagle.android.BaseConfigurationTest
 import br.com.zup.beagle.android.components.layout.Screen
 import br.com.zup.beagle.android.data.ActionRequester
 import br.com.zup.beagle.android.data.ComponentRequester
@@ -51,7 +50,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 @DisplayName("Given a BeagleViewModel")
 @ExperimentalCoroutinesApi
 @ExtendWith(InstantExecutorExtension::class, CoroutinesTestExtension::class)
-class BeagleViewModelTest : BaseTest() {
+class BeagleViewModelTest : BaseConfigurationTest() {
 
     private val component: ServerDrivenComponent = mockk()
 
@@ -73,7 +72,8 @@ class BeagleViewModelTest : BaseTest() {
             actionRequester,
             answers = false
         )
-        beagleUIViewModel = BeagleViewModel(componentRequester = componentRequester)
+        beagleUIViewModel = BeagleViewModel(beagleConfigurator = beagleConfigurator,
+            componentRequester = componentRequester)
 
         coEvery { componentRequester.fetchComponent(any()) } returns component
         every { observer.onChanged(any()) } just Runs

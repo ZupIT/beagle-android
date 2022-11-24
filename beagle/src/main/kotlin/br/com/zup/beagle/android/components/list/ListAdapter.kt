@@ -29,7 +29,7 @@ import br.com.zup.beagle.android.context.AsyncActionData
 import br.com.zup.beagle.android.context.Bind
 import br.com.zup.beagle.android.context.ContextData
 import br.com.zup.beagle.android.context.normalizeContextValue
-import br.com.zup.beagle.android.data.serializer.BeagleJsonSerializerFactory
+import br.com.zup.beagle.android.data.serializer.BeagleJsonSerializer
 import br.com.zup.beagle.android.utils.setIsAutoGenerateIdEnabled
 import br.com.zup.beagle.android.utils.toAndroidId
 import br.com.zup.beagle.android.view.ViewFactory
@@ -37,6 +37,7 @@ import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 
 @Suppress("LongParameterList")
 internal class ListAdapter(
+    val serializer: BeagleJsonSerializer,
     val orientation: Int,
     val iteratorName: String,
     val indexName: String = DEFAULT_INDEX_NAME,
@@ -53,9 +54,6 @@ internal class ListAdapter(
     // Parent list information needed by inner lists
     private var parentListViewSuffix: String? = null
     private var parentListViewId: Int? = null
-
-    // Serializer to provide new template instances
-    private val serializer = BeagleJsonSerializerFactory.serializer
 
     // Items captured by ListView
     private var listItems: List<Any> = mutableListOf()
@@ -234,7 +232,7 @@ internal class ListAdapter(
                 clearAdapterContent()
                 notifyListViewIdViewModel(listItems.isEmpty(), componentId)
                 listItems = list
-                adapterItems = list.map { ListItem(data = it.normalizeContextValue()) }
+                adapterItems = list.map { ListItem(data = it.normalizeContextValue(serializer.moshi)) }
                 notifyDataSetChanged()
             }
         } ?: clearList()
@@ -290,6 +288,7 @@ internal class ListAdapter(
 
     fun clone(): ListAdapter {
         return ListAdapter(
+            this.serializer,
             this.orientation,
             this.iteratorName,
             this.indexName,

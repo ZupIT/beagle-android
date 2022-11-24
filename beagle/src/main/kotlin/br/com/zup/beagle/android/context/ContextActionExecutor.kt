@@ -50,8 +50,11 @@ internal object ContextActionExecutor {
         context: ContextData,
         origin: View,
     ) {
-        val viewModel = rootView.generateViewModelInstance<ScreenContextViewModel>()
-        viewModel.addImplicitContext(context.normalize(), sender, origin)
+        val viewModel = rootView.generateViewModelInstance<ScreenContextViewModel>(
+            ScreenContextViewModel.provideFactory(
+            rootView.getBeagleConfigurator()
+        ))
+        viewModel.addImplicitContext(context.normalize(rootView.getBeagleConfigurator().moshi), sender, origin)
     }
 
     private fun executeActions(

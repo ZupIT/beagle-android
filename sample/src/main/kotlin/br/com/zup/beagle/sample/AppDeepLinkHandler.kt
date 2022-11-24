@@ -28,6 +28,15 @@ class AppDeepLinkHandler : DeepLinkHandler {
                                    path: String,
                                    data: Map<String, String>?,
                                    shouldResetApplication: Boolean): Intent {
+        return DeepLinkHandlerObject.handleDeepLink(path, data)
+    }
+}
+
+object DeepLinkHandlerObject {
+    fun handleDeepLink(
+        path: String,
+        data: Map<String, String>?,
+    ): Intent {
         val intent = Intent(path)
         val bundle = Bundle()
         data?.forEach {

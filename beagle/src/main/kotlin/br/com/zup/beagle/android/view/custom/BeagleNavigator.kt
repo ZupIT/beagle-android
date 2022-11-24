@@ -30,7 +30,7 @@ import br.com.zup.beagle.android.networking.HttpAdditionalData
 import br.com.zup.beagle.android.networking.HttpMethod
 import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.networking.urlbuilder.UrlBuilderFactory
-import br.com.zup.beagle.android.setup.BeagleEnvironment
+import br.com.zup.beagle.android.setup.BeagleConfigurator
 import br.com.zup.beagle.android.view.BeagleActivity
 import br.com.zup.beagle.android.view.BeagleFragment
 import br.com.zup.beagle.android.widget.RootView
@@ -53,35 +53,37 @@ internal object BeagleNavigator {
         data: Map<String, String>?,
         shouldResetApplication: Boolean,
     ) {
-        BeagleEnvironment.beagleSdk.deepLinkHandler?.getDeepLinkIntent(
+        rootView.getBeagleConfigurator().deepLinkHandler?.getDeepLinkIntent(
             rootView, route, data, shouldResetApplication)?.let {
             rootView.getContext().startActivity(it)
         }
     }
 
-    fun popStack(context: Context, navigationContext: NavigationContext?) {
+    fun popStack(rootView: RootView, navigationContext: NavigationContext?) {
+        val context = rootView.getContext()
         if (context is AppCompatActivity) {
-            setContextInPreviousActivity(context, navigationContext)
+            setContextInPreviousActivity(rootView.getContext()
+                as AppCompatActivity, navigationContext, rootView.getBeagleConfigurator())
             context.finish()
         }
     }
 
-    fun pushView(context: Context, route: Route, navigationContext: NavigationContext?) {
-        if (context is BeagleActivity) {
+    fun pushView(rootView: RootView, route: Route, navigationContext: NavigationContext?) {
+        if (rootView.getContext() is BeagleActivity) {
             when (route) {
-                is Route.Remote -> context.navigateTo(
+                is Route.Remote -> (rootView.getContext() as BeagleActivity).navigateTo(
                     createRequestData(route),
                     route.fallback,
                     navigationContext
                 )
-                is Route.Local -> context.navigateTo(
+                is Route.Local -> (rootView.getContext() as BeagleActivity).navigateTo(
                     RequestData(url = ""),
                     route.screen,
                     navigationContext
                 )
             }
         } else {
-            context.startActivity(generateIntent(context, route, null, navigationContext))
+            rootView.getContext().startActivity(generateIntent(rootView, route, null, navigationContext))
         }
     }
 
@@ -94,7 +96,7 @@ internal object BeagleNavigator {
             f.dismiss()
         } else if (context is AppCompatActivity) {
             if (context.supportFragmentManager.backStackEntryCount <= 1) {
-                setContextInPreviousActivity(context, navigationContext)
+                setContextInPreviousActivity(context, navigationContext, (context as BeagleActivity).beagleConfigurator)
                 context.onBackPressed()
                 return
             }
@@ -103,20 +105,25 @@ internal object BeagleNavigator {
         }
     }
 
-    private fun setContextInPreviousActivity(context: AppCompatActivity, navigationContext: NavigationContext?) {
+    private fun setContextInPreviousActivity(context: AppCompatActivity,
+                                             navigationContext: NavigationContext?,
+                                             beagleConfigurator: BeagleConfigurator) {
         navigationContext?.let {
-            context.setResult(Activity.RESULT_OK, Intent().putExtras(BeagleActivity.bundleOf(navigationContext)))
+            context.setResult(Activity.RESULT_OK, Intent().putExtras(BeagleActivity.bundleOf(navigationContext,
+                beagleConfigurator)))
         }
     }
 
-    fun popToView(context: Context, route: String, navigationContext: NavigationContext?) {
+    fun popToView(rootView: RootView, route: String, navigationContext: NavigationContext?) {
+        val context = rootView.getContext()
         if (context is AppCompatActivity) {
             /**
              * The popBackStackImmediate it's important to update [ContextData] because they get last fragment after pop
              * and function popBackStack will execute in the next event loop cycle because this has a better performance
              * but to this case I need to use this function
              */
-            context.supportFragmentManager.popBackStackImmediate(getFragmentName(route, context), 0)
+            context.supportFragmentManager.popBackStackImmediate(getFragmentName(rootView,route, context,
+                rootView.getBeagleConfigurator().baseUrl), 0)
             updateContext(context, navigationContext)
         }
     }
@@ -128,10 +135,12 @@ internal object BeagleNavigator {
         }
     }
 
-    private fun getFragmentName(route: String, context: AppCompatActivity): String {
+    private fun getFragmentName(rootView: RootView,
+                                route: String,
+                                context: AppCompatActivity,
+                                baseUrl: String): String {
         var fragmentName = route
-        val urlBuilder = UrlBuilderFactory().make()
-        val baseUrl = BeagleEnvironment.beagleSdk.config.baseUrl
+        val urlBuilder = UrlBuilderFactory().make(rootView.getBeagleConfigurator())
         val routeFormatted = urlBuilder.format(baseUrl, route)
         for (index in 0 until context.supportFragmentManager.backStackEntryCount) {
             val backStackEntryName = context.supportFragmentManager.getBackStackEntryAt(index).name
@@ -148,63 +157,68 @@ internal object BeagleNavigator {
     }
 
     fun pushStack(
-        context: Context,
+        rootView: RootView,
         route: Route,
         controllerName: String?,
         navigationContext: NavigationContext?,
     ) {
+        val context = rootView.getContext()
         if (context is BeagleActivity) {
-            context.nextActivity.launch(generateIntent(context, route, controllerName, navigationContext))
+            context.nextActivity.launch(generateIntent(rootView, route, controllerName, navigationContext))
         } else {
-            context.startActivity(generateIntent(context, route, controllerName, navigationContext))
+            context.startActivity(generateIntent(rootView, route, controllerName, navigationContext))
         }
     }
 
     fun resetApplication(
-        context: Context,
+        rootView: RootView,
         route: Route,
         controllerName: String?,
         navigationContext: NavigationContext?,
     ) {
-        context.startActivity(generateIntent(context, route, controllerName, navigationContext).apply {
+        val context = rootView.getContext()
+        context.startActivity(generateIntent(rootView, route, controllerName, navigationContext).apply {
             addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
         })
     }
 
     fun resetStack(
-        context: Context,
+        rootView: RootView,
         route: Route,
         controllerName: String?,
         navigationContext: NavigationContext?,
     ) {
-        popStack(context, null)
-        pushStack(context, route, controllerName, navigationContext)
+        popStack(rootView, null)
+        pushStack(rootView, route, controllerName, navigationContext)
     }
 
     private fun generateIntent(
-        context: Context, route: Route,
+        rootView: RootView, route: Route,
         controllerName: String?,
         navigationContext: NavigationContext?,
     ): Intent {
+        val context = rootView.getContext()
         val bundle = when (route) {
             is Route.Remote -> {
                 if (route.fallback != null) {
                     BeagleActivity.bundleOf(
                         createRequestData(route),
                         route.fallback,
-                        navigationContext
+                        navigationContext,
+                        rootView.getBeagleConfigurator()
                     )
                 } else {
                     BeagleActivity.bundleOf(
                         createRequestData(route),
-                        navigationContext
+                        navigationContext,
+                        rootView.getBeagleConfigurator()
                     )
                 }
             }
-            is Route.Local -> BeagleActivity.bundleOf(route.screen, navigationContext)
+            is Route.Local -> BeagleActivity.bundleOf(route.screen, navigationContext, rootView.getBeagleConfigurator())
         }
 
-        val activityClass = BeagleEnvironment.beagleSdk.controllerReference?.classFor(controllerName)
+        val activityClass = rootView.getBeagleConfigurator().controllerReference?.classFor(controllerName)
 
         return Intent(context, activityClass).apply {
             putExtras(bundle)

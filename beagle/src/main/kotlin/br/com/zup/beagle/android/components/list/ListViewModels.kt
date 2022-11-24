@@ -27,7 +27,10 @@ import br.com.zup.beagle.android.widget.RootView
 internal data class ListViewModels(
     val rootView: RootView,
     val asyncActionViewModel: AsyncActionViewModel = rootView.generateViewModelInstance(),
-    val contextViewModel: ScreenContextViewModel = rootView.generateViewModelInstance(),
+    val contextViewModel: ScreenContextViewModel = rootView.generateViewModelInstance(
+        ScreenContextViewModel.provideFactory(
+        rootView.getBeagleConfigurator()
+    )),
     val listViewIdViewModel: ListViewIdViewModel = rootView.generateViewModelInstance(),
     val generateIdViewModel: GenerateIdViewModel = rootView.generateViewModelInstance(),
     val onInitViewModel: OnInitViewModel = rootView.generateViewModelInstance()

@@ -20,17 +20,18 @@ import br.com.zup.beagle.android.action.Action
 import br.com.zup.beagle.android.exception.BeagleException
 import br.com.zup.beagle.android.logger.BeagleMessageLogs
 import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
+import com.squareup.moshi.Moshi
 
 private const val EXCEPTION_MESSAGE = "Unexpected error when trying to serialize json="
 
 internal class BeagleSerializer(
-    val beagleMoshiFactory: BeagleMoshi = BeagleMoshi
+    override val moshi: Moshi
 ): BeagleJsonSerializer {
 
     @Throws(BeagleException::class)
     override fun serializeComponent(component: ServerDrivenComponent): String {
         try {
-            return beagleMoshiFactory.moshi.adapter(ServerDrivenComponent::class.java).toJson(component) ?:
+            return moshi.adapter(ServerDrivenComponent::class.java).toJson(component) ?:
             throw NullPointerException()
         } catch (ex: Exception) {
             val message = """
@@ -43,7 +44,7 @@ internal class BeagleSerializer(
     @Throws(BeagleException::class)
     override fun deserializeComponent(json: String): ServerDrivenComponent {
         try {
-            return beagleMoshiFactory.moshi.adapter(ServerDrivenComponent::class.java).fromJson(json) ?:
+            return moshi.adapter(ServerDrivenComponent::class.java).fromJson(json) ?:
                 throw NullPointerException()
         } catch (ex: Exception) {
             BeagleMessageLogs.logDeserializationError(json, ex)
@@ -54,7 +55,7 @@ internal class BeagleSerializer(
     @Throws(BeagleException::class)
     override fun deserializeAction(json: String): Action {
         try {
-            return beagleMoshiFactory.moshi.adapter(Action::class.java).fromJson(json) ?:
+            return moshi.adapter(Action::class.java).fromJson(json) ?:
                 throw NullPointerException()
         } catch (ex: Exception) {
             BeagleMessageLogs.logDeserializationError(json, ex)

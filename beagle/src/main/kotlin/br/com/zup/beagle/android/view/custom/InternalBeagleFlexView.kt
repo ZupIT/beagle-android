@@ -40,7 +40,10 @@ open class InternalBeagleFlexView internal constructor(
     style: Style = Style(),
     private val flexMapper: FlexMapper = FlexMapper(),
     private val viewRendererFactory: ViewRendererFactory = ViewRendererFactory(),
-    private val viewModel: ScreenContextViewModel = rootView.generateViewModelInstance(),
+    private val viewModel: ScreenContextViewModel = rootView.generateViewModelInstance(
+        ScreenContextViewModel.provideFactory(
+        rootView.getBeagleConfigurator()
+    )),
     private val generateIdManager: GenerateIdManager = GenerateIdManager(rootView),
     styleId: Int = 0,
 ) : YogaLayout(if (styleId == 0) rootView.getContext() else ContextThemeWrapper(rootView.getContext(), styleId),

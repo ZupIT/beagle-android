@@ -17,7 +17,7 @@
 
 package br.com.zup.beagle.android.data
 
-import br.com.zup.beagle.android.BaseTest
+import br.com.zup.beagle.android.BaseConfigurationTest
 import br.com.zup.beagle.android.data.serializer.BeagleSerializer
 import br.com.zup.beagle.android.exception.BeagleApiException
 import br.com.zup.beagle.android.networking.OnError
@@ -26,12 +26,10 @@ import br.com.zup.beagle.android.networking.RequestCall
 import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.networking.ResponseData
 import br.com.zup.beagle.android.networking.ViewClient
-import br.com.zup.beagle.android.testutil.RandomData
 import br.com.zup.beagle.android.widget.core.ServerDrivenComponent
 import io.mockk.clearMocks
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.mockkStatic
 import io.mockk.slot
 import io.mockk.verifySequence
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -46,10 +44,8 @@ import org.junit.jupiter.api.assertThrows
 
 @DisplayName("Given a ComponentRequester")
 @ExperimentalCoroutinesApi
-class ComponentRequesterTest : BaseTest() {
+class ComponentRequesterTest : BaseConfigurationTest() {
 
-    private val viewClient: ViewClient = mockk(relaxed = true)
-    private val serializer: BeagleSerializer = mockk()
     private val requestCall: RequestCall = mockk()
     private val requestData: RequestData = mockk(relaxed = true)
     private val requestDataCopy: RequestData = RequestData("/test")
@@ -66,12 +62,12 @@ class ComponentRequesterTest : BaseTest() {
         every { serializer.deserializeComponent(any()) } returns component
         every { requestData.copy(any()) } returns requestDataCopy
 
-        componentRequester = ComponentRequester(viewClient, serializer)
+        componentRequester = ComponentRequester(beagleConfigurator, viewClient, serializer)
     }
 
     @BeforeEach
     fun clear() {
-        clearMocks(viewClient, serializer, answers = false)
+        clearMocks(beagleConfigurator, viewClient, serializer, answers = false)
     }
 
     @DisplayName("When fetchComponent is called")

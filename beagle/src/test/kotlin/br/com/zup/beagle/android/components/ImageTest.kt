@@ -19,7 +19,6 @@ package br.com.zup.beagle.android.components
 import android.widget.ImageView
 import br.com.zup.beagle.android.components.utils.RoundedImageView
 import br.com.zup.beagle.android.context.constant
-import br.com.zup.beagle.android.setup.BeagleEnvironment
 import br.com.zup.beagle.android.testutil.RandomData
 import br.com.zup.beagle.android.utils.dp
 import br.com.zup.beagle.android.view.ViewFactory
@@ -73,8 +72,7 @@ internal class ImageTest : BaseComponentTest() {
         mockkStatic("br.com.zup.beagle.android.utils.NumberExtensionsKt")
 
         every { ViewFactory.makeImageView(rootView, any()) } returns imageView
-        every { beagleSdk.designSystem } returns mockk(relaxed = true)
-        every { beagleSdk.designSystem!!.image(any()) } returns IMAGE_RES
+
         every { 10.0.dp() } returns 20.0
     }
 
@@ -94,6 +92,8 @@ internal class ImageTest : BaseComponentTest() {
             ).apply {
                 style = styleLocal
             }
+        every { beagleConfigurator.designSystem } returns mockk(relaxed = true)
+        every { beagleConfigurator.designSystem!!.image(any()) } returns IMAGE_RES
     }
 
     @DisplayName("When an imageView is built")
@@ -246,7 +246,7 @@ internal class ImageTest : BaseComponentTest() {
         fun testsTheScaleTypeSetIfDesignSystemIsNull() {
             // Given
             val scaleType = ImageView.ScaleType.CENTER_CROP
-            every { BeagleEnvironment.beagleSdk.designSystem } returns null
+            every { beagleConfigurator.designSystem } returns null
             every { imageView.scaleType = capture(scaleTypeSlot) } just Runs
             imageLocal = imageLocal.copy(mode = ImageContentMode.CENTER_CROP)
 

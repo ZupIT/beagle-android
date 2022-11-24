@@ -17,18 +17,27 @@
 package br.com.zup.beagle.android.context
 
 import br.com.zup.beagle.android.BaseTest
+import br.com.zup.beagle.android.data.serializer.BeagleMoshi
 import br.com.zup.beagle.android.testutil.RandomData
 import org.json.JSONArray
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 
 private data class Test(val a: String)
 
 internal class ContextDataExtensionsKtTest : BaseTest() {
 
+    @BeforeAll
+    override fun setUp() {
+        super.setUp()
+
+        moshi = BeagleMoshi.moshi
+
+    }
     @Test
     fun normalize_should_return_the_actual_contextData_when_value_type_is_double() {
         // Given
@@ -38,7 +47,7 @@ internal class ContextDataExtensionsKtTest : BaseTest() {
         )
 
         // When
-        val normalized = contextData.normalize()
+        val normalized = contextData.normalize(moshi)
 
         // Then
         assertEquals(normalized, contextData)
@@ -53,7 +62,7 @@ internal class ContextDataExtensionsKtTest : BaseTest() {
         )
 
         // When
-        val normalized = contextData.normalize()
+        val normalized = contextData.normalize(moshi)
 
         // Then
         assertEquals(normalized, contextData)
@@ -68,7 +77,7 @@ internal class ContextDataExtensionsKtTest : BaseTest() {
         )
 
         // When
-        val normalized = contextData.normalize()
+        val normalized = contextData.normalize(moshi)
 
         // Then
         assertEquals(normalized, contextData)
@@ -83,7 +92,7 @@ internal class ContextDataExtensionsKtTest : BaseTest() {
         )
 
         // When
-        val normalized = contextData.normalize()
+        val normalized = contextData.normalize(moshi)
 
         // Then
         assertEquals(normalized, contextData)
@@ -98,7 +107,7 @@ internal class ContextDataExtensionsKtTest : BaseTest() {
         )
 
         // When
-        val normalized = contextData.normalize()
+        val normalized = contextData.normalize(moshi)
 
         // Then
         assertEquals(normalized, contextData)
@@ -113,7 +122,7 @@ internal class ContextDataExtensionsKtTest : BaseTest() {
         )
 
         // When
-        val normalized = contextData.normalize()
+        val normalized = contextData.normalize(moshi)
 
         // Then
         assertNotEquals(normalized, contextData)
@@ -129,7 +138,7 @@ internal class ContextDataExtensionsKtTest : BaseTest() {
         )
 
         // When
-        val normalized = contextData.normalize()
+        val normalized = contextData.normalize(moshi)
 
         // Then
         assertNotEquals(normalized, contextData)

@@ -23,3 +23,7 @@ import br.com.zup.beagle.android.widget.RootView
 internal inline fun <reified T : ViewModel> RootView.generateViewModelInstance(): T {
     return ViewModelProvider(this.getViewModelStoreOwner()).get(T::class.java)
 }
+
+internal inline fun <reified T : ViewModel> RootView.generateViewModelInstance(factory: ViewModelProvider.Factory): T {
+    return ViewModelProvider(this.getViewModelStoreOwner(), factory).get(T::class.java)
+}

@@ -17,25 +17,32 @@
 package br.com.zup.beagle.android.view.custom
 
 import android.app.Application
+import android.content.Intent
+import android.os.Bundle
 import android.view.View
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import br.com.zup.beagle.android.BaseSoLoaderTest
 import br.com.zup.beagle.android.BaseTest
 import br.com.zup.beagle.android.MyBeagleSetup
 import br.com.zup.beagle.android.components.Text
 import br.com.zup.beagle.android.context.constant
 import br.com.zup.beagle.android.data.formatUrl
 import br.com.zup.beagle.android.networking.RequestData
+import br.com.zup.beagle.android.setup.BeagleConfigurator
 import br.com.zup.beagle.android.setup.BeagleSdk
+import br.com.zup.beagle.android.utils.ObjectWrapperForBinder
 import br.com.zup.beagle.android.view.ApplicationTest
+import br.com.zup.beagle.android.view.BeagleActivity
 import br.com.zup.beagle.android.view.ServerDrivenActivity
 import br.com.zup.beagle.android.view.viewmodel.AnalyticsViewModel
 import br.com.zup.beagle.android.view.viewmodel.BeagleViewModel
 import br.com.zup.beagle.android.view.viewmodel.ViewState
 import br.com.zup.beagle.android.widget.ActivityRootView
+import br.com.zup.beagle.android.widget.RootView
 import com.facebook.yoga.YogaNode
 import com.facebook.yoga.YogaNodeFactory
 import io.mockk.Runs
@@ -55,7 +62,7 @@ import org.robolectric.annotation.Config
 
 @Config(application = ApplicationTest::class)
 @RunWith(AndroidJUnit4::class)
-internal class BeagleViewTest : BaseTest() {
+internal class BeagleViewTest : BaseSoLoaderTest() {
 
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
@@ -63,7 +70,7 @@ internal class BeagleViewTest : BaseTest() {
     private val viewModel: BeagleViewModel = mockk()
     private val analyticsViewModel = mockk<AnalyticsViewModel>()
 
-    private val screenIdentifierSlot = slot<String>()
+    private val screenIdentifierSlot = slot<RootView>()
     private val rootIdSlot = slot<String>()
 
     private val mutableLiveData = MutableLiveData<ViewState>()
@@ -83,14 +90,19 @@ internal class BeagleViewTest : BaseTest() {
         prepareViewModelMock(analyticsViewModel)
         every { analyticsViewModel.createScreenReport(capture(screenIdentifierSlot), capture(rootIdSlot)) } just Runs
         every { viewModel.fetchComponent(any(), any()) } returns mutableLiveData
+        val intent = Intent(application, ServerDrivenActivity::class.java)
+        val bundle = Bundle().apply {
+            putBinder(BeagleActivity.BEAGLE_CONFIGURATOR, ObjectWrapperForBinder(beagleConfigurator))
+        }
+        intent.putExtras(bundle)
         val activityScenario: ActivityScenario<ServerDrivenActivity> =
-            ActivityScenario.launch(ServerDrivenActivity::class.java)
+            ActivityScenario.launch(intent)
         activityScenario.onActivity {
             val rootView = ActivityRootView(it, 10, "")
             beagleView = BeagleView(rootView, viewModel)
         }
 
-        url = "/url".formatUrl()
+        url = "/url".formatUrl(beagleConfigurator)
         component = Text(constant("Test component"))
     }
 
@@ -118,7 +130,7 @@ internal class BeagleViewTest : BaseTest() {
         beagleView.loadView(RequestData(url))
 
         // Then
-        Assert.assertEquals(url, screenIdentifierSlot.captured)
+        Assert.assertEquals(url, screenIdentifierSlot.captured.getScreenId())
     }
 
     @Test

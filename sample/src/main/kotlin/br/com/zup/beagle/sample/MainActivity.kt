@@ -24,6 +24,8 @@ import br.com.zup.beagle.android.networking.RequestData
 import br.com.zup.beagle.android.utils.loadView
 import br.com.zup.beagle.android.utils.newServerDrivenIntent
 import br.com.zup.beagle.android.view.ServerDrivenActivity
+import br.com.zup.beagle.sample.config.BeagleSetupSecond
+import br.com.zup.beagle.sample.config.BeagleSetupThird
 import br.com.zup.beagle.sample.constants.SAMPLE_ENDPOINT
 import br.com.zup.beagle.sample.databinding.ActivityMainBinding
 
@@ -53,7 +55,19 @@ class MainActivity : AppCompatActivity() {
         when (itemSelected) {
             R.id.remote_server -> startActivity(
                 newServerDrivenIntent<ServerDrivenActivity>(
-                    RequestData(SAMPLE_ENDPOINT)
+                    requestData = RequestData(SAMPLE_ENDPOINT)
+                )
+            )
+            R.id.sample_config2 -> startActivity(
+                newServerDrivenIntent<ServerDrivenActivity>(
+                    screenJson = SCREEN2,
+                    beagleSdk = BeagleSetupSecond()
+                )
+            )
+            R.id.sample_config3 -> startActivity(
+                newServerDrivenIntent<ServerDrivenActivity>(
+                    screenJson = SCREEN3,
+                    beagleSdk = BeagleSetupThird()
                 )
             )
         }

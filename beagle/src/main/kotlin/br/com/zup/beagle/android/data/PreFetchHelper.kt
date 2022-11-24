@@ -48,7 +48,10 @@ internal class PreFetchHelper {
                 BeagleMessageLogs.expressionNotSupportInPreFetch()
                 return
             }
-            val viewModel = rootView.generateViewModelInstance<BeagleViewModel>()
+            val viewModel = rootView.generateViewModelInstance<BeagleViewModel>(
+                factory = BeagleViewModel.provideFactory(
+                    rootView.getBeagleConfigurator()
+                ))
             viewModel.fetchForCache(route.url.value as String)
         }
     }
